@@ -1,0 +1,31 @@
+---
+description: Core coding standards for Redunsy
+alwaysApply: true
+---
+
+# Redunsy coding standards
+
+## Paradigm
+
+- Use only functional programming: no classes, no `this`, no mutable shared state outside stores.
+- Prefer React hooks for component state and side effects.
+- Encapsulate features under `features/<feature-name>/` with colocated store, hooks, and UI.
+
+## Style (not fully enforceable in ESLint)
+
+- Prefer arrow functions for all functions and callbacks.
+- Prefer concise arrow auto-return (`() => value`) when the body is a single expression.
+- Avoid barrel `index` files; import from concrete module paths.
+- Keep files under 100 lines when possible; stay under 200 lines unless well justified.
+
+## Structure
+
+- `lib/` — shared non-UI utilities (e.g. `lib/midinke`).
+- `features/shared/` — cross-feature client providers and primitives.
+- `features/store/` — app-wide Zustand stores.
+- `features/<feature>/` — feature modules (`*.store.ts`, component modules).
+
+## React components in `.ts`
+
+- UI modules may use `.ts` with `createElement` when avoiding `.tsx` is intentional.
+- Any file using JSX must use the `.tsx` extension.

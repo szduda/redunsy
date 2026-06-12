@@ -1,0 +1,13 @@
+---
+description: React and feature patterns for Redunsy
+globs: **/*.{ts,tsx}
+alwaysApply: false
+---
+
+# React patterns
+
+- Mark client components with `'use client'` only when they use hooks, browser APIs, or event handlers.
+- Keep pages as Server Components when possible; push interactivity into feature components.
+- Use TanStack Query for server/async data; use Zustand for client UI state.
+- Co-locate feature state in `<feature>.store.ts` next to the feature component.
+- Extract subcomponents only when it improves readability and keeps files under 100 lines.
