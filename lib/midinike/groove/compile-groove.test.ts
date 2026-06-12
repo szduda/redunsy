@@ -41,6 +41,10 @@ describe('compileGroove notation — cell counts', () => {
     expect(() => validateBarForGroove('b-{---}b-{---}', 8)).not.toThrow()
   })
 
+  it('treats hyphen after } as a rest between groups', () => {
+    expect(barCellCount('s{tts}-{stt}')).toBe(6)
+  })
+
   it('rejects bars with more notation cells than groove length', () => {
     expect(() => validateBarForGroove('b---b---', 6)).toThrow(/more than groove length/)
     expect(() => validateBarForGroove('ttstts', 8)).not.toThrow()

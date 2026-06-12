@@ -15,7 +15,10 @@ export const tripletCells = (length: number) => Math.ceil(length / 3) * 2
 /** `-` before `[` or `{` links a plain symbol to a group — not a rest. */
 export const isGroupGlue = (bar: string, index: number) => {
   const next = bar[index + 1]
-  return bar[index] === '-' && (next === '[' || next === '{')
+  const prev = bar[index - 1]
+  if (bar[index] !== '-' || (next !== '[' && next !== '{')) return false
+  if (prev === '}') return false
+  return true
 }
 
 export const barCellCount = (bar: string) => {

@@ -8,6 +8,8 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-yellowy: #f9c926;
+  --color-yellowy-light: #fbd760;
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
 }

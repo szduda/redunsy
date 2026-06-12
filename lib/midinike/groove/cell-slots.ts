@@ -7,8 +7,7 @@ const hitToSlot = (sampleId: number): BeatSlot => [[sampleId], []]
 const noteToSlot = (hit: { sampleId: number | null }): BeatSlot =>
   hit.sampleId ? hitToSlot(hit.sampleId) : emptySlot()
 
-const emptyTicks = (count: number): BeatSlot[] =>
-  Array.from({ length: count }, () => emptySlot())
+const emptyTicks = (count: number): BeatSlot[] => Array.from({ length: count }, () => emptySlot())
 
 const placeHit = (slots: BeatSlot[], tick: number, hit: { sampleId: number | null }) => {
   if (!hit.sampleId || tick < 0 || tick >= slots.length) return

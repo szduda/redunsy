@@ -49,6 +49,7 @@ export const useMidinike = (options: MidinikeOptions) => {
   const [groove, setGrooveState] = useState(initialGroove)
   const [playing, setPlaying] = useState(false)
   const [paused, setPaused] = useState(false)
+  const [beatIndex, setBeatIndex] = useState(-1)
 
   const beatsRef = useRef<BeatMatrix>([])
   const compileRef = useRef(
@@ -58,6 +59,15 @@ export const useMidinike = (options: MidinikeOptions) => {
   const pausedAtRef = useRef(0)
   const lastBarsRef = useRef<string[]>([])
   const playingRef = useRef(false)
+
+  const activeBarIndex = useMemo(() => {
+    if (beatIndex < 0) return -1
+    const offsets = compileRef.current.barSlotOffsets
+    for (let i = offsets.length - 1; i >= 0; i -= 1) {
+      if (beatIndex >= offsets[i]) return i
+    }
+    return 0
+  }, [beatIndex, groove])
 
   const swingModifier = swingModifierFromGroove(groove)
 
@@ -84,11 +94,13 @@ export const useMidinike = (options: MidinikeOptions) => {
       setVolumes()
       player.startPlayLoop(beatsRef.current, playbackTempo, DENSITY, fromBeat, (index) => {
         noteIndexRef.current = index
+        setBeatIndex(index)
         if (!loop && index >= beatsRef.current.length - 1) {
           player.stopPlayLoop()
           setPlaying(false)
           setPaused(false)
           playingRef.current = false
+          setBeatIndex(-1)
         }
       })
       setPlaying(true)
@@ -136,6 +148,7 @@ export const useMidinike = (options: MidinikeOptions) => {
     setPlaying(false)
     setPaused(true)
     playingRef.current = false
+    setBeatIndex(-1)
   }, [midiSounds])
 
   const stop = useCallback(() => {
@@ -145,6 +158,7 @@ export const useMidinike = (options: MidinikeOptions) => {
     setPlaying(false)
     setPaused(false)
     playingRef.current = false
+    setBeatIndex(-1)
   }, [midiSounds])
 
   const goTo = useCallback(
@@ -216,6 +230,8 @@ export const useMidinike = (options: MidinikeOptions) => {
     paused,
     groove,
     tempo,
+    beatIndex,
+    activeBarIndex,
     swingModifier,
     compile: compileBars,
     ...layerHandles,
