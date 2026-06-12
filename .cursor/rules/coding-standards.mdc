@@ -20,12 +20,11 @@ alwaysApply: true
 
 ## Structure
 
-- `lib/` — shared non-UI utilities (e.g. `lib/midinke`).
+- `lib/` — shared non-UI utilities (e.g. `lib/midinike`).
 - `features/shared/` — cross-feature client providers and primitives.
 - `features/store/` — app-wide Zustand stores.
 - `features/<feature>/` — feature modules (`*.store.ts`, component modules).
 
-## React components in `.ts`
+## React components
 
-- UI modules may use `.ts` with `createElement` when avoiding `.tsx` is intentional.
-- Any file using JSX must use the `.tsx` extension.
+- Use `.tsx` for any file that contains JSX.
