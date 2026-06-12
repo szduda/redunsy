@@ -1,39 +1,51 @@
 import { barSlotSegments } from './build-bar-slots'
 import { grooveSlotIndex } from './groove-index'
-import { grooveGap } from './groove-symbols'
+import { grooveOffset } from './groove-symbols'
 
+import type { BarSlotSegment } from './build-bar-slots'
 import type { BeatMatrix, BeatSlot, ParsedCell } from '../types'
 
 const emptySlot = (): BeatSlot => [[], []]
 
-const expandCell = (slots: BeatSlot[], emptys: number): BeatSlot[] => {
-  if (emptys === 0) return slots
-  const count = slots.length
-  const total = count + emptys
-  const expanded = Array.from({ length: total }, () => emptySlot())
-  slots.forEach((slot, index) => {
-    const position = Math.floor((index * total) / count)
-    expanded[position] = slot
-  })
-  return expanded
+const notationOffsetForTick = (tick: number, span: number, notationCellSpan: number) =>
+  Math.min(notationCellSpan - 1, Math.floor((tick * notationCellSpan) / span))
+
+const notationCellForBarTick = (segments: BarSlotSegment[], barTick: number) => {
+  let cursor = 0
+  for (const segment of segments) {
+    const span = segment.slots.length
+    if (barTick < cursor + span) {
+      const localTick = barTick - cursor
+      const cellOffset = notationOffsetForTick(localTick, span, segment.notationCellSpan)
+      return segment.notationCellIndex + cellOffset
+    }
+    cursor += span
+  }
+  return segments[segments.length - 1]?.notationCellIndex ?? 0
 }
 
-const grooveForSegment = (
+const shiftBarGroove = (
+  slots: BeatSlot[],
+  segments: BarSlotSegment[],
   groove: string,
-  notationCellIndex: number,
-  notationCellSpan: number,
   notationCells: number,
   grooveLength: number,
-) => {
-  const gaps = Array.from({ length: notationCellSpan }, (_, offset) => {
-    const grooveIndex = grooveSlotIndex(
-      notationCellIndex + offset,
-      notationCells,
-      grooveLength,
-    )
-    return grooveGap(groove[grooveIndex] ?? '-', grooveIndex === 0)
-  })
-  return Math.max(...gaps, 0)
+): BeatSlot[] => {
+  const span = slots.length
+  const shifted = Array.from({ length: span }, () => emptySlot())
+
+  for (let tick = 0; tick < span; tick += 1) {
+    const slot = slots[tick]
+    if (slot[0].length === 0) continue
+
+    const notationCell = notationCellForBarTick(segments, tick)
+    const grooveIndex = grooveSlotIndex(notationCell, notationCells, grooveLength)
+    const delta = grooveOffset(groove[grooveIndex] ?? '-', notationCell === 0)
+    const newTick = Math.max(0, Math.min(span - 1, tick + delta))
+    shifted[newTick] = slot
+  }
+
+  return shifted
 }
 
 export const applyGrooveToBar = (
@@ -42,18 +54,7 @@ export const applyGrooveToBar = (
   notationCells: number,
   grooveLength: number,
 ): BeatMatrix => {
-  const expanded: BeatMatrix = []
-
-  barSlotSegments(cells, notationCells, grooveLength).forEach((segment) => {
-    const gaps = grooveForSegment(
-      groove,
-      segment.notationCellIndex,
-      segment.notationCellSpan,
-      notationCells,
-      grooveLength,
-    )
-    expanded.push(...expandCell(segment.slots, gaps))
-  })
-
-  return expanded
+  const segments = barSlotSegments(cells, notationCells, grooveLength)
+  const slots = segments.flatMap((segment) => segment.slots)
+  return shiftBarGroove(slots, segments, groove, notationCells, grooveLength)
 }

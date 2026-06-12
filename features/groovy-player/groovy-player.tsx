@@ -20,8 +20,10 @@ const MIN_TEMPO = 60
 const MAX_TEMPO = 200
 const BAR_SEPARATOR = '|'
 
+const numberPattern = /^\d+$/
+
 const parseTempo = (input: string): number | null => {
-  if (!/^\d+$/.test(input)) return null
+  if (!numberPattern.test(input)) return null
   const value = Number(input)
   if (value < MIN_TEMPO || value > MAX_TEMPO) return null
   return value
@@ -49,14 +51,6 @@ export const GroovyPlayer = () => {
     tempo: DEFAULT_TEMPO,
   })
 
-  const onGrooveChange = ({ target }: ChangeEvent<HTMLInputElement>) => {
-    setGrooveInput(target.value)
-  }
-
-  const onBarsChange = ({ target }: ChangeEvent<HTMLInputElement>) => {
-    setBarsInput(target.value)
-  }
-
   const onSubmitGroove = () => {
     if (!grooveInput.length) return
     try {
@@ -70,7 +64,7 @@ export const GroovyPlayer = () => {
 
   const onTempoChange = ({ target }: ChangeEvent<HTMLInputElement>) => {
     const { value } = target
-    if (value === '' || /^\d+$/.test(value)) setTempoInput(value)
+    if (value === '' || numberPattern.test(value)) setTempoInput(value)
   }
 
   const onSubmitTempo = () => {
@@ -79,8 +73,11 @@ export const GroovyPlayer = () => {
     setTempo(value)
   }
 
-  const onPlay = () => {
-    if (playing) return
+  const onTogglePlayPause = () => {
+    if (playing) {
+      pause()
+      return
+    }
     if (!grooveInput.length) return
     const bars = parseBarsInput(barsInput)
     if (!bars.length) return
@@ -98,7 +95,7 @@ export const GroovyPlayer = () => {
       <div className="flex gap-2">
         <Input
           aria-label="Groove pattern"
-          onChange={onGrooveChange}
+          onChange={({ target }) => setGrooveInput(target.value)}
           type="text"
           value={grooveInput}
           className="flex-1"
@@ -135,7 +132,7 @@ export const GroovyPlayer = () => {
 
       <Input
         aria-label="Bar notation"
-        onChange={onBarsChange}
+        onChange={({ target }) => setBarsInput(target.value)}
         placeholder={`Bars separated by ${BAR_SEPARATOR}`}
         type="text"
         value={barsInput}
@@ -144,11 +141,8 @@ export const GroovyPlayer = () => {
       {playError ? <Text variant="mono">{playError}</Text> : null}
 
       <div className="flex gap-2">
-        <Button disabled={playing} onClick={onPlay} variant="primary">
-          {playing ? 'Playing' : 'Play'}
-        </Button>
-        <Button disabled={!playing} onClick={pause}>
-          Pause
+        <Button onClick={onTogglePlayPause} variant="primary">
+          {playing ? 'Pause' : 'Play'}
         </Button>
         <Button onClick={stop}>Stop</Button>
       </div>

@@ -1,4 +1,5 @@
-export const TICKS_PER_EIGHTH = 6
+/** Twelve scheduler ticks per eighth — five groove positions at ±1 / ±2. */
+export const TICKS_PER_EIGHTH = 12
 
 export const plainCharCells = (length: number) => length
 

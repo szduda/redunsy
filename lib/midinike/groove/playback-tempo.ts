@@ -1,6 +1,6 @@
 import { TICKS_PER_EIGHTH } from '../notation/cell-duration'
 
-/** Six scheduler ticks per eighth-cell; swing expansion is compensated separately. */
+/** Groove shifts notes inside fixed eighth cells; slot count matches pre-groove length. */
 export const calcPlaybackTempo = (
   cellsPerBar: number,
   cellCount: number,

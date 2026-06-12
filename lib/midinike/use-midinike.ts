@@ -35,10 +35,16 @@ export const useMidinike = (options: MidinikeOptions) => {
   const midiSounds = useMidiSounds()
   const { loop = true, tempo: initialTempo = 110, ...rest } = options
 
-  const layerEntries = Object.entries(rest).filter((entry): entry is [string, LayerConfig] =>
-    isLayerConfig(entry[1]),
+  const layerEntries = useMemo(
+    () =>
+      Object.entries(rest).filter((entry): entry is [string, LayerConfig] =>
+        isLayerConfig(entry[1]),
+      ),
+    [],
   )
+
   const [tempo, setTempo] = useState(initialTempo)
+  const tempoRef = useRef(initialTempo)
   const initialGroove = layerEntries[0]?.[1].grooves?.[0] ?? '------'
   const [groove, setGrooveState] = useState(initialGroove)
   const [playing, setPlaying] = useState(false)
@@ -54,7 +60,6 @@ export const useMidinike = (options: MidinikeOptions) => {
   const playingRef = useRef(false)
 
   const swingModifier = swingModifierFromGroove(groove)
-  const cellsPerBar = groove.length
 
   const setVolumes = useCallback(() => {
     Object.values(DRUMS).forEach(({ sampleId, volume, instrument }) => {
@@ -74,7 +79,7 @@ export const useMidinike = (options: MidinikeOptions) => {
         cellCount,
         preGrooveSlots,
         beats.length,
-        tempo,
+        tempoRef.current,
       )
       setVolumes()
       player.startPlayLoop(beatsRef.current, playbackTempo, DENSITY, fromBeat, (index) => {
@@ -90,8 +95,18 @@ export const useMidinike = (options: MidinikeOptions) => {
       setPaused(false)
       playingRef.current = true
     },
-    [loop, midiSounds, setVolumes, tempo],
+    [loop, midiSounds, setVolumes],
   )
+
+  const startLoopRef = useRef(startLoop)
+
+  useEffect(() => {
+    tempoRef.current = tempo
+  }, [tempo])
+
+  useEffect(() => {
+    startLoopRef.current = startLoop
+  }, [startLoop])
 
   const compileBars = useCallback(
     (bars: string[], groovePattern = groove) => {
@@ -158,9 +173,16 @@ export const useMidinike = (options: MidinikeOptions) => {
       }
       return
     }
-    compileBars(bars)
-    if (playingRef.current) startLoop(noteIndexRef.current)
-  }, [groove, compileBars, startLoop, midiSounds])
+    const compiled = compileGroove({ bars, groove })
+    compileRef.current = compiled
+    beatsRef.current = compiled.beats
+    if (playingRef.current) startLoopRef.current(noteIndexRef.current)
+  }, [groove])
+
+  useEffect(() => {
+    if (!playingRef.current) return
+    startLoopRef.current(noteIndexRef.current)
+  }, [tempo])
 
   const play = useMemo(() => {
     const handlers = Object.fromEntries(
