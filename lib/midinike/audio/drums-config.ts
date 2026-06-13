@@ -26,3 +26,10 @@ export const symbolToSampleId = (symbol: string): number | null => {
   const entry = Object.values(DRUMS).find((d) => d.symbol === symbol)
   return entry?.sampleId ?? null
 }
+
+export const soundMapForInstrument = (instrument: string): Record<string, number | null> =>
+  Object.fromEntries(
+    Object.values(DRUMS)
+      .filter((drum) => drum.instrument === instrument)
+      .map((drum) => [drum.symbol, drum.sampleId]),
+  )

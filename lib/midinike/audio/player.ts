@@ -37,13 +37,15 @@ const cacheDrum = (state: PlayerState, drum: number) => {
 const volumeDrumAdjust = (state: PlayerState, drum: number) => state.volumesDrum[drum] ?? 1
 
 const playDrum = (state: PlayerState, when: number, drum: number) => {
+  const volume = volumeDrumAdjust(state, drum)
+  if (volume <= 0) return
+
   const info = state.player.loader.drumInfo(drum)
   if (!info) return
   const win = soundWindow()
   const preset = win[info.variable]
   if (preset) {
     const pitch = preset.zones[0].keyRangeLow
-    const volume = volumeDrumAdjust(state, drum)
     state.player.queueWaveTable(
       state.audioContext,
       state.equalizer.input,

@@ -4,10 +4,17 @@ import { barCellCount, isGroupGlue } from './cell-duration'
 
 import type { CellHit, ParsedCell } from '../types'
 
-const toHit = (sound: string): CellHit => ({
-  sound,
-  sampleId: sound === '-' ? null : symbolToSampleId(sound),
-})
+const createToHit =
+  (soundMap?: Record<string, number | null>) =>
+  (sound: string): CellHit => ({
+    sound,
+    sampleId:
+      sound === '-'
+        ? null
+        : soundMap
+          ? (soundMap[sound] ?? null)
+          : symbolToSampleId(sound),
+  })
 
 const emptyCell = (kind: ParsedCell['kind'] = 'eighth'): ParsedCell => ({
   kind,
@@ -15,7 +22,7 @@ const emptyCell = (kind: ParsedCell['kind'] = 'eighth'): ParsedCell => ({
   slotIndexes: [],
 })
 
-const placeTripletGroup = (chars: string): ParsedCell[] => {
+const placeTripletGroup = (chars: string, toHit: (sound: string) => CellHit): ParsedCell[] => {
   const notes = [...chars].map(toHit)
   while (notes.length < 3) notes.push(toHit('-'))
 
@@ -25,15 +32,15 @@ const placeTripletGroup = (chars: string): ParsedCell[] => {
   ]
 }
 
-const tripletCellsFrom = (chars: string): ParsedCell[] => {
+const tripletCellsFrom = (chars: string, toHit: (sound: string) => CellHit): ParsedCell[] => {
   const cells: ParsedCell[] = []
   for (let index = 0; index < chars.length; index += 3) {
-    cells.push(...placeTripletGroup(chars.slice(index, index + 3)))
+    cells.push(...placeTripletGroup(chars.slice(index, index + 3), toHit))
   }
   return cells
 }
 
-const sixteenthCellsFrom = (chars: string): ParsedCell[] => {
+const sixteenthCellsFrom = (chars: string, toHit: (sound: string) => CellHit): ParsedCell[] => {
   const cells: ParsedCell[] = []
   for (let index = 0; index < chars.length; index += 2) {
     const pair = [...chars.slice(index, index + 2)].map(toHit)
@@ -46,7 +53,7 @@ const sixteenthCellsFrom = (chars: string): ParsedCell[] => {
   return cells
 }
 
-const parseSegment = (bar: string): ParsedCell[] => {
+const parseSegment = (bar: string, toHit: (sound: string) => CellHit): ParsedCell[] => {
   const cells: ParsedCell[] = []
   const useSixteenthGrid = bar.includes('[')
   let index = 0
@@ -59,13 +66,13 @@ const parseSegment = (bar: string): ParsedCell[] => {
     const char = bar[index]
     if (char === '[') {
       const end = bar.indexOf(']', index)
-      cells.push(...sixteenthCellsFrom(bar.slice(index + 1, end)))
+      cells.push(...sixteenthCellsFrom(bar.slice(index + 1, end), toHit))
       index = end + 1
       continue
     }
     if (char === '{') {
       const end = bar.indexOf('}', index)
-      cells.push(...tripletCellsFrom(bar.slice(index + 1, end)))
+      cells.push(...tripletCellsFrom(bar.slice(index + 1, end), toHit))
       index = end + 1
       continue
     }
@@ -86,8 +93,13 @@ const parseSegment = (bar: string): ParsedCell[] => {
   return cells
 }
 
-export const parseBar = (bar: string, grooveLength: number): ParsedCell[] => {
-  const cells = parseSegment(bar)
+export const parseBar = (
+  bar: string,
+  grooveLength: number,
+  soundMap?: Record<string, number | null>,
+): ParsedCell[] => {
+  const toHit = createToHit(soundMap)
+  const cells = parseSegment(bar, toHit)
   const count = barCellCount(bar)
   if (count > grooveLength) {
     throw new Error(`Bar "${bar}" has ${count} cells, more than groove length ${grooveLength}`)

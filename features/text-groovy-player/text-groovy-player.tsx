@@ -84,7 +84,7 @@ export const TextGroovyPlayer = () => {
     try {
       validateBarsForGroove(bars, grooveInput.length)
       setPlayError(null)
-      play.djembe(bars, grooveInput)
+      play({ djembe: bars }, grooveInput)
     } catch (error) {
       setPlayError(error instanceof Error ? error.message : 'Could not play pattern')
     }

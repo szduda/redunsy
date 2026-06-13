@@ -2,63 +2,60 @@
 
 import { useCallback, useEffect, useState } from 'react'
 
-import { BarsCanvas } from '@/features/groovy-player/canvas/bars-canvas'
+import { BarSizeToggle } from '@/features/groovy-player/bar-size-toggle'
+import { DEMO_TRACKS } from '@/features/groovy-player/demo-tracks'
 import { MetronomeToggle } from '@/features/groovy-player/metronome-toggle'
+import { PlayerTransport } from '@/features/groovy-player/player-transport'
 import {
   DEFAULT_SWING_PATTERN,
   DEFAULT_TEMPO,
+  resolveGroovePattern,
   usePlayerStore,
 } from '@/features/groovy-player/player.store'
-import { SwingPatternInput } from '@/features/groovy-player/swing-pattern-input'
+import { SwingToggle } from '@/features/groovy-player/swing-toggle'
 import { TempoSlider } from '@/features/groovy-player/tempo-slider'
-import { Button } from '@/features/theme/button'
+import { Track } from '@/features/groovy-player/track'
 import { Text } from '@/features/theme/text'
 import { metronomeBarForGrooveLength, useMidinike, validateBarsForGroove } from '@/lib/midinike'
 
-// const DEMO_BARS = ['ttstts', 'b--b--', 'sstsst', 'b--b--', '[tt]ts[tt]ts', 'b--b--', '{tttstt}ts', 'b--b--', 's[sf-f-b-sss]', 'b--b--', 's{tts}-{stt}', 'bs-b-b']
-const DEMO_BARS = [
-  'ttsb-s',
-  'b-sb-s',
-  'ttsb-s',
-  'b-sb-s',
-  '[ss]ssstt',
-  '-ssstt',
-  'ts---[tt]',
-  '[tt]tbsb-',
-  'f-sf-s',
-  'f-sf--',
-  'f-tt-t',
-  't-tt--',
-]
+const DEMO_TRACK_BARS = Object.fromEntries(DEMO_TRACKS.map((track) => [track.id, track.bars]))
+
+const LAYER_CONFIG = {
+  instrument: 'djembe',
+  sounds: ['b', 't', 's', 'f'],
+  lengths: ['8th', '16th', '8th triplet'] as ('8th' | '16th' | '8th triplet')[],
+  grooves: [DEFAULT_SWING_PATTERN],
+}
 
 export const GroovyPlayer = () => {
-  const [bars] = useState(DEMO_BARS)
   const barsPerRow = usePlayerStore((state) => state.barsPerRow)
   const tempo = usePlayerStore((state) => state.tempo)
   const isPlaying = usePlayerStore((state) => state.isPlaying)
   const swingPattern = usePlayerStore((state) => state.swingPattern)
+  const swingEnabled = usePlayerStore((state) => state.swingEnabled)
+  const barSize = usePlayerStore((state) => state.barSize)
   const hasMetronome = usePlayerStore((state) => state.hasMetronome)
   const setIsPlaying = usePlayerStore((state) => state.setIsPlaying)
   const setBeatIndex = usePlayerStore((state) => state.setBeatIndex)
   const [playError, setPlayError] = useState<string | null>(null)
 
+  const groovePattern = resolveGroovePattern(swingPattern, barSize, swingEnabled)
+
   const getOverlayBars = useCallback(
-    (patternBars: string[], groove: string) => {
+    (patternBars: string[], _groove: string) => {
       if (!hasMetronome) return null
-      const metronomeBar = metronomeBarForGrooveLength(groove.length)
+      const metronomeBar = metronomeBarForGrooveLength(barSize)
       return patternBars.map(() => metronomeBar)
     },
-    [hasMetronome],
+    [barSize, hasMetronome],
   )
 
-  const { play, pause, stop, setGroove, setTempo, playing, activeBarIndex, beatIndex } =
+  const { play, pause, stop, setGroove, setTempo, setInstrumentVolume, playing, activeBarIndex, beatIndex } =
     useMidinike({
-      djembe: {
-        instrument: 'djembe',
-        sounds: ['b', 't', 's', 'f'],
-        lengths: ['8th', '16th', '8th triplet'],
-        grooves: [DEFAULT_SWING_PATTERN],
-      },
+      djembe: LAYER_CONFIG,
+      dundunba: { ...LAYER_CONFIG, instrument: 'dundunba', sounds: ['o', 'x'], lengths: ['8th'] },
+      sangban: { ...LAYER_CONFIG, instrument: 'sangban', sounds: ['o', 'x'], lengths: ['8th'] },
+      kenkeni: { ...LAYER_CONFIG, instrument: 'kenkeni', sounds: ['o', 'x'], lengths: ['8th'] },
       shaker: {
         instrument: 'shaker',
         sounds: ['x'],
@@ -76,8 +73,8 @@ export const GroovyPlayer = () => {
   }, [beatIndex, playing, setBeatIndex, setIsPlaying])
 
   useEffect(() => {
-    if (swingPattern) setGroove(swingPattern)
-  }, [setGroove, swingPattern])
+    setGroove(groovePattern)
+  }, [groovePattern, setGroove])
 
   useEffect(() => {
     setTempo(tempo)
@@ -89,36 +86,46 @@ export const GroovyPlayer = () => {
       return
     }
     try {
-      validateBarsForGroove(bars, swingPattern.length)
+      DEMO_TRACKS.forEach((track) => validateBarsForGroove(track.bars, barSize))
       setPlayError(null)
-      play.djembe(bars, swingPattern)
+      play(DEMO_TRACK_BARS, groovePattern)
     } catch (error) {
       setPlayError(error instanceof Error ? error.message : 'Could not play pattern')
     }
   }
 
+  const trackActiveIndex = isPlaying ? activeBarIndex : -1
+
+  const onVolumeLevelChange = useCallback(
+    (instrument: string, level: number) => setInstrumentVolume(instrument, level),
+    [setInstrumentVolume],
+  )
+
   return (
-    <section className="flex w-full max-w-3xl flex-col gap-4">
-      <BarsCanvas
-        activeIndex={isPlaying ? activeBarIndex : -1}
-        bars={bars}
-        barsPerRow={barsPerRow}
-        id="groovy-player"
-        instrument="djembe"
-      />
+    <section className="flex w-full max-w-4xl flex-col gap-4 bg-zinc-900/60 rounded-xl p-4">
+      <div className="flex flex-col">
+        {DEMO_TRACKS.map((track) => (
+          <Track
+            activeIndex={trackActiveIndex}
+            bars={track.bars}
+            barsPerRow={barsPerRow}
+            id={track.id}
+            instrument={track.instrument}
+            key={track.id}
+            name={track.name}
+            onVolumeLevelChange={onVolumeLevelChange}
+          />
+        ))}
+      </div>
 
       {playError ? <Text variant="mono">{playError}</Text> : null}
 
-      <div className="flex gap-2 justify-between">
-        <div className="flex gap-2">
-          <Button onClick={onTogglePlayPause} variant="primary">
-            {isPlaying ? 'Pause' : 'Play'}
-          </Button>
-          <Button onClick={stop}>Stop</Button>
-        </div>
+      <div className="flex flex-wrap items-end justify-between gap-4">
+        <PlayerTransport isPlaying={isPlaying} onPlayPause={onTogglePlayPause} onStop={stop} />
 
-        <div className="flex gap-4">
-          <SwingPatternInput />
+        <div className="flex flex-wrap items-end gap-4">
+          <BarSizeToggle />
+          <SwingToggle />
           <TempoSlider />
           <MetronomeToggle />
         </div>

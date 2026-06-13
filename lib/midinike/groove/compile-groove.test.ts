@@ -4,6 +4,7 @@ import { TICKS_PER_EIGHTH } from '../notation/cell-duration'
 import { barCellCount } from '../notation/cell-duration'
 import { validateBarForGroove } from '../notation/fit-bar'
 
+import { compileGroove } from './compile-groove'
 import {
   barLocalHits,
   barSlotCount,
@@ -12,6 +13,8 @@ import {
   evenSpacing,
 } from './compile-groove.test-helpers'
 import { grooveOffset } from './groove-symbols'
+
+import type { BeatMatrix } from '../types'
 
 const GROOVE_8 = '--------'
 const GROOVE_6 = '------'
@@ -260,6 +263,35 @@ describe('compileGroove — groove modifier strength and direction', () => {
     const swung = compileResult(['ttstts'], '-<--<-')
     expect(swung.beats.length).toBe(straight.beats.length)
     expect(swung.preGrooveSlots).toBe(straight.preGrooveSlots)
+  })
+})
+
+describe('compileGroove — instrument sound maps', () => {
+  it('resolves o and x to instrument-specific sample ids', () => {
+    const bar = 'oxox----'
+    const groove = '--------'
+    const sampleIds = (beats: BeatMatrix) => beats.flatMap((slot) => slot[0])
+
+    const sangban = compileGroove({
+      bars: [bar],
+      groove,
+      soundMap: { o: 3310, x: 3311 },
+    })
+    const dundunba = compileGroove({
+      bars: [bar],
+      groove,
+      soundMap: { o: 3312, x: 3313 },
+    })
+    const kenkeni = compileGroove({
+      bars: [bar],
+      groove,
+      soundMap: { o: 3314, x: 3315 },
+    })
+
+    expect(sampleIds(sangban.beats)).toEqual(expect.arrayContaining([3310, 3311]))
+    expect(sampleIds(dundunba.beats)).toEqual(expect.arrayContaining([3312, 3313]))
+    expect(sampleIds(kenkeni.beats)).toEqual(expect.arrayContaining([3314, 3315]))
+    expect(sampleIds(sangban.beats)).not.toEqual(expect.arrayContaining([3312, 3313]))
   })
 })
 

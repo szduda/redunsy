@@ -12,4 +12,5 @@ export type {
   CompileGrooveResult,
   LayerConfig,
   MidinikeOptions,
+  PlayTracks,
 } from './types'

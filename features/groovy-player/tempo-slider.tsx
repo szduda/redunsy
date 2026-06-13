@@ -17,8 +17,8 @@ export const TempoSlider = () => {
     setTempo(Number(target.value))
 
   return (
-    <div className="flex flex-col gap-1">
-      <Text variant="mono">Tempo: {tempo} BPM</Text>
+    <div className="flex flex-col gap-1 items-end">
+      <Text variant="mono" className="font-bold">{tempo} BPM</Text>
       <input
         aria-label="Tempo"
         className="h-2 cursor-pointer appearance-none rounded-full bg-zinc-200 accent-zinc-900 dark:bg-zinc-800 dark:accent-zinc-100"
@@ -29,7 +29,7 @@ export const TempoSlider = () => {
         type="range"
         value={tempo}
       />
-      <div className="flex justify-between font-mono text-xs text-zinc-500">
+      <div className="flex w-full justify-between font-mono text-xs text-zinc-500">
         <span>{MIN_TEMPO}</span>
         <span>{MAX_TEMPO}</span>
       </div>

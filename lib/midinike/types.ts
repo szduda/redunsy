@@ -22,6 +22,8 @@ export type LayerConfig = {
   grooves?: string[]
 }
 
+export type PlayTracks = Record<string, string[]>
+
 type OverlayBarsFn = (bars: string[], groove: string) => string[] | null
 
 export type MidinikeOptions = {
