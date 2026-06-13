@@ -1,35 +1,31 @@
 'use client'
 
-import { Button } from '@/features/theme/button'
+import { ColumnsIcon } from '@/features/icons/columns-icon'
+import { cn } from '@/features/theme/cn'
+import { usePlayerStore } from '@/features/groovy-player/player.store'
 
-export const ZOOM_STEPS = [1, 2, 3, 4, 6, 8] as const
+const navItemClass =
+  'flex flex-col items-center gap-1 px-4 py-2 text-zinc-600 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100'
 
-export type ZoomBarsPerRow = (typeof ZOOM_STEPS)[number]
+export const ZoomToggle = () => {
+  const barsPerRow = usePlayerStore((state) => state.barsPerRow)
+  const nextZoom = usePlayerStore((state) => state.nextZoom)
+  const prevZoom = usePlayerStore((state) => state.prevZoom)
 
-type ZoomToggleProps = {
-  value: ZoomBarsPerRow
-  onChange: (value: ZoomBarsPerRow) => void
+  return (
+    <button
+      className={cn(navItemClass, 'cursor-pointer')}
+      onClick={() => nextZoom()}
+      onContextMenu={(event) => {
+        event.preventDefault()
+        prevZoom()
+      }}
+      type="button"
+    >
+      <ColumnsIcon />
+      <span className="text-[10px] font-medium uppercase tracking-wide">
+        {barsPerRow} col{barsPerRow === 1 ? '' : 's'}
+      </span>
+    </button>
+  )
 }
-
-const nextZoom = (current: ZoomBarsPerRow) => {
-  const index = ZOOM_STEPS.indexOf(current)
-  return ZOOM_STEPS[(index + 1) % ZOOM_STEPS.length]
-}
-
-const prevZoom = (current: ZoomBarsPerRow) => {
-  const index = ZOOM_STEPS.indexOf(current)
-  return ZOOM_STEPS[(index - 1 + ZOOM_STEPS.length) % ZOOM_STEPS.length]
-}
-
-export const ZoomToggle = ({ value, onChange }: ZoomToggleProps) => (
-  <Button
-    onClick={() => onChange(nextZoom(value))}
-    onContextMenu={(event) => {
-      event.preventDefault()
-      onChange(prevZoom(value))
-    }}
-    variant="secondary"
-  >
-    {value} col{value === 1 ? '' : 's'}
-  </Button>
-)

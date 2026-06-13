@@ -55,4 +55,10 @@ describe('parseBarLayout', () => {
       { note: 't', position: 4 + 4 / 3, kind: 'triplet' },
     ])
   })
+
+  it('counts rests before a 16th group without treating the last hyphen as glue', () => {
+    const layout = parseBarLayout('ts---[tt]')
+    expect(layout.cellCount).toBe(6)
+    expect(layout.glyphs.map((g) => g.position)).toEqual([0, 1, 2, 3, 4, 5, 5.5])
+  })
 })

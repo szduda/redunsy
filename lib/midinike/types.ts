@@ -22,10 +22,15 @@ export type LayerConfig = {
   grooves?: string[]
 }
 
+type OverlayBarsFn = (bars: string[], groove: string) => string[] | null
+
 export type MidinikeOptions = {
   loop?: boolean
   tempo?: number
-} & Record<string, LayerConfig | boolean | number | undefined>
+  getOverlayBars?: OverlayBarsFn
+} & {
+  [key: string]: LayerConfig | boolean | number | OverlayBarsFn | undefined
+}
 
 export type MidiPlayer = {
   startPlayLoop: (

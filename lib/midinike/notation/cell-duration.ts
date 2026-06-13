@@ -17,7 +17,7 @@ export const isGroupGlue = (bar: string, index: number) => {
   const next = bar[index + 1]
   const prev = bar[index - 1]
   if (bar[index] !== '-' || (next !== '[' && next !== '{')) return false
-  if (prev === '}') return false
+  if (!prev || prev === '-' || prev === '}' || prev === ']') return false
   return true
 }
 

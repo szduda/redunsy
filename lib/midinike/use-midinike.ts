@@ -5,6 +5,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { DRUMS } from './audio/drums-config'
 import { useMidiSounds } from './audio/provider'
 import { compileGroove } from './groove/compile-groove'
+import { mergeBeatMatrices } from './groove/merge-beat-matrices'
 import { calcPlaybackTempo } from './groove/playback-tempo'
 import { swingModifierFromGroove } from './groove/groove-symbols'
 import { validateBarsForGroove } from './notation/fit-bar'
@@ -33,7 +34,7 @@ type LayerPlayer = {
 
 export const useMidinike = (options: MidinikeOptions) => {
   const midiSounds = useMidiSounds()
-  const { loop = true, tempo: initialTempo = 110, ...rest } = options
+  const { loop = true, tempo: initialTempo = 110, getOverlayBars, ...rest } = options
 
   const layerEntries = useMemo(
     () =>
@@ -120,14 +121,25 @@ export const useMidinike = (options: MidinikeOptions) => {
     startLoopRef.current = startLoop
   }, [startLoop])
 
+  const buildBeats = useCallback(
+    (bars: string[], groovePattern: string) => {
+      const compiled = compileGroove({ bars, groove: groovePattern })
+      const overlayBars = getOverlayBars?.(bars, groovePattern)
+      if (!overlayBars?.length) return compiled
+      const overlay = compileGroove({ bars: overlayBars, groove: groovePattern })
+      return { ...compiled, beats: mergeBeatMatrices(compiled.beats, overlay.beats) }
+    },
+    [getOverlayBars],
+  )
+
   const compileBars = useCallback(
     (bars: string[], groovePattern = groove) => {
-      const compiled = compileGroove({ bars, groove: groovePattern })
+      const compiled = buildBeats(bars, groovePattern)
       compileRef.current = compiled
       beatsRef.current = compiled.beats
       return compiled
     },
-    [groove],
+    [buildBeats, groove],
   )
 
   const playLayer = useCallback(
@@ -187,11 +199,11 @@ export const useMidinike = (options: MidinikeOptions) => {
       }
       return
     }
-    const compiled = compileGroove({ bars, groove })
+    const compiled = buildBeats(bars, groove)
     compileRef.current = compiled
     beatsRef.current = compiled.beats
     if (playingRef.current) startLoopRef.current(noteIndexRef.current)
-  }, [groove])
+  }, [buildBeats, groove, midiSounds])
 
   useEffect(() => {
     if (!playingRef.current) return

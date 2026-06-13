@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 
+import { AppLayout } from '@/features/layout/app-layout'
 import { Providers } from '@/features/shared/providers'
 
 import './globals.css'
@@ -27,7 +28,9 @@ const RootLayout = ({
 }>) => (
   <html lang="en" className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}>
     <body className="flex min-h-full flex-col">
-      <Providers>{children}</Providers>
+      <Providers>
+        <AppLayout>{children}</AppLayout>
+      </Providers>
     </body>
   </html>
 )
