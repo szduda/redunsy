@@ -1,30 +1,19 @@
-import { useEffect, useState } from 'react'
+import { useLayoutEffect, useState, type RefObject } from 'react'
 
-type Props = {
-  canvasId: string
-  defaultWidth?: number
-}
+export const useCanvasWidth = (containerRef: RefObject<HTMLElement | null>) => {
+  const [width, setWidth] = useState(0)
 
-export const useCanvasWidth = ({ canvasId, defaultWidth = 280 }: Props) => {
-  const [canvasWidth, setCanvasWidth] = useState(defaultWidth)
+  useLayoutEffect(() => {
+    const element = containerRef.current
+    if (!element) return
 
-  useEffect(() => {
-    const handler = () => {
-      const canvas = document.getElementById(canvasId)
-      if (!canvas) return
-      setCanvasWidth(canvas.parentElement?.clientWidth ?? defaultWidth)
-    }
+    const measure = () => setWidth(element.clientWidth)
+    measure()
 
-    handler()
-    const timeout = { id: 0 }
-    const debouncedHandler = () => {
-      window.clearTimeout(timeout.id)
-      timeout.id = window.setTimeout(handler, 500)
-    }
+    const observer = new ResizeObserver(measure)
+    observer.observe(element)
+    return () => observer.disconnect()
+  }, [containerRef])
 
-    window.addEventListener('resize', debouncedHandler)
-    return () => window.removeEventListener('resize', debouncedHandler)
-  }, [canvasId, defaultWidth])
-
-  return canvasWidth
+  return width
 }

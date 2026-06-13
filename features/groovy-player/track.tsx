@@ -32,7 +32,7 @@ export const Track = ({
   onVolumeLevelChange,
 }: TrackProps) => {
   const [collapsed, setCollapsed] = useState(false)
-  const [volume, setVolume] = useState(100)
+  const [volume, setVolume] = useState(50)
   const [muted, setMuted] = useState(false)
 
   useEffect(() => {

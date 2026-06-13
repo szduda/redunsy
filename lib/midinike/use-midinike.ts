@@ -251,7 +251,6 @@ export const useMidinike = (options: MidinikeOptions) => {
     setPlaying(false)
     setPaused(true)
     playingRef.current = false
-    setBeatIndex(-1)
   }, [midiSounds])
 
   const stop = useCallback(() => {
@@ -264,6 +263,32 @@ export const useMidinike = (options: MidinikeOptions) => {
     playingRef.current = false
     setBeatIndex(-1)
   }, [midiSounds])
+
+  const restart = useCallback(() => {
+    noteIndexRef.current = 0
+    pausedAtRef.current = 0
+    setPaused(false)
+    const tracks = lastTracksRef.current
+    if (Object.keys(tracks).length) {
+      const result = buildMergedBeats(tracks, groove)
+      if (!result) return null
+      lastBarsRef.current = result.primaryBars
+      compileRef.current = result.compiled
+      beatsRef.current = result.compiled.beats
+      startLoop(0)
+      return result.compiled
+    }
+    const bars = lastBarsRef.current
+    if (!bars.length) return null
+    const soundMap = lastInstrumentRef.current
+      ? soundMapForInstrument(lastInstrumentRef.current)
+      : undefined
+    const compiled = buildBeats(bars, groove, soundMap)
+    compileRef.current = compiled
+    beatsRef.current = compiled.beats
+    startLoop(0)
+    return compiled
+  }, [buildBeats, buildMergedBeats, groove, startLoop])
 
   const goTo = useCallback(
     (barIndex: number) => {
@@ -342,6 +367,7 @@ export const useMidinike = (options: MidinikeOptions) => {
     play,
     pause,
     stop,
+    restart,
     goTo,
     setGroove,
     setTempo,

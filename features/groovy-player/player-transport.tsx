@@ -1,5 +1,6 @@
 'use client'
 
+import { PauseIcon } from '@/features/icons/pause-icon'
 import { PlayIcon } from '@/features/icons/play-icon'
 import { RestartIcon } from '@/features/icons/restart-icon'
 import { StopIcon } from '@/features/icons/stop-icon'
@@ -9,9 +10,15 @@ type PlayerTransportProps = {
   isPlaying: boolean
   onPlayPause: () => void
   onStop: () => void
+  onRestart: () => void
 }
 
-export const PlayerTransport = ({ isPlaying, onPlayPause, onStop }: PlayerTransportProps) => (
+export const PlayerTransport = ({
+  isPlaying,
+  onPlayPause,
+  onStop,
+  onRestart,
+}: PlayerTransportProps) => (
   <div className="flex gap-1">
     <IconButton
       active
@@ -21,7 +28,7 @@ export const PlayerTransport = ({ isPlaying, onPlayPause, onStop }: PlayerTransp
       ninja={false}
       onClick={onPlayPause}
     >
-      {isPlaying ? <RestartIcon className="mx-auto" /> : <PlayIcon className="mx-auto" />}
+      {isPlaying ? <PauseIcon className="mx-auto" /> : <PlayIcon className="mx-auto" />}
     </IconButton>
     <IconButton
       active
@@ -32,6 +39,16 @@ export const PlayerTransport = ({ isPlaying, onPlayPause, onStop }: PlayerTransp
       onClick={onStop}
     >
       <StopIcon className="mx-auto" />
+    </IconButton>
+    <IconButton
+      active
+      aria-label="Restart playback"
+      className="text-yellowy"
+      dark
+      ninja={false}
+      onClick={onRestart}
+    >
+      <RestartIcon className="mx-auto" />
     </IconButton>
   </div>
 )

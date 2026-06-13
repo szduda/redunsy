@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useState } from 'react'
 
 import { BarSizeToggle } from '@/features/groovy-player/bar-size-toggle'
 import { DEMO_TRACKS } from '@/features/groovy-player/demo-tracks'
@@ -18,8 +18,6 @@ import { Track } from '@/features/groovy-player/track'
 import { Text } from '@/features/theme/text'
 import { metronomeBarForGrooveLength, useMidinike, validateBarsForGroove } from '@/lib/midinike'
 
-const DEMO_TRACK_BARS = Object.fromEntries(DEMO_TRACKS.map((track) => [track.id, track.bars]))
-
 const LAYER_CONFIG = {
   instrument: 'djembe',
   sounds: ['b', 't', 's', 'f'],
@@ -34,10 +32,18 @@ export const GroovyPlayer = () => {
   const swingPattern = usePlayerStore((state) => state.swingPattern)
   const swingEnabled = usePlayerStore((state) => state.swingEnabled)
   const barSize = usePlayerStore((state) => state.barSize)
+  const trackBars = usePlayerStore((state) => state.trackBars)
+  const initTrackBars = usePlayerStore((state) => state.initTrackBars)
+  const syncBarSizeFromTracks = usePlayerStore((state) => state.syncBarSizeFromTracks)
   const hasMetronome = usePlayerStore((state) => state.hasMetronome)
   const setIsPlaying = usePlayerStore((state) => state.setIsPlaying)
   const setBeatIndex = usePlayerStore((state) => state.setBeatIndex)
   const [playError, setPlayError] = useState<string | null>(null)
+
+  useLayoutEffect(() => {
+    initTrackBars(DEMO_TRACKS)
+    syncBarSizeFromTracks()
+  }, [initTrackBars, syncBarSizeFromTracks])
 
   const groovePattern = resolveGroovePattern(swingPattern, barSize, swingEnabled)
 
@@ -50,7 +56,7 @@ export const GroovyPlayer = () => {
     [barSize, hasMetronome],
   )
 
-  const { play, pause, stop, setGroove, setTempo, setInstrumentVolume, playing, activeBarIndex, beatIndex } =
+  const { play, pause, stop, restart, setGroove, setTempo, setInstrumentVolume, playing, activeBarIndex, beatIndex } =
     useMidinike({
       djembe: LAYER_CONFIG,
       dundunba: { ...LAYER_CONFIG, instrument: 'dundunba', sounds: ['o', 'x'], lengths: ['8th'] },
@@ -80,21 +86,39 @@ export const GroovyPlayer = () => {
     setTempo(tempo)
   }, [setTempo, tempo])
 
+  const validateTrackBars = () => {
+    DEMO_TRACKS.forEach((track) => {
+      const bars = trackBars[track.id]
+      if (!bars?.length) return
+      validateBarsForGroove(bars, barSize)
+    })
+  }
+
   const onTogglePlayPause = () => {
     if (isPlaying) {
       pause()
       return
     }
     try {
-      DEMO_TRACKS.forEach((track) => validateBarsForGroove(track.bars, barSize))
+      validateTrackBars()
       setPlayError(null)
-      play(DEMO_TRACK_BARS, groovePattern)
+      play(trackBars, groovePattern)
     } catch (error) {
       setPlayError(error instanceof Error ? error.message : 'Could not play pattern')
     }
   }
 
-  const trackActiveIndex = isPlaying ? activeBarIndex : -1
+  const onRestart = () => {
+    try {
+      validateTrackBars()
+      setPlayError(null)
+      restart() ?? play(trackBars, groovePattern)
+    } catch (error) {
+      setPlayError(error instanceof Error ? error.message : 'Could not restart pattern')
+    }
+  }
+
+  const trackActiveIndex = activeBarIndex
 
   const onVolumeLevelChange = useCallback(
     (instrument: string, level: number) => setInstrumentVolume(instrument, level),
@@ -107,7 +131,7 @@ export const GroovyPlayer = () => {
         {DEMO_TRACKS.map((track) => (
           <Track
             activeIndex={trackActiveIndex}
-            bars={track.bars}
+            bars={trackBars[track.id] ?? track.bars}
             barsPerRow={barsPerRow}
             id={track.id}
             instrument={track.instrument}
@@ -121,7 +145,12 @@ export const GroovyPlayer = () => {
       {playError ? <Text variant="mono">{playError}</Text> : null}
 
       <div className="flex flex-wrap items-end justify-between gap-4">
-        <PlayerTransport isPlaying={isPlaying} onPlayPause={onTogglePlayPause} onStop={stop} />
+        <PlayerTransport
+          isPlaying={isPlaying}
+          onPlayPause={onTogglePlayPause}
+          onRestart={onRestart}
+          onStop={stop}
+        />
 
         <div className="flex flex-wrap items-end gap-4">
           <BarSizeToggle />

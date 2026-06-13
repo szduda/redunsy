@@ -1,10 +1,11 @@
 'use client'
 
-import { memo, useEffect } from 'react'
+import { memo, useLayoutEffect, useRef } from 'react'
 
 import { findPatternLength } from './find-pattern-length'
 import { BAR_GAP_PX, BAR_HEIGHT_LARGE_PX, BAR_HEIGHT_PX, colors, renderBar } from './renderers'
 import { useCanvasWidth } from './use-canvas-width'
+import { cn } from '@/features/theme/cn'
 
 type BarsCanvasProps = {
   id: string
@@ -16,14 +17,17 @@ type BarsCanvasProps = {
 
 const Bars = ({ bars, activeIndex = -1, barsPerRow, instrument, id }: BarsCanvasProps) => {
   const canvasId = `${instrument}-canvas-${id}`
-  const canvasWidth = useCanvasWidth({ canvasId })
+  const containerRef = useRef<HTMLDivElement>(null)
+  const canvasWidth = useCanvasWidth(containerRef)
   const barsInPattern = Math.max(findPatternLength(bars, 8), barsPerRow)
   const barHeight = barsPerRow <= 2 ? BAR_HEIGHT_LARGE_PX : BAR_HEIGHT_PX
   const hash = bars.join('')
+  const canvasHeight =
+    (barHeight + 2 * BAR_GAP_PX) * Math.ceil(barsInPattern / barsPerRow) - 2 * BAR_GAP_PX
 
   const renderAll = () => {
     const canvas = document.getElementById(canvasId) as HTMLCanvasElement | null
-    if (!canvas) return
+    if (!canvas || canvasWidth <= 0) return
     const context = canvas.getContext('2d')
     if (!context) return
 
@@ -43,19 +47,13 @@ const Bars = ({ bars, activeIndex = -1, barsPerRow, instrument, id }: BarsCanvas
     )
   }
 
-  useEffect(renderAll, [
-    hash,
-    canvasId,
-    canvasWidth,
-    barsPerRow,
-    barHeight,
-    instrument,
-    bars.length,
-  ])
+  useLayoutEffect(() => {
+    renderAll()
+  }, [hash, canvasId, canvasWidth, barsPerRow, barHeight, instrument, bars.length])
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     const canvas = document.getElementById(canvasId) as HTMLCanvasElement | null
-    if (!canvas) return
+    if (!canvas || canvasWidth <= 0) return
     const context = canvas.getContext('2d')
     if (!context) return
 
@@ -74,15 +72,17 @@ const Bars = ({ bars, activeIndex = -1, barsPerRow, instrument, id }: BarsCanvas
     if (previousIndex <= bars.length - 1) {
       renderBar({ ...mutual, barIndex: previousIndex })
     }
-  }, [instrument, barsInPattern > 1 ? activeIndex % barsInPattern : -1, barsPerRow, hash])
+  }, [instrument, barsInPattern > 1 ? activeIndex % barsInPattern : -1, barsPerRow, hash, canvasWidth])
 
   return (
-    <canvas
-      id={canvasId}
-      height={(barHeight + 2 * BAR_GAP_PX) * Math.ceil(barsInPattern / barsPerRow) - 2 * BAR_GAP_PX}
-      width={canvasWidth}
-      className="h-auto bg-zinc-950"
-    />
+    <div ref={containerRef} className="w-full min-w-0">
+      <canvas
+        id={canvasId}
+        height={canvasHeight}
+        width={canvasWidth || 1}
+        className={cn('h-auto w-full bg-zinc-950', canvasWidth <= 0 && 'invisible')}
+      />
+    </div>
   )
 }
 
