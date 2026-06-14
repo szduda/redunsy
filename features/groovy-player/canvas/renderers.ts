@@ -3,7 +3,7 @@ import { onBeatCellIndexes, parseBarLayout } from './bar-layout'
 
 import type { CanvasElement } from './types'
 
-export const BAR_GAP_PX = 5
+export const BAR_GAP_PX = 1
 export const BAR_HEIGHT_PX = 32
 export const BAR_HEIGHT_LARGE_PX = 48
 

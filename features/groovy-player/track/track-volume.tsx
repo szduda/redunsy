@@ -13,6 +13,7 @@ type TrackVolumeProps = {
   onVolumeChange: (volume: number) => void
   onToggleMute: () => void
   compact?: boolean
+  className?: string
 }
 
 export const TrackVolume = ({
@@ -21,12 +22,13 @@ export const TrackVolume = ({
   onVolumeChange,
   onToggleMute,
   compact = false,
+  className,
 }: TrackVolumeProps) => {
   const onChange = ({ target }: ChangeEvent<HTMLInputElement>) =>
     onVolumeChange(Number(target.value))
 
   return (
-    <div className={cn('flex items-center gap-2', compact && 'shrink-0')}>
+    <div className={cn('flex items-center gap-2', compact && 'shrink-0', className)}>
       <IconButton
         active={!muted}
         aria-label={muted ? 'Unmute track' : 'Mute track'}

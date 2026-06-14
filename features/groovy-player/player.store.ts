@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+import { createJSONStorage, persist } from 'zustand/middleware'
 
 import { detectBarSizeFromBars, reflowBarsToSize } from '@/lib/midinike/notation/reflow-bars'
 
@@ -61,59 +62,111 @@ type PlayerState = {
   toggleBarSize: () => void
   trackBars: Record<string, string[]>
   initTrackBars: (tracks: { id: string; bars: string[] }[]) => void
-  syncBarSizeFromTracks: () => void
   hasMetronome: boolean
   toggleHasMetronome: () => void
 }
 
-export const usePlayerStore = create<PlayerState>((set, get) => ({
-  barsPerRow: 4,
-  nextZoom: () => set({ barsPerRow: stepZoomForward(get().barsPerRow) }),
-  prevZoom: () => set({ barsPerRow: stepZoomBackward(get().barsPerRow) }),
-  tempo: DEFAULT_TEMPO,
-  setTempo: (tempo) => set({ tempo }),
-  isPlaying: false,
-  setIsPlaying: (isPlaying) => set({ isPlaying }),
-  beatIndex: -1,
-  setBeatIndex: (beatIndex) => set({ beatIndex }),
-  swingPattern: DEFAULT_SWING_PATTERN,
-  setSwingPattern: (swingPattern) => set({ swingPattern: swingPattern.slice(0, get().barSize) }),
-  swingEnabled: true,
-  toggleSwingEnabled: () => {
-    const state = get()
-    if (isSwingPatternIncorrect(state.swingPattern, state.barSize)) return
-    set({ swingEnabled: !state.swingEnabled })
-  },
-  barSize: DEFAULT_BAR_SIZE,
-  trackBars: {},
-  initTrackBars: (tracks) =>
-    set({ trackBars: Object.fromEntries(tracks.map((track) => [track.id, track.bars])) }),
-  syncBarSizeFromTracks: () => {
-    const state = get()
-    const { trackBars } = state
-    if (!Object.keys(trackBars).length) return
-    const barSize = detectBarSizeFromBars(Object.values(trackBars))
-    const swingIncorrect = isSwingPatternIncorrect(state.swingPattern, barSize)
-    set({
-      barSize,
-      swingEnabled: swingIncorrect ? false : state.swingEnabled,
-    })
-  },
-  toggleBarSize: () => {
-    const state = get()
-    const barSize = state.barSize === 8 ? 6 : 8
-    const swingIncorrect = isSwingPatternIncorrect(state.swingPattern, barSize)
-    set({
-      barSize,
-      trackBars: Object.fromEntries(
-        Object.entries(state.trackBars).map(([id, bars]) => [
-          id,
-          reflowBarsToSize(bars, barSize),
-        ]),
-      ),
-      swingEnabled: swingIncorrect ? false : state.swingEnabled,
-    })
-  },
-  hasMetronome: false,
-  toggleHasMetronome: () => set({ hasMetronome: !get().hasMetronome }),
-}))
+type PersistedPlayerState = Pick<
+  PlayerState,
+  | 'barsPerRow'
+  | 'tempo'
+  | 'swingPattern'
+  | 'swingEnabled'
+  | 'barSize'
+  | 'trackBars'
+  | 'hasMetronome'
+>
+
+const isBarSize = (value: unknown): value is BarSize => value === 6 || value === 8
+
+const isZoomBarsPerRow = (value: unknown): value is ZoomBarsPerRow =>
+  typeof value === 'number' && (ZOOM_STEPS as readonly number[]).includes(value)
+
+const seedTrackBars = (tracks: { id: string; bars: string[] }[]) =>
+  Object.fromEntries(tracks.map((track) => [track.id, track.bars]))
+
+export const usePlayerStore = create<PlayerState>()(
+  persist(
+    (set, get) => ({
+      barsPerRow: 4,
+      nextZoom: () => set({ barsPerRow: stepZoomForward(get().barsPerRow) }),
+      prevZoom: () => set({ barsPerRow: stepZoomBackward(get().barsPerRow) }),
+      tempo: DEFAULT_TEMPO,
+      setTempo: (tempo) => set({ tempo }),
+      isPlaying: false,
+      setIsPlaying: (isPlaying) => set({ isPlaying }),
+      beatIndex: -1,
+      setBeatIndex: (beatIndex) => set({ beatIndex }),
+      swingPattern: DEFAULT_SWING_PATTERN,
+      setSwingPattern: (swingPattern) =>
+        set({ swingPattern: swingPattern.slice(0, get().barSize) }),
+      swingEnabled: true,
+      toggleSwingEnabled: () => {
+        const state = get()
+        if (isSwingPatternIncorrect(state.swingPattern, state.barSize)) return
+        set({ swingEnabled: !state.swingEnabled })
+      },
+      barSize: DEFAULT_BAR_SIZE,
+      trackBars: {},
+      initTrackBars: (tracks) => {
+        const { trackBars } = get()
+        if (Object.keys(trackBars).length) return
+
+        const seeded = seedTrackBars(tracks)
+        const barSize = detectBarSizeFromBars(Object.values(seeded))
+        const swingIncorrect = isSwingPatternIncorrect(get().swingPattern, barSize)
+        set({
+          trackBars: seeded,
+          barSize,
+          swingEnabled: swingIncorrect ? false : get().swingEnabled,
+        })
+      },
+      toggleBarSize: () => {
+        const state = get()
+        const barSize = state.barSize === 8 ? 6 : 8
+        const swingIncorrect = isSwingPatternIncorrect(state.swingPattern, barSize)
+        set({
+          barSize,
+          trackBars: Object.fromEntries(
+            Object.entries(state.trackBars).map(([id, bars]) => [
+              id,
+              reflowBarsToSize(bars, barSize),
+            ]),
+          ),
+          swingEnabled: swingIncorrect ? false : state.swingEnabled,
+        })
+      },
+      hasMetronome: false,
+      toggleHasMetronome: () => set({ hasMetronome: !get().hasMetronome }),
+    }),
+    {
+      name: 'redunsy-player',
+      storage: createJSONStorage(() => localStorage),
+      partialize: (state): PersistedPlayerState => ({
+        barsPerRow: state.barsPerRow,
+        tempo: state.tempo,
+        swingPattern: state.swingPattern,
+        swingEnabled: state.swingEnabled,
+        barSize: state.barSize,
+        trackBars: state.trackBars,
+        hasMetronome: state.hasMetronome,
+      }),
+      merge: (persisted, current) => {
+        const saved = persisted as Partial<PersistedPlayerState>
+        return {
+          ...current,
+          ...saved,
+          barsPerRow: isZoomBarsPerRow(saved.barsPerRow) ? saved.barsPerRow : current.barsPerRow,
+          barSize: isBarSize(saved.barSize) ? saved.barSize : current.barSize,
+          tempo: typeof saved.tempo === 'number' ? saved.tempo : current.tempo,
+          swingPattern:
+            typeof saved.swingPattern === 'string' ? saved.swingPattern : current.swingPattern,
+          trackBars:
+            saved.trackBars && typeof saved.trackBars === 'object'
+              ? saved.trackBars
+              : current.trackBars,
+        }
+      },
+    },
+  ),
+)

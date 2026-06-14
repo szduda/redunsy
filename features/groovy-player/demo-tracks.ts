@@ -25,6 +25,8 @@ export const DEMO_TRACKS: DemoTrack[] = [
       '-ssstt',
       'ts---[tt]',
       '[tt]tbsb-',
+      'ss{ttsstt}',
+      'sst---',
       'f-sf-s',
       'f-sf--',
       'f-tt-t',
@@ -51,7 +53,7 @@ export const DEMO_TRACKS: DemoTrack[] = [
   },
 ]
 
-export const previewWindowStart = (activeIndex: number, barCount: number) => {
-  if (barCount <= 4 || activeIndex < 0) return 0
-  return Math.min(Math.floor(activeIndex / 4) * 4, barCount - 4)
+export const previewWindowStart = (activeIndex: number, barCount: number, collapsedBarsPerRow: number = 2) => {
+  if (barCount <= collapsedBarsPerRow || activeIndex < 0) return 0
+  return Math.min(Math.floor(activeIndex / collapsedBarsPerRow) * collapsedBarsPerRow, barCount - collapsedBarsPerRow)
 }

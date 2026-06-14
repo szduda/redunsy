@@ -14,7 +14,7 @@ import {
 } from '@/features/groovy-player/player.store'
 import { SwingToggle } from '@/features/groovy-player/swing-toggle'
 import { TempoSlider } from '@/features/groovy-player/tempo-slider'
-import { Track } from '@/features/groovy-player/track'
+import { Track } from '@/features/groovy-player/track/track'
 import { Text } from '@/features/theme/text'
 import { metronomeBarForGrooveLength, useMidinike, validateBarsForGroove } from '@/lib/midinike'
 
@@ -34,7 +34,6 @@ export const GroovyPlayer = () => {
   const barSize = usePlayerStore((state) => state.barSize)
   const trackBars = usePlayerStore((state) => state.trackBars)
   const initTrackBars = usePlayerStore((state) => state.initTrackBars)
-  const syncBarSizeFromTracks = usePlayerStore((state) => state.syncBarSizeFromTracks)
   const hasMetronome = usePlayerStore((state) => state.hasMetronome)
   const setIsPlaying = usePlayerStore((state) => state.setIsPlaying)
   const setBeatIndex = usePlayerStore((state) => state.setBeatIndex)
@@ -42,8 +41,7 @@ export const GroovyPlayer = () => {
 
   useLayoutEffect(() => {
     initTrackBars(DEMO_TRACKS)
-    syncBarSizeFromTracks()
-  }, [initTrackBars, syncBarSizeFromTracks])
+  }, [initTrackBars])
 
   const groovePattern = resolveGroovePattern(swingPattern, barSize, swingEnabled)
 
@@ -126,8 +124,8 @@ export const GroovyPlayer = () => {
   )
 
   return (
-    <section className="flex w-full max-w-4xl flex-col gap-4 bg-zinc-900/60 rounded-xl p-4">
-      <div className="flex flex-col">
+    <section className="flex w-full max-w-4xl flex-col gap-4 bg-zinc-900/60 md:rounded-xl">
+      <div className="flex flex-col md:py-2 lg:py-4">
         {DEMO_TRACKS.map((track) => (
           <Track
             activeIndex={trackActiveIndex}

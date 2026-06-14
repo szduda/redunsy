@@ -3,7 +3,7 @@ import { GroovyPlayer } from '@/features/groovy-player/groovy-player'
 export const dynamic = 'force-static'
 
 const GuiPage = () => (
-  <main className="flex flex-1 items-center justify-center p-6">
+  <main className="flex flex-1 justify-center lg:p-4 xl:p-6">
     <GroovyPlayer />
   </main>
 )

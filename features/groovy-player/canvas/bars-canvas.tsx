@@ -75,7 +75,7 @@ const Bars = ({ bars, activeIndex = -1, barsPerRow, instrument, id }: BarsCanvas
   }, [instrument, barsInPattern > 1 ? activeIndex % barsInPattern : -1, barsPerRow, hash, canvasWidth])
 
   return (
-    <div ref={containerRef} className="w-full min-w-0">
+    <div ref={containerRef} className="w-full min-w-0 flex-1">
       <canvas
         id={canvasId}
         height={canvasHeight}

@@ -40,4 +40,5 @@ body {
 
 button, a {
   cursor: pointer;
+  user-select: none;
 }
