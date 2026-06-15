@@ -1,10 +1,12 @@
 'use client'
 
-import { type ChangeEvent } from 'react'
-
 import { SpeakerIcon } from '@/features/icons/speaker-icon'
 import { SpeakerMutedIcon } from '@/features/icons/speaker-muted-icon'
 import { IconButton } from '@/features/groovy-player/icon-button'
+import { Popover } from '@/features/groovy-player/popover'
+import { VolumeSlider } from '@/features/groovy-player/track/volume-slider'
+import { Button } from '@/features/theme/button'
+import { Text } from '@/features/theme/text'
 import { cn } from '@/features/theme/cn'
 
 type TrackVolumeProps = {
@@ -23,32 +25,54 @@ export const TrackVolume = ({
   onToggleMute,
   compact = false,
   className,
-}: TrackVolumeProps) => {
-  const onChange = ({ target }: ChangeEvent<HTMLInputElement>) =>
-    onVolumeChange(Number(target.value))
+}: TrackVolumeProps) => (
+  <div
+    className={cn(
+      'flex items-center rounded-lg bg-zinc-50 md:gap-1 dark:bg-zinc-900',
+      compact && 'shrink-0',
+      className,
+    )}
+  >
+    <IconButton
+      active={!muted}
+      aria-label={muted ? 'Unmute track' : 'Mute track'}
+      aria-pressed={!muted}
+      className="text-zinc-400"
+      onClick={onToggleMute}
+    >
+      {muted ? <SpeakerMutedIcon className="size-4 lg:size-5" /> : <SpeakerIcon className="size-4 lg:size-5" />}
+    </IconButton>
 
-  return (
-    <div className={cn('flex items-center gap-2', compact && 'shrink-0', className)}>
-      <IconButton
-        active={!muted}
-        aria-label={muted ? 'Unmute track' : 'Mute track'}
-        aria-pressed={!muted}
-        className="text-zinc-400"
-        onClick={onToggleMute}
+    {compact ? (
+      <Popover
+        panel={
+          <div className="flex flex-col gap-3 items-center">
+            <VolumeSlider
+              muted={muted}
+              onVolumeChange={onVolumeChange}
+              vertical
+              volume={volume}
+            />
+            <Text variant="mono" className="uppercase text-[10px] font-medium">Volume</Text>
+          </div>
+        }
+        panelClassName="w-auto items-center p-3 rounded-lg"
       >
-        {muted ? <SpeakerMutedIcon className="size-5" /> : <SpeakerIcon className="size-5" />}
-      </IconButton>
-      {!compact ? (
-        <input
-          aria-label="Track volume"
-          className="h-1 w-24 cursor-pointer appearance-none rounded-full bg-zinc-200 accent-zinc-900 dark:bg-zinc-800 dark:accent-zinc-100"
-          max={100}
-          min={0}
-          onChange={onChange}
-          type="range"
-          value={muted ? 0 : volume}
-        />
-      ) : null}
-    </div>
-  )
-}
+        {({ open, toggle }) => (
+          <Button
+            aria-expanded={open}
+            className="!rounded-l-none !border-l border-l-black"
+            onClick={toggle}
+            type="button"
+            variant="subtle"
+          >
+            {volume}
+            <span className="opacity-80">%</span>
+          </Button>
+        )}
+      </Popover>
+    ) : (
+      <VolumeSlider muted={muted} onVolumeChange={onVolumeChange} volume={volume} />
+    )}
+  </div>
+)

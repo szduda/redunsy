@@ -59,14 +59,8 @@ export const Track = ({
           {name}
         </CollapseLabel>
 
-        {!compact &&
-          <span className="font-mono text-xs uppercase tracking-wide text-zinc-500">
-            {instrument} · {bars.length} bar{bars.length === 1 ? '' : 's'}
-          </span>
-        }
-
         <TrackVolume
-          compact={compact}
+          compact={collapsed || isMobile}
           muted={muted}
           onToggleMute={() => setMuted((value) => !value)}
           onVolumeChange={(value: number) => {
@@ -75,6 +69,13 @@ export const Track = ({
           }}
           volume={volume}
         />
+
+        {!compact &&
+          <span className="font-mono text-xs uppercase tracking-wide text-zinc-500">
+            {instrument} · {bars.length} bar{bars.length === 1 ? '' : 's'}
+          </span>
+        }
+
       </div>
 
       <BarsCanvas
