@@ -47,13 +47,13 @@ export const renderBarWrapper = ({ context, el, isLastInRow }: RendererArgs) => 
 
   if (isLastInRow) return
 
-  context.beginPath()
-  context.moveTo(el.left + el.width + 2, el.top + 1)
-  context.lineTo(el.left + el.width + 2, el.top + el.height - 1)
-  context.strokeStyle = colors.w0
-  context.lineWidth = 2
-  context.stroke()
-  context.closePath()
+  // context.beginPath()
+  // context.moveTo(el.left + el.width + 2, el.top + 1)
+  // context.lineTo(el.left + el.width + 2, el.top + el.height - 1)
+  // context.strokeStyle = colors.w0
+  // context.lineWidth = 2
+  // context.stroke()
+  // context.closePath()
 }
 
 type BarRendererArgs = {
