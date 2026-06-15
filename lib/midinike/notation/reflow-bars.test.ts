@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
 import { barCellCount } from './cell-duration'
-import { detectBarSizeFromBars, reflowBarsToSize } from './reflow-bars'
+import { reflowBarsToSize } from './reflow-bars'
 
 const totalCells = (bars: string[]) => bars.reduce((sum, bar) => sum + barCellCount(bar), 0)
 
@@ -70,26 +70,5 @@ describe('reflowBarsToSize', () => {
       bars = reflowBarsToSize(bars, 6)
       expect(bars).toEqual(original)
     }
-  })
-})
-
-describe('detectBarSizeFromBars', () => {
-  it('detects 6-cell demo bars', () => {
-    expect(
-      detectBarSizeFromBars([
-        ['ttsb-s', 'b-sb-s'],
-        ['o-o---', '--oo-o'],
-        ['----oo'],
-      ]),
-    ).toBe(6)
-  })
-
-  it('detects 8-cell bars when dominant', () => {
-    expect(
-      detectBarSizeFromBars([
-        ['b---b---', 'b---b---', 'b---b---'],
-        ['ttstts'],
-      ]),
-    ).toBe(8)
   })
 })

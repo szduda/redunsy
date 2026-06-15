@@ -2,7 +2,7 @@
 
 import { type ChangeEvent } from 'react'
 
-import { usePlayerStore } from '@/features/groovy-player/player.store'
+import { barSizeFromTrackBars, usePlayerStore } from '@/features/groovy-player/player.store'
 
 type SwingPatternFieldProps = {
   className?: string
@@ -10,7 +10,8 @@ type SwingPatternFieldProps = {
 
 export const SwingPatternField = ({ className }: SwingPatternFieldProps) => {
   const swingPattern = usePlayerStore((state) => state.swingPattern)
-  const barSize = usePlayerStore((state) => state.barSize)
+  const trackBars = usePlayerStore((state) => state.trackBars)
+  const barSize = barSizeFromTrackBars(trackBars)
   const setSwingPattern = usePlayerStore((state) => state.setSwingPattern)
 
   const onChange = ({ target }: ChangeEvent<HTMLInputElement>) => setSwingPattern(target.value)

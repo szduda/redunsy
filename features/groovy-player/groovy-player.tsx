@@ -2,11 +2,11 @@
 
 import { useCallback, useEffect, useLayoutEffect, useState } from 'react'
 
-import { BarSizeToggle } from '@/features/groovy-player/bar-size-toggle'
 import { DEMO_TRACKS } from '@/features/groovy-player/demo-tracks'
 import { MetronomeToggle } from '@/features/groovy-player/metronome-toggle'
 import { PlayerTransport } from '@/features/groovy-player/player-transport'
 import {
+  barSizeFromTrackBars,
   DEFAULT_SWING_PATTERN,
   DEFAULT_TEMPO,
   resolveGroovePattern,
@@ -31,8 +31,8 @@ export const GroovyPlayer = () => {
   const isPlaying = usePlayerStore((state) => state.isPlaying)
   const swingPattern = usePlayerStore((state) => state.swingPattern)
   const swingEnabled = usePlayerStore((state) => state.swingEnabled)
-  const barSize = usePlayerStore((state) => state.barSize)
   const trackBars = usePlayerStore((state) => state.trackBars)
+  const barSize = barSizeFromTrackBars(trackBars)
   const initTrackBars = usePlayerStore((state) => state.initTrackBars)
   const hasMetronome = usePlayerStore((state) => state.hasMetronome)
   const setIsPlaying = usePlayerStore((state) => state.setIsPlaying)
@@ -142,7 +142,7 @@ export const GroovyPlayer = () => {
 
       {playError ? <Text variant="mono">{playError}</Text> : null}
 
-      <div className="flex flex-wrap items-end justify-between gap-4">
+      <div className="flex flex-wrap items-center justify-between gap-2 md:gap-4 py-2">
         <PlayerTransport
           isPlaying={isPlaying}
           onPlayPause={onTogglePlayPause}
@@ -150,11 +150,10 @@ export const GroovyPlayer = () => {
           onStop={stop}
         />
 
-        <div className="flex flex-wrap items-end gap-4">
-          <BarSizeToggle />
-          <SwingToggle />
+        <div className="flex flex-wrap items-end gap-3">
           <TempoSlider />
           <MetronomeToggle />
+          <SwingToggle />
         </div>
       </div>
     </section>

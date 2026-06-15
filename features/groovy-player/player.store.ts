@@ -1,8 +1,6 @@
 import { create } from 'zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
 
-import { detectBarSizeFromBars, reflowBarsToSize } from '@/lib/midinike/notation/reflow-bars'
-
 export const ZOOM_STEPS = [1, 2, 3, 4, 6, 8] as const
 
 export type ZoomBarsPerRow = (typeof ZOOM_STEPS)[number]
@@ -11,26 +9,29 @@ export const DEFAULT_TEMPO = 110
 
 export const DEFAULT_BAR_SIZE = 8
 
-export const BAR_SIZES = [8, 6] as const
-
-export type BarSize = (typeof BAR_SIZES)[number]
-
 export const DEFAULT_SWING_PATTERN = '-<(-<('
+
+export const barSizeFromBars = (bars: string[]) => bars[0]?.length ?? DEFAULT_BAR_SIZE
+
+export const barSizeFromTrackBars = (trackBars: Record<string, string[]>) => {
+  const bars = Object.values(trackBars).find((trackBarsList) => trackBarsList.length > 0)
+  return barSizeFromBars(bars ?? [])
+}
 
 export const isSwingPatternEmpty = (pattern: string) =>
   pattern.length === 0 || [...pattern].every((char) => char === '-')
 
-export const isSwingPatternIncorrect = (pattern: string, barSize: BarSize) =>
+export const isSwingPatternIncorrect = (pattern: string, barSize: number) =>
   !isSwingPatternEmpty(pattern) && pattern.length !== barSize
 
-export const fitSwingPattern = (pattern: string, barSize: BarSize) =>
+export const fitSwingPattern = (pattern: string, barSize: number) =>
   pattern.slice(0, barSize).padEnd(barSize, '-')
 
-export const straightGroovePattern = (barSize: BarSize) => '-'.repeat(barSize)
+export const straightGroovePattern = (barSize: number) => '-'.repeat(barSize)
 
 export const resolveGroovePattern = (
   swingPattern: string,
-  barSize: BarSize,
+  barSize: number,
   swingEnabled: boolean,
 ) => (swingEnabled ? fitSwingPattern(swingPattern, barSize) : straightGroovePattern(barSize))
 
@@ -58,8 +59,6 @@ type PlayerState = {
   setSwingPattern: (swingPattern: string) => void
   swingEnabled: boolean
   toggleSwingEnabled: () => void
-  barSize: BarSize
-  toggleBarSize: () => void
   trackBars: Record<string, string[]>
   initTrackBars: (tracks: { id: string; bars: string[] }[]) => void
   hasMetronome: boolean
@@ -68,16 +67,8 @@ type PlayerState = {
 
 type PersistedPlayerState = Pick<
   PlayerState,
-  | 'barsPerRow'
-  | 'tempo'
-  | 'swingPattern'
-  | 'swingEnabled'
-  | 'barSize'
-  | 'trackBars'
-  | 'hasMetronome'
+  'barsPerRow' | 'tempo' | 'swingPattern' | 'swingEnabled' | 'trackBars' | 'hasMetronome'
 >
-
-const isBarSize = (value: unknown): value is BarSize => value === 6 || value === 8
 
 const isZoomBarsPerRow = (value: unknown): value is ZoomBarsPerRow =>
   typeof value === 'number' && (ZOOM_STEPS as readonly number[]).includes(value)
@@ -98,42 +89,28 @@ export const usePlayerStore = create<PlayerState>()(
       beatIndex: -1,
       setBeatIndex: (beatIndex) => set({ beatIndex }),
       swingPattern: DEFAULT_SWING_PATTERN,
-      setSwingPattern: (swingPattern) =>
-        set({ swingPattern: swingPattern.slice(0, get().barSize) }),
+      setSwingPattern: (swingPattern) => {
+        const barSize = barSizeFromTrackBars(get().trackBars)
+        set({ swingPattern: swingPattern.slice(0, barSize) })
+      },
       swingEnabled: true,
       toggleSwingEnabled: () => {
         const state = get()
-        if (isSwingPatternIncorrect(state.swingPattern, state.barSize)) return
+        const barSize = barSizeFromTrackBars(state.trackBars)
+        if (isSwingPatternIncorrect(state.swingPattern, barSize)) return
         set({ swingEnabled: !state.swingEnabled })
       },
-      barSize: DEFAULT_BAR_SIZE,
       trackBars: {},
       initTrackBars: (tracks) => {
         const { trackBars } = get()
         if (Object.keys(trackBars).length) return
 
         const seeded = seedTrackBars(tracks)
-        const barSize = detectBarSizeFromBars(Object.values(seeded))
+        const barSize = barSizeFromBars(tracks[0]?.bars ?? [])
         const swingIncorrect = isSwingPatternIncorrect(get().swingPattern, barSize)
         set({
           trackBars: seeded,
-          barSize,
           swingEnabled: swingIncorrect ? false : get().swingEnabled,
-        })
-      },
-      toggleBarSize: () => {
-        const state = get()
-        const barSize = state.barSize === 8 ? 6 : 8
-        const swingIncorrect = isSwingPatternIncorrect(state.swingPattern, barSize)
-        set({
-          barSize,
-          trackBars: Object.fromEntries(
-            Object.entries(state.trackBars).map(([id, bars]) => [
-              id,
-              reflowBarsToSize(bars, barSize),
-            ]),
-          ),
-          swingEnabled: swingIncorrect ? false : state.swingEnabled,
         })
       },
       hasMetronome: false,
@@ -147,7 +124,6 @@ export const usePlayerStore = create<PlayerState>()(
         tempo: state.tempo,
         swingPattern: state.swingPattern,
         swingEnabled: state.swingEnabled,
-        barSize: state.barSize,
         trackBars: state.trackBars,
         hasMetronome: state.hasMetronome,
       }),
@@ -157,7 +133,6 @@ export const usePlayerStore = create<PlayerState>()(
           ...current,
           ...saved,
           barsPerRow: isZoomBarsPerRow(saved.barsPerRow) ? saved.barsPerRow : current.barsPerRow,
-          barSize: isBarSize(saved.barSize) ? saved.barSize : current.barSize,
           tempo: typeof saved.tempo === 'number' ? saved.tempo : current.tempo,
           swingPattern:
             typeof saved.swingPattern === 'string' ? saved.swingPattern : current.swingPattern,

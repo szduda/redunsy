@@ -1,38 +1,194 @@
 'use client'
 
-import { type ChangeEvent } from 'react'
+import { type ChangeEvent, type KeyboardEvent, type PointerEvent } from 'react'
 
+import { Popover, popoverTriggerOpenClass } from '@/features/groovy-player/popover'
 import { usePlayerStore } from '@/features/groovy-player/player.store'
+import { useIsMobile } from '@/features/shared/use-is-mobile'
+import { Button } from '@/features/theme/button'
+import { cn } from '@/features/theme/cn'
 import { Text } from '@/features/theme/text'
 
 const MIN_TEMPO = 60
 const MAX_TEMPO = 200
 const TEMPO_STEP = 5
 
-export const TempoSlider = () => {
-  const tempo = usePlayerStore((state) => state.tempo)
-  const setTempo = usePlayerStore((state) => state.setTempo)
+const verticalSliderClass =
+  'h-1 w-24 appearance-none rounded-full bg-zinc-200 accent-zinc-900 dark:bg-zinc-800 dark:accent-zinc-100'
 
-  const onChange = ({ target }: ChangeEvent<HTMLInputElement>) =>
-    setTempo(Number(target.value))
+const horizontalSliderClass =
+  'h-2 w-full cursor-pointer appearance-none rounded-full bg-zinc-200 accent-zinc-900 dark:bg-zinc-800 dark:accent-zinc-100'
+
+const clampTempo = (value: number) =>
+  Math.round(Math.min(MAX_TEMPO, Math.max(MIN_TEMPO, value)) / TEMPO_STEP) * TEMPO_STEP
+
+const tempoFromClientY = (clientY: number, track: HTMLElement) => {
+  const { top, height } = track.getBoundingClientRect()
+  const ratio = 1 - (clientY - top) / height
+  return clampTempo(MIN_TEMPO + ratio * (MAX_TEMPO - MIN_TEMPO))
+}
+
+type TempoSliderInputProps = {
+  tempo: number
+  onTempoChange: (tempo: number) => void
+  className?: string
+  vertical?: boolean
+}
+
+const TempoMinMaxLabels = ({ vertical = false }: { vertical?: boolean }) => (
+  <div
+    className={cn(
+      'font-mono text-xs text-zinc-500',
+      vertical ? 'flex h-24 flex-col-reverse justify-between text-right' : 'flex w-full justify-between',
+    )}
+  >
+    <span>{MIN_TEMPO}</span>
+    <span>{MAX_TEMPO}</span>
+  </div>
+)
+
+const VerticalTempoSlider = ({
+  tempo,
+  onTempoChange,
+  className,
+}: Omit<TempoSliderInputProps, 'vertical'>) => {
+  const setTempoFromPointer = ({ currentTarget, clientY, pointerId }: PointerEvent<HTMLDivElement>) => {
+    if (!currentTarget.hasPointerCapture(pointerId)) return
+    onTempoChange(tempoFromClientY(clientY, currentTarget))
+  }
+
+  const onPointerDown = (event: PointerEvent<HTMLDivElement>) => {
+    event.preventDefault()
+    event.stopPropagation()
+    event.currentTarget.setPointerCapture(event.pointerId)
+    onTempoChange(tempoFromClientY(event.clientY, event.currentTarget))
+  }
+
+  const onKeyDown = ({ key }: KeyboardEvent<HTMLDivElement>) => {
+    if (key === 'ArrowUp' || key === 'ArrowRight') onTempoChange(clampTempo(tempo + TEMPO_STEP))
+    if (key === 'ArrowDown' || key === 'ArrowLeft') onTempoChange(clampTempo(tempo - TEMPO_STEP))
+  }
 
   return (
-    <div className="flex flex-col gap-1 items-end">
-      <Text variant="mono" className="font-bold">{tempo} BPM</Text>
+    <div
+      aria-label="Tempo"
+      aria-orientation="vertical"
+      aria-valuemax={MAX_TEMPO}
+      aria-valuemin={MIN_TEMPO}
+      aria-valuenow={tempo}
+      className="flex h-24 w-8 touch-none cursor-pointer items-center justify-center"
+      onKeyDown={onKeyDown}
+      onPointerDown={onPointerDown}
+      onPointerMove={setTempoFromPointer}
+      role="slider"
+      tabIndex={0}
+    >
       <input
-        aria-label="Tempo"
-        className="h-2 cursor-pointer appearance-none rounded-full bg-zinc-200 accent-zinc-900 dark:bg-zinc-800 dark:accent-zinc-100"
+        aria-hidden
+        className={cn('pointer-events-none', verticalSliderClass, '-rotate-90', className)}
         max={MAX_TEMPO}
         min={MIN_TEMPO}
-        onChange={onChange}
+        readOnly
         step={TEMPO_STEP}
+        tabIndex={-1}
         type="range"
         value={tempo}
       />
-      <div className="flex w-full justify-between font-mono text-xs text-zinc-500">
-        <span>{MIN_TEMPO}</span>
-        <span>{MAX_TEMPO}</span>
-      </div>
     </div>
+  )
+}
+
+const VerticalTempoSliderWithLabels = ({
+  tempo,
+  onTempoChange,
+}: Omit<TempoSliderInputProps, 'vertical' | 'className'>) => (
+  <div className="flex items-center gap-2">
+    <TempoMinMaxLabels vertical />
+    <VerticalTempoSlider onTempoChange={onTempoChange} tempo={tempo} />
+  </div>
+)
+
+const TempoSliderInput = ({ tempo, onTempoChange, className, vertical = false }: TempoSliderInputProps) => {
+  if (vertical) return <VerticalTempoSlider className={className} onTempoChange={onTempoChange} tempo={tempo} />
+
+  const onChange = ({ target }: ChangeEvent<HTMLInputElement>) => onTempoChange(Number(target.value))
+
+  return (
+    <input
+      aria-label="Tempo"
+      className={cn('cursor-pointer', horizontalSliderClass, className)}
+      max={MAX_TEMPO}
+      min={MIN_TEMPO}
+      onChange={onChange}
+      step={TEMPO_STEP}
+      type="range"
+      value={tempo}
+    />
+  )
+}
+
+const DesktopTempoSlider = ({ tempo, onTempoChange }: Omit<TempoSliderInputProps, 'vertical' | 'className'>) => (
+  <div className="flex flex-col items-end gap-1">
+    <Text variant="mono" className="font-bold">
+      {tempo} BPM
+    </Text>
+    <TempoSliderInput onTempoChange={onTempoChange} tempo={tempo} />
+    <TempoMinMaxLabels />
+  </div>
+)
+
+const MobileTempoSlider = ({ tempo, onTempoChange }: Omit<TempoSliderInputProps, 'vertical' | 'className'>) => (
+  <Popover
+    panel={
+      <div className="flex flex-col items-center gap-3">
+        <VerticalTempoSliderWithLabels onTempoChange={onTempoChange} tempo={tempo} />
+        <Text variant="mono" className="text-[10px] font-medium uppercase">
+          Tempo
+        </Text>
+      </div>
+    }
+    panelClassName="w-auto items-center rounded-lg p-3"
+  >
+    {({ open, toggle }) => (
+      <Button
+        aria-expanded={open}
+        aria-label={`Tempo ${tempo} BPM`}
+        className={cn('flex-col', open && popoverTriggerOpenClass)}
+        onClick={toggle}
+        type="button"
+        variant="subtle"
+      >
+        <Text
+          variant="mono"
+          className={cn(
+            'translate-y-1 text-[20px] font-black leading-none',
+            open ? '!text-yellowy' : '!text-white',
+          )}
+        >
+          {tempo}
+        </Text>
+        <Text
+          variant="mono"
+          className={cn(
+            'w-full translate-y-1 text-right text-xs font-bold uppercase tracking-widest',
+            open ? 'text-yellowy' : 'text-inherit',
+          )}
+        >
+          BPM
+        </Text>
+      </Button>
+    )}
+  </Popover>
+)
+
+export const TempoSlider = () => {
+  const isMobile = useIsMobile()
+  const tempo = usePlayerStore((state) => state.tempo)
+  const setTempo = usePlayerStore((state) => state.setTempo)
+
+  return isMobile ? (
+    <MobileTempoSlider onTempoChange={setTempo} tempo={tempo} />
+  ) : (
+    <DesktopTempoSlider onTempoChange={setTempo} tempo={tempo} />
   )
 }

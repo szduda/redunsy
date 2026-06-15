@@ -1,6 +1,7 @@
 import { font } from './drum-font'
 import { onBeatCellIndexes, parseBarLayout } from './bar-layout'
 
+import type { BarGlyph } from './bar-layout'
 import type { CanvasElement } from './types'
 
 export const BAR_GAP_PX = 1
@@ -30,9 +31,13 @@ type RendererArgs = {
 const renderChar = ({ instrument, el, context }: RendererArgs) =>
   font[instrument!]?.[el.note ?? '-']?.(context, el, el.bgColor)
 
-export const renderNote = ({ instrument, el, context }: RendererArgs) => {
+export const renderNoteBackground = ({ context, el }: RendererArgs) => {
   context.fillStyle = el.bgColor
   context.fillRect(el.left, el.top, el.width, el.height)
+}
+
+export const renderNote = ({ instrument, el, context }: RendererArgs) => {
+  renderNoteBackground({ context, el })
   renderChar({ instrument, el, context })
 }
 
@@ -40,20 +45,10 @@ const renderGlyphOnly = ({ instrument, el, context }: RendererArgs) => {
   renderChar({ instrument, el, context })
 }
 
-export const renderBarWrapper = ({ context, el, isLastInRow }: RendererArgs) => {
+export const renderBarWrapper = ({ context, el }: RendererArgs) => {
   context.fillStyle = el.bgColor
   context.lineCap = 'square'
   context.fillRect(el.left, el.top, el.width, el.height)
-
-  if (isLastInRow) return
-
-  // context.beginPath()
-  // context.moveTo(el.left + el.width + 2, el.top + 1)
-  // context.lineTo(el.left + el.width + 2, el.top + el.height - 1)
-  // context.strokeStyle = colors.w0
-  // context.lineWidth = 2
-  // context.stroke()
-  // context.closePath()
 }
 
 type BarRendererArgs = {
@@ -68,16 +63,22 @@ type BarRendererArgs = {
   highlighted?: boolean
 }
 
-export const renderBar = ({
+type LayoutBarArgs = Omit<BarRendererArgs, 'canvas' | 'context' | 'instrument'>
+
+export type LaidOutBar = {
+  barEl: CanvasElement
+  noteElements: Required<CanvasElement>[]
+  glyphs: BarGlyph[]
+}
+
+export const layoutBar = ({
   bars,
-  instrument,
-  context,
   canvasWidth,
   barHeight,
   barIndex = 0,
   barsPerRow = 2,
   highlighted = false,
-}: BarRendererArgs) => {
+}: LayoutBarArgs): LaidOutBar => {
   const bar = bars[barIndex]
   const { cellCount, glyphs } = parseBarLayout(bar)
   const barHeightGross = barHeight + 2 * BAR_GAP_PX
@@ -97,18 +98,12 @@ export const renderBar = ({
     barIndex,
   }
 
-  renderBarWrapper({
-    context,
-    el: barEl,
-    isLastInRow: !((barEl.barIndex! + 1) % barsPerRow),
-  })
-
-  const toNoteEl = (glyph: (typeof glyphs)[number], noteIndex: number): Required<CanvasElement> => {
+  const noteElements = glyphs.map((glyph, noteIndex) => {
     const cellIndex = Math.floor(glyph.position)
     const isOnBeat = beatCells.includes(cellIndex)
 
     return {
-      type: 'note',
+      type: 'note' as const,
       colour: glyph.note === '-' ? colors.w0 : colors.w2,
       bgColor: isOnBeat
         ? highlighted
@@ -125,19 +120,84 @@ export const renderBar = ({
       barIndex,
       noteIndex,
     }
-  }
+  })
 
-  const noteElements = glyphs.map((glyph, noteIndex) => toNoteEl(glyph, noteIndex))
+  return { barEl, noteElements, glyphs }
+}
 
-  glyphs.forEach((glyph, noteIndex) => {
+export const renderBar = ({
+  bars,
+  instrument,
+  context,
+  canvasWidth,
+  barHeight,
+  barIndex = 0,
+  barsPerRow = 2,
+  highlighted = false,
+}: BarRendererArgs) => {
+  const layout = layoutBar({
+    bars,
+    canvasWidth,
+    barHeight,
+    barIndex,
+    barsPerRow,
+    highlighted,
+  })
+
+  renderBarWrapper({ context, el: layout.barEl })
+
+  layout.glyphs.forEach((glyph, noteIndex) => {
     if (glyph.kind !== 'eighth') return
-    renderNote({ instrument, el: noteElements[noteIndex], context })
+    renderNoteBackground({ context, el: layout.noteElements[noteIndex] })
   })
 
-  glyphs.forEach((glyph, noteIndex) => {
-    if (glyph.kind === 'eighth') return
-    renderGlyphOnly({ instrument, el: noteElements[noteIndex], context })
+  layout.glyphs.forEach((_, noteIndex) => {
+    renderGlyphOnly({ instrument, el: layout.noteElements[noteIndex], context })
   })
 
-  return [barEl, ...noteElements]
+  return [layout.barEl, ...layout.noteElements]
+}
+
+type RenderBarsArgs = Omit<BarRendererArgs, 'barIndex' | 'highlighted'> & {
+  highlightedBarIndex?: number
+}
+
+export const renderBars = ({
+  bars,
+  instrument,
+  context,
+  canvasWidth,
+  barHeight,
+  barsPerRow = 2,
+  highlightedBarIndex = -1,
+}: RenderBarsArgs) => {
+  const layouts = bars.map((_, barIndex) =>
+    layoutBar({
+      bars,
+      canvasWidth,
+      barHeight,
+      barIndex,
+      barsPerRow,
+      highlighted: barIndex === highlightedBarIndex,
+    }),
+  )
+
+  layouts.forEach((layout) => {
+    renderBarWrapper({ context, el: layout.barEl })
+  })
+
+  layouts.forEach((layout) => {
+    layout.glyphs.forEach((glyph, noteIndex) => {
+      if (glyph.kind !== 'eighth') return
+      renderNoteBackground({ context, el: layout.noteElements[noteIndex] })
+    })
+  })
+
+  layouts.forEach((layout) => {
+    layout.glyphs.forEach((_, noteIndex) => {
+      renderGlyphOnly({ instrument, el: layout.noteElements[noteIndex], context })
+    })
+  })
+
+  return layouts.flatMap((layout) => [layout.barEl, ...layout.noteElements])
 }

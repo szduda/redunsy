@@ -5,14 +5,19 @@ import { WarningIcon } from '@/features/icons/warning-icon'
 import { IconButton } from '@/features/groovy-player/icon-button'
 import { Popover } from '@/features/groovy-player/popover'
 import { SwingPatternField } from '@/features/groovy-player/swing-pattern-field'
-import { isSwingPatternIncorrect, usePlayerStore } from '@/features/groovy-player/player.store'
+import {
+  barSizeFromTrackBars,
+  isSwingPatternIncorrect,
+  usePlayerStore,
+} from '@/features/groovy-player/player.store'
 import { cn } from '@/features/theme/cn'
 import { Text } from '@/features/theme/text'
 
 export const SwingToggle = () => {
   const swingEnabled = usePlayerStore((state) => state.swingEnabled)
   const swingPattern = usePlayerStore((state) => state.swingPattern)
-  const barSize = usePlayerStore((state) => state.barSize)
+  const trackBars = usePlayerStore((state) => state.trackBars)
+  const barSize = barSizeFromTrackBars(trackBars)
   const isPlaying = usePlayerStore((state) => state.isPlaying)
   const tempo = usePlayerStore((state) => state.tempo)
   const toggleSwingEnabled = usePlayerStore((state) => state.toggleSwingEnabled)
@@ -48,7 +53,7 @@ export const SwingToggle = () => {
               }
             />
           </IconButton>
-          <div className="absolute top-full left-1/2 flex -translate-x-1/2 items-center gap-0.5">
+          {/* <div className="absolute top-full left-1/2 flex -translate-x-1/2 items-center gap-0.5">
             {swingIncorrect ? (
               <WarningIcon
                 aria-label="Swing pattern length does not match bar size"
@@ -62,7 +67,7 @@ export const SwingToggle = () => {
             >
               edit
             </button>
-          </div>
+          </div> */}
         </>
       )}
     </Popover>

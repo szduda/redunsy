@@ -19,13 +19,10 @@ export const PlayerTransport = ({
   onStop,
   onRestart,
 }: PlayerTransportProps) => (
-  <div className="flex gap-1">
+  <div className="flex gap-1 items-center">
     <IconButton
       active
       aria-label={isPlaying ? 'Pause' : 'Play'}
-      className="text-yellowy"
-      dark
-      ninja={false}
       onClick={onPlayPause}
     >
       {isPlaying ? <PauseIcon className="mx-auto" /> : <PlayIcon className="mx-auto" />}
@@ -33,19 +30,13 @@ export const PlayerTransport = ({
     <IconButton
       active
       aria-label="Stop"
-      className="text-yellowy"
-      dark
-      ninja={false}
       onClick={onStop}
     >
       <StopIcon className="mx-auto" />
     </IconButton>
     <IconButton
-      active
       aria-label="Restart playback"
-      className="text-yellowy"
-      dark
-      ninja={false}
+      className='!hidden !md:inline-flex'
       onClick={onRestart}
     >
       <RestartIcon className="mx-auto" />

@@ -88,9 +88,3 @@ const validateReflowedBar = (bar: string, barSize: number) => {
   }
 }
 
-export const detectBarSizeFromBars = (barsList: string[][]): 6 | 8 => {
-  const counts = barsList.flat().map(barCellCount)
-  const six = counts.filter((count) => count === 6).length
-  const eight = counts.filter((count) => count === 8).length
-  return six >= eight ? 6 : 8
-}

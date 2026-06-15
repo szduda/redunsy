@@ -3,7 +3,7 @@
 import { SpeakerIcon } from '@/features/icons/speaker-icon'
 import { SpeakerMutedIcon } from '@/features/icons/speaker-muted-icon'
 import { IconButton } from '@/features/groovy-player/icon-button'
-import { Popover } from '@/features/groovy-player/popover'
+import { Popover, popoverTriggerOpenClass } from '@/features/groovy-player/popover'
 import { VolumeSlider } from '@/features/groovy-player/track/volume-slider'
 import { Button } from '@/features/theme/button'
 import { Text } from '@/features/theme/text'
@@ -34,13 +34,16 @@ export const TrackVolume = ({
     )}
   >
     <IconButton
-      active={!muted}
+      active={muted}
       aria-label={muted ? 'Unmute track' : 'Mute track'}
       aria-pressed={!muted}
-      className="text-zinc-400"
+      className="text-yellowy"
       onClick={onToggleMute}
     >
-      {muted ? <SpeakerMutedIcon className="size-4 lg:size-5" /> : <SpeakerIcon className="size-4 lg:size-5" />}
+      {muted ?
+        <SpeakerMutedIcon className="size-4 lg:size-5" /> :
+        <SpeakerIcon className="size-4 lg:size-5" />
+      }
     </IconButton>
 
     {compact ? (
@@ -61,13 +64,16 @@ export const TrackVolume = ({
         {({ open, toggle }) => (
           <Button
             aria-expanded={open}
-            className="!rounded-l-none !border-l border-l-black"
+            className={cn(
+              '!rounded-l-none !border-l border-l-black font-semibold text-lg',
+              open && popoverTriggerOpenClass,
+            )}
             onClick={toggle}
             type="button"
             variant="subtle"
           >
             {volume}
-            <span className="opacity-80">%</span>
+            <span className="opacity-80 scale-90 origin-bottom-right">%</span>
           </Button>
         )}
       </Popover>

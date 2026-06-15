@@ -4,7 +4,7 @@ import { memo, useLayoutEffect, useRef } from 'react'
 
 import { setupCanvasDpi } from './canvas-dpi'
 import { findPatternLength } from './find-pattern-length'
-import { BAR_GAP_PX, BAR_HEIGHT_LARGE_PX, BAR_HEIGHT_PX, colors, renderBar } from './renderers'
+import { BAR_GAP_PX, BAR_HEIGHT_LARGE_PX, BAR_HEIGHT_PX, colors, renderBars } from './renderers'
 import { useCanvasWidth } from './use-canvas-width'
 import { cn } from '@/features/theme/cn'
 
@@ -25,8 +25,10 @@ const Bars = ({ bars, activeIndex = -1, barsPerRow, instrument, id }: BarsCanvas
   const hash = bars.join('')
   const canvasHeight =
     (barHeight + 2 * BAR_GAP_PX) * Math.ceil(barsInPattern / barsPerRow) - 2 * BAR_GAP_PX
+  const highlightedBarIndex =
+    activeIndex < 0 ? -1 : barsInPattern > 1 ? activeIndex % barsInPattern : activeIndex
 
-  const renderAll = () => {
+  useLayoutEffect(() => {
     const canvas = document.getElementById(canvasId) as HTMLCanvasElement | null
     if (!canvas || canvasWidth <= 0) return
     const context = setupCanvasDpi(canvas, canvasWidth, canvasHeight)
@@ -35,53 +37,27 @@ const Bars = ({ bars, activeIndex = -1, barsPerRow, instrument, id }: BarsCanvas
     context.fillStyle = colors.b0
     context.fillRect(0, 0, canvasWidth, canvasHeight)
 
-    bars.forEach((_, barIndex) =>
-      renderBar({
-        bars,
-        instrument,
-        canvas,
-        context,
-        canvasWidth,
-        barHeight,
-        barIndex,
-        barsPerRow,
-      }),
-    )
-  }
-
-  useLayoutEffect(() => {
-    renderAll()
-  }, [hash, canvasId, canvasWidth, canvasHeight, dpr, barsPerRow, barHeight, instrument, bars.length])
-
-  useLayoutEffect(() => {
-    const canvas = document.getElementById(canvasId) as HTMLCanvasElement | null
-    if (!canvas || canvasWidth <= 0) return
-    const context = canvas.getContext('2d')
-    if (!context) return
-
-    if (activeIndex < 0) {
-      renderAll()
-      return
-    }
-
-    const mutual = { canvas, context, bars, canvasWidth, barHeight, instrument, barsPerRow }
-
-    if (activeIndex <= bars.length - 1) {
-      renderBar({ ...mutual, barIndex: activeIndex, highlighted: true })
-    }
-
-    const previousIndex = activeIndex === 0 ? bars.length - 1 : activeIndex - 1
-    if (previousIndex <= bars.length - 1) {
-      renderBar({ ...mutual, barIndex: previousIndex })
-    }
+    renderBars({
+      bars,
+      instrument,
+      canvas,
+      context,
+      canvasWidth,
+      barHeight,
+      barsPerRow,
+      highlightedBarIndex,
+    })
   }, [
-    instrument,
-    barsInPattern > 1 ? activeIndex % barsInPattern : -1,
-    barsPerRow,
     hash,
+    canvasId,
     canvasWidth,
     canvasHeight,
     dpr,
+    barsPerRow,
+    barHeight,
+    instrument,
+    bars.length,
+    highlightedBarIndex,
   ])
 
   return (
