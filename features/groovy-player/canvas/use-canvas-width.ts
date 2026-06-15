@@ -1,19 +1,31 @@
 import { useLayoutEffect, useState, type RefObject } from 'react'
 
-export const useCanvasWidth = (containerRef: RefObject<HTMLElement | null>) => {
-  const [width, setWidth] = useState(0)
+import { getDevicePixelRatio } from './canvas-dpi'
+
+type CanvasLayout = {
+  width: number
+  dpr: number
+}
+
+export const useCanvasWidth = (containerRef: RefObject<HTMLElement | null>): CanvasLayout => {
+  const [layout, setLayout] = useState<CanvasLayout>({ width: 0, dpr: 1 })
 
   useLayoutEffect(() => {
     const element = containerRef.current
     if (!element) return
 
-    const measure = () => setWidth(element.clientWidth)
+    const measure = () =>
+      setLayout({ width: element.clientWidth, dpr: getDevicePixelRatio() })
     measure()
 
     const observer = new ResizeObserver(measure)
     observer.observe(element)
-    return () => observer.disconnect()
+    window.addEventListener('resize', measure)
+    return () => {
+      observer.disconnect()
+      window.removeEventListener('resize', measure)
+    }
   }, [containerRef])
 
-  return width
+  return layout
 }

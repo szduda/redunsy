@@ -8,15 +8,11 @@ export const drawCircle = (
 ) => {
   const startAngle = Math.min(360, Math.max(0, angle?.[0] ?? 0))
   const endAngle = Math.min(360, Math.max(0, angle?.[1] ?? 360))
+  const cx = el.left + el.width / 2
+  const cy = el.top + el.height / 2
   ctx.fillStyle = el.colour!
   ctx.beginPath()
-  ctx.arc(
-    el.left + el.width / 2,
-    el.top + el.height / 2,
-    radius,
-    (startAngle / 180) * Math.PI,
-    (endAngle / 180) * Math.PI,
-  )
+  ctx.arc(cx, cy, radius, (startAngle / 180) * Math.PI, (endAngle / 180) * Math.PI)
   ctx.fill()
 }
 

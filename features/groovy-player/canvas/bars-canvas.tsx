@@ -2,6 +2,7 @@
 
 import { memo, useLayoutEffect, useRef } from 'react'
 
+import { setupCanvasDpi } from './canvas-dpi'
 import { findPatternLength } from './find-pattern-length'
 import { BAR_GAP_PX, BAR_HEIGHT_LARGE_PX, BAR_HEIGHT_PX, colors, renderBar } from './renderers'
 import { useCanvasWidth } from './use-canvas-width'
@@ -18,7 +19,7 @@ type BarsCanvasProps = {
 const Bars = ({ bars, activeIndex = -1, barsPerRow, instrument, id }: BarsCanvasProps) => {
   const canvasId = `${instrument}-canvas-${id}`
   const containerRef = useRef<HTMLDivElement>(null)
-  const canvasWidth = useCanvasWidth(containerRef)
+  const { width: canvasWidth, dpr } = useCanvasWidth(containerRef)
   const barsInPattern = Math.max(findPatternLength(bars, 8), barsPerRow)
   const barHeight = barsPerRow <= 2 ? BAR_HEIGHT_LARGE_PX : BAR_HEIGHT_PX
   const hash = bars.join('')
@@ -28,11 +29,11 @@ const Bars = ({ bars, activeIndex = -1, barsPerRow, instrument, id }: BarsCanvas
   const renderAll = () => {
     const canvas = document.getElementById(canvasId) as HTMLCanvasElement | null
     if (!canvas || canvasWidth <= 0) return
-    const context = canvas.getContext('2d')
+    const context = setupCanvasDpi(canvas, canvasWidth, canvasHeight)
     if (!context) return
 
     context.fillStyle = colors.b0
-    context.fillRect(0, 0, canvas.width, canvas.height)
+    context.fillRect(0, 0, canvasWidth, canvasHeight)
 
     bars.forEach((_, barIndex) =>
       renderBar({
@@ -40,6 +41,7 @@ const Bars = ({ bars, activeIndex = -1, barsPerRow, instrument, id }: BarsCanvas
         instrument,
         canvas,
         context,
+        canvasWidth,
         barHeight,
         barIndex,
         barsPerRow,
@@ -49,7 +51,7 @@ const Bars = ({ bars, activeIndex = -1, barsPerRow, instrument, id }: BarsCanvas
 
   useLayoutEffect(() => {
     renderAll()
-  }, [hash, canvasId, canvasWidth, barsPerRow, barHeight, instrument, bars.length])
+  }, [hash, canvasId, canvasWidth, canvasHeight, dpr, barsPerRow, barHeight, instrument, bars.length])
 
   useLayoutEffect(() => {
     const canvas = document.getElementById(canvasId) as HTMLCanvasElement | null
@@ -62,7 +64,7 @@ const Bars = ({ bars, activeIndex = -1, barsPerRow, instrument, id }: BarsCanvas
       return
     }
 
-    const mutual = { canvas, context, bars, barHeight, instrument, barsPerRow }
+    const mutual = { canvas, context, bars, canvasWidth, barHeight, instrument, barsPerRow }
 
     if (activeIndex <= bars.length - 1) {
       renderBar({ ...mutual, barIndex: activeIndex, highlighted: true })
@@ -72,14 +74,20 @@ const Bars = ({ bars, activeIndex = -1, barsPerRow, instrument, id }: BarsCanvas
     if (previousIndex <= bars.length - 1) {
       renderBar({ ...mutual, barIndex: previousIndex })
     }
-  }, [instrument, barsInPattern > 1 ? activeIndex % barsInPattern : -1, barsPerRow, hash, canvasWidth])
+  }, [
+    instrument,
+    barsInPattern > 1 ? activeIndex % barsInPattern : -1,
+    barsPerRow,
+    hash,
+    canvasWidth,
+    canvasHeight,
+    dpr,
+  ])
 
   return (
     <div ref={containerRef} className="w-full min-w-0 flex-1">
       <canvas
         id={canvasId}
-        height={canvasHeight}
-        width={canvasWidth || 1}
         className={cn('h-auto w-full bg-zinc-950', canvasWidth <= 0 && 'invisible')}
       />
     </div>

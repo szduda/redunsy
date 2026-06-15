@@ -61,6 +61,7 @@ type BarRendererArgs = {
   instrument: string
   canvas: HTMLCanvasElement
   context: CanvasRenderingContext2D
+  canvasWidth: number
   barHeight: number
   barIndex?: number
   barsPerRow?: number
@@ -70,8 +71,8 @@ type BarRendererArgs = {
 export const renderBar = ({
   bars,
   instrument,
-  canvas,
   context,
+  canvasWidth,
   barHeight,
   barIndex = 0,
   barsPerRow = 2,
@@ -80,7 +81,7 @@ export const renderBar = ({
   const bar = bars[barIndex]
   const { cellCount, glyphs } = parseBarLayout(bar)
   const barHeightGross = barHeight + 2 * BAR_GAP_PX
-  const barWidth = (canvas.width - (barsPerRow - 1) * BAR_GAP_PX) / barsPerRow
+  const barWidth = (canvasWidth - (barsPerRow - 1) * BAR_GAP_PX) / barsPerRow
   const eighthWidth = barWidth / cellCount
   const beatCells = onBeatCellIndexes(cellCount)
   const top = Math.trunc(barIndex / barsPerRow) * barHeightGross
