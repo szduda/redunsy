@@ -162,7 +162,7 @@ const MobileTempoSlider = ({ tempo, onTempoChange }: Omit<TempoSliderInputProps,
           variant="mono"
           className={cn(
             'translate-y-1 text-[20px] font-black leading-none',
-            open ? '!text-yellowy' : '!text-white',
+            open ? '!text-yellowy' : '!text-zinc-500 dark:!text-white',
           )}
         >
           {tempo}

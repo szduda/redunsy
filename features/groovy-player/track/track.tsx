@@ -53,7 +53,7 @@ export const Track = ({
   const compact = !isMobile && collapsed
 
   return (
-    <section className={cn("flex justify-center gap-2 border-b border-zinc-200 dark:border-zinc-800 py-1 lg:py-2", compact ? 'pr-1 md:pr-2 lg:pr-4' : 'flex-col')}>
+    <section className={cn("flex justify-center gap-2 border-b border-zinc-200/60 dark:border-zinc-800/60 py-1 lg:py-2", compact ? 'pr-1 md:pr-2 lg:pr-4' : 'flex-col')}>
       <div className="flex items-center justify-between gap-2 lg:gap-3 flex-wrap px-1 md:px-2 lg:px-4">
         <CollapseLabel collapsed={collapsed} onClick={() => setCollapsed((value) => !value)}>
           {name}

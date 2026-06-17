@@ -1,7 +1,8 @@
 import { type FancyIcon } from '@/features/icons/types'
+import { cn } from '@/features/theme/cn'
 
-export const PepperIcon: FancyIcon = ({ innerClass, innerClass2, ...props }) => (
-  <svg width="36" height="36" viewBox="0 0 36 36" fill="none" aria-hidden {...props}>
+export const PepperIcon: FancyIcon = ({ innerClass, innerClass2, className, ...props }) => (
+  <svg width="36" height="36" viewBox="0 0 36 36" fill="none" aria-hidden className={className} {...props}>
     <g clipPath="url(#pepper-icon-clip)">
       <path
         className={innerClass}
@@ -11,10 +12,9 @@ export const PepperIcon: FancyIcon = ({ innerClass, innerClass2, ...props }) => 
         strokeLinecap="round"
       />
       <path
-        className={innerClass2}
+        className={cn('stroke-yellowy dark:stroke-[#142926]', innerClass2)}
         d="M28.8436 9.74091L27.0536 9.01565C26.5094 8.79516 26.2732 8.15616 26.543 7.63442L27.5743 5.64043L29.5064 0.522994C29.9306 -0.600677 31.6154 -0.16495 31.4331 1.02129L30.2125 8.96419C30.1143 9.60303 29.4432 9.98384 28.8436 9.74091Z"
         fill="#F9C926"
-        stroke="#142926"
         strokeLinecap="round"
       />
     </g>

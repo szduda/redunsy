@@ -16,7 +16,7 @@ const OPPOSITE_DIRECTION: Record<PopoverDirection, PopoverDirection> = {
 }
 
 export const popoverPanelBaseClass =
-  'absolute z-20 touch-none overscroll-contain flex flex-col gap-1 rounded-md bg-white p-3 shadow-lg dark:bg-black border border-zinc-500/50'
+  'absolute z-20 touch-none overscroll-contain flex flex-col gap-1 rounded-md bg-white p-3 shadow-lg dark:bg-black border border-zinc-200 dark:border-zinc-500/50'
 
 export const popoverTriggerOpenClass =
   'bg-zinc-200/60 !text-yellowy dark:bg-zinc-700/50 !dark:text-yellowy'

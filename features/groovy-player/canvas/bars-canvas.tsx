@@ -3,9 +3,11 @@
 import { memo, useLayoutEffect, useRef } from 'react'
 
 import { setupCanvasDpi } from './canvas-dpi'
+import { darkCanvasColors, lightCanvasColors } from './canvas-colors'
 import { findPatternLength } from './find-pattern-length'
-import { BAR_GAP_PX, BAR_HEIGHT_LARGE_PX, BAR_HEIGHT_PX, colors, renderBars } from './renderers'
+import { BAR_GAP_PX, BAR_HEIGHT_LARGE_PX, BAR_HEIGHT_PX, renderBars } from './renderers'
 import { useCanvasWidth } from './use-canvas-width'
+import { usePrefersDark } from '@/features/shared/use-prefers-dark'
 import { cn } from '@/features/theme/cn'
 
 type BarsCanvasProps = {
@@ -17,6 +19,7 @@ type BarsCanvasProps = {
 }
 
 const Bars = ({ bars, activeIndex = -1, barsPerRow, instrument, id }: BarsCanvasProps) => {
+  const prefersDark = usePrefersDark()
   const canvasId = `${instrument}-canvas-${id}`
   const containerRef = useRef<HTMLDivElement>(null)
   const { width: canvasWidth, dpr } = useCanvasWidth(containerRef)
@@ -34,7 +37,9 @@ const Bars = ({ bars, activeIndex = -1, barsPerRow, instrument, id }: BarsCanvas
     const context = setupCanvasDpi(canvas, canvasWidth, canvasHeight)
     if (!context) return
 
-    context.fillStyle = colors.b0
+    const palette = prefersDark ? darkCanvasColors : lightCanvasColors
+
+    context.fillStyle = palette.b0
     context.fillRect(0, 0, canvasWidth, canvasHeight)
 
     renderBars({
@@ -46,6 +51,7 @@ const Bars = ({ bars, activeIndex = -1, barsPerRow, instrument, id }: BarsCanvas
       barHeight,
       barsPerRow,
       highlightedBarIndex,
+      palette,
     })
   }, [
     hash,
@@ -58,13 +64,14 @@ const Bars = ({ bars, activeIndex = -1, barsPerRow, instrument, id }: BarsCanvas
     instrument,
     bars.length,
     highlightedBarIndex,
+    prefersDark,
   ])
 
   return (
     <div ref={containerRef} className="w-full min-w-0 flex-1">
       <canvas
         id={canvasId}
-        className={cn('h-auto w-full bg-zinc-950', canvasWidth <= 0 && 'invisible')}
+        className={cn('h-auto w-full bg-zinc-50 dark:bg-zinc-950', canvasWidth <= 0 && 'invisible')}
       />
     </div>
   )

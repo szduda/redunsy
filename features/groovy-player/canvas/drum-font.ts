@@ -11,10 +11,10 @@ const getR = (el: CanvasElement) => {
 
 const soundLowRenderer: NoteRenderer = (ctx, el) => drawCircle(ctx, el, getR(el))
 
-const soundMidRenderer: NoteRenderer = (ctx, el, bgColor = '#111') =>
+const soundMidRenderer: NoteRenderer = (ctx, el, bgColor = el.bgColor) =>
   drawRing(ctx, el, getR(el), getR(el) / 2.5, bgColor)
 
-const soundHighRenderer: NoteRenderer = (ctx, el, bgColor = '#111') => {
+const soundHighRenderer: NoteRenderer = (ctx, el, bgColor = el.bgColor) => {
   drawRing(ctx, el, getR(el), getR(el) / 3, bgColor)
   drawCross(ctx, el, getR(el) + 1, getR(el) / 3.5)
 }
@@ -32,25 +32,29 @@ const stickRenderer: NoteRenderer = (ctx, el) => {
 
 type FlamRenderer = (notes: [NoteRenderer, NoteRenderer]) => NoteRenderer
 
-const flamRenderer: FlamRenderer = (notes) => (ctx, el) => {
+const flamRenderer: FlamRenderer = (notes) => (ctx, el, bgColor = el.bgColor) => {
   const top = el.top - getR(el) * 0.2
   const left = el.left - getR(el) * 0.1
   const [leftRenderer, rightRenderer] = notes
-  leftRenderer(ctx, {
-    ...el,
-    top,
-    left,
-    height: el.height * 0.8,
-    width: el.width * 0.8,
-  })
-  rightRenderer(ctx, { ...el, top: el.top + 1, left: el.left + 1 })
+  leftRenderer(
+    ctx,
+    {
+      ...el,
+      top,
+      left,
+      height: el.height * 0.8,
+      width: el.width * 0.8,
+    },
+    bgColor,
+  )
+  rightRenderer(ctx, { ...el, top: el.top + 1, left: el.left + 1 }, bgColor)
 }
 
 const ttFlamRenderer: NoteRenderer = flamRenderer([soundMidRenderer, soundMidRenderer])
 const ssFlamRenderer: NoteRenderer = flamRenderer([soundHighRenderer, soundHighRenderer])
 
 const pauseSymbol: CharsRenderer = {
-  '-': (ctx, el) => drawCircle(ctx, { ...el, colour: colors.w0 }, el.height / 30),
+  '-': (ctx, el) => drawCircle(ctx, el, el.height / 30),
 }
 
 const dundunSymbols: CharsRenderer = {

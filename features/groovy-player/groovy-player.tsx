@@ -124,7 +124,7 @@ export const GroovyPlayer = () => {
   )
 
   return (
-    <section className="flex w-full max-w-4xl flex-col gap-4 bg-zinc-900/60 md:rounded-xl">
+    <section className="flex w-full max-w-4xl flex-col gap-4 bg-white md:rounded-xl md:border md:border-zinc-100 dark:border-transparent dark:bg-zinc-900/60">
       <div className="flex flex-col md:py-2 lg:py-4">
         {DEMO_TRACKS.map((track) => (
           <Track
@@ -142,7 +142,7 @@ export const GroovyPlayer = () => {
 
       {playError ? <Text variant="mono">{playError}</Text> : null}
 
-      <div className="flex flex-wrap items-center justify-between gap-2 md:gap-4 py-2">
+      <div className="flex flex-wrap items-center justify-between gap-2 border-t border-zinc-100 px-1 py-2 dark:border-zinc-800/60 md:gap-4 md:px-2 lg:px-4">
         <PlayerTransport
           isPlaying={isPlaying}
           onPlayPause={onTogglePlayPause}

@@ -28,7 +28,7 @@ export const TrackVolume = ({
 }: TrackVolumeProps) => (
   <div
     className={cn(
-      'flex items-center rounded-lg bg-zinc-50 md:gap-1 dark:bg-zinc-900',
+      'flex items-center rounded-lg border border-zinc-200/60 bg-white md:gap-1 dark:border-transparent dark:bg-zinc-900 dark:shadow-none',
       compact && 'shrink-0',
       className,
     )}
@@ -65,7 +65,7 @@ export const TrackVolume = ({
           <Button
             aria-expanded={open}
             className={cn(
-              '!rounded-l-none !border-l border-l-black font-semibold text-lg',
+              '!rounded-l-none !border-l border-l-zinc-200 font-semibold text-lg dark:border-l-zinc-700',
               open && popoverTriggerOpenClass,
             )}
             onClick={toggle}

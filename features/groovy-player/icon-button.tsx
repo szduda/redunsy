@@ -24,7 +24,7 @@ export const IconButton = ({
 }: IconButtonProps) => (
   <button
     className={cn(
-      'inline-flex items-center justify-center border border-transparent transition-all ease-in-out',
+      'inline-flex items-center justify-center border border-transparent text-zinc-800 transition-all ease-in-out dark:text-zinc-100',
       'active:scale-95 disabled:pointer-events-none disabled:opacity-25',
       dark
         ? 'min-w-[54px] rounded-md bg-zinc-900 text-white hover:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-200'

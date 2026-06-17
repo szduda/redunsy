@@ -1,3 +1,4 @@
+import { darkCanvasColors, type CanvasColors } from './canvas-colors'
 import { font } from './drum-font'
 import { onBeatCellIndexes, parseBarLayout } from './bar-layout'
 
@@ -8,16 +9,7 @@ export const BAR_GAP_PX = 1
 export const BAR_HEIGHT_PX = 32
 export const BAR_HEIGHT_LARGE_PX = 48
 
-export const colors = {
-  b0: '#121211',
-  b1: '#141414',
-  b2: '#1f1f1f',
-  w0: '#666',
-  w1: '#afafaf',
-  w2: '#d4d4d4',
-  g0: '#131',
-  g1: '#242',
-}
+export const colors = darkCanvasColors
 
 type RendererArgs = {
   context: CanvasRenderingContext2D
@@ -63,7 +55,9 @@ type BarRendererArgs = {
   highlighted?: boolean
 }
 
-type LayoutBarArgs = Omit<BarRendererArgs, 'canvas' | 'context' | 'instrument'>
+type LayoutBarArgs = Omit<BarRendererArgs, 'canvas' | 'context' | 'instrument'> & {
+  palette?: CanvasColors
+}
 
 export type LaidOutBar = {
   barEl: CanvasElement
@@ -78,6 +72,7 @@ export const layoutBar = ({
   barIndex = 0,
   barsPerRow = 2,
   highlighted = false,
+  palette = darkCanvasColors,
 }: LayoutBarArgs): LaidOutBar => {
   const bar = bars[barIndex]
   const { cellCount, glyphs } = parseBarLayout(bar)
@@ -90,7 +85,7 @@ export const layoutBar = ({
 
   const barEl: CanvasElement = {
     type: 'bar',
-    bgColor: highlighted ? colors.g0 : colors.b1,
+    bgColor: highlighted ? palette.g0 : palette.b1,
     width: barWidth,
     height: barHeight,
     top,
@@ -104,14 +99,14 @@ export const layoutBar = ({
 
     return {
       type: 'note' as const,
-      colour: glyph.note === '-' ? colors.w0 : colors.w2,
+      colour: glyph.note === '-' ? palette.w0 : palette.w2,
       bgColor: isOnBeat
         ? highlighted
-          ? colors.g1
-          : colors.b2
+          ? palette.g1
+          : palette.b2
         : highlighted
-          ? colors.g0
-          : colors.b1,
+          ? palette.g0
+          : palette.b1,
       width: eighthWidth,
       height: barHeight,
       top,
@@ -160,6 +155,7 @@ export const renderBar = ({
 
 type RenderBarsArgs = Omit<BarRendererArgs, 'barIndex' | 'highlighted'> & {
   highlightedBarIndex?: number
+  palette?: CanvasColors
 }
 
 export const renderBars = ({
@@ -170,6 +166,7 @@ export const renderBars = ({
   barHeight,
   barsPerRow = 2,
   highlightedBarIndex = -1,
+  palette = darkCanvasColors,
 }: RenderBarsArgs) => {
   const layouts = bars.map((_, barIndex) =>
     layoutBar({
@@ -179,6 +176,7 @@ export const renderBars = ({
       barIndex,
       barsPerRow,
       highlighted: barIndex === highlightedBarIndex,
+      palette,
     }),
   )
 
