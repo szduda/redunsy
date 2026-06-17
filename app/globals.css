@@ -1,8 +1,17 @@
 @import 'tailwindcss';
 
+@custom-variant dark (&:where(.dark, .dark *));
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  color-scheme: light;
+}
+
+.dark {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+  color-scheme: dark;
 }
 
 @keyframes wiggle {
@@ -15,21 +24,61 @@
   }
 }
 
+@keyframes dundun {
+  0% {
+    transform: scale(1);
+  }
+  12.5% {
+    transform: scale(0.975);
+  }
+  25% {
+    transform: scale(1);
+  }
+  37.5% {
+    transform: scale(0.98);
+  }
+  50% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes spin-logo {
+  0% {
+    transform: rotate(-180deg);
+  }
+  100% {
+    transform: rotate(-35deg);
+  }
+}
+
+@keyframes bouncy {
+  0%,
+  100% {
+    transform: translateX(0) rotate(0deg);
+    animation-timing-function: cubic-bezier(0.1, 0, 1, 1);
+  }
+  50% {
+    transform: translateX(20%) rotate(35deg);
+    animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+  }
+}
+
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --color-yellowy: #f9c926;
   --color-yellowy-light: #fbd760;
+  --color-graye: #455f5d;
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
   --animate-shake: wiggle 500ms ease-in-out infinite;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --animate-dundun: dundun 1.5s ease-in infinite;
+  --animate-spin-logo-once: spin-logo 500ms ease-out;
+  --animate-stick: bouncy 1s infinite;
+  --animate-stick2: bouncy 667ms infinite;
 }
 
 body {

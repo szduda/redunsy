@@ -4,8 +4,8 @@ export const dynamic = 'force-static'
 
 const Home = () => (
   <main className="flex flex-1 flex-col items-center justify-center gap-4 p-6">
-    <Button href="/gui" link>
-      Canvas GUI
+    <Button href="/player" link>
+      Player
     </Button>
     <Button href="/raw" link>
       Raw Text

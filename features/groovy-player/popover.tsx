@@ -1,11 +1,13 @@
 'use client'
 
-import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react'
+import { createPortal } from 'react-dom'
 
 import { cn } from '@/features/theme/cn'
 
 export type PopoverDirection = 'top' | 'bottom' | 'left' | 'right'
 
+const POPOVER_GAP_PX = 4
 const POPOVER_MARGIN_PX = 8
 
 const OPPOSITE_DIRECTION: Record<PopoverDirection, PopoverDirection> = {
@@ -16,19 +18,50 @@ const OPPOSITE_DIRECTION: Record<PopoverDirection, PopoverDirection> = {
 }
 
 export const popoverPanelBaseClass =
-  'absolute z-20 touch-none overscroll-contain flex flex-col gap-1 rounded-md bg-white p-3 shadow-lg dark:bg-black border border-zinc-200 dark:border-zinc-500/50'
+  'fixed z-30 touch-none overscroll-contain flex flex-col gap-1 rounded-md bg-white p-3 shadow-lg dark:bg-black border border-zinc-200 dark:border-zinc-500/50'
+
+export const popoverPanelFullBaseClass =
+  'fixed z-30 touch-none overscroll-contain flex flex-col overflow-y-auto bg-white dark:bg-black border-t border-zinc-200 dark:border-zinc-500/50'
 
 export const popoverTriggerOpenClass =
   'bg-zinc-200/60 !text-yellowy dark:bg-zinc-700/50 !dark:text-yellowy'
 
-const directionPanelClass: Record<PopoverDirection, string> = {
-  bottom: 'top-full left-1/2 -translate-x-1/2 translate-y-1',
-  top: 'bottom-full left-1/2 -translate-x-1/2 -translate-y-1',
-  left: 'right-full top-1/2 -translate-y-1/2 -translate-x-1',
-  right: 'left-full top-1/2 -translate-y-1/2 translate-x-1',
+export const popoverPanelClass = cn(popoverPanelBaseClass, 'w-32')
+
+type PanelPosition = {
+  top: number
+  left: number
+  transform: string
 }
 
-export const popoverPanelClass = cn(popoverPanelBaseClass, directionPanelClass.bottom, 'w-32')
+const getPanelPosition = (direction: PopoverDirection, trigger: DOMRect): PanelPosition => {
+  switch (direction) {
+    case 'bottom':
+      return {
+        top: trigger.bottom + POPOVER_GAP_PX,
+        left: trigger.left + trigger.width / 2,
+        transform: 'translateX(-50%)',
+      }
+    case 'top':
+      return {
+        top: trigger.top - POPOVER_GAP_PX,
+        left: trigger.left + trigger.width / 2,
+        transform: 'translate(-50%, -100%)',
+      }
+    case 'left':
+      return {
+        top: trigger.top + trigger.height / 2,
+        left: trigger.left - POPOVER_GAP_PX,
+        transform: 'translate(-100%, -50%)',
+      }
+    case 'right':
+      return {
+        top: trigger.top + trigger.height / 2,
+        left: trigger.right + POPOVER_GAP_PX,
+        transform: 'translateY(-50%)',
+      }
+  }
+}
 
 const resolveDirection = (
   preferred: PopoverDirection,
@@ -59,15 +92,30 @@ const resolveDirection = (
   return space[preferred] >= space[opposite] ? preferred : opposite
 }
 
+const getFullPanelStyle = (root: HTMLElement): CSSProperties => {
+  const headerBottom = root.closest('header')?.getBoundingClientRect().bottom
+  return {
+    top: headerBottom ?? 0,
+    left: 0,
+    right: 0,
+    bottom: 0,
+  }
+}
+
 type PopoverRenderProps = {
   open: boolean
   toggle: () => void
 }
 
+type PopoverPanelProps = {
+  close: () => void
+}
+
 type PopoverProps = {
-  panel: ReactNode
+  panel: ReactNode | ((props: PopoverPanelProps) => ReactNode)
   panelClassName?: string
   preferredDirection?: PopoverDirection
+  full?: boolean
   children: (props: PopoverRenderProps) => ReactNode
 }
 
@@ -75,68 +123,92 @@ export const Popover = ({
   panel,
   panelClassName,
   preferredDirection = 'bottom',
+  full = false,
   children,
 }: PopoverProps) => {
   const [open, setOpen] = useState(false)
-  const [direction, setDirection] = useState<PopoverDirection>(preferredDirection)
+  const [panelStyle, setPanelStyle] = useState<CSSProperties>()
   const rootRef = useRef<HTMLDivElement>(null)
   const panelRef = useRef<HTMLDivElement>(null)
+  const close = () => setOpen(false)
 
-  const updateDirection = () => {
+  const updatePosition = () => {
     const trigger = rootRef.current
     const panelEl = panelRef.current
     if (!trigger || !panelEl) return
 
-    setDirection(
-      resolveDirection(preferredDirection, trigger.getBoundingClientRect(), {
-        width: panelEl.offsetWidth,
-        height: panelEl.offsetHeight,
-      }),
-    )
+    if (full) {
+      setPanelStyle(getFullPanelStyle(trigger))
+      return
+    }
+
+    const triggerRect = trigger.getBoundingClientRect()
+    const direction = resolveDirection(preferredDirection, triggerRect, {
+      width: panelEl.offsetWidth,
+      height: panelEl.offsetHeight,
+    })
+    const position = getPanelPosition(direction, triggerRect)
+
+    setPanelStyle({
+      top: position.top,
+      left: position.left,
+      transform: position.transform,
+    })
   }
 
   useLayoutEffect(() => {
     if (!open) {
-      setDirection(preferredDirection)
+      setPanelStyle(undefined)
       return
     }
-    updateDirection()
-  }, [open, preferredDirection, panel])
+    updatePosition()
+  }, [full, open, preferredDirection, panel])
 
   useEffect(() => {
     if (!open) return
-    const onViewportChange = () => updateDirection()
+    const onViewportChange = () => updatePosition()
     window.addEventListener('resize', onViewportChange)
     window.addEventListener('scroll', onViewportChange, true)
     return () => {
       window.removeEventListener('resize', onViewportChange)
       window.removeEventListener('scroll', onViewportChange, true)
     }
-  }, [open, preferredDirection])
+  }, [full, open, preferredDirection])
 
   useEffect(() => {
     if (!open) return
     const onPointerDown = ({ target }: PointerEvent) => {
-      if (!rootRef.current?.contains(target as Node)) setOpen(false)
+      const node = target as Node
+      if (rootRef.current?.contains(node) || panelRef.current?.contains(node)) return
+      setOpen(false)
     }
     document.addEventListener('pointerdown', onPointerDown)
     return () => document.removeEventListener('pointerdown', onPointerDown)
   }, [open])
 
   const toggle = () => setOpen((value) => !value)
+  const panelContent = typeof panel === 'function' ? panel({ close }) : panel
 
   return (
     <div ref={rootRef} className="relative">
       {children({ open, toggle })}
-      {open ? (
-        <div
-          ref={panelRef}
-          className={cn(popoverPanelBaseClass, directionPanelClass[direction], 'w-32', panelClassName)}
-          onPointerDown={(event) => event.stopPropagation()}
-        >
-          {panel}
-        </div>
-      ) : null}
+      {open && typeof document !== 'undefined'
+        ? createPortal(
+            <div
+              ref={panelRef}
+              className={cn(
+                full ? popoverPanelFullBaseClass : popoverPanelBaseClass,
+                !full && 'w-32',
+                panelClassName,
+              )}
+              style={panelStyle}
+              onPointerDown={(event) => event.stopPropagation()}
+            >
+              {panelContent}
+            </div>,
+            document.body,
+          )
+        : null}
     </div>
   )
 }

@@ -63,11 +63,25 @@ type PlayerState = {
   initTrackBars: (tracks: { id: string; bars: string[] }[]) => void
   hasMetronome: boolean
   toggleHasMetronome: () => void
+  showBarIndex: boolean
+  setShowBarIndex: (showBarIndex: boolean) => void
+  markTriplets: boolean
+  setMarkTriplets: (markTriplets: boolean) => void
+  fullBleed: boolean
+  setFullBleed: (fullBleed: boolean) => void
 }
 
 type PersistedPlayerState = Pick<
   PlayerState,
-  'barsPerRow' | 'tempo' | 'swingPattern' | 'swingEnabled' | 'trackBars' | 'hasMetronome'
+  | 'barsPerRow'
+  | 'tempo'
+  | 'swingPattern'
+  | 'swingEnabled'
+  | 'trackBars'
+  | 'hasMetronome'
+  | 'showBarIndex'
+  | 'markTriplets'
+  | 'fullBleed'
 >
 
 const isZoomBarsPerRow = (value: unknown): value is ZoomBarsPerRow =>
@@ -115,6 +129,12 @@ export const usePlayerStore = create<PlayerState>()(
       },
       hasMetronome: false,
       toggleHasMetronome: () => set({ hasMetronome: !get().hasMetronome }),
+      showBarIndex: true,
+      setShowBarIndex: (showBarIndex) => set({ showBarIndex }),
+      markTriplets: true,
+      setMarkTriplets: (markTriplets) => set({ markTriplets }),
+      fullBleed: false,
+      setFullBleed: (fullBleed) => set({ fullBleed }),
     }),
     {
       name: 'redunsy-player',
@@ -126,9 +146,12 @@ export const usePlayerStore = create<PlayerState>()(
         swingEnabled: state.swingEnabled,
         trackBars: state.trackBars,
         hasMetronome: state.hasMetronome,
+        showBarIndex: state.showBarIndex,
+        markTriplets: state.markTriplets,
+        fullBleed: state.fullBleed,
       }),
       merge: (persisted, current) => {
-        const saved = persisted as Partial<PersistedPlayerState>
+        const saved = persisted as Partial<PersistedPlayerState> & { markFirstBeat?: boolean }
         return {
           ...current,
           ...saved,
@@ -140,6 +163,13 @@ export const usePlayerStore = create<PlayerState>()(
             saved.trackBars && typeof saved.trackBars === 'object'
               ? saved.trackBars
               : current.trackBars,
+          showBarIndex:
+            typeof saved.showBarIndex === 'boolean'
+              ? saved.showBarIndex
+              : typeof saved.markFirstBeat === 'boolean'
+                ? saved.markFirstBeat
+                : current.showBarIndex,
+          fullBleed: typeof saved.fullBleed === 'boolean' ? saved.fullBleed : current.fullBleed,
         }
       },
     },

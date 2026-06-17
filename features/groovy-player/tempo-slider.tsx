@@ -128,11 +128,11 @@ const TempoSliderInput = ({ tempo, onTempoChange, className, vertical = false }:
 }
 
 const DesktopTempoSlider = ({ tempo, onTempoChange }: Omit<TempoSliderInputProps, 'vertical' | 'className'>) => (
-  <div className="flex flex-col items-end gap-1">
+  <div className="flex w-40 flex-col items-end gap-1 pr-5">
     <Text variant="mono" className="font-bold">
       {tempo} BPM
     </Text>
-    <TempoSliderInput onTempoChange={onTempoChange} tempo={tempo} />
+    <TempoSliderInput className="w-full" onTempoChange={onTempoChange} tempo={tempo} />
     <TempoMinMaxLabels />
   </div>
 )

@@ -4,6 +4,7 @@ import { createElement, type ReactNode } from 'react'
 
 import { MidiSoundsProvider } from '@/lib/midinike/audio/provider'
 
+import { ThemeProvider } from '@/features/theme/theme-provider'
 import { QueryProvider } from './query-provider'
 
 type ProvidersProps = {
@@ -11,4 +12,8 @@ type ProvidersProps = {
 }
 
 export const Providers = ({ children }: ProvidersProps) =>
-  createElement(QueryProvider, null, createElement(MidiSoundsProvider, null, children))
+  createElement(
+    QueryProvider,
+    null,
+    createElement(ThemeProvider, null, createElement(MidiSoundsProvider, null, children)),
+  )

@@ -3,8 +3,8 @@
 import { useCallback, useEffect, useLayoutEffect, useState } from 'react'
 
 import { DEMO_TRACKS } from '@/features/groovy-player/demo-tracks'
-import { MetronomeToggle } from '@/features/groovy-player/metronome-toggle'
-import { PlayerTransport } from '@/features/groovy-player/player-transport'
+import { PlayerBottomNav } from '@/features/groovy-player/player-bottom-nav'
+import { useTopNavSticky } from '@/features/layout/use-top-nav-sticky'
 import {
   barSizeFromTrackBars,
   DEFAULT_SWING_PATTERN,
@@ -12,10 +12,10 @@ import {
   resolveGroovePattern,
   usePlayerStore,
 } from '@/features/groovy-player/player.store'
-import { SwingToggle } from '@/features/groovy-player/swing-toggle'
-import { TempoSlider } from '@/features/groovy-player/tempo-slider'
 import { Track } from '@/features/groovy-player/track/track'
+import { PageBottomNav } from '@/features/layout/page-bottom-nav'
 import { Text } from '@/features/theme/text'
+import { cn } from '@/features/theme/cn'
 import { metronomeBarForGrooveLength, useMidinike, validateBarsForGroove } from '@/lib/midinike'
 
 const LAYER_CONFIG = {
@@ -26,6 +26,8 @@ const LAYER_CONFIG = {
 }
 
 export const GroovyPlayer = () => {
+  useTopNavSticky(false)
+
   const barsPerRow = usePlayerStore((state) => state.barsPerRow)
   const tempo = usePlayerStore((state) => state.tempo)
   const isPlaying = usePlayerStore((state) => state.isPlaying)
@@ -35,6 +37,7 @@ export const GroovyPlayer = () => {
   const barSize = barSizeFromTrackBars(trackBars)
   const initTrackBars = usePlayerStore((state) => state.initTrackBars)
   const hasMetronome = usePlayerStore((state) => state.hasMetronome)
+  const fullBleed = usePlayerStore((state) => state.fullBleed)
   const setIsPlaying = usePlayerStore((state) => state.setIsPlaying)
   const setBeatIndex = usePlayerStore((state) => state.setBeatIndex)
   const [playError, setPlayError] = useState<string | null>(null)
@@ -124,38 +127,41 @@ export const GroovyPlayer = () => {
   )
 
   return (
-    <section className="flex w-full max-w-4xl flex-col gap-4 bg-white md:rounded-xl md:border md:border-zinc-100 dark:border-transparent dark:bg-zinc-900/60">
-      <div className="flex flex-col md:py-2 lg:py-4">
-        {DEMO_TRACKS.map((track) => (
-          <Track
-            activeIndex={trackActiveIndex}
-            bars={trackBars[track.id] ?? track.bars}
-            barsPerRow={barsPerRow}
-            id={track.id}
-            instrument={track.instrument}
-            key={track.id}
-            name={track.name}
-            onVolumeLevelChange={onVolumeLevelChange}
-          />
-        ))}
-      </div>
+    <>
+      <section
+        className={cn(
+          'flex w-full flex-col gap-4 bg-white dark:bg-zinc-900/60',
+          fullBleed
+            ? 'md:rounded-none md:border-0'
+            : 'max-w-4xl md:rounded-xl md:border md:border-zinc-100 dark:border-transparent',
+        )}
+      >
+        <div className="flex flex-col">
+          {DEMO_TRACKS.map((track) => (
+            <Track
+              activeIndex={trackActiveIndex}
+              bars={trackBars[track.id] ?? track.bars}
+              barsPerRow={barsPerRow}
+              id={track.id}
+              instrument={track.instrument}
+              key={track.id}
+              name={track.name}
+              onVolumeLevelChange={onVolumeLevelChange}
+            />
+          ))}
+        </div>
 
-      {playError ? <Text variant="mono">{playError}</Text> : null}
+        {playError ? <Text className="px-4 pb-2" variant="mono">{playError}</Text> : null}
+      </section>
 
-      <div className="flex flex-wrap items-center justify-between gap-2 border-t border-zinc-100 px-1 py-2 dark:border-zinc-800/60 md:gap-4 md:px-2 lg:px-4">
-        <PlayerTransport
+      <PageBottomNav>
+        <PlayerBottomNav
           isPlaying={isPlaying}
           onPlayPause={onTogglePlayPause}
           onRestart={onRestart}
           onStop={stop}
         />
-
-        <div className="flex flex-wrap items-end gap-3">
-          <TempoSlider />
-          <MetronomeToggle />
-          <SwingToggle />
-        </div>
-      </div>
-    </section>
+      </PageBottomNav>
+    </>
   )
 }

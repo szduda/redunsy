@@ -3,8 +3,12 @@ import { colors } from './renderers'
 
 import type { CanvasElement, CharsRenderer, FontRenderer, NoteRenderer } from './types'
 
+const GLYPH_MAX_HEIGHT_RATIO = 0.6
+
+const maxGlyphHeight = (el: CanvasElement) => el.height * GLYPH_MAX_HEIGHT_RATIO
+
 const getR = (el: CanvasElement) => {
-  const r = Math.min(el.width, el.height) / 2
+  const r = Math.min(el.width, maxGlyphHeight(el)) / 2
   const padding = r < 15 ? 1 : 3
   return r - padding
 }
@@ -21,12 +25,13 @@ const soundHighRenderer: NoteRenderer = (ctx, el, bgColor = el.bgColor) => {
 
 const stickRenderer: NoteRenderer = (ctx, el) => {
   const x = el.left + el.width / 2
-  const padding = el.height < 30 ? 2 : 4
+  const height = maxGlyphHeight(el)
+  const top = el.top + (el.height - height) / 2
   ctx.strokeStyle = el.colour ?? colors.w2
   ctx.lineWidth = el.width / 4
   ctx.beginPath()
-  ctx.moveTo(x, el.top + padding)
-  ctx.lineTo(x, el.top + el.height - padding)
+  ctx.moveTo(x, top)
+  ctx.lineTo(x, top + height)
   ctx.stroke()
 }
 

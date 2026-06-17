@@ -5,9 +5,10 @@ import { memo, useLayoutEffect, useRef } from 'react'
 import { setupCanvasDpi } from './canvas-dpi'
 import { darkCanvasColors, lightCanvasColors } from './canvas-colors'
 import { findPatternLength } from './find-pattern-length'
-import { BAR_GAP_PX, BAR_HEIGHT_LARGE_PX, BAR_HEIGHT_PX, renderBars } from './renderers'
+import { BAR_GAP_PX, barHeightForBarsPerRow, renderBars } from './renderers'
 import { useCanvasWidth } from './use-canvas-width'
-import { usePrefersDark } from '@/features/shared/use-prefers-dark'
+import { usePlayerStore } from '@/features/groovy-player/player.store'
+import { useIsDark } from '@/features/store/theme.store'
 import { cn } from '@/features/theme/cn'
 
 type BarsCanvasProps = {
@@ -19,12 +20,14 @@ type BarsCanvasProps = {
 }
 
 const Bars = ({ bars, activeIndex = -1, barsPerRow, instrument, id }: BarsCanvasProps) => {
-  const prefersDark = usePrefersDark()
+  const prefersDark = useIsDark()
+  const showBarIndex = usePlayerStore((state) => state.showBarIndex)
+  const markTriplets = usePlayerStore((state) => state.markTriplets)
   const canvasId = `${instrument}-canvas-${id}`
   const containerRef = useRef<HTMLDivElement>(null)
   const { width: canvasWidth, dpr } = useCanvasWidth(containerRef)
   const barsInPattern = Math.max(findPatternLength(bars, 8), barsPerRow)
-  const barHeight = barsPerRow <= 2 ? BAR_HEIGHT_LARGE_PX : BAR_HEIGHT_PX
+  const barHeight = barHeightForBarsPerRow(barsPerRow)
   const hash = bars.join('')
   const canvasHeight =
     (barHeight + 2 * BAR_GAP_PX) * Math.ceil(barsInPattern / barsPerRow) - 2 * BAR_GAP_PX
@@ -52,6 +55,8 @@ const Bars = ({ bars, activeIndex = -1, barsPerRow, instrument, id }: BarsCanvas
       barsPerRow,
       highlightedBarIndex,
       palette,
+      showBarIndex,
+      markTriplets,
     })
   }, [
     hash,
@@ -65,6 +70,8 @@ const Bars = ({ bars, activeIndex = -1, barsPerRow, instrument, id }: BarsCanvas
     bars.length,
     highlightedBarIndex,
     prefersDark,
+    showBarIndex,
+    markTriplets,
   ])
 
   return (

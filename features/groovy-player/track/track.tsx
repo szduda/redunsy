@@ -59,16 +59,18 @@ export const Track = ({
           {name}
         </CollapseLabel>
 
-        <TrackVolume
-          compact={collapsed || isMobile}
-          muted={muted}
-          onToggleMute={() => setMuted((value) => !value)}
-          onVolumeChange={(value: number) => {
-            setVolume(value)
-            if (value > 0) setMuted(false)
-          }}
-          volume={volume}
-        />
+        <div className="md:flex-1 flex justify-end">
+          <TrackVolume
+            compact={collapsed || isMobile}
+            muted={muted}
+            onToggleMute={() => setMuted((value) => !value)}
+            onVolumeChange={(value: number) => {
+              setVolume(value)
+              if (value > 0) setMuted(false)
+            }}
+            volume={volume}
+          />
+        </div>
 
         {!compact &&
           <span className="font-mono text-xs uppercase tracking-wide text-zinc-500">

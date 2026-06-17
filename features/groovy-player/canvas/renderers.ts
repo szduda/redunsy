@@ -1,13 +1,17 @@
 import { darkCanvasColors, type CanvasColors } from './canvas-colors'
 import { font } from './drum-font'
+import { drawBarIndexLabel } from '@/features/groovy-player/bar-index-mark'
 import { onBeatCellIndexes, parseBarLayout } from './bar-layout'
 
 import type { BarGlyph } from './bar-layout'
 import type { CanvasElement } from './types'
 
 export const BAR_GAP_PX = 1
-export const BAR_HEIGHT_PX = 32
 export const BAR_HEIGHT_LARGE_PX = 48
+export const BAR_HEIGHT_DENSE_PX = 40
+
+export const barHeightForBarsPerRow = (barsPerRow: number) =>
+  barsPerRow >= 3 ? BAR_HEIGHT_DENSE_PX : BAR_HEIGHT_LARGE_PX
 
 export const colors = darkCanvasColors
 
@@ -156,6 +160,67 @@ export const renderBar = ({
 type RenderBarsArgs = Omit<BarRendererArgs, 'barIndex' | 'highlighted'> & {
   highlightedBarIndex?: number
   palette?: CanvasColors
+  showBarIndex?: boolean
+  markTriplets?: boolean
+}
+
+const renderBarIndexLabels = (
+  context: CanvasRenderingContext2D,
+  layouts: LaidOutBar[],
+  palette: CanvasColors,
+) => {
+  layouts.forEach((layout) => {
+    const firstNote = layout.noteElements[0]
+    if (!firstNote) return
+    drawBarIndexLabel(
+      context,
+      firstNote.left + firstNote.width / 2,
+      firstNote.top + firstNote.height,
+      layout.barEl.barIndex ?? 0,
+      palette.w1,
+    )
+  })
+}
+
+const noteCenterX = (note: Required<CanvasElement>) => note.left + note.width / 2
+
+const renderTripletMarks = (
+  context: CanvasRenderingContext2D,
+  layouts: LaidOutBar[],
+  palette: CanvasColors,
+) => {
+  context.strokeStyle = palette.w1
+  context.fillStyle = palette.w1
+  context.lineWidth = 1
+  context.font = '7px monospace'
+  context.textAlign = 'center'
+  context.textBaseline = 'bottom'
+
+  layouts.forEach((layout) => {
+    for (let index = 0; index < layout.glyphs.length; index += 1) {
+      const glyph = layout.glyphs[index]
+      if (glyph.kind !== 'eighth' || layout.glyphs[index + 1]?.kind !== 'triplet') continue
+
+      const groupNotes = layout.noteElements.slice(index, index + 3)
+      if (groupNotes.length < 3) continue
+
+      const left = noteCenterX(groupNotes[0])
+      const right = noteCenterX(groupNotes[2])
+      const bracketY = layout.barEl.top + 5
+      const tickHeight = 3
+
+      context.beginPath()
+      context.moveTo(left, bracketY)
+      context.lineTo(right, bracketY)
+      context.moveTo(left, bracketY)
+      context.lineTo(left, bracketY + tickHeight)
+      context.moveTo(right, bracketY)
+      context.lineTo(right, bracketY + tickHeight)
+      context.stroke()
+
+      context.fillText('3', (left + right) / 2, bracketY - 1)
+    }
+  })
 }
 
 export const renderBars = ({
@@ -167,6 +232,8 @@ export const renderBars = ({
   barsPerRow = 2,
   highlightedBarIndex = -1,
   palette = darkCanvasColors,
+  showBarIndex = false,
+  markTriplets = false,
 }: RenderBarsArgs) => {
   const layouts = bars.map((_, barIndex) =>
     layoutBar({
@@ -196,6 +263,9 @@ export const renderBars = ({
       renderGlyphOnly({ instrument, el: layout.noteElements[noteIndex], context })
     })
   })
+
+  if (markTriplets) renderTripletMarks(context, layouts, palette)
+  if (showBarIndex) renderBarIndexLabels(context, layouts, palette)
 
   return layouts.flatMap((layout) => [layout.barEl, ...layout.noteElements])
 }

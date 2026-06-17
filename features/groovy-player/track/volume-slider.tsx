@@ -13,7 +13,7 @@ type VolumeSliderProps = {
 }
 
 const horizontalSliderClass =
-  'h-1 w-24 appearance-none rounded-full bg-zinc-200 accent-zinc-900 dark:bg-zinc-800 dark:accent-zinc-100'
+  'h-1 w-24 mr-3 appearance-none rounded-full bg-zinc-200 accent-zinc-900 dark:bg-zinc-800 dark:accent-zinc-100'
 
 const clampVolume = (value: number) => Math.round(Math.min(100, Math.max(0, value)))
 
