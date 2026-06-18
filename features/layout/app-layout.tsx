@@ -6,6 +6,7 @@ import { BottomNav } from '@/features/layout/bottom-nav'
 import { BOTTOM_NAV_PADDING_CLASS, TOP_NAV_PADDING_CLASS } from '@/features/layout/constants'
 import { BottomNavSlotProvider } from '@/features/layout/page-bottom-nav'
 import { TopNav } from '@/features/layout/top-nav'
+import { SearchUrlSync } from '@/features/shared/search-url-sync'
 import { useUiStore } from '@/features/store/ui.store'
 import { cn } from '@/features/theme/cn'
 
@@ -20,6 +21,7 @@ export const AppLayout = ({ children }: AppLayoutProps) => {
 
   return (
     <BottomNavSlotProvider onContentChange={onBottomNavChange}>
+      <SearchUrlSync />
       <TopNav />
       <div
         className={cn(

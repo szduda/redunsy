@@ -4,6 +4,7 @@ import { useCallback, useEffect, useLayoutEffect, useState } from 'react'
 
 import { DEMO_TRACKS } from '@/features/groovy-player/demo-tracks'
 import { PlayerBottomNav } from '@/features/groovy-player/player-bottom-nav'
+import { useScreenWakeLock } from '@/features/groovy-player/use-screen-wake-lock'
 import { useTopNavSticky } from '@/features/layout/use-top-nav-sticky'
 import {
   barSizeFromTrackBars,
@@ -38,6 +39,7 @@ export const GroovyPlayer = () => {
   const initTrackBars = usePlayerStore((state) => state.initTrackBars)
   const hasMetronome = usePlayerStore((state) => state.hasMetronome)
   const fullBleed = usePlayerStore((state) => state.fullBleed)
+  const preventScreenSleep = usePlayerStore((state) => state.preventScreenSleep)
   const setIsPlaying = usePlayerStore((state) => state.setIsPlaying)
   const setBeatIndex = usePlayerStore((state) => state.setBeatIndex)
   const [playError, setPlayError] = useState<string | null>(null)
@@ -78,6 +80,8 @@ export const GroovyPlayer = () => {
     setIsPlaying(playing)
     setBeatIndex(beatIndex)
   }, [beatIndex, playing, setBeatIndex, setIsPlaying])
+
+  useScreenWakeLock({ active: playing, enabled: preventScreenSleep })
 
   useEffect(() => {
     setGroove(groovePattern)

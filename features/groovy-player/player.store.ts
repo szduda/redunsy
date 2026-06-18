@@ -69,6 +69,8 @@ type PlayerState = {
   setMarkTriplets: (markTriplets: boolean) => void
   fullBleed: boolean
   setFullBleed: (fullBleed: boolean) => void
+  preventScreenSleep: boolean
+  setPreventScreenSleep: (preventScreenSleep: boolean) => void
 }
 
 type PersistedPlayerState = Pick<
@@ -82,6 +84,7 @@ type PersistedPlayerState = Pick<
   | 'showBarIndex'
   | 'markTriplets'
   | 'fullBleed'
+  | 'preventScreenSleep'
 >
 
 const isZoomBarsPerRow = (value: unknown): value is ZoomBarsPerRow =>
@@ -135,6 +138,8 @@ export const usePlayerStore = create<PlayerState>()(
       setMarkTriplets: (markTriplets) => set({ markTriplets }),
       fullBleed: false,
       setFullBleed: (fullBleed) => set({ fullBleed }),
+      preventScreenSleep: true,
+      setPreventScreenSleep: (preventScreenSleep) => set({ preventScreenSleep }),
     }),
     {
       name: 'redunsy-player',
@@ -149,6 +154,7 @@ export const usePlayerStore = create<PlayerState>()(
         showBarIndex: state.showBarIndex,
         markTriplets: state.markTriplets,
         fullBleed: state.fullBleed,
+        preventScreenSleep: state.preventScreenSleep,
       }),
       merge: (persisted, current) => {
         const saved = persisted as Partial<PersistedPlayerState> & { markFirstBeat?: boolean }
@@ -170,6 +176,10 @@ export const usePlayerStore = create<PlayerState>()(
                 ? saved.markFirstBeat
                 : current.showBarIndex,
           fullBleed: typeof saved.fullBleed === 'boolean' ? saved.fullBleed : current.fullBleed,
+          preventScreenSleep:
+            typeof saved.preventScreenSleep === 'boolean'
+              ? saved.preventScreenSleep
+              : current.preventScreenSleep,
         }
       },
     },

@@ -2,6 +2,7 @@
 
 import { type ReactNode, useEffect } from 'react'
 
+import { ScreenAwakeIcon } from '@/features/icons/screen-awake-icon'
 import { FullBleedIcon } from '@/features/icons/full-bleed-icon'
 import { ColumnsIcon } from '@/features/icons/columns-icon'
 import { BarIndexIcon } from '@/features/icons/bar-index-icon'
@@ -58,7 +59,7 @@ const BarsPerRowControl = () => {
           >
             <span className="font-mono font-bold text-lg leading-none">−</span>
           </IconButton>
-          <Text variant="mono" className="min-w-12 text-center text-sm font-bold !text-white">
+          <Text variant="mono" className="min-w-12 text-center text-sm font-bold !text-black dark:!text-white">
             {barsPerRow} col{barsPerRow === 1 ? '' : 's'}
           </Text>
           <IconButton
@@ -106,9 +107,11 @@ export const PlayerSettingsPanel = ({ open, onClose }: PlayerSettingsPanelProps)
   const showBarIndex = usePlayerStore((state) => state.showBarIndex)
   const markTriplets = usePlayerStore((state) => state.markTriplets)
   const fullBleed = usePlayerStore((state) => state.fullBleed)
+  const preventScreenSleep = usePlayerStore((state) => state.preventScreenSleep)
   const setShowBarIndex = usePlayerStore((state) => state.setShowBarIndex)
   const setMarkTriplets = usePlayerStore((state) => state.setMarkTriplets)
   const setFullBleed = usePlayerStore((state) => state.setFullBleed)
+  const setPreventScreenSleep = usePlayerStore((state) => state.setPreventScreenSleep)
 
   useEffect(() => {
     if (!open) return
@@ -123,7 +126,7 @@ export const PlayerSettingsPanel = ({ open, onClose }: PlayerSettingsPanelProps)
 
   const panelContent = (
     <div className="grid w-full grid-cols-[auto_minmax(0,1fr)] items-center gap-x-3 gap-y-4">
-      <Text className="col-span-2 text-xs font-semibold uppercase opacity-40">Player settings</Text>
+      <Text className="col-span-2 text-xs font-semibold tracking-widest uppercase opacity-40">Player settings</Text>
       <BarsPerRowControl />
       <SwingPatternSection />
       <SettingRow icon={<BarIndexIcon />}>
@@ -131,6 +134,13 @@ export const PlayerSettingsPanel = ({ open, onClose }: PlayerSettingsPanelProps)
       </SettingRow>
       <SettingRow icon={<TripletBracketIcon />}>
         <Switch checked={markTriplets} label="Show triplet brackets" onChange={setMarkTriplets} />
+      </SettingRow>
+      <SettingRow icon={<ScreenAwakeIcon />}>
+        <Switch
+          checked={preventScreenSleep}
+          label="Prevent screen sleep"
+          onChange={setPreventScreenSleep}
+        />
       </SettingRow>
       {!isMobile ? (
         <SettingRow icon={<FullBleedIcon />}>
