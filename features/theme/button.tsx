@@ -3,7 +3,7 @@ import { type ComponentPropsWithoutRef } from 'react'
 
 import { cn } from './cn'
 
-type ButtonVariant = 'primary' | 'secondary' | 'subtle' | 'link'
+type ButtonVariant = 'filled' | 'outlined' | 'subtle' | 'dimmed' | 'link'
 
 type ButtonProps = Omit<ComponentPropsWithoutRef<'button'>, 'href'> & {
   variant?: ButtonVariant
@@ -18,12 +18,14 @@ const linkBase =
   'inline font-semibold text-yellowy underline underline-offset-4 transition-colors duration-150 hover:text-yellowy-light hover:underline-offset-2'
 
 const variants: Record<ButtonVariant, string> = {
-  primary:
-    'px-4 py-2 bg-zinc-900 text-white hover:bg-zinc-700 active:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-300 dark:active:bg-zinc-200',
-  secondary:
-    'px-4 py-2 border border-zinc-300 text-zinc-900 hover:border-zinc-400 hover:bg-zinc-100 active:bg-zinc-200 dark:border-zinc-700 dark:text-zinc-100 dark:hover:border-zinc-500 dark:hover:bg-zinc-800 dark:active:bg-zinc-700',
+  filled:
+    'px-4 py-2 border border-transparent bg-zinc-900 text-white hover:bg-zinc-700 active:bg-zinc-800 dark:bg-zinc-100 dark:text-zinc-900 dark:hover:bg-zinc-300 dark:active:bg-zinc-200',
+  outlined:
+    'px-4 py-2 border border-zinc-300 bg-transparent text-zinc-900 hover:border-zinc-400 hover:bg-zinc-50 active:bg-zinc-100 dark:border-zinc-700 dark:text-zinc-100 dark:hover:border-zinc-500 dark:hover:bg-zinc-900/50 dark:active:bg-zinc-800/50',
   subtle:
     'p-2 border border-transparent bg-transparent text-zinc-500 hover:bg-zinc-100/80 active:bg-zinc-200/60 dark:text-zinc-400 dark:hover:bg-zinc-800/50 dark:active:bg-zinc-700/50',
+  dimmed:
+    'px-4 py-2 border border-transparent bg-zinc-200 text-zinc-700 hover:bg-zinc-300 active:bg-zinc-400 dark:bg-zinc-800 dark:text-zinc-200 dark:hover:bg-zinc-700 dark:active:bg-zinc-600',
   link: '',
 }
 
@@ -37,7 +39,7 @@ export const Button = ({
   children,
   ...props
 }: ButtonProps) => {
-  const resolvedVariant = variant ?? (link || href ? 'link' : 'secondary')
+  const resolvedVariant = variant ?? (link || href ? 'link' : 'outlined')
   const isLink = resolvedVariant === 'link'
   const styles = cn(
     isLink ? linkBase : base,

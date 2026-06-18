@@ -100,7 +100,7 @@ export const TextGroovyPlayer = () => {
           value={grooveInput}
           className="flex-1"
         />
-        <Button disabled={!grooveInput.length} onClick={onSubmitGroove} variant="secondary">
+        <Button disabled={!grooveInput.length} onClick={onSubmitGroove} variant="outlined">
           Submit groove
         </Button>
       </div>
@@ -120,7 +120,7 @@ export const TextGroovyPlayer = () => {
         <Button
           disabled={parseTempo(tempoInput) === null}
           onClick={onSubmitTempo}
-          variant="secondary"
+          variant="outlined"
         >
           Submit tempo
         </Button>
@@ -141,7 +141,7 @@ export const TextGroovyPlayer = () => {
       {playError ? <Text variant="mono">{playError}</Text> : null}
 
       <div className="flex gap-2">
-        <Button onClick={onTogglePlayPause} variant="primary">
+        <Button onClick={onTogglePlayPause} variant="filled">
           {playing ? 'Pause' : 'Play'}
         </Button>
         <Button onClick={stop}>Stop</Button>

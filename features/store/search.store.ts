@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
 
-import { createUrlQueryStorage } from '@/features/store/url-query-storage'
+import { searchUrlStorage } from '@/features/store/search-url-storage'
 
 export const SEARCH_QUERY_PARAM = 'search'
 
@@ -22,9 +22,7 @@ export const useSearchStore = create<SearchState>()(
     }),
     {
       name: 'redunsy-search',
-      storage: createJSONStorage(() =>
-        createUrlQueryStorage({ param: SEARCH_QUERY_PARAM, field: 'searchTerm' }),
-      ),
+      storage: createJSONStorage(() => searchUrlStorage),
       partialize: (state) => ({ searchTerm: state.searchTerm }),
       skipHydration: true,
     },

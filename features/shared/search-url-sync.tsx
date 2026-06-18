@@ -1,41 +1,70 @@
 'use client'
 
-import { usePathname } from 'next/navigation'
-import { useEffect } from 'react'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
+import { useCallback, useEffect } from 'react'
 
-import { SEARCH_QUERY_PARAM, useSearchStore } from '@/features/store/search.store'
+import { selectGarageFilters, useGarageFiltersStore } from '@/features/garage/garage-filters.store'
+import {
+  buildAppQueryHref,
+  filtersEqual,
+  parseAppQueryFromSearchParams,
+} from '@/features/store/app-query-state'
+import { useSearchStore } from '@/features/store/search.store'
 
-const syncStoredTermToUrl = (pathname: string) => {
-  const term = useSearchStore.getState().searchTerm
-  const params = new URLSearchParams(window.location.search)
-  if (!term) {
-    if (!params.has(SEARCH_QUERY_PARAM)) return
-    params.delete(SEARCH_QUERY_PARAM)
-  } else if (params.get(SEARCH_QUERY_PARAM) === term) {
-    return
-  } else {
-    params.set(SEARCH_QUERY_PARAM, term)
+const syncUrlToStores = (searchParams: URLSearchParams) => {
+  const { searchTerm, filters } = parseAppQueryFromSearchParams(searchParams)
+  const currentSearch = useSearchStore.getState().searchTerm
+  const currentFilters = selectGarageFilters(useGarageFiltersStore.getState())
+
+  if (currentSearch !== searchTerm) {
+    useSearchStore.setState({ searchTerm })
   }
-  const search = params.toString()
-  const next = search ? `${pathname}?${search}` : pathname
-  window.history.replaceState(window.history.state, '', next)
+
+  if (!filtersEqual(currentFilters, filters)) {
+    useGarageFiltersStore.setState(filters)
+  }
 }
 
 export const SearchUrlSync = () => {
   const pathname = usePathname()
+  const router = useRouter()
+  const searchParams = useSearchParams()
+  const queryString = searchParams.toString()
+
+  const syncStoresToUrl = useCallback(() => {
+    const searchTerm = useSearchStore.getState().searchTerm
+    const filters = selectGarageFilters(useGarageFiltersStore.getState())
+    const nextHref = buildAppQueryHref(pathname, searchTerm, filters)
+    const currentHref = queryString ? `${pathname}?${queryString}` : pathname
+    if (nextHref === currentHref) return
+    router.replace(nextHref, { scroll: false })
+  }, [pathname, queryString, router])
 
   useEffect(() => {
-    void useSearchStore.persist.rehydrate()
-  }, [])
+    syncUrlToStores(searchParams)
+  }, [pathname, queryString, searchParams])
 
   useEffect(() => {
-    syncStoredTermToUrl(pathname)
-  }, [pathname])
+    const unsubscribeSearch = useSearchStore.subscribe((state, previous) => {
+      if (state.searchTerm === previous.searchTerm) return
+      syncStoresToUrl()
+    })
 
-  useEffect(() => {
-    const onPopState = () => {
-      void useSearchStore.persist.rehydrate()
+    const unsubscribeFilters = useGarageFiltersStore.subscribe((state, previous) => {
+      const current = selectGarageFilters(state)
+      const prior = selectGarageFilters(previous)
+      if (filtersEqual(current, prior)) return
+      syncStoresToUrl()
+    })
+
+    return () => {
+      unsubscribeSearch()
+      unsubscribeFilters()
     }
+  }, [syncStoresToUrl])
+
+  useEffect(() => {
+    const onPopState = () => syncUrlToStores(new URLSearchParams(window.location.search))
     window.addEventListener('popstate', onPopState)
     return () => window.removeEventListener('popstate', onPopState)
   }, [])

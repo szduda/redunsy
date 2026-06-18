@@ -32,9 +32,9 @@ export const DEMO_TRACKS: DemoTrack[] = [
       'sss-ss',
       's-sss-',
       'b---[ss]s','sst--t','tsttst','t-ssbb',
-      'b---[ss]s','sst--t','tsttst','ts-b-b',
-      'f-tt-t',
-      't-tt--',
+      'b---[ss]s','sst--t','tsttst','ts-b-[ss]',
+      '[ss]tss-t',
+      't-f---',
     ],
   },
   {

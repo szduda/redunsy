@@ -20,7 +20,7 @@ export const TopNav = () => {
         topNavSticky ? 'fixed inset-x-0 top-0' : 'relative',
       )}
     >
-      <nav className="mx-auto flex h-full max-w-4xl items-center justify-between px-3 md:px-4">
+      <nav className="mx-auto flex h-full max-w-8xl items-center justify-between px-3 md:px-4">
         <TopNavMenu />
 
         <AppLogo />

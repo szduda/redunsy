@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useState, type ReactNode } from 'react'
+import { useCallback, useState, Suspense, type ReactNode } from 'react'
 
 import { BottomNav } from '@/features/layout/bottom-nav'
 import { BOTTOM_NAV_PADDING_CLASS, TOP_NAV_PADDING_CLASS } from '@/features/layout/constants'
@@ -21,7 +21,9 @@ export const AppLayout = ({ children }: AppLayoutProps) => {
 
   return (
     <BottomNavSlotProvider onContentChange={onBottomNavChange}>
-      <SearchUrlSync />
+      <Suspense fallback={null}>
+        <SearchUrlSync />
+      </Suspense>
       <TopNav />
       <div
         className={cn(
