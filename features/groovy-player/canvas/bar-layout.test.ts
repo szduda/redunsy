@@ -61,4 +61,16 @@ describe('parseBarLayout', () => {
     expect(layout.cellCount).toBe(6)
     expect(layout.glyphs.map((g) => g.position)).toEqual([0, 1, 2, 3, 4, 5, 5.5])
   })
+
+  it('lays out ts-b-[ss] as six 8th cells', () => {
+    const layout = parseBarLayout('ts-b-[ss]')
+    expect(layout.cellCount).toBe(6)
+    expect(layout.glyphs.map((g) => g.position)).toEqual([0, 1, 2, 3, 4, 5, 5.5])
+  })
+
+  it('lays out ts-[ssss]t as six 8th cells', () => {
+    const layout = parseBarLayout('ts-[ssss]t')
+    expect(layout.cellCount).toBe(6)
+    expect(layout.glyphs.map((g) => g.position)).toEqual([0, 1, 2, 3, 3.5, 4, 4.5, 5])
+  })
 })

@@ -3,15 +3,18 @@
 import { useThemeStore } from '@/features/store/theme.store'
 import { Switch } from '@/features/theme/switch'
 
-export const ThemeSwitch = () => {
+type ThemeSwitchProps = {
+  className?: string
+}
+
+export const ThemeSwitch = ({ className }: ThemeSwitchProps) => {
   const theme = useThemeStore((state) => state.theme)
   const setTheme = useThemeStore((state) => state.setTheme)
 
   return (
     <Switch
+      className={className}
       checked={theme === 'dark'}
-      inline
-      reversed
       label={`${theme === 'dark' ? 'Dark' : 'Light'} Theme`}
       onChange={(checked) => setTheme(checked ? 'dark' : 'light')}
     />

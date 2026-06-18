@@ -7,11 +7,11 @@ import {
 } from '@/features/garage/garage-filter-section'
 import { useGarageFiltersStore } from '@/features/garage/garage-filters.store'
 
-const METER_LABELS = ['3/4', '4/4'] as const
+const METER_LABELS = ['on 3', 'on 4'] as const
 
-const meterLabel = (value: 3 | 4) => `${value}/4` as (typeof METER_LABELS)[number]
+const meterLabel = (value: 3 | 4) => `on ${value}` as (typeof METER_LABELS)[number]
 
-const meterFromLabel = (label: string): 3 | 4 => (label === '3/4' ? 3 : 4)
+const meterFromLabel = (label: string): 3 | 4 => (label === 'on 3' ? 3 : 4)
 
 export const GarageFilters = () => {
   const meter = useGarageFiltersStore((state) => state.meter)

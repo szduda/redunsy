@@ -2,10 +2,11 @@
 
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
+import { createPortal } from 'react-dom'
 
 import { MenuIcon } from '@/features/icons/menu-icon'
 import { Popover } from '@/features/groovy-player/popover'
-import { TOP_NAV_HALO_STROKE_CLASS, TOP_NAV_HEIGHT_CLASS } from '@/features/layout/constants'
+import { TOP_NAV_HALO_STROKE_CLASS } from '@/features/layout/constants'
 import { topNavItemClass } from '@/features/layout/top-nav-item'
 import { useIsMobile } from '@/features/shared/use-is-mobile'
 import { ThemeSwitch } from '@/features/theme/theme-switch'
@@ -76,8 +77,8 @@ const MenuPanelContent = ({ onClose, linkClassName = menuLinkClass }: MenuPanelC
         {label}
       </Link>
     ))}
-    <div className="mt-3 border-t border-zinc-200 pt-3 dark:border-zinc-800">
-      <ThemeSwitch />
+    <div className="mt-2 pt-4 border-t border-zinc-200 dark:border-zinc-800">
+      <ThemeSwitch className="px-2" />
     </div>
   </nav>
 )
@@ -99,20 +100,19 @@ const DesktopMenuPanel = ({ open, onClose }: DesktopMenuPanelProps) => {
 
   if (!open) return null
 
-  return (
+  return createPortal(
     <>
       <button
         aria-label="Close menu"
-        className="fixed inset-0 top-0 z-30 bg-black/40"
+        className="fixed inset-0 z-30 bg-black/40"
         onClick={onClose}
         type="button"
       />
       <div
         className={cn(
-          'fixed left-0 z-40 w-80 max-h-[calc(100dvh-3.5rem)] overflow-y-auto',
-          TOP_NAV_HEIGHT_CLASS,
+          'fixed left-0 top-14 z-40 w-80 max-h-[calc(100dvh-3.5rem)] overflow-y-auto shadow-lg',
           'border border-t-0 border-l-0 border-zinc-200 bg-background p-6 dark:border-zinc-800',
-          'rounded-tr-xl',
+          'rounded-br-xl',
         )}
         role="dialog"
         aria-modal
@@ -120,7 +120,8 @@ const DesktopMenuPanel = ({ open, onClose }: DesktopMenuPanelProps) => {
       >
         <MenuPanelContent onClose={onClose} />
       </div>
-    </>
+    </>,
+    document.body,
   )
 }
 

@@ -8,6 +8,7 @@ type SwitchProps = {
   onChange: (checked: boolean) => void
   inline?: boolean
   reversed?: boolean
+  className?: string
 }
 
 export const Switch = ({
@@ -16,6 +17,7 @@ export const Switch = ({
   onChange,
   inline = false,
   reversed = false,
+  className,
 }: SwitchProps) => {
   const switchButton = (
     <button
@@ -47,6 +49,7 @@ export const Switch = ({
       className={cn(
         'flex cursor-pointer items-center gap-3',
         inline ? 'w-fit' : 'justify-between',
+        className,
       )}
     >
       {reversed ? switchButton : labelSpan}

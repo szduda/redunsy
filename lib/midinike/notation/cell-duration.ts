@@ -12,12 +12,25 @@ export const sixteenthCells = (length: number) => {
 
 export const tripletCells = (length: number) => Math.ceil(length / 3) * 2
 
+/** Bass `b` before a multi-pair 16th group uses glue; other notes keep the hyphen as a rest. */
+const GLUE_SIXTEENTH_PREFIXES = new Set(['b'])
+
 /** `-` before `[` or `{` links a plain symbol to a group — not a rest. */
 export const isGroupGlue = (bar: string, index: number) => {
   const next = bar[index + 1]
   const prev = bar[index - 1]
   if (bar[index] !== '-' || (next !== '[' && next !== '{')) return false
   if (!prev || prev === '-' || prev === '}' || prev === ']') return false
+
+  if (next === '[') {
+    const open = index + 1
+    const end = bar.indexOf(']', open)
+    if (end === -1) return false
+    // A single [xy] pair needs its own cell — the hyphen is a rest, not glue.
+    if (end - open - 1 <= 2) return false
+    if (!GLUE_SIXTEENTH_PREFIXES.has(prev)) return false
+  }
+
   return true
 }
 
