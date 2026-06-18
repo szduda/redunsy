@@ -1,3 +1,5 @@
+export const PAGE_BODY_BG_CLASS = 'bg-white dark:bg-zinc-950'
+
 /** Reserved height for the fixed top nav — keep layout padding aligned when sticky. */
 export const TOP_NAV_HEIGHT_CLASS = 'h-14'
 export const TOP_NAV_PADDING_CLASS = 'pt-14'

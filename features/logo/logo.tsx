@@ -15,9 +15,16 @@ type LogoProps = ComponentProps<'svg'> & {
   className?: string
   compact?: boolean
   href?: string
+  onPage?: boolean
 }
 
-export const Logo = ({ className, compact = false, href = '/', ...iconProps }: LogoProps) => {
+export const Logo = ({
+  className,
+  compact = false,
+  href = '/',
+  onPage = false,
+  ...iconProps
+}: LogoProps) => {
   const [dundunTime, setDundunTime] = useState(0)
   const [hint, setHint] = useState('')
   const [hintVisible, setHintVisible] = useState(false)
@@ -77,21 +84,32 @@ export const Logo = ({ className, compact = false, href = '/', ...iconProps }: L
 
   const iconSize = compact ? 36 : 128
   const dundunUnlocked = dundunTime >= DUNDUN_CLICKS
+  const stableLayout = onPage && !compact
 
   return (
     <Link
       className={cn('flex items-center', compact ? 'scale-90' : 'scale-75 md:scale-100', className)}
       href={href}
     >
-      <div className={cn("relative", !dundunUnlocked && '-translate-y-4')}>
+      <div
+        className={cn(
+          'relative shrink-0 overflow-visible',
+          stableLayout && 'h-32 w-48',
+          !dundunUnlocked && '-translate-y-4',
+        )}
+      >
         <DundunSetIcon
           height={iconSize}
           innerClass2="animate-dundun origin-center"
           {...iconProps}
           className={cn(
+            stableLayout && 'absolute top-0 left-0',
             !dundunUnlocked
               ? 'pointer-events-none opacity-0'
-              : 'animate-spin-logo-once absolute origin-center -rotate-[30deg] transition-all delay-100 duration-500',
+              : cn(
+                  'animate-spin-logo-once origin-center -rotate-[30deg] transition-all delay-100 duration-500',
+                  !stableLayout && 'absolute',
+                ),
           )}
         />
         <LogoIcon
@@ -99,6 +117,7 @@ export const Logo = ({ className, compact = false, href = '/', ...iconProps }: L
           innerClass2="animate-dundun origin-center"
           {...iconProps}
           className={cn(
+            stableLayout && 'absolute top-0 left-0',
             dundunUnlocked && 'pointer-events-none animate-spin opacity-0',
             'origin-center transition-all duration-500',
           )}
@@ -131,9 +150,13 @@ export const Logo = ({ className, compact = false, href = '/', ...iconProps }: L
       </div>
       <h1
         className={cn(
-          'font-black tracking-wide text-zinc-300 transition duration-500 ease-in-out',
+          'font-black tracking-wide transition duration-500 ease-in-out',
+          onPage ? 'text-zinc-900 dark:text-zinc-300' : 'text-zinc-300',
           compact ? 'text-xl' : 'text-5xl',
-          dundunUnlocked && (compact ? 'translate-x-0 translate-y-4' : 'translate-y-12 -translate-x-1'),
+          stableLayout
+            ? 'translate-y-12 -translate-x-1'
+            : dundunUnlocked &&
+                (compact ? 'translate-x-0 translate-y-4' : 'translate-y-12 -translate-x-1'),
         )}
       >
         dunsy<small className={cn('opacity-50', compact ? 'text-xs' : 'text-2xl')}>.app</small>
