@@ -1,28 +1,15 @@
 'use client'
 
-import Link from 'next/link'
 import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 
 import { MenuIcon } from '@/features/icons/menu-icon'
 import { Popover } from '@/features/groovy-player/popover'
 import { TOP_NAV_HALO_STROKE_CLASS } from '@/features/layout/constants'
+import { NavMenuContent } from '@/features/layout/nav-menu-content'
 import { topNavItemClass } from '@/features/layout/top-nav-item'
 import { useIsMobile } from '@/features/shared/use-is-mobile'
-import { ThemeSwitch } from '@/features/theme/theme-switch'
 import { cn } from '@/features/theme/cn'
-
-const MENU_ITEMS = [
-  { href: '/', label: 'Home' },
-  { href: '/player', label: 'Player' },
-  { href: '/garage', label: 'Garage' },
-] as const
-
-const menuLinkClass =
-  'rounded-md px-3 py-2.5 text-sm text-zinc-700 transition-colors hover:bg-zinc-100 dark:text-zinc-200 dark:hover:bg-zinc-800'
-
-const mobileMenuLinkClass =
-  'rounded px-4 py-3 text-base text-zinc-300 transition-colors hover:bg-zinc-800 hover:text-zinc-100'
 
 const MenuCloseBadge = () => (
   <svg aria-hidden className="size-3" fill="none" viewBox="0 0 24 24">
@@ -65,24 +52,6 @@ const MenuButton = ({ open, onClick }: MenuButtonProps) => (
   </button>
 )
 
-type MenuPanelContentProps = {
-  onClose: () => void
-  linkClassName?: string
-}
-
-const MenuPanelContent = ({ onClose, linkClassName = menuLinkClass }: MenuPanelContentProps) => (
-  <nav className="flex flex-col gap-1">
-    {MENU_ITEMS.map(({ href, label }) => (
-      <Link key={href} className={linkClassName} href={href} onClick={onClose}>
-        {label}
-      </Link>
-    ))}
-    <div className="mt-2 pt-4 border-t border-zinc-200 dark:border-zinc-800">
-      <ThemeSwitch className="px-2" />
-    </div>
-  </nav>
-)
-
 type DesktopMenuPanelProps = {
   open: boolean
   onClose: () => void
@@ -118,7 +87,7 @@ const DesktopMenuPanel = ({ open, onClose }: DesktopMenuPanelProps) => {
         aria-modal
         aria-label="Menu"
       >
-        <MenuPanelContent onClose={onClose} />
+        <NavMenuContent onClose={onClose} />
       </div>
     </>,
     document.body,
@@ -136,7 +105,7 @@ export const TopNavMenu = () => {
         full
         panel={({ close: closePopover }) => (
           <div className="mx-auto flex w-full max-w-4xl flex-col px-3 py-4 md:px-4">
-            <MenuPanelContent linkClassName={mobileMenuLinkClass} onClose={closePopover} />
+            <NavMenuContent onClose={closePopover} variant="mobile" />
           </div>
         )}
         panelClassName="!border-zinc-800 !bg-zinc-900/95 backdrop-blur"
