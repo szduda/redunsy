@@ -71,6 +71,15 @@
   --color-foreground: var(--foreground);
   --color-yellowy: #f9c926;
   --color-yellowy-light: #fbd760;
+  --color-redy: #ed3c19;
+  --color-redy-dark: #bd2c0f;
+  --color-redy-light: #ee4f2f;
+  --color-greeny: #2e8269;
+  --color-greeny-dark: #205a4a;
+  --color-greeny-darkest: #0a1a18;
+  --color-greeny-darker: #142926;
+  --color-greeny-light: #35977a;
+  --color-greeny-lighter: #69a197;
   --color-graye: #455f5d;
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
