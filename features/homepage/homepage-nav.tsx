@@ -4,6 +4,8 @@ import { MenuIcon } from '@/features/icons/menu-icon'
 import { PAGE_BODY_BG_CLASS, TOP_NAV_HALO_STROKE_CLASS } from '@/features/layout/constants'
 import { NavMenuContent } from '@/features/layout/nav-menu-content'
 import { cn } from '@/features/theme/cn'
+import { Text } from '@/features/theme/text'
+import { Button } from '../theme/button'
 
 const MenuCloseBadge = () => (
   <svg aria-hidden className="size-3" fill="none" viewBox="0 0 24 24">
@@ -27,5 +29,24 @@ export const HomepageNav = () => (
     <MenuIcon className="m-2 size-6 opacity-30" />
 
     <NavMenuContent variant="homepage" />
+
+    <div className="flex flex-col flex-1 justify-center opacity-70">
+      <Text className='text-right'>
+        If you have any questions or suggestions, please don't hesitate to{' '}
+        <Button link className='saturate-0 hover:saturate-100 no-underline hover:underline tracking-widest text-black dark:text-white' href="mailto:szymon@dunsy.app">
+          contact me
+        </Button>
+        .
+        <br />
+        <br />
+        Thank you for using dunsy.app
+        <br />
+        <br />
+        Best regards,
+        <br />
+        Szymon
+      </Text>
+      {/* <Button href="https://szd.cat">szd.cat</Button> */}
+    </div>
   </aside>
 )

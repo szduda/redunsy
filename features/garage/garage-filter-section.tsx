@@ -44,7 +44,7 @@ export const GarageFilterChipList = <T extends string>({
   onToggle,
   className,
 }: GarageFilterChipListProps<T>) => (
-  <div className={cn('flex flex-wrap gap-[1px]', className)}>
+  <div className={cn('flex flex-wrap gap-1', className)}>
     {values.map((value) => {
       const active = selected.includes(value)
       return (

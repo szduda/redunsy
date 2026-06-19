@@ -1,28 +1,33 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useCallback, useState } from 'react'
 
-import { useUiStore } from '@/features/store/ui.store'
 import { Input } from '@/features/theme/input'
-
-const DEBOUNCE_MS = 300
+import { useRouter } from 'next/navigation'
 
 export const HomepageSearch = () => {
-  const setSearchTerm = useUiStore((state) => state.setSearchTerm)
-  const [value, setValue] = useState('')
+  const [draft, setDraft] = useState('')
+  const router = useRouter()
 
-  useEffect(() => {
-    const timeoutId = setTimeout(() => setSearchTerm(value), DEBOUNCE_MS)
-    return () => clearTimeout(timeoutId)
-  }, [setSearchTerm, value])
+  const commit = useCallback(() => {
+    router.push(`/garage?search=${draft}`)
+  }, [draft])
 
   return (
     <Input
+      className="w-full"
       aria-label="Search grooves"
       placeholder="Search grooves…"
       type="search"
-      value={value}
-      onChange={(event) => setValue(event.target.value)}
+      value={draft}
+      onBlur={commit}
+      onChange={(event) => setDraft(event.target.value)}
+      onKeyDown={(event) => {
+        if (event.key !== 'Enter') return
+        event.preventDefault()
+        commit()
+        event.currentTarget.blur()
+      }}
     />
   )
 }

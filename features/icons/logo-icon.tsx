@@ -2,11 +2,14 @@
 
 import { type FC } from 'react'
 
+import { cn } from '@/features/theme/cn'
 import { type FancyIconProps } from '@/features/icons/types'
 
 type LogoIconProps = FancyIconProps & {
   onStickClick?: () => void
 }
+
+const drumClass = 'saturate-80 contrast-150 brightness-70 dark:saturate-100 dark:contrast-100 dark:brightness-100'
 
 export const LogoIcon: FC<LogoIconProps> = ({
   onStickClick = () => null,
@@ -22,17 +25,17 @@ export const LogoIcon: FC<LogoIconProps> = ({
     aria-label="Website logo: two dundun drums pictured from above with a stick over the bigger drum on the right."
     {...props}
   >
-    <circle cx="48" cy="26" r="18.5" stroke="#f9c926aa" strokeWidth="3" />
+    <circle cx="48" cy="26" r="18.5" stroke="#f9c926aa" strokeWidth="3" className={drumClass} />
     <circle
       cx="48"
       cy="26"
       r="14"
       fill="#f9c92644"
       stroke="#f9c926aa"
-      className={innerClass2}
+      className={cn(innerClass2, drumClass)}
     />
-    <circle cx="13" cy="27" r="11.5" stroke="#f9c926aa" strokeWidth="3" />
-    <circle cx="13" cy="27" r="8" fill="#f9c92644" stroke="#f9c926aa" />
+    <circle cx="13" cy="27" r="11.5" stroke="#f9c926aa" strokeWidth="3" className={drumClass} />
+    <circle cx="13" cy="27" r="8" fill="#f9c92644" stroke="#f9c926aa" className={drumClass} />
     <g className={innerClass}>
       <rect
         x="43.5661"
@@ -41,8 +44,7 @@ export const LogoIcon: FC<LogoIconProps> = ({
         height="4"
         rx="2"
         transform="rotate(-137.518 43.5661 29.2281)"
-        fill="#4A2317"
-        stroke="#121211AA"
+        className="fill-[#af8545] stroke-[#9a7640] dark:fill-[#4A2317] dark:stroke-[#121211AA]"
         strokeWidth="1"
         style={{ cursor: 'pointer' }}
         onClick={onStickClick}

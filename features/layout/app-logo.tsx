@@ -7,5 +7,5 @@ type AppLogoProps = {
 }
 
 export const AppLogo = ({ className }: AppLogoProps) => (
-  <Logo className={className} compact href="/player" />
+  <Logo className={className} compact href="/" />
 )
