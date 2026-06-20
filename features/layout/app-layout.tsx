@@ -34,7 +34,7 @@ export const AppLayout = ({ children }: AppLayoutProps) => {
       <TopNav />
       <div
         className={cn(
-          'flex min-h-full flex-1 flex-col',
+          'flex min-h-[calc(100dvh - 2.5rem)] flex-1 flex-col',
           PAGE_BODY_BG_CLASS,
           topNavSticky && TOP_NAV_PADDING_CLASS,
           hasBottomNav ? BOTTOM_NAV_PADDING_CLASS : 'pb-0',

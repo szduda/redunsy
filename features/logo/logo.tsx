@@ -95,21 +95,21 @@ export const Logo = ({
         className={cn(
           'relative shrink-0 overflow-visible',
           stableLayout && 'h-32 w-48',
-          !dundunUnlocked && '-translate-y-4',
+          !dundunUnlocked && compact && '-translate-y-4.5',
         )}
       >
         <DundunSetIcon
           height={iconSize}
           innerClass2="animate-dundun origin-center"
           {...iconProps}
-          className={cn(
+          className={cn('',
             stableLayout && 'absolute top-0 left-0',
             !dundunUnlocked
               ? 'pointer-events-none opacity-0'
               : cn(
-                  'animate-spin-logo-once origin-center -rotate-[30deg] transition-all delay-100 duration-500',
-                  !stableLayout && 'absolute',
-                ),
+                'animate-spin-logo-once origin-center -rotate-[15deg] transition-all delay-100 duration-500',
+                !stableLayout && 'absolute',
+              ),
           )}
         />
         <LogoIcon
@@ -119,7 +119,7 @@ export const Logo = ({
           className={cn(
             stableLayout && 'absolute top-0 left-0',
             dundunUnlocked && 'pointer-events-none animate-spin opacity-0',
-            'origin-center transition-all duration-500',
+            'origin-center transition-all delay-150 duration-500',
           )}
           onStickClick={onStickClick}
         />
@@ -156,11 +156,11 @@ export const Logo = ({
           stableLayout
             ? 'translate-y-12 -translate-x-1'
             : dundunUnlocked &&
-                (compact ? 'translate-x-0 translate-y-4' : 'translate-y-12 -translate-x-1'),
+            (compact ? 'translate-x-0 translate-y-4' : 'translate-y-12 -translate-x-1'),
         )}
       >
         dunsy<small className={cn('opacity-50', compact ? 'text-xs' : 'text-2xl')}>.app</small>
       </h1>
-    </Link>
+    </Link >
   )
 }

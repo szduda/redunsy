@@ -4,8 +4,8 @@ import { useInfiniteQuery } from '@tanstack/react-query'
 import { useShallow } from 'zustand/react/shallow'
 
 import { selectGarageFilters, useGarageFiltersStore } from '@/features/garage/garage-filters.store'
-import type { GarageFilters } from '@/features/garage/snippet.types'
-import { searchSnippets } from '@/features/garage/search-snippets'
+import { searchRhythmCards } from '@/features/garage/search-snippets'
+import type { GarageFilters } from '@/features/rhythm/rhythm.types'
 
 export const GARAGE_PAGE_SIZE = 10
 
@@ -18,7 +18,7 @@ export const useGarageSnippets = (search: string) => {
   return useInfiniteQuery({
     queryKey: garageSnippetsQueryKey(search, filters),
     queryFn: ({ pageParam }) =>
-      searchSnippets({
+      searchRhythmCards({
         search,
         filters,
         page: pageParam,

@@ -79,7 +79,7 @@ const DesktopMenuPanel = ({ open, onClose }: DesktopMenuPanelProps) => {
       />
       <div
         className={cn(
-          'fixed left-0 top-14 z-40 w-80 max-h-[calc(100dvh-3.5rem)] overflow-y-auto shadow-lg',
+          'fixed left-0 top-10 z-40 w-80 max-h-[calc(100dvh-2.5rem)] overflow-y-auto shadow-lg',
           'border border-t-0 border-l-0 border-zinc-200 bg-background p-6 dark:border-zinc-800',
           'rounded-br-xl',
         )}

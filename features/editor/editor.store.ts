@@ -59,6 +59,7 @@ type EditorState = {
   creatorDraft: CreatorDraft
   hydrateFromStorage: () => void
   openRhythm: (slug: string) => void
+  backToPicker: () => void
   startCreator: () => void
   setCreatorStep: (step: 1 | 2 | 3) => void
   updateCreatorDraft: (patch: Partial<CreatorDraft>) => void
@@ -110,6 +111,12 @@ export const useEditorStore = create<EditorState>((set, get) => ({
       focusedTrackId: Object.keys(rhythm.instruments)[0] ?? null,
     })
   },
+  backToPicker: () =>
+    set({
+      view: 'picker',
+      activeSlug: null,
+      focusedTrackId: null,
+    }),
   startCreator: () =>
     set({
       view: 'creator',

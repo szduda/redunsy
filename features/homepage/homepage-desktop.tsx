@@ -47,7 +47,7 @@ export const HomepageDesktop = () => (
       </Text>
 
       <section className="flex flex-col items-center gap-3 max-w-sm">
-        <h2 className={sectionHeadingClass}>Browse the garage of grooves</h2>
+        <h2 className={sectionHeadingClass}>Browse the database of grooves</h2>
         <HomepageSearch />
       </section>
 

@@ -2,6 +2,8 @@ import { create } from 'zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
 
 import { garageFiltersUrlStorage } from '@/features/garage/garage-filters-url-storage'
+import { filterOptionsFromRhythmCards } from '@/features/garage/mock-snippets'
+import { listRhythmCardsForOwnership } from '@/features/garage/search-snippets'
 import {
   EMPTY_GARAGE_FILTERS,
   type GarageFilters,
@@ -21,6 +23,25 @@ type GarageFiltersState = GarageFilters & {
 const toggleValue = <T,>(values: T[], value: T) =>
   values.includes(value) ? values.filter((item) => item !== value) : [...values, value]
 
+const pruneFiltersForOwnership = (
+  filters: GarageFilters,
+  ownership: OwnershipFilter,
+): Pick<GarageFilters, 'meter' | 'instruments' | 'artist' | 'origin' | 'tags'> => {
+  const options = filterOptionsFromRhythmCards(listRhythmCardsForOwnership(ownership))
+  return {
+    meter: filters.meter.filter((value) => options.meter.includes(value)),
+    instruments: filters.instruments.filter((value) => options.instruments.includes(value)),
+    artist: filters.artist.filter((value) => options.artist.includes(value)),
+    origin: filters.origin.filter((value) => options.origin.includes(value)),
+    tags: filters.tags.filter((value) => options.tags.includes(value)),
+  }
+}
+
+export const sanitizeGarageFilters = (filters: GarageFilters): GarageFilters => ({
+  ...filters,
+  ...pruneFiltersForOwnership(filters, filters.ownership),
+})
+
 export const useGarageFiltersStore = create<GarageFiltersState>()(
   persist(
     (set) => ({
@@ -31,7 +52,11 @@ export const useGarageFiltersStore = create<GarageFiltersState>()(
       toggleArtist: (artist) => set((state) => ({ artist: toggleValue(state.artist, artist) })),
       toggleOrigin: (origin) => set((state) => ({ origin: toggleValue(state.origin, origin) })),
       toggleTag: (tag) => set((state) => ({ tags: toggleValue(state.tags, tag) })),
-      setOwnership: (ownership) => set({ ownership }),
+      setOwnership: (ownership) =>
+        set((state) => ({
+          ownership,
+          ...pruneFiltersForOwnership(state, ownership),
+        })),
       clearFilters: () => set(EMPTY_GARAGE_FILTERS),
     }),
     {

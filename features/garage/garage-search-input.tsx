@@ -1,6 +1,7 @@
 'use client'
 
 import { hasActiveGarageFilters, useGarageFiltersStore } from '@/features/garage/garage-filters.store'
+import { CloseIcon } from '@/features/icons/close-icon'
 import { SearchIcon } from '@/features/icons/search-icon'
 import { useSearchStore } from '@/features/store/search.store'
 import { Button } from '@/features/theme/button'
@@ -41,8 +42,14 @@ export const GarageSearchInput = ({
           value={searchTerm}
         />
       </div>
-      <Button disabled={!canClear} onClick={clearAll} variant="dimmed">
-        Clear
+      <Button
+        aria-label="Clear search and filters"
+        className="rounded-full enabled:text-redy enabled:hover:text-redy-light"
+        disabled={!canClear}
+        onClick={clearAll}
+        variant="subtle"
+      >
+        <CloseIcon />
       </Button>
     </div>
   )

@@ -18,8 +18,6 @@ export const GARAGE_FILTER_QUERY_PARAMS = {
 
 const RHYTHM_INSTRUMENTS: RhythmInstrument[] = ['djembe', 'dundunba', 'sangban', 'kenkeni', 'bell']
 
-const OWNERSHIP_FILTERS: OwnershipFilter[] = ['all', 'private', 'public']
-
 const parseCsv = (value: string) =>
   value
     .split(',')
@@ -37,7 +35,7 @@ const parseInstruments = (value: string): RhythmInstrument[] =>
   )
 
 const parseOwnership = (value: string): OwnershipFilter =>
-  OWNERSHIP_FILTERS.includes(value as OwnershipFilter) ? (value as OwnershipFilter) : 'all'
+  value === 'private' || value === 'public' ? value : 'all'
 
 const serializeCsv = (values: readonly (string | number)[]) =>
   values.length ? values.join(',') : ''

@@ -1,6 +1,8 @@
 import { create } from 'zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
 
+import { THEME_STORAGE_KEY } from '@/features/theme/theme-init-script'
+
 export type Theme = 'dark' | 'light'
 
 type ThemeState = {
@@ -23,7 +25,7 @@ export const useThemeStore = create<ThemeState>()(
       },
     }),
     {
-      name: 'redunsy-theme',
+      name: THEME_STORAGE_KEY,
       storage: createJSONStorage(() => localStorage),
       partialize: (state) => ({ theme: state.theme }),
       onRehydrateStorage: () => (state) => {

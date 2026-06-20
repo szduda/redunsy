@@ -1,5 +1,6 @@
 import type { StateStorage } from 'zustand/middleware'
 
+import { sanitizeGarageFilters } from '@/features/garage/garage-filters.store'
 import { readGarageFiltersFromUrl } from '@/features/store/app-query-state'
 
 export { GARAGE_FILTER_QUERY_PARAMS } from '@/features/store/app-query-state'
@@ -7,7 +8,7 @@ export { GARAGE_FILTER_QUERY_PARAMS } from '@/features/store/app-query-state'
 export const garageFiltersUrlStorage: StateStorage = {
   getItem: () => {
     if (typeof window === 'undefined') return null
-    const filters = readGarageFiltersFromUrl()
+    const filters = sanitizeGarageFilters(readGarageFiltersFromUrl())
     const hasFilters =
       filters.meter.length > 0 ||
       filters.instruments.length > 0 ||

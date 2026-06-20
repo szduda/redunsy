@@ -31,14 +31,6 @@ const RootLayout = ({
     className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     suppressHydrationWarning
   >
-    <head>
-      <script
-        dangerouslySetInnerHTML={{
-          __html:
-            "(function(){try{var s=JSON.parse(localStorage.getItem('redunsy-theme')||'{}').state;if(!s||s.theme!=='light')document.documentElement.classList.add('dark')}catch(e){document.documentElement.classList.add('dark')}})()",
-        }}
-      />
-    </head>
     <body className="flex min-h-full flex-col bg-white text-zinc-900 dark:bg-zinc-950 dark:text-zinc-100">
       <Providers>
         <AppLayout>{children}</AppLayout>

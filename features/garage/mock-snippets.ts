@@ -356,11 +356,9 @@ mockRhythm(
   ),
 ]
 
-export const MOCK_SNIPPETS = MOCK_RHYTHM_CARDS
-
 export const filterOptionsFromRhythmCards = (cards: RhythmCard[]) => ({
-  meter: [3, 4] as const,
-  instruments: ['djembe', 'dundunba', 'sangban', 'kenkeni', 'bell'] as const,
+  meter: [...new Set(cards.map((card) => card.meter))].sort((left, right) => left - right),
+  instruments: [...new Set(cards.flatMap((card) => card.instruments))].sort(),
   artist: [...new Set(cards.map((card) => card.author))].sort(),
   origin: [...new Set(cards.flatMap((card) => card.origin))].sort(),
   tags: [...new Set(cards.flatMap((card) => card.tags))].sort(),

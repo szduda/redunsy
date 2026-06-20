@@ -1,11 +1,13 @@
 'use client'
 
+import { useShallow } from 'zustand/react/shallow'
+
 import { useEditorStore } from '@/features/editor/editor.store'
 import { Button } from '@/features/theme/button'
 import { Text } from '@/features/theme/text'
 
 export const RhythmPicker = () => {
-  const rhythms = useEditorStore((state) => Object.values(state.rhythms))
+  const rhythms = useEditorStore(useShallow((state) => Object.values(state.rhythms)))
   const openRhythm = useEditorStore((state) => state.openRhythm)
   const startCreator = useEditorStore((state) => state.startCreator)
 

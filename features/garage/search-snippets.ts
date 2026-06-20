@@ -17,6 +17,20 @@ const allRhythmCards = (): RhythmCard[] => [
   ...listMyRhythms().map(rhythmToCard),
 ]
 
+export const listAllRhythmCards = allRhythmCards
+
+export const matchesOwnership = (card: RhythmCard, ownership: GarageFilters['ownership']) => {
+  if (ownership === 'all') return true
+  if (ownership === 'private') return card.userOwned === true
+  return card.userOwned !== true
+}
+
+export const listMockRhythmCardsForOwnership = (ownership: GarageFilters['ownership']) =>
+  MOCK_RHYTHM_CARDS.filter((card) => matchesOwnership(card, ownership))
+
+export const listRhythmCardsForOwnership = (ownership: GarageFilters['ownership']) =>
+  allRhythmCards().filter((card) => matchesOwnership(card, ownership))
+
 const matchesSearch = (card: RhythmCard, search: string) => {
   const query = search.toLowerCase()
   return (
@@ -27,12 +41,6 @@ const matchesSearch = (card: RhythmCard, search: string) => {
     card.tags.some((tag) => tag.toLowerCase().includes(query)) ||
     card.instruments.some((instrument) => instrument.toLowerCase().includes(query))
   )
-}
-
-const matchesOwnership = (card: RhythmCard, ownership: GarageFilters['ownership']) => {
-  if (ownership === 'all') return true
-  if (ownership === 'private') return card.userOwned === true
-  return card.userOwned !== true
 }
 
 const matchesFilters = (card: RhythmCard, filters: GarageFilters) => {
@@ -82,6 +90,3 @@ export const searchRhythmCards = async ({
 
   return { items, total, page, pageSize }
 }
-
-/** @deprecated Use searchRhythmCards */
-export const searchSnippets = searchRhythmCards

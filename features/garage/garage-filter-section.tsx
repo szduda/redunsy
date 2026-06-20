@@ -36,6 +36,7 @@ type GarageFilterChipListProps<T extends string> = {
   selected: T[]
   onToggle: (value: T) => void
   className?: string
+  formatLabel?: (value: T) => string
 }
 
 export const GarageFilterChipList = <T extends string>({
@@ -43,13 +44,14 @@ export const GarageFilterChipList = <T extends string>({
   selected,
   onToggle,
   className,
+  formatLabel = (value) => value,
 }: GarageFilterChipListProps<T>) => (
   <div className={cn('flex flex-wrap gap-1', className)}>
     {values.map((value) => {
       const active = selected.includes(value)
       return (
         <button
-          key={value}
+          key={value || '__empty__'}
           aria-pressed={active}
           className={cn(
             'rounded-full border px-2.5 py-1 text-xs transition-colors',
@@ -60,7 +62,7 @@ export const GarageFilterChipList = <T extends string>({
           onClick={() => onToggle(value)}
           type="button"
         >
-          {value}
+          {formatLabel(value)}
         </button>
       )
     })}

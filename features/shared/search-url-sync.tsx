@@ -3,7 +3,7 @@
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useCallback, useEffect } from 'react'
 
-import { selectGarageFilters, useGarageFiltersStore } from '@/features/garage/garage-filters.store'
+import { sanitizeGarageFilters, selectGarageFilters, useGarageFiltersStore } from '@/features/garage/garage-filters.store'
 import {
   buildAppQueryHref,
   filtersEqual,
@@ -12,7 +12,8 @@ import {
 import { useSearchStore } from '@/features/store/search.store'
 
 const syncUrlToStores = (searchParams: URLSearchParams) => {
-  const { searchTerm, filters } = parseAppQueryFromSearchParams(searchParams)
+  const { searchTerm, filters: rawFilters } = parseAppQueryFromSearchParams(searchParams)
+  const filters = sanitizeGarageFilters(rawFilters)
   const currentSearch = useSearchStore.getState().searchTerm
   const currentFilters = selectGarageFilters(useGarageFiltersStore.getState())
 

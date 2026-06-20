@@ -1,6 +1,7 @@
 'use client'
 
 import { useCallback, useEffect, useLayoutEffect, useState } from 'react'
+import { useRouter } from 'next/navigation'
 
 import { CollapsibleMetadata } from '@/features/editor/collapsible-metadata'
 import { EditableBarsCanvas } from '@/features/editor/editable-bars-canvas'
@@ -27,6 +28,7 @@ const LAYER_CONFIG = {
 
 export const RhythmEditor = () => {
   useTopNavSticky(false)
+  const router = useRouter()
 
   const activeSlug = useEditorStore((state) => state.activeSlug)
   const rhythm = useEditorStore((state) => state.rhythms[activeSlug ?? ''])
@@ -34,7 +36,7 @@ export const RhythmEditor = () => {
   const setFocusedTrackId = useEditorStore((state) => state.setFocusedTrackId)
   const patchActiveRhythm = useEditorStore((state) => state.patchActiveRhythm)
   const updateTrackBars = useEditorStore((state) => state.updateTrackBars)
-  const startCreator = useEditorStore((state) => state.startCreator)
+  const backToPicker = useEditorStore((state) => state.backToPicker)
 
   const barsPerRow = usePlayerStore((state) => state.barsPerRow)
   const tempo = usePlayerStore((state) => state.tempo)
@@ -166,12 +168,17 @@ export const RhythmEditor = () => {
 
   if (!rhythm || !focusedTrack) return null
 
+  const onBackToPicker = () => {
+    backToPicker()
+    router.replace('/editor')
+  }
+
   return (
     <>
       <div className="flex w-full max-w-4xl flex-col gap-3">
-        <div className="flex justify-end px-1 md:px-0">
-          <Button onClick={startCreator} variant="outlined">
-            + New Rhythm
+        <div className="flex justify-start px-1 md:px-0">
+          <Button onClick={onBackToPicker} variant="outlined">
+            Back to My Rhythms
           </Button>
         </div>
 
