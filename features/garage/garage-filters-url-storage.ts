@@ -13,7 +13,8 @@ export const garageFiltersUrlStorage: StateStorage = {
       filters.instruments.length > 0 ||
       filters.artist.length > 0 ||
       filters.origin.length > 0 ||
-      filters.tags.length > 0
+      filters.tags.length > 0 ||
+      filters.ownership !== 'all'
     if (!hasFilters) return null
     return JSON.stringify({ state: filters, version: 0 })
   },

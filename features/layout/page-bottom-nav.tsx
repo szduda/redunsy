@@ -4,34 +4,34 @@ import {
   createContext,
   useContext,
   useEffect,
+  useLayoutEffect,
   useState,
   type ReactNode,
 } from 'react'
+import { createPortal } from 'react-dom'
+
+export const BOTTOM_NAV_PORTAL_ID = 'bottom-nav-portal'
 
 type BottomNavSlotContextValue = {
-  setContent: (content: ReactNode) => void
+  setHasBottomNav: (visible: boolean) => void
 }
 
 const BottomNavSlotContext = createContext<BottomNavSlotContextValue | null>(null)
 
 type BottomNavSlotProviderProps = {
   children: ReactNode
-  onContentChange: (content: ReactNode) => void
+  onHasBottomNavChange: (visible: boolean) => void
 }
 
-export const BottomNavSlotProvider = ({ children, onContentChange }: BottomNavSlotProviderProps) => {
-  const [content, setContent] = useState<ReactNode>(null)
+export const BottomNavSlotProvider = ({ children, onHasBottomNavChange }: BottomNavSlotProviderProps) => (
+  <BottomNavSlotContext.Provider value={{ setHasBottomNav: onHasBottomNavChange }}>
+    {children}
+  </BottomNavSlotContext.Provider>
+)
 
-  useEffect(() => {
-    onContentChange(content)
-  }, [content, onContentChange])
-
-  return (
-    <BottomNavSlotContext.Provider value={{ setContent }}>
-      {children}
-    </BottomNavSlotContext.Provider>
-  )
-}
+export const BottomNavPortalTarget = () => (
+  <div id={BOTTOM_NAV_PORTAL_ID} className="h-full w-full" />
+)
 
 type PageBottomNavProps = {
   children: ReactNode
@@ -39,12 +39,19 @@ type PageBottomNavProps = {
 
 export const PageBottomNav = ({ children }: PageBottomNavProps) => {
   const context = useContext(BottomNavSlotContext)
+  const [portalTarget, setPortalTarget] = useState<HTMLElement | null>(null)
+
+  useLayoutEffect(() => {
+    setPortalTarget(document.getElementById(BOTTOM_NAV_PORTAL_ID))
+  }, [])
 
   useEffect(() => {
     if (!context) return undefined
-    context.setContent(children)
-    return () => context.setContent(null)
-  }, [children, context])
+    context.setHasBottomNav(true)
+    return () => context.setHasBottomNav(false)
+  }, [context])
 
-  return null
+  if (!portalTarget) return null
+
+  return createPortal(children, portalTarget)
 }

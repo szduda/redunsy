@@ -6,6 +6,7 @@ import { cn } from '@/features/theme/cn'
 export const NAV_MENU_ITEMS = [
   { href: '/', label: 'Home' },
   { href: '/player', label: 'Player' },
+  { href: '/editor', label: 'Editor' },
   { href: '/garage', label: 'Garage' },
 ] as const
 

@@ -8,7 +8,7 @@ import {
   PAGE_BODY_BG_CLASS,
   TOP_NAV_PADDING_CLASS,
 } from '@/features/layout/constants'
-import { BottomNavSlotProvider } from '@/features/layout/page-bottom-nav'
+import { BottomNavPortalTarget, BottomNavSlotProvider } from '@/features/layout/page-bottom-nav'
 import { TopNav } from '@/features/layout/top-nav'
 import { SearchUrlSync } from '@/features/shared/search-url-sync'
 import { useUiStore } from '@/features/store/ui.store'
@@ -19,12 +19,15 @@ type AppLayoutProps = {
 }
 
 export const AppLayout = ({ children }: AppLayoutProps) => {
-  const [bottomNavContent, setBottomNavContent] = useState<ReactNode>(null)
-  const onBottomNavChange = useCallback((content: ReactNode) => setBottomNavContent(content), [])
+  const [hasBottomNav, setHasBottomNav] = useState(false)
+  const onHasBottomNavChange = useCallback(
+    (visible: boolean) => setHasBottomNav((current) => (current === visible ? current : visible)),
+    [],
+  )
   const topNavSticky = useUiStore((state) => state.topNavSticky)
 
   return (
-    <BottomNavSlotProvider onContentChange={onBottomNavChange}>
+    <BottomNavSlotProvider onHasBottomNavChange={onHasBottomNavChange}>
       <Suspense fallback={null}>
         <SearchUrlSync />
       </Suspense>
@@ -34,12 +37,14 @@ export const AppLayout = ({ children }: AppLayoutProps) => {
           'flex min-h-full flex-1 flex-col',
           PAGE_BODY_BG_CLASS,
           topNavSticky && TOP_NAV_PADDING_CLASS,
-          bottomNavContent ? BOTTOM_NAV_PADDING_CLASS : 'pb-0',
+          hasBottomNav ? BOTTOM_NAV_PADDING_CLASS : 'pb-0',
         )}
       >
         {children}
       </div>
-      <BottomNav>{bottomNavContent}</BottomNav>
+      <BottomNav className={cn(!hasBottomNav && 'hidden')}>
+        <BottomNavPortalTarget />
+      </BottomNav>
     </BottomNavSlotProvider>
   )
 }

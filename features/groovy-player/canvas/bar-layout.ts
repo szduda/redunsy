@@ -53,6 +53,12 @@ export const parseBarLayout = (bar: string): BarLayout => {
 
     if (char === '[') {
       const end = bar.indexOf(']', index)
+      if (end === -1) {
+        glyphs.push({ note: char, position: cellIndex, kind: 'eighth' })
+        cellIndex += 1
+        index += 1
+        continue
+      }
       const content = bar.slice(index + 1, end)
       glyphs.push(...sixteenthGlyphs(content, cellIndex))
       cellIndex += content.length / 2
@@ -62,6 +68,12 @@ export const parseBarLayout = (bar: string): BarLayout => {
 
     if (char === '{') {
       const end = bar.indexOf('}', index)
+      if (end === -1) {
+        glyphs.push({ note: char, position: cellIndex, kind: 'eighth' })
+        cellIndex += 1
+        index += 1
+        continue
+      }
       const content = bar.slice(index + 1, end)
       glyphs.push(...tripletGlyphs(content, cellIndex))
       cellIndex += Math.ceil(content.length / 3) * 2

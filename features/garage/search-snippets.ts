@@ -1,57 +1,74 @@
-import { MOCK_SNIPPETS } from '@/features/garage/mock-snippets'
-import type { GarageFilters, SearchSnippetsParams, SearchSnippetsResult, Snippet } from '@/features/garage/snippet.types'
+import { MOCK_RHYTHM_CARDS } from '@/features/garage/mock-snippets'
+import { listMyRhythms } from '@/features/rhythm/my-rhythms-storage'
+import { rhythmToCard } from '@/features/rhythm/rhythm-helpers'
+import type {
+  GarageFilters,
+  RhythmCard,
+  SearchRhythmCardsParams,
+  SearchRhythmCardsResult,
+} from '@/features/rhythm/rhythm.types'
 
 const API_DELAY_MS = 450
 
 const delay = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms))
 
-const matchesSearch = (snippet: Snippet, search: string) => {
+const allRhythmCards = (): RhythmCard[] => [
+  ...MOCK_RHYTHM_CARDS,
+  ...listMyRhythms().map(rhythmToCard),
+]
+
+const matchesSearch = (card: RhythmCard, search: string) => {
   const query = search.toLowerCase()
   return (
-    snippet.name.toLowerCase().includes(query) ||
-    snippet.artist.some((name) => name.toLowerCase().includes(query)) ||
-    snippet.origin.some((place) => place.toLowerCase().includes(query)) ||
-    snippet.tags.some((tag) => tag.toLowerCase().includes(query)) ||
-    snippet.instruments.some((instrument) => instrument.toLowerCase().includes(query))
+    card.title.toLowerCase().includes(query) ||
+    card.author.toLowerCase().includes(query) ||
+    card.description.toLowerCase().includes(query) ||
+    card.origin.some((place) => place.toLowerCase().includes(query)) ||
+    card.tags.some((tag) => tag.toLowerCase().includes(query)) ||
+    card.instruments.some((instrument) => instrument.toLowerCase().includes(query))
   )
 }
 
-const matchesFilters = (snippet: Snippet, filters: GarageFilters) => {
-  if (filters.meter.length && !filters.meter.includes(snippet.meter)) return false
+const matchesOwnership = (card: RhythmCard, ownership: GarageFilters['ownership']) => {
+  if (ownership === 'all') return true
+  if (ownership === 'private') return card.userOwned === true
+  return card.userOwned !== true
+}
+
+const matchesFilters = (card: RhythmCard, filters: GarageFilters) => {
+  if (filters.meter.length && !filters.meter.includes(card.meter)) return false
   if (
     filters.instruments.length &&
-    !filters.instruments.every((instrument) => snippet.instruments.includes(instrument))
+    !filters.instruments.every((instrument) => card.instruments.includes(instrument))
   ) {
     return false
   }
-  if (filters.artist.length && !filters.artist.some((name) => snippet.artist.includes(name))) {
+  if (filters.artist.length && !filters.artist.includes(card.author)) return false
+  if (filters.origin.length && !filters.origin.some((place) => card.origin.includes(place))) {
     return false
   }
-  if (filters.origin.length && !filters.origin.some((place) => snippet.origin.includes(place))) {
-    return false
-  }
-  if (filters.tags.length && !filters.tags.some((tag) => snippet.tags.includes(tag))) return false
+  if (filters.tags.length && !filters.tags.some((tag) => card.tags.includes(tag))) return false
+  if (!matchesOwnership(card, filters.ownership)) return false
   return true
 }
 
-const sortByRecent = (left: Snippet, right: Snippet) =>
-  new Date(right.addedAt).getTime() - new Date(left.addedAt).getTime()
+const sortByRecent = (left: RhythmCard, right: RhythmCard) => right.updatedAt - left.updatedAt
 
-export const searchSnippets = async ({
+export const searchRhythmCards = async ({
   search,
   filters,
   page,
   pageSize,
-}: SearchSnippetsParams): Promise<SearchSnippetsResult> => {
+}: SearchRhythmCardsParams): Promise<SearchRhythmCardsResult> => {
   await delay(API_DELAY_MS)
 
-  let results = MOCK_SNIPPETS.filter((snippet) => matchesFilters(snippet, filters))
+  let results = allRhythmCards().filter((card) => matchesFilters(card, filters))
 
   if (search) {
-    results = results.filter((snippet) => matchesSearch(snippet, search))
+    results = results.filter((card) => matchesSearch(card, search))
     results.sort((left, right) => {
-      const leftExact = left.name.toLowerCase() === search.toLowerCase()
-      const rightExact = right.name.toLowerCase() === search.toLowerCase()
+      const leftExact = left.title.toLowerCase() === search.toLowerCase()
+      const rightExact = right.title.toLowerCase() === search.toLowerCase()
       if (leftExact !== rightExact) return leftExact ? -1 : 1
       return sortByRecent(left, right)
     })
@@ -65,3 +82,6 @@ export const searchSnippets = async ({
 
   return { items, total, page, pageSize }
 }
+
+/** @deprecated Use searchRhythmCards */
+export const searchSnippets = searchRhythmCards

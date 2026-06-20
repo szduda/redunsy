@@ -1,9 +1,10 @@
 import {
   EMPTY_GARAGE_FILTERS,
   type GarageFilters,
-  type SnippetInstrument,
-  type SnippetMeter,
-} from '@/features/garage/snippet.types'
+  type OwnershipFilter,
+  type RhythmInstrument,
+  type RhythmMeter,
+} from '@/features/rhythm/rhythm.types'
 import { SEARCH_QUERY_PARAM } from '@/features/store/search.store'
 
 export const GARAGE_FILTER_QUERY_PARAMS = {
@@ -12,9 +13,12 @@ export const GARAGE_FILTER_QUERY_PARAMS = {
   artist: 'artist',
   origin: 'origin',
   tags: 'tags',
+  ownership: 'ownership',
 } as const
 
-const SNIPPET_INSTRUMENTS: SnippetInstrument[] = ['djembe', 'dundunba', 'sangban', 'kenkeni', 'bell']
+const RHYTHM_INSTRUMENTS: RhythmInstrument[] = ['djembe', 'dundunba', 'sangban', 'kenkeni', 'bell']
+
+const OWNERSHIP_FILTERS: OwnershipFilter[] = ['all', 'private', 'public']
 
 const parseCsv = (value: string) =>
   value
@@ -22,15 +26,18 @@ const parseCsv = (value: string) =>
     .map((item) => item.trim())
     .filter(Boolean)
 
-const parseMeter = (value: string): SnippetMeter[] =>
+const parseMeter = (value: string): RhythmMeter[] =>
   parseCsv(value)
     .map(Number)
-    .filter((item): item is SnippetMeter => item === 3 || item === 4)
+    .filter((item): item is RhythmMeter => item === 3 || item === 4)
 
-const parseInstruments = (value: string): SnippetInstrument[] =>
-  parseCsv(value).filter((item): item is SnippetInstrument =>
-    SNIPPET_INSTRUMENTS.includes(item as SnippetInstrument),
+const parseInstruments = (value: string): RhythmInstrument[] =>
+  parseCsv(value).filter((item): item is RhythmInstrument =>
+    RHYTHM_INSTRUMENTS.includes(item as RhythmInstrument),
   )
+
+const parseOwnership = (value: string): OwnershipFilter =>
+  OWNERSHIP_FILTERS.includes(value as OwnershipFilter) ? (value as OwnershipFilter) : 'all'
 
 const serializeCsv = (values: readonly (string | number)[]) =>
   values.length ? values.join(',') : ''
@@ -43,7 +50,8 @@ export const filtersEqual = (left: GarageFilters, right: GarageFilters) =>
   arraysEqual(left.instruments, right.instruments) &&
   arraysEqual(left.artist, right.artist) &&
   arraysEqual(left.origin, right.origin) &&
-  arraysEqual(left.tags, right.tags)
+  arraysEqual(left.tags, right.tags) &&
+  left.ownership === right.ownership
 
 export const readSearchTermFromUrl = () => {
   if (typeof window === 'undefined') return ''
@@ -71,6 +79,9 @@ export const readGarageFiltersFromParams = (params: URLSearchParams): GarageFilt
   const tags = params.get(GARAGE_FILTER_QUERY_PARAMS.tags)
   if (tags) filters.tags = parseCsv(tags)
 
+  const ownership = params.get(GARAGE_FILTER_QUERY_PARAMS.ownership)
+  if (ownership) filters.ownership = parseOwnership(ownership)
+
   return filters
 }
 
@@ -97,6 +108,7 @@ export const buildAppQuerySearchParams = (searchTerm: string, filters: GarageFil
     ['artist', serializeCsv(filters.artist)],
     ['origin', serializeCsv(filters.origin)],
     ['tags', serializeCsv(filters.tags)],
+    ['ownership', filters.ownership === 'all' ? '' : filters.ownership],
   ]
 
   entries.forEach(([key, value]) => {

@@ -1,15 +1,15 @@
 'use client'
 
-import { useCallback, useEffect, useLayoutEffect, useState } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react'
 
-import { DEMO_TRACKS } from '@/features/groovy-player/demo-tracks'
+import { DEMO_TRACKS, demoTrackBars } from '@/features/groovy-player/demo-tracks'
 import { PlayerBottomNav } from '@/features/groovy-player/player-bottom-nav'
 import { useScreenWakeLock } from '@/features/groovy-player/use-screen-wake-lock'
 import { useTopNavSticky } from '@/features/layout/use-top-nav-sticky'
 import {
-  barSizeFromTrackBars,
-  DEFAULT_SWING_PATTERN,
   DEFAULT_TEMPO,
+  DEMO_SWING_PATTERN,
+  PLAYER_GROOVE_LENGTH,
   resolveGroovePattern,
   usePlayerStore,
 } from '@/features/groovy-player/player.store'
@@ -23,7 +23,7 @@ const LAYER_CONFIG = {
   instrument: 'djembe',
   sounds: ['b', 't', 's', 'f'],
   lengths: ['8th', '16th', '8th triplet'] as ('8th' | '16th' | '8th triplet')[],
-  grooves: [DEFAULT_SWING_PATTERN],
+  grooves: [DEMO_SWING_PATTERN],
 }
 
 export const GroovyPlayer = () => {
@@ -32,11 +32,10 @@ export const GroovyPlayer = () => {
   const barsPerRow = usePlayerStore((state) => state.barsPerRow)
   const tempo = usePlayerStore((state) => state.tempo)
   const isPlaying = usePlayerStore((state) => state.isPlaying)
+  const storeBeatIndex = usePlayerStore((state) => state.beatIndex)
   const swingPattern = usePlayerStore((state) => state.swingPattern)
   const swingEnabled = usePlayerStore((state) => state.swingEnabled)
-  const trackBars = usePlayerStore((state) => state.trackBars)
-  const barSize = barSizeFromTrackBars(trackBars)
-  const initTrackBars = usePlayerStore((state) => state.initTrackBars)
+  const setSwingPattern = usePlayerStore((state) => state.setSwingPattern)
   const hasMetronome = usePlayerStore((state) => state.hasMetronome)
   const fullBleed = usePlayerStore((state) => state.fullBleed)
   const preventScreenSleep = usePlayerStore((state) => state.preventScreenSleep)
@@ -44,19 +43,22 @@ export const GroovyPlayer = () => {
   const setBeatIndex = usePlayerStore((state) => state.setBeatIndex)
   const [playError, setPlayError] = useState<string | null>(null)
 
-  useLayoutEffect(() => {
-    initTrackBars(DEMO_TRACKS)
-  }, [initTrackBars])
+  const playbackTracks = useMemo(() => demoTrackBars(), [])
+  const grooveLength = PLAYER_GROOVE_LENGTH
+  const groovePattern = resolveGroovePattern(swingPattern, grooveLength, swingEnabled)
 
-  const groovePattern = resolveGroovePattern(swingPattern, barSize, swingEnabled)
+  useLayoutEffect(() => {
+    if (swingPattern.length === PLAYER_GROOVE_LENGTH) return
+    setSwingPattern(swingPattern, PLAYER_GROOVE_LENGTH)
+  }, [setSwingPattern, swingPattern])
 
   const getOverlayBars = useCallback(
     (patternBars: string[], _groove: string) => {
       if (!hasMetronome) return null
-      const metronomeBar = metronomeBarForGrooveLength(barSize)
+      const metronomeBar = metronomeBarForGrooveLength(grooveLength)
       return patternBars.map(() => metronomeBar)
     },
-    [barSize, hasMetronome],
+    [grooveLength, hasMetronome],
   )
 
   const { play, pause, stop, restart, setGroove, setTempo, setInstrumentVolume, playing, activeBarIndex, beatIndex } =
@@ -69,21 +71,27 @@ export const GroovyPlayer = () => {
         instrument: 'shaker',
         sounds: ['x'],
         lengths: ['8th'],
-        grooves: [DEFAULT_SWING_PATTERN],
+        grooves: [DEMO_SWING_PATTERN],
       },
       getOverlayBars,
+      initialGroove: groovePattern,
       loop: true,
       tempo: DEFAULT_TEMPO,
     })
 
   useEffect(() => {
-    setIsPlaying(playing)
-    setBeatIndex(beatIndex)
-  }, [beatIndex, playing, setBeatIndex, setIsPlaying])
+    if (isPlaying !== playing) setIsPlaying(playing)
+  }, [isPlaying, playing, setIsPlaying])
+
+  useEffect(() => {
+    if (storeBeatIndex !== beatIndex) setBeatIndex(beatIndex)
+  }, [beatIndex, setBeatIndex, storeBeatIndex])
+
+  useEffect(() => () => stop(), [stop])
 
   useScreenWakeLock({ active: playing, enabled: preventScreenSleep })
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     setGroove(groovePattern)
   }, [groovePattern, setGroove])
 
@@ -91,11 +99,9 @@ export const GroovyPlayer = () => {
     setTempo(tempo)
   }, [setTempo, tempo])
 
-  const validateTrackBars = () => {
+  const validatePlaybackTracks = () => {
     DEMO_TRACKS.forEach((track) => {
-      const bars = trackBars[track.id]
-      if (!bars?.length) return
-      validateBarsForGroove(bars, barSize)
+      validateBarsForGroove(track.bars, grooveLength)
     })
   }
 
@@ -105,9 +111,9 @@ export const GroovyPlayer = () => {
       return
     }
     try {
-      validateTrackBars()
+      validatePlaybackTracks()
       setPlayError(null)
-      play(trackBars, groovePattern)
+      play(playbackTracks, groovePattern)
     } catch (error) {
       setPlayError(error instanceof Error ? error.message : 'Could not play pattern')
     }
@@ -115,9 +121,9 @@ export const GroovyPlayer = () => {
 
   const onRestart = () => {
     try {
-      validateTrackBars()
+      validatePlaybackTracks()
       setPlayError(null)
-      restart() ?? play(trackBars, groovePattern)
+      restart() ?? play(playbackTracks, groovePattern)
     } catch (error) {
       setPlayError(error instanceof Error ? error.message : 'Could not restart pattern')
     }
@@ -144,7 +150,7 @@ export const GroovyPlayer = () => {
           {DEMO_TRACKS.map((track) => (
             <Track
               activeIndex={trackActiveIndex}
-              bars={trackBars[track.id] ?? track.bars}
+              bars={track.bars}
               barsPerRow={barsPerRow}
               id={track.id}
               instrument={track.instrument}

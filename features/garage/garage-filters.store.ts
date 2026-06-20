@@ -2,7 +2,11 @@ import { create } from 'zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
 
 import { garageFiltersUrlStorage } from '@/features/garage/garage-filters-url-storage'
-import { EMPTY_GARAGE_FILTERS, type GarageFilters } from '@/features/garage/snippet.types'
+import {
+  EMPTY_GARAGE_FILTERS,
+  type GarageFilters,
+  type OwnershipFilter,
+} from '@/features/rhythm/rhythm.types'
 
 type GarageFiltersState = GarageFilters & {
   toggleMeter: (meter: GarageFilters['meter'][number]) => void
@@ -10,6 +14,7 @@ type GarageFiltersState = GarageFilters & {
   toggleArtist: (artist: string) => void
   toggleOrigin: (origin: string) => void
   toggleTag: (tag: string) => void
+  setOwnership: (ownership: OwnershipFilter) => void
   clearFilters: () => void
 }
 
@@ -26,6 +31,7 @@ export const useGarageFiltersStore = create<GarageFiltersState>()(
       toggleArtist: (artist) => set((state) => ({ artist: toggleValue(state.artist, artist) })),
       toggleOrigin: (origin) => set((state) => ({ origin: toggleValue(state.origin, origin) })),
       toggleTag: (tag) => set((state) => ({ tags: toggleValue(state.tags, tag) })),
+      setOwnership: (ownership) => set({ ownership }),
       clearFilters: () => set(EMPTY_GARAGE_FILTERS),
     }),
     {
@@ -37,6 +43,7 @@ export const useGarageFiltersStore = create<GarageFiltersState>()(
         artist: state.artist,
         origin: state.origin,
         tags: state.tags,
+        ownership: state.ownership,
       }),
       skipHydration: true,
     },
@@ -49,6 +56,7 @@ export const selectGarageFilters = (state: GarageFiltersState): GarageFilters =>
   artist: state.artist,
   origin: state.origin,
   tags: state.tags,
+  ownership: state.ownership,
 })
 
 export const hasActiveGarageFilters = (state: GarageFiltersState) =>
@@ -56,4 +64,5 @@ export const hasActiveGarageFilters = (state: GarageFiltersState) =>
   state.instruments.length > 0 ||
   state.artist.length > 0 ||
   state.origin.length > 0 ||
-  state.tags.length > 0
+  state.tags.length > 0 ||
+  state.ownership !== 'all'

@@ -2,7 +2,7 @@
 
 import { type ChangeEvent, type CSSProperties } from 'react'
 
-import { barSizeFromTrackBars, usePlayerStore } from '@/features/groovy-player/player.store'
+import { PLAYER_GROOVE_LENGTH, usePlayerStore } from '@/features/groovy-player/player.store'
 
 type SwingPatternFieldProps = {
   className?: string
@@ -11,8 +11,7 @@ type SwingPatternFieldProps = {
 
 export const SwingPatternField = ({ className, style }: SwingPatternFieldProps) => {
   const swingPattern = usePlayerStore((state) => state.swingPattern)
-  const trackBars = usePlayerStore((state) => state.trackBars)
-  const barSize = barSizeFromTrackBars(trackBars)
+  const barSize = PLAYER_GROOVE_LENGTH
   const setSwingPattern = usePlayerStore((state) => state.setSwingPattern)
 
   const onChange = ({ target }: ChangeEvent<HTMLInputElement>) => setSwingPattern(target.value)

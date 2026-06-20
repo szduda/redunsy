@@ -1,6 +1,6 @@
+import { DEFAULT_SWING_PATTERN, DEFAULT_TEMPO } from '@/features/groovy-player/player.store'
 import type { DemoTrack } from '@/features/groovy-player/demo-tracks'
-
-import type { Snippet, SnippetInstrument } from '@/features/garage/snippet.types'
+import type { RhythmCard, RhythmInstrument } from '@/features/rhythm/rhythm.types'
 
 const parseTrackBars = (notation: string) =>
   notation
@@ -24,31 +24,58 @@ const djembeSet = (prefix: string, notation: string) => [
 
 const longestTrackBars = (tracks: DemoTrack[]) => Math.max(...tracks.map((t) => t.bars.length))
 
-const snippet = (
-  id: string,
-  name: string,
+const toTimestamp = (iso: string) => new Date(iso).getTime()
+
+const rhythmCard = (
+  slug: string,
+  title: string,
   meter: 3 | 4,
-  instruments: SnippetInstrument[],
-  artist: string[],
+  instruments: RhythmInstrument[],
+  artists: string[],
   origin: string[],
   tags: string[],
   addedAt: string,
   tracks: DemoTrack[],
-): Snippet => ({
-  id,
-  name,
-  meter,
-  instruments,
-  longestTrack: longestTrackBars(tracks),
-  artist,
-  origin,
-  tags,
-  addedAt,
-  tracks,
-})
+): RhythmCard => {
+  const createdAt = toTimestamp(addedAt)
+  return {
+    slug,
+    title,
+    description: '',
+    meter,
+    instruments,
+    longestTrack: longestTrackBars(tracks),
+    author: artists.join(' · '),
+    origin,
+    tags,
+    swingPattern: DEFAULT_SWING_PATTERN,
+    tempo: DEFAULT_TEMPO,
+    signalPattern: '',
+    createdAt,
+    updatedAt: createdAt,
+    userOwned: false,
+  }
+}
 
-export const MOCK_SNIPPETS: Snippet[] = [
-  snippet(
+export const MOCK_RHYTHM_TRACKS: Record<string, DemoTrack[]> = {}
+
+const mockRhythm = (
+  slug: string,
+  title: string,
+  meter: 3 | 4,
+  instruments: RhythmInstrument[],
+  artists: string[],
+  origin: string[],
+  tags: string[],
+  addedAt: string,
+  tracks: DemoTrack[],
+) => {
+  MOCK_RHYTHM_TRACKS[slug] = tracks
+  return rhythmCard(slug, title, meter, instruments, artists, origin, tags, addedAt, tracks)
+}
+
+export const MOCK_RHYTHM_CARDS: RhythmCard[] = [
+  mockRhythm(
     'djaa',
     'Djaa',
     4,
@@ -59,7 +86,7 @@ export const MOCK_SNIPPETS: Snippet[] = [
     '2026-06-14T10:00:00Z',
     djembeSet('djaa', 'ttsb-s|b-sb-s|ttsb-s|b-sb-s|[ss]ssstt|-ssstt|ts---[tt]|[tt]tbsb-'),
   ),
-  snippet(
+mockRhythm(
     'soli',
     'Soli',
     4,
@@ -70,7 +97,7 @@ export const MOCK_SNIPPETS: Snippet[] = [
     '2026-06-13T09:30:00Z',
     djembeSet('soli', 'ss{ttsstt}|sstss-|f-sf-s|f-fss-|sss-ss|s-sss-|f-tt-t|t-tt--'),
   ),
-  snippet(
+mockRhythm(
     'gine-fare',
     'Gine Fare',
     4,
@@ -81,7 +108,7 @@ export const MOCK_SNIPPETS: Snippet[] = [
     '2026-06-12T14:20:00Z',
     djembeSet('gine-fare', 'b---[ss]s|sst--t|tsttst|t-ssbb|b---[ss]s|sst--t|tsttst|ts-b-b'),
   ),
-  snippet(
+mockRhythm(
     'kuku',
     'Kuku',
     4,
@@ -92,7 +119,7 @@ export const MOCK_SNIPPETS: Snippet[] = [
     '2026-06-11T11:00:00Z',
     djembeSet('kuku', 'tt--tt|b--b--|tt--tt|b--b--|ssssss|bbbbbb'),
   ),
-  snippet(
+mockRhythm(
     'sinte',
     'Sinte',
     4,
@@ -103,7 +130,7 @@ export const MOCK_SNIPPETS: Snippet[] = [
     '2026-06-10T16:45:00Z',
     djembeSet('sinte', 't-s-t-|b---b|t-s-t-|b---b|sssttt|bbb---'),
   ),
-  snippet(
+mockRhythm(
     'lamban',
     'Lamban',
     4,
@@ -114,7 +141,7 @@ export const MOCK_SNIPPETS: Snippet[] = [
     '2026-06-09T08:15:00Z',
     djembeSet('lamban', 't---t-|s---s|t---t-|s---s|b---b-|o---o'),
   ),
-  snippet(
+mockRhythm(
     'sunu',
     'Sunu',
     4,
@@ -125,7 +152,7 @@ export const MOCK_SNIPPETS: Snippet[] = [
     '2026-06-08T13:30:00Z',
     djembeSet('sunu', 'ss-b-ss|bb-b-bb|ss-b-ss|bb-b-bb|tttttt|bbbbbb'),
   ),
-  snippet(
+mockRhythm(
     'sofa',
     'Sofa',
     4,
@@ -136,7 +163,7 @@ export const MOCK_SNIPPETS: Snippet[] = [
     '2026-06-07T10:50:00Z',
     djembeSet('sofa', 'b-s-b-s|t-t-t-t|b-s-b-s|t-t-t-t|ssssss|oooooo'),
   ),
-  snippet(
+mockRhythm(
     'mendiani',
     'Mendiani',
     4,
@@ -147,7 +174,7 @@ export const MOCK_SNIPPETS: Snippet[] = [
     '2026-06-06T17:00:00Z',
     djembeSet('mendiani', 's-s-s-s|b-b-b-b|t-t-t-t|s-s-s-s|bbbbbb|tttttt'),
   ),
-  snippet(
+mockRhythm(
     'djole',
     'Djole',
     4,
@@ -158,7 +185,7 @@ export const MOCK_SNIPPETS: Snippet[] = [
     '2026-06-05T12:10:00Z',
     djembeSet('djole', 'ss-ss-|bb-bb-|ss-ss-|bb-bb-|tttttt|bbbbbb'),
   ),
-  snippet(
+mockRhythm(
     'tiriba',
     'Tiriba',
     4,
@@ -169,7 +196,7 @@ export const MOCK_SNIPPETS: Snippet[] = [
     '2026-06-04T09:40:00Z',
     djembeSet('tiriba', 'tbs-tbs|tbs-tbs|ssssss|bbbbbb|tttttt|bbbbbb'),
   ),
-  snippet(
+mockRhythm(
     'afri',
     'Afri',
     4,
@@ -180,7 +207,7 @@ export const MOCK_SNIPPETS: Snippet[] = [
     '2026-06-03T15:25:00Z',
     djembeSet('afri', 'b---b-|s---s|b---b-|s---s|tttttt|bbbbbb'),
   ),
-  snippet(
+mockRhythm(
     'yamama',
     'Yamama',
     4,
@@ -191,7 +218,7 @@ export const MOCK_SNIPPETS: Snippet[] = [
     '2026-06-02T11:55:00Z',
     djembeSet('yamama', 't-t---|b-b---|t-t---|b-b---|ssssss|bbbbbb'),
   ),
-  snippet(
+mockRhythm(
     'sorsonet',
     'Sorsonet',
     4,
@@ -202,7 +229,7 @@ export const MOCK_SNIPPETS: Snippet[] = [
     '2026-06-01T08:00:00Z',
     djembeSet('sorsonet', 'ss-bb-|tt-bb-|ss-bb-|tt-bb-|bbbbbb|tttttt'),
   ),
-  snippet(
+mockRhythm(
     'kassa',
     'Kassa',
     4,
@@ -213,7 +240,7 @@ export const MOCK_SNIPPETS: Snippet[] = [
     '2026-05-31T14:30:00Z',
     djembeSet('kassa', 'b-b-b-b|t-t-t-t|b-b-b-b|t-t-t-t|ssssss|bbbbbb'),
   ),
-  snippet(
+mockRhythm(
     'soli-rapide',
     'Soli Rapide',
     4,
@@ -224,7 +251,7 @@ export const MOCK_SNIPPETS: Snippet[] = [
     '2026-05-30T10:20:00Z',
     djembeSet('soli-rapide', 'ssssss|bbbbbb|tttttt|bbbbbb|ssssss|bbbbbb'),
   ),
-  snippet(
+mockRhythm(
     'toro',
     'Toro',
     4,
@@ -235,7 +262,7 @@ export const MOCK_SNIPPETS: Snippet[] = [
     '2026-05-29T16:00:00Z',
     djembeSet('toro', 'b---s-|t---b-|b---s-|t---b-|ssssss|bbbbbb'),
   ),
-  snippet(
+mockRhythm(
     'kakilambe',
     'Kakilambe',
     4,
@@ -246,7 +273,7 @@ export const MOCK_SNIPPETS: Snippet[] = [
     '2026-05-28T09:10:00Z',
     djembeSet('kakilambe', 'b-b---|s-s---|b-b---|s-s---|tttttt|bbbbbb'),
   ),
-  snippet(
+mockRhythm(
     'soko',
     'Soko',
     4,
@@ -257,7 +284,7 @@ export const MOCK_SNIPPETS: Snippet[] = [
     '2026-05-27T13:45:00Z',
     djembeSet('soko', 'tt-bb-|ss-bb-|tt-bb-|ss-bb-|bbbbbb|tttttt'),
   ),
-  snippet(
+mockRhythm(
     'wassolon',
     'Wassolon',
     4,
@@ -268,7 +295,7 @@ export const MOCK_SNIPPETS: Snippet[] = [
     '2026-05-26T11:30:00Z',
     djembeSet('wassolon', 's-s-b-b|t-t-b-b|s-s-b-b|t-t-b-b|ssssss|bbbbbb'),
   ),
-  snippet(
+mockRhythm(
     'sangban-break',
     'Sangban Break',
     3,
@@ -283,7 +310,7 @@ export const MOCK_SNIPPETS: Snippet[] = [
       track('sangban-break-bell', 'Bell', 'bell', 'x---x-|x---x-'),
     ],
   ),
-  snippet(
+mockRhythm(
     'dundungbe',
     'Dundungbe',
     4,
@@ -294,7 +321,7 @@ export const MOCK_SNIPPETS: Snippet[] = [
     '2026-05-24T15:15:00Z',
     djembeSet('dundungbe', 'bbbbbb|tttttt|bbbbbb|tttttt|ssssss|bbbbbb'),
   ),
-  snippet(
+mockRhythm(
     'moribayassa',
     'Moribayassa',
     4,
@@ -305,7 +332,7 @@ export const MOCK_SNIPPETS: Snippet[] = [
     '2026-05-23T10:05:00Z',
     djembeSet('moribayassa', 'ss-b-ss|bb-b-bb|ss-b-ss|bb-b-bb|tttttt|bbbbbb'),
   ),
-  snippet(
+mockRhythm(
     'koreduga',
     'Koreduga',
     4,
@@ -316,7 +343,7 @@ export const MOCK_SNIPPETS: Snippet[] = [
     '2026-05-22T12:40:00Z',
     djembeSet('koreduga', 't-s-b-|t-s-b-|b-s-t-|b-s-t-|ssssss|bbbbbb'),
   ),
-  snippet(
+mockRhythm(
     'sinte-modern',
     'Sinte (Modern)',
     4,
@@ -329,12 +356,14 @@ export const MOCK_SNIPPETS: Snippet[] = [
   ),
 ]
 
-export const filterOptionsFromSnippets = (snippets: Snippet[]) => ({
+export const MOCK_SNIPPETS = MOCK_RHYTHM_CARDS
+
+export const filterOptionsFromRhythmCards = (cards: RhythmCard[]) => ({
   meter: [3, 4] as const,
   instruments: ['djembe', 'dundunba', 'sangban', 'kenkeni', 'bell'] as const,
-  artist: [...new Set(snippets.flatMap((s) => s.artist))].sort(),
-  origin: [...new Set(snippets.flatMap((s) => s.origin))].sort(),
-  tags: [...new Set(snippets.flatMap((s) => s.tags))].sort(),
+  artist: [...new Set(cards.map((card) => card.author))].sort(),
+  origin: [...new Set(cards.flatMap((card) => card.origin))].sort(),
+  tags: [...new Set(cards.flatMap((card) => card.tags))].sort(),
 })
 
-export const GARAGE_FILTER_OPTIONS = filterOptionsFromSnippets(MOCK_SNIPPETS)
+export const GARAGE_FILTER_OPTIONS = filterOptionsFromRhythmCards(MOCK_RHYTHM_CARDS)

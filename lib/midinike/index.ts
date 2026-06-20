@@ -4,7 +4,7 @@ export { metronomeBarForGrooveLength } from './groove/metronome-bar'
 export { mergeBeatMatrices } from './groove/merge-beat-matrices'
 export { MidiSoundsProvider, useMidiSounds } from './audio/provider'
 export { barCellCount, TICKS_PER_EIGHTH } from './notation/cell-duration'
-export { validateBarForGroove, validateBarsForGroove } from './notation/fit-bar'
+export { validateBarForGroove, validateBarsForGroove, barsMatchGrooveLength, tracksMatchGrooveLength } from './notation/fit-bar'
 export type {
   BeatMatrix,
   BeatSlot,

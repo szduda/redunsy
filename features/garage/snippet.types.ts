@@ -1,48 +1,30 @@
-import type { DemoTrack } from '@/features/groovy-player/demo-tracks'
+export type {
+  GarageFilters,
+  OwnershipFilter,
+  Rhythm,
+  RhythmCard,
+  RhythmInstrument,
+  RhythmMeter,
+  SearchRhythmCardsParams,
+  SearchRhythmCardsResult,
+  Track,
+} from '@/features/rhythm/rhythm.types'
 
-export type SnippetInstrument = 'djembe' | 'dundunba' | 'sangban' | 'kenkeni' | 'bell'
+export {
+  EMPTY_GARAGE_FILTERS,
+} from '@/features/rhythm/rhythm.types'
 
-export type SnippetMeter = 3 | 4
+/** @deprecated Use RhythmCard */
+export type { RhythmCard as Snippet } from '@/features/rhythm/rhythm.types'
 
-export type Snippet = {
-  id: string
-  name: string
-  meter: SnippetMeter
-  instruments: SnippetInstrument[]
-  longestTrack: number
-  artist: string[]
-  origin: string[]
-  tags: string[]
-  addedAt: string
-  tracks: DemoTrack[]
-}
+/** @deprecated Use RhythmInstrument */
+export type { RhythmInstrument as SnippetInstrument } from '@/features/rhythm/rhythm.types'
 
-export type GarageFilters = {
-  meter: SnippetMeter[]
-  instruments: SnippetInstrument[]
-  artist: string[]
-  origin: string[]
-  tags: string[]
-}
+/** @deprecated Use RhythmMeter */
+export type { RhythmMeter as SnippetMeter } from '@/features/rhythm/rhythm.types'
 
-export const EMPTY_GARAGE_FILTERS: GarageFilters = {
-  meter: [],
-  instruments: [],
-  artist: [],
-  origin: [],
-  tags: [],
-}
+/** @deprecated Use SearchRhythmCardsParams */
+export type { SearchRhythmCardsParams as SearchSnippetsParams } from '@/features/rhythm/rhythm.types'
 
-export type SearchSnippetsParams = {
-  search: string
-  filters: GarageFilters
-  page: number
-  pageSize: number
-}
-
-export type SearchSnippetsResult = {
-  items: Snippet[]
-  total: number
-  page: number
-  pageSize: number
-}
+/** @deprecated Use SearchRhythmCardsResult */
+export type { SearchRhythmCardsResult as SearchSnippetsResult } from '@/features/rhythm/rhythm.types'

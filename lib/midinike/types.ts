@@ -30,8 +30,12 @@ export type MidinikeOptions = {
   loop?: boolean
   tempo?: number
   getOverlayBars?: OverlayBarsFn
+  /** Initial swing/groove pattern; defaults to 8 straight eighths or the first layer groove. */
+  initialGroove?: string
+  /** When true, merged playback only recompiles when every bar cell count equals groove length. */
+  strictGrooveLength?: boolean
 } & {
-  [key: string]: LayerConfig | boolean | number | OverlayBarsFn | undefined
+  [key: string]: LayerConfig | boolean | number | OverlayBarsFn | string | undefined
 }
 
 export type MidiPlayer = {

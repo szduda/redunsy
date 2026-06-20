@@ -57,6 +57,9 @@ export const DEMO_TRACKS: DemoTrack[] = [
   },
 ]
 
+export const demoTrackBars = () =>
+  Object.fromEntries(DEMO_TRACKS.map((track) => [track.id, track.bars])) as Record<string, string[]>
+
 export const previewWindowStart = (activeIndex: number, barCount: number, collapsedBarsPerRow: number = 2) => {
   if (barCount <= collapsedBarsPerRow || activeIndex < 0) return 0
   return Math.min(Math.floor(activeIndex / collapsedBarsPerRow) * collapsedBarsPerRow, barCount - collapsedBarsPerRow)

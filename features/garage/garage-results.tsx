@@ -2,7 +2,7 @@
 
 import { hasActiveGarageFilters, useGarageFiltersStore } from '@/features/garage/garage-filters.store'
 import { GarageNotFound } from '@/features/garage/garage-not-found'
-import { SnippetCard } from '@/features/garage/snippet-card'
+import { RhythmCardView } from '@/features/garage/rhythm-card'
 import { useDebouncedValue } from '@/features/garage/use-debounced-value'
 import { useGarageSnippets } from '@/features/garage/use-garage-snippets'
 import { useSearchStore } from '@/features/store/search.store'
@@ -45,8 +45,8 @@ export const GarageResults = () => {
 
       {!showSpinner && snippets.length > 0 ? (
         <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
-          {snippets.map((snippet) => (
-            <SnippetCard key={snippet.id} snippet={snippet} />
+          {snippets.map((card) => (
+            <RhythmCardView key={card.slug} card={card} />
           ))}
         </div>
       ) : null}

@@ -19,11 +19,13 @@ export const GarageFilters = () => {
   const artist = useGarageFiltersStore((state) => state.artist)
   const origin = useGarageFiltersStore((state) => state.origin)
   const tags = useGarageFiltersStore((state) => state.tags)
+  const ownership = useGarageFiltersStore((state) => state.ownership)
   const toggleMeter = useGarageFiltersStore((state) => state.toggleMeter)
   const toggleInstrument = useGarageFiltersStore((state) => state.toggleInstrument)
   const toggleArtist = useGarageFiltersStore((state) => state.toggleArtist)
   const toggleOrigin = useGarageFiltersStore((state) => state.toggleOrigin)
   const toggleTag = useGarageFiltersStore((state) => state.toggleTag)
+  const setOwnership = useGarageFiltersStore((state) => state.setOwnership)
 
   return (
     <div className="flex flex-col gap-5">
@@ -49,6 +51,14 @@ export const GarageFilters = () => {
 
       <GarageFilterSection title="Origin">
         <GarageFilterChipList selected={origin} values={GARAGE_FILTER_OPTIONS.origin} onToggle={toggleOrigin} />
+      </GarageFilterSection>
+
+      <GarageFilterSection title="Ownership">
+        <GarageFilterChipList
+          selected={ownership === 'all' ? [] : [ownership]}
+          values={['private', 'public']}
+          onToggle={(value) => setOwnership(ownership === value ? 'all' : (value as 'private' | 'public'))}
+        />
       </GarageFilterSection>
 
       <GarageFilterSection title="Tags">
