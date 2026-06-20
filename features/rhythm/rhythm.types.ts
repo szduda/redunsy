@@ -1,4 +1,6 @@
-export type RhythmInstrument = 'djembe' | 'dundunba' | 'sangban' | 'kenkeni' | 'bell'
+export const RHYTHM_INSTRUMENTS = ['djembe', 'dundunba', 'sangban', 'kenkeni', 'bell'] as const
+
+export type RhythmInstrument = (typeof RHYTHM_INSTRUMENTS)[number]
 
 export type RhythmMeter = 3 | 4
 
@@ -67,6 +69,7 @@ export type GarageFilters = {
   instruments: RhythmInstrument[]
   artist: string[]
   origin: string[]
+  rhythmGroup: string[]
   tags: string[]
   ownership: OwnershipFilter
 }
@@ -76,6 +79,7 @@ export const EMPTY_GARAGE_FILTERS: GarageFilters = {
   instruments: [],
   artist: [],
   origin: [],
+  rhythmGroup: [],
   tags: [],
   ownership: 'all',
 }
