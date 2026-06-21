@@ -10,7 +10,7 @@ import { NoteKeyboard } from '@/features/editor/note-keyboard'
 import { useEditorKeyboard } from '@/features/editor/use-editor-keyboard'
 import { useNoteEditor } from '@/features/editor/use-note-editor'
 import { PlayerBottomNav } from '@/features/groovy-player/player-bottom-nav'
-import { defaultSwingPatternForMeter, resolveGroovePattern, usePlayerStore } from '@/features/groovy-player/player.store'
+import { defaultSwingPatternForMeter, isSwingPatternEmpty, resolveGroovePattern, usePlayerStore } from '@/features/groovy-player/player.store'
 import { TrackVolume } from '@/features/groovy-player/track/track-volume'
 import { PageBottomNav } from '@/features/layout/page-bottom-nav'
 import { useTopNavSticky } from '@/features/layout/use-top-nav-sticky'
@@ -42,7 +42,9 @@ export const RhythmEditor = () => {
   const tempo = usePlayerStore((state) => state.tempo)
   const isPlaying = usePlayerStore((state) => state.isPlaying)
   const storeBeatIndex = usePlayerStore((state) => state.beatIndex)
+  const swingPattern = usePlayerStore((state) => state.swingPattern)
   const swingEnabled = usePlayerStore((state) => state.swingEnabled)
+  const setSwingPattern = usePlayerStore((state) => state.setSwingPattern)
   const hasMetronome = usePlayerStore((state) => state.hasMetronome)
   const setIsPlaying = usePlayerStore((state) => state.setIsPlaying)
   const setBeatIndex = usePlayerStore((state) => state.setBeatIndex)
@@ -50,11 +52,7 @@ export const RhythmEditor = () => {
   const [playError, setPlayError] = useState<string | null>(null)
 
   const barSize = rhythm ? rhythm.meter * 2 : 8
-  const groovePattern = resolveGroovePattern(
-    rhythm?.swingPattern ?? defaultSwingPatternForMeter(rhythm?.meter ?? 4),
-    barSize,
-    swingEnabled,
-  )
+  const groovePattern = resolveGroovePattern(swingPattern, barSize, swingEnabled)
   const trackBars = rhythm ? trackBarsRecord(rhythm) : {}
   const tracks = rhythm ? Object.values(rhythm.instruments) : []
   const focusedTrack = tracks.find((track) => track.id === focusedTrackId) ?? tracks[0]
@@ -106,6 +104,14 @@ export const RhythmEditor = () => {
     if (!rhythm) return
     setTempo(rhythm.tempo)
   }, [rhythm?.slug, rhythm?.tempo, setTempo])
+
+  useEffect(() => {
+    if (!rhythm) return
+    const pattern = isSwingPatternEmpty(rhythm.swingPattern)
+      ? defaultSwingPatternForMeter(rhythm.meter)
+      : rhythm.swingPattern
+    setSwingPattern(pattern, barSize)
+  }, [barSize, rhythm?.meter, rhythm?.slug, rhythm?.swingPattern, setSwingPattern])
 
   useEffect(() => {
     setMidinikeTempo(tempo)

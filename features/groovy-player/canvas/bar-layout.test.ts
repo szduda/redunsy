@@ -68,9 +68,17 @@ describe('parseBarLayout', () => {
     expect(layout.glyphs.map((g) => g.position)).toEqual([0, 1, 2, 3, 4, 5, 5.5])
   })
 
-  it('lays out ts-[ssss]t as six 8th cells', () => {
+  it('links any note to a multi-pair 16th group via glue hyphen', () => {
+    for (const bar of ['b-[----]', 't-[----]', 's-[----]', 'f-[----]']) {
+      const layout = parseBarLayout(bar)
+      expect(layout.cellCount).toBe(3)
+      expect(layout.glyphs.map((g) => g.position)).toEqual([0, 1, 1.5, 2, 2.5])
+    }
+  })
+
+  it('lays out ts-[ssss]t as five 8th cells when note links to multi-pair 16ths', () => {
     const layout = parseBarLayout('ts-[ssss]t')
-    expect(layout.cellCount).toBe(6)
-    expect(layout.glyphs.map((g) => g.position)).toEqual([0, 1, 2, 3, 3.5, 4, 4.5, 5])
+    expect(layout.cellCount).toBe(5)
+    expect(layout.glyphs.map((g) => g.position)).toEqual([0, 1, 2, 2.5, 3, 3.5, 4])
   })
 })

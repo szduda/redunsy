@@ -77,7 +77,9 @@ type PlayerState = {
   beatIndex: number
   setBeatIndex: (beatIndex: number) => void
   swingPattern: string
+  swingBarSize: number
   setSwingPattern: (swingPattern: string, barSize?: number) => void
+  setSwingBarSize: (barSize: number) => void
   swingEnabled: boolean
   toggleSwingEnabled: () => void
   hasMetronome: boolean
@@ -121,13 +123,16 @@ export const usePlayerStore = create<PlayerState>()(
       beatIndex: -1,
       setBeatIndex: (beatIndex) => set({ beatIndex }),
       swingPattern: DEMO_SWING_PATTERN,
-      setSwingPattern: (swingPattern, barSize = PLAYER_GROOVE_LENGTH) => {
-        set({ swingPattern: fitSwingPattern(swingPattern, barSize) })
+      swingBarSize: PLAYER_GROOVE_LENGTH,
+      setSwingPattern: (swingPattern, barSize) => {
+        const size = barSize ?? get().swingBarSize
+        set({ swingPattern: fitSwingPattern(swingPattern, size), swingBarSize: size })
       },
+      setSwingBarSize: (swingBarSize) => set({ swingBarSize }),
       swingEnabled: true,
       toggleSwingEnabled: () => {
         const state = get()
-        if (isSwingPatternIncorrect(state.swingPattern, PLAYER_GROOVE_LENGTH)) return
+        if (isSwingPatternIncorrect(state.swingPattern, state.swingBarSize)) return
         set({ swingEnabled: !state.swingEnabled })
       },
       hasMetronome: false,

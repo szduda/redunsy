@@ -55,6 +55,7 @@ export const GroovyPlayer = () => {
   const preventScreenSleep = usePlayerStore((state) => state.preventScreenSleep)
   const setIsPlaying = usePlayerStore((state) => state.setIsPlaying)
   const setBeatIndex = usePlayerStore((state) => state.setBeatIndex)
+  const setSwingBarSize = usePlayerStore((state) => state.setSwingBarSize)
   const [playError, setPlayError] = useState<string | null>(null)
 
   const displayTracks = loadedRhythm ? tracksFromRecord(loadedRhythm.instruments) : DEMO_TRACKS
@@ -117,6 +118,10 @@ export const GroovyPlayer = () => {
   }, [beatIndex, setBeatIndex, storeBeatIndex])
 
   useEffect(() => () => stop(), [stop])
+
+  useEffect(() => {
+    setSwingBarSize(PLAYER_GROOVE_LENGTH)
+  }, [setSwingBarSize])
 
   useScreenWakeLock({ active: playing, enabled: preventScreenSleep })
 

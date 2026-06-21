@@ -4,7 +4,6 @@ import { PepperIcon } from '@/features/icons/pepper-icon'
 import { IconButton } from '@/features/groovy-player/icon-button'
 import {
   isSwingPatternIncorrect,
-  PLAYER_GROOVE_LENGTH,
   usePlayerStore,
 } from '@/features/groovy-player/player.store'
 import { cn } from '@/features/theme/cn'
@@ -12,10 +11,11 @@ import { cn } from '@/features/theme/cn'
 export const SwingToggle = () => {
   const swingEnabled = usePlayerStore((state) => state.swingEnabled)
   const swingPattern = usePlayerStore((state) => state.swingPattern)
+  const swingBarSize = usePlayerStore((state) => state.swingBarSize)
   const isPlaying = usePlayerStore((state) => state.isPlaying)
   const tempo = usePlayerStore((state) => state.tempo)
   const toggleSwingEnabled = usePlayerStore((state) => state.toggleSwingEnabled)
-  const swingIncorrect = isSwingPatternIncorrect(swingPattern, PLAYER_GROOVE_LENGTH)
+  const swingIncorrect = isSwingPatternIncorrect(swingPattern, swingBarSize)
 
   return (
     <IconButton

@@ -13,7 +13,6 @@ import { IconButton } from '@/features/groovy-player/icon-button'
 import { SwingPatternField } from '@/features/groovy-player/swing-pattern-field'
 import {
   isSwingPatternIncorrect,
-  PLAYER_GROOVE_LENGTH,
   usePlayerStore,
 } from '@/features/groovy-player/player.store'
 import { BOTTOM_NAV_OFFSET_CLASS } from '@/features/layout/constants'
@@ -78,7 +77,8 @@ const BarsPerRowControl = () => {
 
 const SwingPatternSection = () => {
   const swingPattern = usePlayerStore((state) => state.swingPattern)
-  const swingIncorrect = isSwingPatternIncorrect(swingPattern, PLAYER_GROOVE_LENGTH)
+  const swingBarSize = usePlayerStore((state) => state.swingBarSize)
+  const swingIncorrect = isSwingPatternIncorrect(swingPattern, swingBarSize)
 
   return (
     <SettingRow icon={<PepperIcon className="size-5 saturate-0" />}>
