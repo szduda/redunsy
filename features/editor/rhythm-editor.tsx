@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useLayoutEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 
 import { CollapsibleMetadata } from '@/features/editor/collapsible-metadata'
@@ -47,7 +47,6 @@ export const RhythmEditor = () => {
   const setIsPlaying = usePlayerStore((state) => state.setIsPlaying)
   const setBeatIndex = usePlayerStore((state) => state.setBeatIndex)
   const setTempo = usePlayerStore((state) => state.setTempo)
-  const setSwingPattern = usePlayerStore((state) => state.setSwingPattern)
   const [playError, setPlayError] = useState<string | null>(null)
 
   const barSize = rhythm ? rhythm.meter * 2 : 8
@@ -105,11 +104,6 @@ export const RhythmEditor = () => {
 
   useEffect(() => {
     if (!rhythm) return
-    setSwingPattern(rhythm.swingPattern, barSize)
-  }, [barSize, rhythm?.slug, rhythm?.swingPattern, setSwingPattern])
-
-  useEffect(() => {
-    if (!rhythm) return
     setTempo(rhythm.tempo)
   }, [rhythm?.slug, rhythm?.tempo, setTempo])
 
@@ -125,7 +119,7 @@ export const RhythmEditor = () => {
     if (storeBeatIndex !== beatIndex) setBeatIndex(beatIndex)
   }, [beatIndex, setBeatIndex, storeBeatIndex])
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     setGroove(groovePattern)
   }, [groovePattern, setGroove])
 

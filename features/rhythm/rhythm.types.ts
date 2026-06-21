@@ -9,6 +9,20 @@ export type Track = {
   bars: string[]
 }
 
+/**
+ * A single instrument pattern as stored in the `rhythms.patterns` JSON column.
+ * Merges the original export shape (`pattern`, `title`) with the editor/player
+ * {@link Track} shape (`id`, `name`, `instrument`, `bars`).
+ */
+export type RhythmPattern = {
+  id: string
+  name: string
+  instrument: string
+  title: string
+  pattern: string
+  bars: string[]
+}
+
 export type RhythmCard = {
   slug: string
   title: string
@@ -19,6 +33,7 @@ export type RhythmCard = {
   author: string
   origin: string[]
   tags: string[]
+  rhythmGroup: string[]
   swingPattern: string
   tempo: number
   signalPattern: string
@@ -35,6 +50,7 @@ export type Rhythm = {
   author: string
   origin: string[]
   tags: string[]
+  rhythmGroup: string[]
   swingPattern: string
   tempo: number
   signalPattern: string

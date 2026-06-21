@@ -1,0 +1,2810 @@
+{
+  "drums": [
+    {
+      "_id": "3ByqjPsULw7VQeHSOOFa",
+      "_path": "drums/3ByqjPsULw7VQeHSOOFa",
+      "swing": "<<",
+      "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+      "tempo": 180,
+      "title": "Gine Fare Groove",
+      "createdAt": "2023-09-22T14:42:09.474Z",
+      "slug": "gine-fare",
+      "description": "",
+      "signal": "ttt-sss--tttt-t-t-t-tt--",
+      "patterns": [
+        {
+          "__ref": "patterns/HXq3S5Ok7o22JnODCo9k",
+          "_id": "HXq3S5Ok7o22JnODCo9k",
+          "_path": "patterns/HXq3S5Ok7o22JnODCo9k",
+          "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+          "pattern": "o----------------------oo-------------oo-oo-oo-oo--------------------o-oo--------oo-o-o-o-o-oo-o",
+          "instrument": "dundunba",
+          "title": "dundunba"
+        },
+        {
+          "__ref": "patterns/GnsMUfInKXEmSSmjH5wA",
+          "_id": "GnsMUfInKXEmSSmjH5wA",
+          "_path": "patterns/GnsMUfInKXEmSSmjH5wA",
+          "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+          "pattern": "---o-----o--",
+          "instrument": "sangban",
+          "title": "sangban"
+        },
+        {
+          "__ref": "patterns/JIRbevyteBKLYG9lmypS",
+          "_id": "JIRbevyteBKLYG9lmypS",
+          "_path": "patterns/JIRbevyteBKLYG9lmypS",
+          "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+          "pattern": "----o-o-o---",
+          "instrument": "kenkeni",
+          "title": "kenkeni"
+        },
+        {
+          "__ref": "patterns/8vrAzwX49dgbd4XQU0FV",
+          "_id": "8vrAzwX49dgbd4XQU0FV",
+          "_path": "patterns/8vrAzwX49dgbd4XQU0FV",
+          "pattern": "s-bt-ss-st--s--t-ss-st-b",
+          "instrument": "djembe",
+          "title": "djembe"
+        }
+      ],
+      "tags": [
+        "6/8",
+        "gine fare",
+        "dundun set",
+        "susu",
+        "yogui"
+      ],
+      "published": true,
+      "updatedAt": "2023-10-19T01:41:17.055Z"
+    },
+    {
+      "_id": "43kTIYG28bT3CK5OXz3O",
+      "_path": "drums/43kTIYG28bT3CK5OXz3O",
+      "description": "Dun dun set arrangement",
+      "title": "djansa dundun set",
+      "tempo": 125,
+      "createdAt": "2021-12-31T23:00:00.791Z",
+      "slug": "djansa-set",
+      "tags": [
+        "djansa",
+        "dundun set",
+        "4/4"
+      ],
+      "swing": "-->",
+      "patterns": [
+        {
+          "__ref": "patterns/OCpZEUvbbp7cwXrAvLjj",
+          "_id": "OCpZEUvbbp7cwXrAvLjj",
+          "_path": "patterns/OCpZEUvbbp7cwXrAvLjj",
+          "instrument": "dundunba",
+          "pattern": "x-------x-o-----x-----oo-oo-----",
+          "title": "dundunba"
+        },
+        {
+          "__ref": "patterns/oE9KR8ea7NOCW8QCpnDT",
+          "_id": "oE9KR8ea7NOCW8QCpnDT",
+          "_path": "patterns/oE9KR8ea7NOCW8QCpnDT",
+          "instrument": "sangban",
+          "title": "sangban",
+          "pattern": "o--o--o---x---o-",
+          "id": "oE9KR8ea7NOCW8QCpnDT"
+        },
+        {
+          "__ref": "patterns/uy7ffRD5IRQrrwDgoQe1",
+          "_id": "uy7ffRD5IRQrrwDgoQe1",
+          "_path": "patterns/uy7ffRD5IRQrrwDgoQe1",
+          "pattern": "o----oo-o----oo-o----oo-o----oo-",
+          "instrument": "kenkeni",
+          "title": "kenkeni"
+        },
+        {
+          "__ref": "patterns/ExZVgYBsZQZv5Q6oooJV",
+          "_id": "ExZVgYBsZQZv5Q6oooJV",
+          "_path": "patterns/ExZVgYBsZQZv5Q6oooJV",
+          "pattern": "ss-ss-tts-b-sbtt",
+          "instrument": "djembe",
+          "title": "djembe"
+        }
+      ],
+      "signal": "",
+      "published": true,
+      "updatedAt": "2023-10-19T01:41:16.625Z"
+    },
+    {
+      "_id": "4aqLD8X2rJaY0qupccXq",
+      "_path": "drums/4aqLD8X2rJaY0qupccXq",
+      "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+      "tempo": 125,
+      "title": "Wassolon Soboninkun Variation",
+      "slug": "wassolon-soboninkun-variation",
+      "tags": [
+        "4/4",
+        "soboninkun",
+        "wassolon",
+        "kassonke"
+      ],
+      "createdAt": "2023-11-21T17:33:55.883Z",
+      "published": true,
+      "swing": "",
+      "patterns": [
+        {
+          "__ref": "patterns/7XDa6u3cNKeQPfiOHlqv",
+          "_id": "7XDa6u3cNKeQPfiOHlqv",
+          "_path": "patterns/7XDa6u3cNKeQPfiOHlqv",
+          "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+          "instrument": "sangban",
+          "title": "sangban",
+          "pattern": "x--x---o--oo----x--x---oo-oo----x--x---oo-o-oo-o-o-o-o-oo-oo----",
+          "id": "7XDa6u3cNKeQPfiOHlqv"
+        },
+        {
+          "__ref": "patterns/0G2BAMsLhaw5vu64s7dY",
+          "_id": "0G2BAMsLhaw5vu64s7dY",
+          "_path": "patterns/0G2BAMsLhaw5vu64s7dY",
+          "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+          "pattern": "----o-o-",
+          "instrument": "kenkeni",
+          "title": "kenkeni"
+        },
+        {
+          "__ref": "patterns/vUbOvxpYeche11dlqS7A",
+          "_id": "vUbOvxpYeche11dlqS7A",
+          "_path": "patterns/vUbOvxpYeche11dlqS7A",
+          "instrument": "bell",
+          "title": "bell",
+          "pattern": "x-xx-x-xx-xx-x-xx-xx-x-xx-xx-x-xx-xx-x-xx-x-xx-x-x-x-x-xx-xx-xx-"
+        }
+      ],
+      "description": "",
+      "signal": "",
+      "updatedAt": "2024-11-26T23:23:51.833Z"
+    },
+    {
+      "_id": "8DQO1MlMh1nWxZ8C4xWj",
+      "_path": "drums/8DQO1MlMh1nWxZ8C4xWj",
+      "swing": "<<",
+      "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+      "patterns": [
+        {
+          "__ref": "patterns/ulnLMDTbnIbbFB7wAUS9",
+          "_id": "ulnLMDTbnIbbFB7wAUS9",
+          "_path": "patterns/ulnLMDTbnIbbFB7wAUS9",
+          "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+          "pattern": "--------------oo-o-oo------------------o-o-oo-oo-oo-oo-oo-oo-o-o-o-oo-oo-oo-oo-oo-o-",
+          "instrument": "dundunba",
+          "title": "dundunba"
+        },
+        {
+          "__ref": "patterns/pumWeBLBBWPQ0cikC4Yz",
+          "_id": "pumWeBLBBWPQ0cikC4Yz",
+          "_path": "patterns/pumWeBLBBWPQ0cikC4Yz",
+          "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+          "pattern": "x--x--x--x--x--o-o----o-x--x--x--x--x--o-o----o---o----o----o-oo-o-----o-----o----o-",
+          "instrument": "sangban",
+          "title": "sangban"
+        },
+        {
+          "__ref": "patterns/Vs2Bnmf0btrw8BKJDpg5",
+          "_id": "Vs2Bnmf0btrw8BKJDpg5",
+          "_path": "patterns/Vs2Bnmf0btrw8BKJDpg5",
+          "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+          "pattern": "--o-oo",
+          "instrument": "kenkeni",
+          "title": "kenkeni"
+        },
+        {
+          "__ref": "patterns/8nc7Oi3eoVO6PExIPZDU",
+          "_id": "8nc7Oi3eoVO6PExIPZDU",
+          "_path": "patterns/8nc7Oi3eoVO6PExIPZDU",
+          "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+          "instrument": "bell",
+          "title": "bell",
+          "pattern": "x-xx-xx-xx-xx-xx-x-xx-x-x-xx-xx-xx-xx-xx-x-xx-xx-xx-xx-xx-x-x-xx-x-xx-xx-xx-xx-xx-x-",
+          "id": "8nc7Oi3eoVO6PExIPZDU"
+        },
+        {
+          "__ref": "patterns/0RU32apTKfCsbMFNSj7o",
+          "_id": "0RU32apTKfCsbMFNSj7o",
+          "_path": "patterns/0RU32apTKfCsbMFNSj7o",
+          "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+          "pattern": "s-ts--",
+          "instrument": "djembe",
+          "title": "djembe"
+        }
+      ],
+      "tempo": 150,
+      "slug": "bolokonondo",
+      "tags": [
+        "6/8",
+        "bolokonondo",
+        "dunumba",
+        "sequential"
+      ],
+      "createdAt": "2023-10-06T16:38:35.357Z",
+      "description": "",
+      "title": "Bolokonondo Groove",
+      "signal": "sstsss------------------sstsss------tttssssssssstttssstttssstttsssttss-ssss-tttt-s--",
+      "published": true,
+      "updatedAt": "2023-10-19T01:32:40.527Z"
+    },
+    {
+      "_id": "9eD3C3nan2VynsPAv8rN",
+      "_path": "drums/9eD3C3nan2VynsPAv8rN",
+      "swing": "<<",
+      "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+      "patterns": [
+        {
+          "__ref": "patterns/yWS8tPiHrVSZa0nEp1xv",
+          "_id": "yWS8tPiHrVSZa0nEp1xv",
+          "_path": "patterns/yWS8tPiHrVSZa0nEp1xv",
+          "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+          "pattern": "---------oooo-----oooo-----------oooo-o-o-oooo-----------o--o-----o--o-----------o--o--o--o--o-----------------o--o--o--",
+          "instrument": "dundunba",
+          "title": "dundunba"
+        },
+        {
+          "__ref": "patterns/CGtZgtOmyOvkMirRIilJ",
+          "_id": "CGtZgtOmyOvkMirRIilJ",
+          "_path": "patterns/CGtZgtOmyOvkMirRIilJ",
+          "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+          "pattern": "-----------------------------------------------------------o--------o--------------o--o--o--o---",
+          "instrument": "kenkeni",
+          "title": "kenkeni"
+        },
+        {
+          "__ref": "patterns/FuxBWa7xdzHQ1a0BmVZo",
+          "_id": "FuxBWa7xdzHQ1a0BmVZo",
+          "_path": "patterns/FuxBWa7xdzHQ1a0BmVZo",
+          "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+          "pattern": "ttt-sss--ssss-----ssss-tttt-sss--ssss-s-s-ssss-tsss-ttt--b-sb-----b-sb-tsss-ttt--b-sb-sb-sb-sb-tttt-sss-tt-sttsttsttss-t",
+          "instrument": "djembe",
+          "title": "djembe"
+        }
+      ],
+      "tempo": 140,
+      "title": "Gine Fare Intro from Moribaya",
+      "slug": "gine-fare-intro-from-moribaya",
+      "tags": [
+        "6/8",
+        "gine fare",
+        "intro",
+        "break"
+      ],
+      "createdAt": "2023-11-15T18:39:33.736Z",
+      "published": true,
+      "updatedAt": "2024-03-24T01:07:43.731Z"
+    },
+    {
+      "_id": "BH9KDWUXRUx3w48iD02i",
+      "_path": "drums/BH9KDWUXRUx3w48iD02i",
+      "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+      "patterns": [
+        {
+          "__ref": "patterns/KnE4wXwDYAyouQandNJM",
+          "_id": "KnE4wXwDYAyouQandNJM",
+          "_path": "patterns/KnE4wXwDYAyouQandNJM",
+          "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+          "pattern": "oo-------------ooo-------------ooo-------------ooo-oo-ooo-oo-o-o",
+          "instrument": "dundunba",
+          "title": "dundunba"
+        },
+        {
+          "__ref": "patterns/gMfC2Ldg4Yv5RiEtiRpd",
+          "_id": "gMfC2Ldg4Yv5RiEtiRpd",
+          "_path": "patterns/gMfC2Ldg4Yv5RiEtiRpd",
+          "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+          "pattern": "---o----o-oo----",
+          "instrument": "sangban",
+          "title": "sangban"
+        },
+        {
+          "__ref": "patterns/N3nF0CZ0xc5x5c0hjVx0",
+          "_id": "N3nF0CZ0xc5x5c0hjVx0",
+          "_path": "patterns/N3nF0CZ0xc5x5c0hjVx0",
+          "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+          "pattern": "----o-o-",
+          "instrument": "kenkeni",
+          "title": "kenkeni"
+        },
+        {
+          "__ref": "patterns/knzwFRz5LW1j0pxZWUw1",
+          "_id": "knzwFRz5LW1j0pxZWUw1",
+          "_path": "patterns/knzwFRz5LW1j0pxZWUw1",
+          "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+          "pattern": "tt-bs-b-s--sttss",
+          "instrument": "djembe",
+          "title": "djembe"
+        }
+      ],
+      "description": "A non-traditional sinte arrangement.",
+      "tempo": 110,
+      "title": "Sinte",
+      "signal": "s---f--tss-ss-f-tt-tt---",
+      "slug": "sinte",
+      "tags": [
+        "4/4",
+        "sinte",
+        "dundun set",
+        "variations"
+      ],
+      "createdAt": "2024-08-13T14:40:24.347Z",
+      "published": true,
+      "updatedAt": "2024-08-13T14:40:34.528Z"
+    },
+    {
+      "_id": "FYr8JXbKf6ODdC7NtH3s",
+      "_path": "drums/FYr8JXbKf6ODdC7NtH3s",
+      "patterns": [
+        {
+          "__ref": "patterns/KKVcdA5iFFzPrn7sujG5",
+          "_id": "KKVcdA5iFFzPrn7sujG5",
+          "_path": "patterns/KKVcdA5iFFzPrn7sujG5",
+          "instrument": "sangban",
+          "title": "sangban",
+          "pattern": "x--o-o--o-o--x--"
+        },
+        {
+          "__ref": "patterns/OYM9y53GIPzeu4XSPXOX",
+          "_id": "OYM9y53GIPzeu4XSPXOX",
+          "_path": "patterns/OYM9y53GIPzeu4XSPXOX",
+          "instrument": "bell",
+          "title": "bell",
+          "pattern": "x-xx-x-xx-x-xx-x"
+        }
+      ],
+      "description": "The last sound of the 2nd bar (muted stroke) is played slightly faster in this variation. Bell pattern has been adjusted to avoid triple strokes.",
+      "swing": ">",
+      "createdAt": "2021-12-31T23:00:00.854Z",
+      "slug": "madan-sangban-variation",
+      "authorUid": "1DaMIjztNLfHUO5H8wXv68feMD83",
+      "tempo": 110,
+      "title": "Sangban for madan (variation)",
+      "signal": "",
+      "published": true,
+      "tags": [
+        "madan",
+        "djagbe",
+        "sangban",
+        "4/4"
+      ],
+      "updatedAt": "2024-06-18T18:48:46.056Z"
+    },
+    {
+      "_id": "KhMyJAAZjWxM6359Y29F",
+      "_path": "drums/KhMyJAAZjWxM6359Y29F",
+      "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+      "tempo": 135,
+      "title": "Soboninkun",
+      "signal": "f-tt-t-tt-sss---",
+      "createdAt": "2023-09-26T16:43:37.947Z",
+      "slug": "soboninkun",
+      "swing": "<<<",
+      "description": "Other names: sobonikun, sogonikun, sogoninkun.",
+      "tags": [
+        "dundun set",
+        "soboninkun",
+        "4/4",
+        "wassolon"
+      ],
+      "patterns": [
+        {
+          "__ref": "patterns/bX88MFY24mRHI8z0N3TG",
+          "_id": "bX88MFY24mRHI8z0N3TG",
+          "_path": "patterns/bX88MFY24mRHI8z0N3TG",
+          "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+          "pattern": "------o-------o-",
+          "instrument": "dundunba",
+          "title": "dundunba"
+        },
+        {
+          "__ref": "patterns/Z20kvqw0HGkfuYSlTHA2",
+          "_id": "Z20kvqw0HGkfuYSlTHA2",
+          "_path": "patterns/Z20kvqw0HGkfuYSlTHA2",
+          "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+          "pattern": "x--x---o--oo----",
+          "instrument": "sangban",
+          "title": "sangban"
+        },
+        {
+          "__ref": "patterns/5syc61v0QktH1Dndm8fm",
+          "_id": "5syc61v0QktH1Dndm8fm",
+          "_path": "patterns/5syc61v0QktH1Dndm8fm",
+          "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+          "pattern": "----o-o-",
+          "instrument": "kenkeni",
+          "title": "kenkeni"
+        },
+        {
+          "__ref": "patterns/MsgrPWPhckuAeiXs6mxq",
+          "_id": "MsgrPWPhckuAeiXs6mxq",
+          "_path": "patterns/MsgrPWPhckuAeiXs6mxq",
+          "pattern": "s--sf-tt",
+          "instrument": "djembe",
+          "title": "djembe"
+        }
+      ],
+      "published": true,
+      "updatedAt": "2023-10-19T01:35:15.637Z"
+    },
+    {
+      "_id": "Kk5BOa2Vk2ny0LW3h5mb",
+      "_path": "drums/Kk5BOa2Vk2ny0LW3h5mb",
+      "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+      "patterns": [
+        {
+          "__ref": "patterns/bMpGmfxtPQplvvmGYI3v",
+          "_id": "bMpGmfxtPQplvvmGYI3v",
+          "_path": "patterns/bMpGmfxtPQplvvmGYI3v",
+          "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+          "pattern": "o-----------------------o---o---",
+          "instrument": "dundunba",
+          "title": "dundunba"
+        },
+        {
+          "__ref": "patterns/sTryorpLblxwfLfjQEF8",
+          "_id": "sTryorpLblxwfLfjQEF8",
+          "_path": "patterns/sTryorpLblxwfLfjQEF8",
+          "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+          "pattern": "--oo--x---oo--x---oo--x---o---o-",
+          "instrument": "sangban",
+          "title": "sangban"
+        },
+        {
+          "__ref": "patterns/Ft7x1MBhBfRmnDQLwJ6b",
+          "_id": "Ft7x1MBhBfRmnDQLwJ6b",
+          "_path": "patterns/Ft7x1MBhBfRmnDQLwJ6b",
+          "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+          "pattern": "o---o---",
+          "instrument": "kenkeni",
+          "title": "kenkeni"
+        },
+        {
+          "__ref": "patterns/oHU0zKhpjcEqp4KDt7rX",
+          "_id": "oHU0zKhpjcEqp4KDt7rX",
+          "_path": "patterns/oHU0zKhpjcEqp4KDt7rX",
+          "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+          "instrument": "djembe",
+          "title": "djembe",
+          "pattern": "s----bsss----bsss----bssssf-sst-",
+          "id": "oHU0zKhpjcEqp4KDt7rX"
+        }
+      ],
+      "tempo": 110,
+      "title": "N'goron",
+      "slug": "ngoron",
+      "tags": [
+        "ngoron",
+        "dundun set",
+        "4/4"
+      ],
+      "createdAt": "2024-02-18T17:37:25.182Z",
+      "published": true,
+      "swing": "",
+      "description": "",
+      "signal": "",
+      "updatedAt": "2024-03-17T17:08:06.542Z"
+    },
+    {
+      "_id": "LmHoQgO37JVpK7TEUB59",
+      "_path": "drums/LmHoQgO37JVpK7TEUB59",
+      "author": "Szdun Dudumba",
+      "patterns": [
+        {
+          "__ref": "patterns/pFqJ3YpeSBwX6gr9Phv5",
+          "_id": "pFqJ3YpeSBwX6gr9Phv5",
+          "_path": "patterns/pFqJ3YpeSBwX6gr9Phv5",
+          "author": "Szdun Dudumba",
+          "pattern": "o-----o-",
+          "instrument": "dundunba",
+          "title": "dundunba"
+        },
+        {
+          "__ref": "patterns/lzXsr60A8jmwYCCAmlj8",
+          "_id": "lzXsr60A8jmwYCCAmlj8",
+          "_path": "patterns/lzXsr60A8jmwYCCAmlj8",
+          "author": "Szdun Dudumba",
+          "pattern": "---o-o-o--o---o-",
+          "instrument": "sangban",
+          "title": "sangban"
+        },
+        {
+          "__ref": "patterns/fnMP247AMKwW2kW5WYuv",
+          "_id": "fnMP247AMKwW2kW5WYuv",
+          "_path": "patterns/fnMP247AMKwW2kW5WYuv",
+          "author": "Szdun Dudumba",
+          "pattern": "oo-x-x--oo--x---",
+          "instrument": "kenkeni",
+          "title": "kenkeni"
+        }
+      ],
+      "description": "A modern rhythm composed by Mamady Keita",
+      "title": "Kudani",
+      "signal": "",
+      "createdAt": "2023-08-01T00:10:26.622Z",
+      "swing": ">",
+      "slug": "kudani",
+      "tags": [
+        "kudani",
+        "4/4",
+        "dundun set",
+        "mamady keita"
+      ],
+      "published": true,
+      "updatedAt": "2023-10-19T01:36:36.450Z"
+    },
+    {
+      "_id": "MTZejeMhZTHtDeu2EuII",
+      "_path": "drums/MTZejeMhZTHtDeu2EuII",
+      "description": "An interesting 9/8 polirhythm. Sangban phrase has length of 3 beats, dundunba - 6 beats and kenkeni only 2 beats (kenkeni is 6/8 here). That means the rhythm loop consists of 1 dundunba phrase, 2 sangban phrases and 3 kenkeni phrases.",
+      "title": "Konkoba dundun set",
+      "createdAt": "2021-12-31T23:00:00.269Z",
+      "slug": "konkoba",
+      "patterns": [
+        {
+          "__ref": "patterns/t925PPDVRImk2u2Lw9fm",
+          "_id": "t925PPDVRImk2u2Lw9fm",
+          "_path": "patterns/t925PPDVRImk2u2Lw9fm",
+          "instrument": "dundunba",
+          "title": "dundunba",
+          "pattern": "o-o------o-o-oo-o-",
+          "id": "t925PPDVRImk2u2Lw9fm"
+        },
+        {
+          "__ref": "patterns/n4iBSEnnY4q2yUvTKr2o",
+          "_id": "n4iBSEnnY4q2yUvTKr2o",
+          "_path": "patterns/n4iBSEnnY4q2yUvTKr2o",
+          "instrument": "sangban",
+          "title": "sangban",
+          "id": "n4iBSEnnY4q2yUvTKr2o",
+          "pattern": "o-o-x-x--o-o-x-x--"
+        },
+        {
+          "__ref": "patterns/mK9dlZl5qOaU2xbswdZv",
+          "_id": "mK9dlZl5qOaU2xbswdZv",
+          "_path": "patterns/mK9dlZl5qOaU2xbswdZv",
+          "instrument": "kenkeni",
+          "title": "kenkeni",
+          "pattern": "o----o"
+        }
+      ],
+      "signal": "",
+      "tags": [
+        "9/8",
+        "konkoba",
+        "dundun set"
+      ],
+      "published": true,
+      "swing": "<<",
+      "tempo": 160,
+      "updatedAt": "2023-11-07T17:09:54.081Z"
+    },
+    {
+      "_id": "MvkICEHYCtlbhtC60BxR",
+      "_path": "drums/MvkICEHYCtlbhtC60BxR",
+      "patterns": [
+        {
+          "__ref": "patterns/hNcnQQQj89AmvTBhfAJA",
+          "_id": "hNcnQQQj89AmvTBhfAJA",
+          "_path": "patterns/hNcnQQQj89AmvTBhfAJA",
+          "pattern": "o--x------ooo--o",
+          "instrument": "dundunba",
+          "title": "dundunba"
+        },
+        {
+          "__ref": "patterns/VsgLtV05G2lqJKV42Ks5",
+          "_id": "VsgLtV05G2lqJKV42Ks5",
+          "_path": "patterns/VsgLtV05G2lqJKV42Ks5",
+          "pattern": "----o-o-o-------",
+          "instrument": "sangban",
+          "title": "sangban"
+        },
+        {
+          "__ref": "patterns/lku9czzRSOXJolp74TJj",
+          "_id": "lku9czzRSOXJolp74TJj",
+          "_path": "patterns/lku9czzRSOXJolp74TJj",
+          "pattern": "--oo----",
+          "instrument": "kenkeni",
+          "title": "kenkeni (high)"
+        },
+        {
+          "__ref": "patterns/RWuTCHVydkmXSwCPcYr5",
+          "_id": "RWuTCHVydkmXSwCPcYr5",
+          "_path": "patterns/RWuTCHVydkmXSwCPcYr5",
+          "pattern": "------oo",
+          "instrument": "kenkeni2",
+          "title": "kenkeni (low)"
+        }
+      ],
+      "tempo": 135,
+      "title": "Zaouli",
+      "createdAt": "2022-02-08T23:00:00.000Z",
+      "signal": "t--t---t--t--t--",
+      "slug": "zaouli-set",
+      "tags": [
+        "zaouli",
+        "dundun set",
+        "4/4"
+      ],
+      "published": true,
+      "updatedAt": "2023-10-19T01:37:42.264Z"
+    },
+    {
+      "_id": "NK5vuWhVUJ0Da4zpJ5wM",
+      "_path": "drums/NK5vuWhVUJ0Da4zpJ5wM",
+      "createdAt": "2022-02-05T23:00:00.000Z",
+      "tempo": 130,
+      "signal": "ttttt-tt-t--",
+      "slug": "djaa-kouroussa",
+      "swing": ">>",
+      "patterns": [
+        {
+          "__ref": "patterns/UGrbfwlH6jq45AIZhFhK",
+          "_id": "UGrbfwlH6jq45AIZhFhK",
+          "_path": "patterns/UGrbfwlH6jq45AIZhFhK",
+          "instrument": "dundunba",
+          "title": "dundunba",
+          "id": "UGrbfwlH6jq45AIZhFhK",
+          "pattern": "--o---oo---oo----------o--o---oo---oo----------o--o---oo---oo----------o--o---oo---o--o--------o"
+        },
+        {
+          "__ref": "patterns/I3xFia6XndpGVcEHrNvr",
+          "_id": "I3xFia6XndpGVcEHrNvr",
+          "_path": "patterns/I3xFia6XndpGVcEHrNvr",
+          "instrument": "sangban",
+          "title": "sangban",
+          "id": "I3xFia6XndpGVcEHrNvr",
+          "pattern": "o---o----o--------------o---o----oo-------------o---o----o--------------oo-oo----oo-oo----o-----"
+        },
+        {
+          "__ref": "patterns/lGjxVnoGgJbNT3TGOX26",
+          "_id": "lGjxVnoGgJbNT3TGOX26",
+          "_path": "patterns/lGjxVnoGgJbNT3TGOX26",
+          "instrument": "kenkeni",
+          "title": "kenkeni",
+          "id": "lGjxVnoGgJbNT3TGOX26",
+          "pattern": "----o--o-o------o--o-o------o--o-o------o--o-o------o--o-o------o--o-o------o--o-o------o--o-o--"
+        },
+        {
+          "__ref": "patterns/pEAuwA9WJClpGZKcVo9A",
+          "_id": "pEAuwA9WJClpGZKcVo9A",
+          "_path": "patterns/pEAuwA9WJClpGZKcVo9A",
+          "pattern": "x-x-x-xx-x-xx-x-x-xx-x-xx-x-x-xx-x-xx-x-x-xx-x-xx-x-x-xx-x-xx-x-x-xx-xx-xx-xx-xx-xx-xx-xx-xx-x-x",
+          "instrument": "bell",
+          "title": "bell"
+        },
+        {
+          "__ref": "patterns/FQUoS72tbpZrsosWAfvM",
+          "_id": "FQUoS72tbpZrsosWAfvM",
+          "_path": "patterns/FQUoS72tbpZrsosWAfvM",
+          "pattern": "s-bs-bstts-b",
+          "instrument": "djembe",
+          "title": "djembe"
+        }
+      ],
+      "description": "Sometimes spelled as dja.",
+      "title": "Djaa",
+      "tags": [
+        "6/8",
+        "djaa",
+        "dundun set"
+      ],
+      "published": true,
+      "updatedAt": "2023-10-19T01:42:24.308Z"
+    },
+    {
+      "_id": "NrDOcOPrmoQMAphDrkCb",
+      "_path": "drums/NrDOcOPrmoQMAphDrkCb",
+      "title": "Mendiani for set",
+      "createdAt": "2023-08-21T00:32:46.444Z",
+      "patterns": [
+        {
+          "__ref": "patterns/swJCTwoXVog2we54GDer",
+          "_id": "swJCTwoXVog2we54GDer",
+          "_path": "patterns/swJCTwoXVog2we54GDer",
+          "pattern": "-oo--------o",
+          "instrument": "dundunba",
+          "title": "dundunba"
+        },
+        {
+          "__ref": "patterns/9jusMHyzUxTXRBIzKEjj",
+          "_id": "9jusMHyzUxTXRBIzKEjj",
+          "_path": "patterns/9jusMHyzUxTXRBIzKEjj",
+          "pattern": "o-o--x--o-o-",
+          "instrument": "sangban",
+          "title": "sangban"
+        },
+        {
+          "__ref": "patterns/ky7isaWnWuIRqMInmkj1",
+          "_id": "ky7isaWnWuIRqMInmkj1",
+          "_path": "patterns/ky7isaWnWuIRqMInmkj1",
+          "pattern": "o----o",
+          "instrument": "kenkeni",
+          "title": "kenkeni"
+        },
+        {
+          "__ref": "patterns/TnczGEaJj3YoA22VN7mq",
+          "_id": "TnczGEaJj3YoA22VN7mq",
+          "_path": "patterns/TnczGEaJj3YoA22VN7mq",
+          "pattern": "x-xx-xx-x-x-",
+          "instrument": "bell",
+          "title": "sangban bell"
+        }
+      ],
+      "swing": "<<",
+      "signal": "f-ss-tsstss-",
+      "slug": "mendiani",
+      "tags": [
+        "6/8",
+        "dundun set",
+        "mendiani"
+      ],
+      "published": true,
+      "updatedAt": "2023-10-19T01:36:35.815Z"
+    },
+    {
+      "_id": "OdzId3lpVmBt3xjErNie",
+      "_path": "drums/OdzId3lpVmBt3xjErNie",
+      "swing": "-->",
+      "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+      "patterns": [
+        {
+          "__ref": "patterns/xloBxQpodfifscjKxY24",
+          "_id": "xloBxQpodfifscjKxY24",
+          "_path": "patterns/xloBxQpodfifscjKxY24",
+          "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+          "pattern": "o---------o-----",
+          "instrument": "dundunba",
+          "title": "dundunba"
+        },
+        {
+          "__ref": "patterns/UzTHOkNdOmt6IJKwWKty",
+          "_id": "UzTHOkNdOmt6IJKwWKty",
+          "_path": "patterns/UzTHOkNdOmt6IJKwWKty",
+          "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+          "pattern": "-o-o-oo-o-------",
+          "instrument": "sangban",
+          "title": "sangban"
+        },
+        {
+          "__ref": "patterns/95gG9oNAPPSXKJNUUE2Y",
+          "_id": "95gG9oNAPPSXKJNUUE2Y",
+          "_path": "patterns/95gG9oNAPPSXKJNUUE2Y",
+          "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+          "pattern": "----o-o-----o-o-",
+          "instrument": "kenkeni",
+          "title": "kenkeni"
+        },
+        {
+          "__ref": "patterns/drJlXZKNLuJW1eU950yF",
+          "_id": "drJlXZKNLuJW1eU950yF",
+          "_path": "patterns/drJlXZKNLuJW1eU950yF",
+          "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+          "instrument": "djembe",
+          "title": "djembe",
+          "pattern": "s---f-f-s-b-f-f-",
+          "id": "drJlXZKNLuJW1eU950yF"
+        }
+      ],
+      "tempo": 110,
+      "title": "Didadi - short groove for dundun set",
+      "slug": "didadi-short-groove-for-dundun-set",
+      "tags": [
+        "4/4",
+        "didadi",
+        "dundun set",
+        "short loop"
+      ],
+      "createdAt": "2023-10-19T13:36:19.616Z",
+      "published": true,
+      "description": "",
+      "signal": "",
+      "updatedAt": "2024-06-18T18:42:39.591Z"
+    },
+    {
+      "_id": "OtzpHqDDipsJzXxJQtD6",
+      "_path": "drums/OtzpHqDDipsJzXxJQtD6",
+      "title": "Lamban",
+      "tempo": 110,
+      "createdAt": "2021-12-31T23:00:00.492Z",
+      "slug": "lamban",
+      "tags": [
+        "lamban",
+        "sandia",
+        "djelidon",
+        "4/4",
+        "kassonke",
+        "drissa kone"
+      ],
+      "published": true,
+      "swing": "",
+      "patterns": [
+        {
+          "__ref": "patterns/EsJ3q8qKj9v94X1I8dGu",
+          "_id": "EsJ3q8qKj9v94X1I8dGu",
+          "_path": "patterns/EsJ3q8qKj9v94X1I8dGu",
+          "instrument": "dundunba",
+          "title": "dundunba",
+          "id": "EsJ3q8qKj9v94X1I8dGu",
+          "pattern": "o-----x--oo-----o-----oo-o-o----"
+        },
+        {
+          "__ref": "patterns/X3r09Lz1DOeOY7oCRP4S",
+          "_id": "X3r09Lz1DOeOY7oCRP4S",
+          "_path": "patterns/X3r09Lz1DOeOY7oCRP4S",
+          "instrument": "sangban",
+          "title": "sangban",
+          "id": "X3r09Lz1DOeOY7oCRP4S",
+          "pattern": "o-o--oo-"
+        },
+        {
+          "__ref": "patterns/Z8GBnhzyeOhHhQ1xsoP8",
+          "_id": "Z8GBnhzyeOhHhQ1xsoP8",
+          "_path": "patterns/Z8GBnhzyeOhHhQ1xsoP8",
+          "instrument": "bell",
+          "title": "bell",
+          "id": "Z8GBnhzyeOhHhQ1xsoP8",
+          "pattern": "x-x-x-xx-xx-x-x-x-x-x-xx-x-x-xx-"
+        },
+        {
+          "__ref": "patterns/JXlTYE5sAgWs1egze0RO",
+          "_id": "JXlTYE5sAgWs1egze0RO",
+          "_path": "patterns/JXlTYE5sAgWs1egze0RO",
+          "pattern": "tts--ss-",
+          "instrument": "djembe",
+          "title": "djembe"
+        }
+      ],
+      "signal": "--f-t-t-t-ttss--",
+      "description": "Transcription of lamban by Drissa Kone (Mali). Originally played on 2 khassonke dunduns.\n\nPay attention to the djembe accompaniment - it's a shifted passport accompaniment: |s--ss-tt| -> |tts--ss-|.",
+      "updatedAt": "2024-08-13T14:14:20.339Z"
+    },
+    {
+      "_id": "Q0t6Kijs7Me19FpcVTtu",
+      "_path": "drums/Q0t6Kijs7Me19FpcVTtu",
+      "patterns": [
+        {
+          "__ref": "patterns/Rzy6p9bKLtwnVeSFegFb",
+          "_id": "Rzy6p9bKLtwnVeSFegFb",
+          "_path": "patterns/Rzy6p9bKLtwnVeSFegFb",
+          "pattern": "o---o-o---o-",
+          "instrument": "dundunba",
+          "title": "dundunba"
+        },
+        {
+          "__ref": "patterns/FK6zafbBBj3qoC1mbXaO",
+          "_id": "FK6zafbBBj3qoC1mbXaO",
+          "_path": "patterns/FK6zafbBBj3qoC1mbXaO",
+          "pattern": "o-o------x--",
+          "instrument": "sangban",
+          "title": "sangban"
+        }
+      ],
+      "createdAt": "2022-02-09T23:00:00.000Z",
+      "description": "A pattern that you can play at the very fast tempo.",
+      "title": "soko (fast)",
+      "tempo": 180,
+      "signal": "ttttt-tt-t--",
+      "slug": "soko-fast",
+      "tags": [
+        "soko",
+        "dundun set",
+        "rapide",
+        "6/8"
+      ],
+      "published": true,
+      "updatedAt": "2023-10-19T01:36:37.565Z"
+    },
+    {
+      "_id": "SeahrppUQbehkuL7xOeA",
+      "_path": "drums/SeahrppUQbehkuL7xOeA",
+      "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+      "patterns": [
+        {
+          "__ref": "patterns/B6CyPc7pPhBbujBqFd3t",
+          "_id": "B6CyPc7pPhBbujBqFd3t",
+          "_path": "patterns/B6CyPc7pPhBbujBqFd3t",
+          "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+          "pattern": "o-----o-",
+          "instrument": "dundunba",
+          "title": "dundunba"
+        },
+        {
+          "__ref": "patterns/VrCFWHQepL6OjaVTR7xJ",
+          "_id": "VrCFWHQepL6OjaVTR7xJ",
+          "_path": "patterns/VrCFWHQepL6OjaVTR7xJ",
+          "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+          "instrument": "sangban",
+          "title": "sangban",
+          "pattern": "x---x---x-o-o---x---x---x-o-oo--x---x--oo-o-o---x--o--o--o--o---",
+          "id": "VrCFWHQepL6OjaVTR7xJ"
+        },
+        {
+          "__ref": "patterns/vsiGTJFqmMNvw02jOiqk",
+          "_id": "vsiGTJFqmMNvw02jOiqk",
+          "_path": "patterns/vsiGTJFqmMNvw02jOiqk",
+          "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+          "instrument": "bell",
+          "title": "bell",
+          "pattern": "x-x-x-x-x-x-x-x-x-x-x-x-x-x-xx-xx-x-xx-xx-x-x-x-x-xx-xx-xx-xx-x-",
+          "id": "vsiGTJFqmMNvw02jOiqk"
+        }
+      ],
+      "title": "Balkulandjan sangban jam",
+      "tags": [
+        "jam",
+        "balakulandjan",
+        "sangban",
+        "4/4"
+      ],
+      "createdAt": "2023-09-27T19:47:00.058Z",
+      "slug": "balakulandjan-sangban-jam",
+      "swing": "",
+      "description": "Example sangban variations.",
+      "signal": "",
+      "tempo": 110,
+      "published": true,
+      "updatedAt": "2023-10-19T01:41:15.693Z"
+    },
+    {
+      "_id": "TnHbeuWuDGl1p7bMlL3b",
+      "_path": "drums/TnHbeuWuDGl1p7bMlL3b",
+      "tempo": 80,
+      "swing": ">",
+      "patterns": [
+        {
+          "__ref": "patterns/fqpQO2hFu0shdHhz1uSf",
+          "_id": "fqpQO2hFu0shdHhz1uSf",
+          "_path": "patterns/fqpQO2hFu0shdHhz1uSf",
+          "instrument": "sangban",
+          "title": "sangban",
+          "id": "fqpQO2hFu0shdHhz1uSf",
+          "pattern": "--oo--o---o-o-------------------"
+        },
+        {
+          "__ref": "patterns/OcEcgIqHmyFVNHsC2fga",
+          "_id": "OcEcgIqHmyFVNHsC2fga",
+          "_path": "patterns/OcEcgIqHmyFVNHsC2fga",
+          "instrument": "kenkeni",
+          "title": "kenkeni",
+          "id": "OcEcgIqHmyFVNHsC2fga",
+          "pattern": "o---o-----o-o-------------------"
+        }
+      ],
+      "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+      "createdAt": "2023-08-31T23:44:33.023Z",
+      "slug": "break",
+      "description": "A common thank-you phrase.",
+      "title": "The Last Break",
+      "signal": "s-tts-t---f-f---",
+      "tags": [
+        "break",
+        "outro",
+        "popular"
+      ],
+      "published": true,
+      "updatedAt": "2023-10-19T01:41:15.145Z"
+    },
+    {
+      "_id": "VJLOvOcBeHTsY210t2v3",
+      "_path": "drums/VJLOvOcBeHTsY210t2v3",
+      "patterns": [
+        {
+          "__ref": "patterns/RnnUrQC9ZOXJLvNhcWpv",
+          "_id": "RnnUrQC9ZOXJLvNhcWpv",
+          "_path": "patterns/RnnUrQC9ZOXJLvNhcWpv",
+          "pattern": "o-----o-",
+          "instrument": "kenkeni",
+          "title": "kenkeni"
+        },
+        {
+          "__ref": "patterns/IW7eErAaM2nx7qBjafxe",
+          "_id": "IW7eErAaM2nx7qBjafxe",
+          "_path": "patterns/IW7eErAaM2nx7qBjafxe",
+          "instrument": "sangban",
+          "title": "sangban",
+          "pattern": "---o--o----o--o-o---------------"
+        },
+        {
+          "__ref": "patterns/538A1aF0ohObYGq1a5W6",
+          "_id": "538A1aF0ohObYGq1a5W6",
+          "_path": "patterns/538A1aF0ohObYGq1a5W6",
+          "instrument": "dundunba",
+          "title": "dundunba",
+          "pattern": "--oo-oo---oo-oo---oo------------"
+        }
+      ],
+      "title": "kassa dibon dundun set",
+      "swing": ">",
+      "createdAt": "2021-12-31T23:00:00.804Z",
+      "slug": "dibon",
+      "tags": [
+        "4/4",
+        "kassa",
+        "dibon",
+        "dundun set"
+      ],
+      "published": true,
+      "updatedAt": "2023-10-19T01:37:40.313Z"
+    },
+    {
+      "_id": "WeC5owlWLeGvDnLQnWz1",
+      "_path": "drums/WeC5owlWLeGvDnLQnWz1",
+      "tempo": "110",
+      "title": "Denaben Dundun or Lafe",
+      "createdAt": "2021-12-31T23:00:00.634Z",
+      "swing": ">",
+      "patterns": [
+        {
+          "__ref": "patterns/3sFcgBqjRKbM7x01B19L",
+          "_id": "3sFcgBqjRKbM7x01B19L",
+          "_path": "patterns/3sFcgBqjRKbM7x01B19L",
+          "instrument": "dundunba",
+          "title": "dundunba",
+          "pattern": "-------oo-oo-oo--------oo-oo-oo--------oo-o-oo-oo-oo-o-oo-oo-oo-"
+        },
+        {
+          "__ref": "patterns/HVatTy2jN4Yc8r4hrJLs",
+          "_id": "HVatTy2jN4Yc8r4hrJLs",
+          "_path": "patterns/HVatTy2jN4Yc8r4hrJLs",
+          "instrument": "sangban",
+          "title": "sangban",
+          "pattern": "x--x-x--o-o-oo--x--x-x--o-o-oo--x--x-x--o-o-o--o---o----o-o-oo--"
+        },
+        {
+          "__ref": "patterns/DMyul8Lnux3nSdLXOMpj",
+          "_id": "DMyul8Lnux3nSdLXOMpj",
+          "_path": "patterns/DMyul8Lnux3nSdLXOMpj",
+          "instrument": "kenkeni",
+          "title": "kenkeni",
+          "pattern": "------oo",
+          "id": "DMyul8Lnux3nSdLXOMpj"
+        },
+        {
+          "__ref": "patterns/T5hG2Vanf0IlEGTsKpul",
+          "_id": "T5hG2Vanf0IlEGTsKpul",
+          "_path": "patterns/T5hG2Vanf0IlEGTsKpul",
+          "pattern": "--oo----",
+          "instrument": "kenkeni2",
+          "title": "kenkeni2"
+        }
+      ],
+      "description": "",
+      "signal": "f-tt-t-tt-ttt---",
+      "slug": "denaben",
+      "tags": [
+        "denaben",
+        "lafe",
+        "dundun set",
+        "dundun",
+        "4/4"
+      ],
+      "published": true,
+      "updatedAt": "2023-10-19T01:41:13.511Z"
+    },
+    {
+      "_id": "gyAM5pAG8FY2M3dRFDpz",
+      "_path": "drums/gyAM5pAG8FY2M3dRFDpz",
+      "title": "Soko dundun set",
+      "patterns": [
+        {
+          "__ref": "patterns/Ka9GUDlA3noiZTFu2Vmm",
+          "_id": "Ka9GUDlA3noiZTFu2Vmm",
+          "_path": "patterns/Ka9GUDlA3noiZTFu2Vmm",
+          "pattern": "o----oo-oo-oo-------oo-o",
+          "instrument": "dundunba",
+          "title": "dundunba"
+        },
+        {
+          "__ref": "patterns/iuKVz13a1Z7aqp9LyoMi",
+          "_id": "iuKVz13a1Z7aqp9LyoMi",
+          "_path": "patterns/iuKVz13a1Z7aqp9LyoMi",
+          "pattern": "x--x--oo-oo-x--x--x--oo-",
+          "instrument": "sangban",
+          "title": "sangban"
+        },
+        {
+          "__ref": "patterns/BRqnKMJWlNYppiDVQZd8",
+          "_id": "BRqnKMJWlNYppiDVQZd8",
+          "_path": "patterns/BRqnKMJWlNYppiDVQZd8",
+          "pattern": "x--oo-x--oo-x--oo-x--oo-",
+          "instrument": "kenkeni",
+          "title": "kenkeni"
+        }
+      ],
+      "tempo": 140,
+      "swing": ">>",
+      "createdAt": "2021-12-31T23:00:00.980Z",
+      "slug": "soko",
+      "tags": [
+        "soko",
+        "6/8",
+        "dundun set"
+      ],
+      "published": true,
+      "updatedAt": "2023-10-19T01:37:36.729Z"
+    },
+    {
+      "_id": "iLp52CR5HPtYNK3HhWR6",
+      "_path": "drums/iLp52CR5HPtYNK3HhWR6",
+      "title": "Kon (dunungbe)",
+      "createdAt": "2022-02-03T23:00:00.000Z",
+      "description": "Traditionally played as first in a dununba sequence.",
+      "swing": "<<",
+      "signal": "sstsss------",
+      "slug": "kon",
+      "tags": [
+        "kon",
+        "dunungbe",
+        "dunumba",
+        "dundun set",
+        "6/8"
+      ],
+      "patterns": [
+        {
+          "__ref": "patterns/Qvu1szbalhlboMh1pRA7",
+          "_id": "Qvu1szbalhlboMh1pRA7",
+          "_path": "patterns/Qvu1szbalhlboMh1pRA7",
+          "pattern": "-------oo-oo-------oo-oo",
+          "instrument": "dundunba",
+          "title": "dundunba"
+        },
+        {
+          "__ref": "patterns/LiO3oGUdSvWhSVNzgIXb",
+          "_id": "LiO3oGUdSvWhSVNzgIXb",
+          "_path": "patterns/LiO3oGUdSvWhSVNzgIXb",
+          "instrument": "sangban",
+          "title": "sangban",
+          "pattern": "x-------oo--x-------o---"
+        },
+        {
+          "__ref": "patterns/bOlbc61aZohW1k6u7uOg",
+          "_id": "bOlbc61aZohW1k6u7uOg",
+          "_path": "patterns/bOlbc61aZohW1k6u7uOg",
+          "instrument": "kenkeni",
+          "title": "kenkeni",
+          "pattern": "--o-oo"
+        },
+        {
+          "__ref": "patterns/BA1LhUma4tiEBdJ7H45N",
+          "_id": "BA1LhUma4tiEBdJ7H45N",
+          "_path": "patterns/BA1LhUma4tiEBdJ7H45N",
+          "pattern": "s-ts--",
+          "instrument": "djembe",
+          "title": "djembe"
+        }
+      ],
+      "tempo": 110,
+      "published": true,
+      "updatedAt": "2023-10-19T01:42:24.781Z"
+    },
+    {
+      "_id": "jQbw04o9BhZEkaPYiOr9",
+      "_path": "drums/jQbw04o9BhZEkaPYiOr9",
+      "title": "Soli dundun set",
+      "patterns": [
+        {
+          "__ref": "patterns/2V3yUjWbwPRKXwgzDhtJ",
+          "_id": "2V3yUjWbwPRKXwgzDhtJ",
+          "_path": "patterns/2V3yUjWbwPRKXwgzDhtJ",
+          "instrument": "sangban",
+          "title": "sangban",
+          "pattern": "o---x-x--o--"
+        },
+        {
+          "__ref": "patterns/xTevIrB0ZhufMSN4gg4h",
+          "_id": "xTevIrB0ZhufMSN4gg4h",
+          "_path": "patterns/xTevIrB0ZhufMSN4gg4h",
+          "instrument": "dundunba",
+          "title": "dundunba",
+          "pattern": "o-o-----oo-o"
+        },
+        {
+          "__ref": "patterns/28VUvwnw8e9VFaZ1joNC",
+          "_id": "28VUvwnw8e9VFaZ1joNC",
+          "_path": "patterns/28VUvwnw8e9VFaZ1joNC",
+          "instrument": "kenkeni",
+          "title": "kenkeni",
+          "pattern": "----oo------",
+          "authorUid": "1DaMIjztNLfHUO5H8wXv68feMD83"
+        }
+      ],
+      "description": "Soli is quite dense rhythm. And quite fast (that's why it's called \"soli rapide\"). When played on dundun set we simplify the melody to make it easier for dundunfola to play. With increasing tempo you may need to simplify it even more - I do that by removing double strokes in dundunba and kenkeni parts.",
+      "tempo": 130,
+      "swing": "<<",
+      "createdAt": "2021-12-31T23:00:00.885Z",
+      "slug": "soli",
+      "tags": [
+        "soli",
+        "dundun set",
+        "6/8",
+        "rapide"
+      ],
+      "published": true,
+      "updatedAt": "2023-10-19T01:37:37.833Z"
+    },
+    {
+      "_id": "kGlxDZtzlAdcE9ZfPgZ9",
+      "_path": "drums/kGlxDZtzlAdcE9ZfPgZ9",
+      "title": "djagbe dundun set",
+      "patterns": [
+        {
+          "__ref": "patterns/7M8Q5i50bEc7SDTAHOgT",
+          "_id": "7M8Q5i50bEc7SDTAHOgT",
+          "_path": "patterns/7M8Q5i50bEc7SDTAHOgT",
+          "pattern": "--oo-o----o-----",
+          "instrument": "dundunba",
+          "title": "dundunba"
+        },
+        {
+          "__ref": "patterns/KKVcdA5iFFzPrn7sujG5",
+          "_id": "KKVcdA5iFFzPrn7sujG5",
+          "_path": "patterns/KKVcdA5iFFzPrn7sujG5",
+          "instrument": "sangban",
+          "title": "sangban",
+          "pattern": "x--o-o--o-o--x--"
+        },
+        {
+          "__ref": "patterns/RnnUrQC9ZOXJLvNhcWpv",
+          "_id": "RnnUrQC9ZOXJLvNhcWpv",
+          "_path": "patterns/RnnUrQC9ZOXJLvNhcWpv",
+          "pattern": "o-----o-",
+          "instrument": "kenkeni",
+          "title": "kenkeni"
+        }
+      ],
+      "tempo": 100,
+      "swing": ">",
+      "createdAt": "2021-12-31T23:00:00.422Z",
+      "slug": "djagbe",
+      "tags": [
+        "djagbe",
+        "dundun set",
+        "madan",
+        "4/4"
+      ],
+      "published": true,
+      "updatedAt": "2023-10-19T01:41:07.617Z"
+    },
+    {
+      "_id": "kKENIxNQGQyPDqTblAVE",
+      "_path": "drums/kKENIxNQGQyPDqTblAVE",
+      "swing": ">",
+      "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+      "patterns": [
+        {
+          "__ref": "patterns/lnwshjGhsqt0iyu0oGWK",
+          "_id": "lnwshjGhsqt0iyu0oGWK",
+          "_path": "patterns/lnwshjGhsqt0iyu0oGWK",
+          "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+          "pattern": "o-------oo------",
+          "instrument": "dundunba",
+          "title": "dundunba"
+        },
+        {
+          "__ref": "patterns/0sXoZrdgsSVN1KKgUBaI",
+          "_id": "0sXoZrdgsSVN1KKgUBaI",
+          "_path": "patterns/0sXoZrdgsSVN1KKgUBaI",
+          "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+          "pattern": "--o---o-",
+          "instrument": "kenkeni",
+          "title": "kenkeni"
+        }
+      ],
+      "tempo": 110,
+      "title": "test-test",
+      "signal": "tts-ttstt-------",
+      "slug": "test-test",
+      "tags": [
+        "tag",
+        "tag2",
+        "4/4"
+      ],
+      "createdAt": "2024-03-11T21:14:37.930Z"
+    },
+    {
+      "_id": "m6LBuTKdo35Ucxchw6IW",
+      "_path": "drums/m6LBuTKdo35Ucxchw6IW",
+      "title": "Madan sangban",
+      "swing": ">",
+      "createdAt": "2021-12-31T23:00:00.701Z",
+      "slug": "madan-sangban",
+      "published": true,
+      "patterns": [
+        {
+          "__ref": "patterns/8EfSExfQHeU17iTeeF2p",
+          "_id": "8EfSExfQHeU17iTeeF2p",
+          "_path": "patterns/8EfSExfQHeU17iTeeF2p",
+          "pattern": "x--o-o--o-o---x-",
+          "instrument": "sangban",
+          "title": "sangban"
+        },
+        {
+          "__ref": "patterns/IaGH99IgXuMDB9muPHyT",
+          "_id": "IaGH99IgXuMDB9muPHyT",
+          "_path": "patterns/IaGH99IgXuMDB9muPHyT",
+          "pattern": "x-xx-x-xx-x-x-x-",
+          "instrument": "bell",
+          "title": "bell"
+        }
+      ],
+      "description": "",
+      "tempo": 110,
+      "signal": "",
+      "tags": [
+        "madan",
+        "djagbe",
+        "sangban",
+        "4/4"
+      ],
+      "updatedAt": "2024-06-18T18:49:51.446Z"
+    },
+    {
+      "_id": "p0vLS1WKkk2UIhufpbRY",
+      "_path": "drums/p0vLS1WKkk2UIhufpbRY",
+      "patterns": [
+        {
+          "__ref": "patterns/ugJT61hYW884L8BySdlm",
+          "_id": "ugJT61hYW884L8BySdlm",
+          "_path": "patterns/ugJT61hYW884L8BySdlm",
+          "pattern": "x---o---oo--o-o-o---oo--",
+          "instrument": "sangban",
+          "title": "sangban"
+        },
+        {
+          "__ref": "patterns/ygGhyEq4fpw7dndz37hn",
+          "_id": "ygGhyEq4fpw7dndz37hn",
+          "_path": "patterns/ygGhyEq4fpw7dndz37hn",
+          "pattern": "o----o",
+          "instrument": "kenkeni",
+          "title": "kenkeni"
+        }
+      ],
+      "description": "Crazy one, really.",
+      "title": "Kawa",
+      "createdAt": "2022-02-07T23:00:00.000Z",
+      "tempo": 140,
+      "swing": "<<",
+      "slug": "kawa",
+      "tags": [
+        "kawa",
+        "dundun set",
+        "6/8"
+      ],
+      "published": true,
+      "updatedAt": "2023-10-19T01:37:41.254Z"
+    },
+    {
+      "_id": "pEM8tU5DEmv6pwlKJBdA",
+      "_path": "drums/pEM8tU5DEmv6pwlKJBdA",
+      "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+      "patterns": [
+        {
+          "__ref": "patterns/iG63M5YoksExa5M2xR4J",
+          "_id": "iG63M5YoksExa5M2xR4J",
+          "_path": "patterns/iG63M5YoksExa5M2xR4J",
+          "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+          "instrument": "dundunba",
+          "title": "dundunba",
+          "pattern": "oooo--oooo--x--x--x--x--oooo--oooo--x--x--x--x--oooo-----oooo-----oooo-x-o-x-o-x-oooo-----o-----",
+          "id": "iG63M5YoksExa5M2xR4J"
+        },
+        {
+          "__ref": "patterns/ThKCGKU3bR0g8tc4Hc8j",
+          "_id": "ThKCGKU3bR0g8tc4Hc8j",
+          "_path": "patterns/ThKCGKU3bR0g8tc4Hc8j",
+          "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+          "instrument": "sangban",
+          "title": "sangban",
+          "pattern": "oooo--oooo--x--x--x--x--oooo--oooo--x--x--x--x-------o-o------o-o------o-x-o-x-o------o-o-------",
+          "id": "ThKCGKU3bR0g8tc4Hc8j"
+        },
+        {
+          "__ref": "patterns/mAPxeKSHRHkDODeTtaDT",
+          "_id": "mAPxeKSHRHkDODeTtaDT",
+          "_path": "patterns/mAPxeKSHRHkDODeTtaDT",
+          "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+          "pattern": "--------------------------------------------------------------------------------------------o-oo",
+          "instrument": "kenkeni",
+          "title": "kenkeni"
+        }
+      ],
+      "title": "Dunumba intro",
+      "createdAt": "2023-09-03T20:54:47.240Z",
+      "swing": "<<",
+      "tempo": 0,
+      "signal": "",
+      "slug": "dunumba-intro",
+      "description": "A popular break for dunumba rhythms sequence. Usually played at the beginning. As always there are multiple variations and this is just one of them. I added the kenkeni phrase at the end just for reference.",
+      "tags": [
+        "6/8",
+        "dunumba",
+        "intro",
+        "break",
+        "dundun set"
+      ],
+      "published": true,
+      "updatedAt": "2023-10-19T01:41:14.131Z"
+    },
+    {
+      "_id": "pVQSOASd5JagBJ6eXC1w",
+      "_path": "drums/pVQSOASd5JagBJ6eXC1w",
+      "description": "Sangban pattern for djansa",
+      "title": "djansa sangban",
+      "swing": ">",
+      "createdAt": "2021-12-31T23:00:00.786Z",
+      "slug": "djansa-sangban",
+      "published": true,
+      "patterns": [
+        {
+          "__ref": "patterns/OXiw7tSaeMIaKCwcFtA7",
+          "_id": "OXiw7tSaeMIaKCwcFtA7",
+          "_path": "patterns/OXiw7tSaeMIaKCwcFtA7",
+          "instrument": "sangban",
+          "title": "sangban",
+          "pattern": "o--o--o---x---o-",
+          "id": "OXiw7tSaeMIaKCwcFtA7"
+        },
+        {
+          "__ref": "patterns/Kncmd4iHpLDb6iNqmbL7",
+          "_id": "Kncmd4iHpLDb6iNqmbL7",
+          "_path": "patterns/Kncmd4iHpLDb6iNqmbL7",
+          "instrument": "kenkeni",
+          "title": "kenkeni",
+          "pattern": "o----oo-",
+          "id": "Kncmd4iHpLDb6iNqmbL7"
+        },
+        {
+          "__ref": "patterns/jbMrbQbnuzTVlDm3NXbe",
+          "_id": "jbMrbQbnuzTVlDm3NXbe",
+          "_path": "patterns/jbMrbQbnuzTVlDm3NXbe",
+          "pattern": "x-xx-xx-x-x-x-x-",
+          "instrument": "bell",
+          "title": "bell"
+        }
+      ],
+      "tempo": 110,
+      "signal": "",
+      "tags": [
+        "djansa",
+        "sangban",
+        "4/4"
+      ],
+      "updatedAt": "2024-06-18T18:49:26.158Z"
+    },
+    {
+      "_id": "pYQRbz9fbbSC4uTO91lx",
+      "_path": "drums/pYQRbz9fbbSC4uTO91lx",
+      "swing": ">>",
+      "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+      "title": "Marakadon",
+      "tags": [
+        "6/8",
+        "dundun set",
+        "marakadon",
+        "fula fare"
+      ],
+      "createdAt": "2023-09-26T00:08:45.005Z",
+      "slug": "marakadon",
+      "description": "",
+      "signal": "",
+      "tempo": 120,
+      "patterns": [
+        {
+          "__ref": "patterns/wv6dZQ4bezpCmgIjVXW0",
+          "_id": "wv6dZQ4bezpCmgIjVXW0",
+          "_path": "patterns/wv6dZQ4bezpCmgIjVXW0",
+          "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+          "instrument": "dundunba",
+          "title": "dundunba",
+          "pattern": "o------o-o-o",
+          "id": "wv6dZQ4bezpCmgIjVXW0"
+        },
+        {
+          "__ref": "patterns/sYDPK7DqD2wv1TViysmw",
+          "_id": "sYDPK7DqD2wv1TViysmw",
+          "_path": "patterns/sYDPK7DqD2wv1TViysmw",
+          "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+          "pattern": "--o---------",
+          "instrument": "sangban",
+          "title": "sangban"
+        },
+        {
+          "__ref": "patterns/ekGtwhxIIvCdDZTGsXb0",
+          "_id": "ekGtwhxIIvCdDZTGsXb0",
+          "_path": "patterns/ekGtwhxIIvCdDZTGsXb0",
+          "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+          "pattern": "xx-oo-xx-oo-",
+          "instrument": "kenkeni",
+          "title": "kenkeni"
+        }
+      ],
+      "published": true,
+      "updatedAt": "2023-10-19T01:41:14.669Z"
+    },
+    {
+      "_id": "uLGf8n99T4mVXPw0zuxm",
+      "_path": "drums/uLGf8n99T4mVXPw0zuxm",
+      "tempo": 140,
+      "createdAt": "2021-12-31T23:00:00.716Z",
+      "slug": "maane",
+      "tags": [
+        "maane",
+        "dundun set",
+        "6/8",
+        "mane",
+        "susu"
+      ],
+      "title": "Maane groove",
+      "swing": "<<",
+      "description": "",
+      "signal": "--fsss-tts--",
+      "patterns": [
+        {
+          "__ref": "patterns/IVJl5IXaWGaue0pXbe12",
+          "_id": "IVJl5IXaWGaue0pXbe12",
+          "_path": "patterns/IVJl5IXaWGaue0pXbe12",
+          "pattern": "o-----------------ooo-o-",
+          "instrument": "dundunba",
+          "title": "dundunba"
+        },
+        {
+          "__ref": "patterns/PzPiFqs2A5g9PxRedG4j",
+          "_id": "PzPiFqs2A5g9PxRedG4j",
+          "_path": "patterns/PzPiFqs2A5g9PxRedG4j",
+          "pattern": "--o-o---o-o---o-o-------",
+          "instrument": "sangban",
+          "title": "sangban"
+        },
+        {
+          "__ref": "patterns/WbKxeAhktzPF8kD4NJaG",
+          "_id": "WbKxeAhktzPF8kD4NJaG",
+          "_path": "patterns/WbKxeAhktzPF8kD4NJaG",
+          "instrument": "kenkeni",
+          "title": "kenkeni",
+          "pattern": "o----oo----oo----oo----o"
+        },
+        {
+          "__ref": "patterns/Eu88vCOo0odcYlEkBDlp",
+          "_id": "Eu88vCOo0odcYlEkBDlp",
+          "_path": "patterns/Eu88vCOo0odcYlEkBDlp",
+          "pattern": "b-stts--stts",
+          "instrument": "djembe",
+          "title": "djembe"
+        }
+      ],
+      "published": true,
+      "updatedAt": "2023-10-19T01:42:23.768Z"
+    },
+    {
+      "_id": "uU8Q4THYMFx6paVqtP8p",
+      "_path": "drums/uU8Q4THYMFx6paVqtP8p",
+      "title": "Toro dundun set",
+      "patterns": [
+        {
+          "__ref": "patterns/BMRhajPASLQHKOgLtYfi",
+          "_id": "BMRhajPASLQHKOgLtYfi",
+          "_path": "patterns/BMRhajPASLQHKOgLtYfi",
+          "pattern": "oo--------x-----oo--------oo-oo-",
+          "instrument": "dundunba",
+          "title": "dundunba"
+        },
+        {
+          "__ref": "patterns/vyhu2DwVOPjJU1Zu3nct",
+          "_id": "vyhu2DwVOPjJU1Zu3nct",
+          "_path": "patterns/vyhu2DwVOPjJU1Zu3nct",
+          "pattern": "oo--x-x-x---o-o-",
+          "instrument": "sangban",
+          "title": "sangban"
+        },
+        {
+          "__ref": "patterns/UQH6WJCLQ9iFjtI12BnF",
+          "_id": "UQH6WJCLQ9iFjtI12BnF",
+          "_path": "patterns/UQH6WJCLQ9iFjtI12BnF",
+          "pattern": "---oo---",
+          "instrument": "kenkeni",
+          "title": "kenkeni"
+        }
+      ],
+      "description": "You can try flexing and playing the last bar as noted, but I recommend just ignoring the kenkeni part there.",
+      "createdAt": "2021-12-31T23:00:00.645Z",
+      "slug": "toro",
+      "tags": [
+        "toro",
+        "dundun set",
+        "4/4"
+      ],
+      "published": true,
+      "updatedAt": "2023-10-19T01:41:05.938Z"
+    },
+    {
+      "_id": "vMxwxoS7s9Qfl1xdLqw5",
+      "_path": "drums/vMxwxoS7s9Qfl1xdLqw5",
+      "description": "Transcription of madan by Drissa Kone team. (source: https://www.youtube.com/watch?v=I3_IqLLV70k)",
+      "tempo": 105,
+      "createdAt": "2022-02-11T23:00:00.000Z",
+      "patterns": [
+        {
+          "__ref": "patterns/yIH5boO5Rb0pAih5dZWr",
+          "_id": "yIH5boO5Rb0pAih5dZWr",
+          "_path": "patterns/yIH5boO5Rb0pAih5dZWr",
+          "instrument": "kenkeni",
+          "title": "kenkeni",
+          "pattern": "x--o-o--x---oo--"
+        },
+        {
+          "__ref": "patterns/8EfSExfQHeU17iTeeF2p",
+          "_id": "8EfSExfQHeU17iTeeF2p",
+          "_path": "patterns/8EfSExfQHeU17iTeeF2p",
+          "pattern": "x--o-o--o-o---x-",
+          "instrument": "sangban",
+          "title": "sangban"
+        }
+      ],
+      "swing": ">",
+      "title": "madan by Drissa Kone Quartett",
+      "slug": "madan-drissa-kone",
+      "tags": [
+        "madan",
+        "4/4",
+        "drissa kone",
+        "kassonke"
+      ],
+      "published": true,
+      "updatedAt": "2023-10-19T01:36:37.042Z"
+    },
+    {
+      "_id": "vhvuAzkbdO1dZvO5gYYD",
+      "_path": "drums/vhvuAzkbdO1dZvO5gYYD",
+      "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+      "slug": "let's-call-it-segefoli...",
+      "createdAt": "2023-11-07T16:26:35.625Z",
+      "swing": "",
+      "patterns": [
+        {
+          "__ref": "patterns/xLpwiP0EFg7kDyaclXPn",
+          "_id": "xLpwiP0EFg7kDyaclXPn",
+          "_path": "patterns/xLpwiP0EFg7kDyaclXPn",
+          "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+          "pattern": "o--------------oo----------oo-o-o--------------oo-o-oo-oo-o-oo-o",
+          "instrument": "dundunba",
+          "title": "dundunba"
+        },
+        {
+          "__ref": "patterns/EGV6dAWHFDYa692bMrRc",
+          "_id": "EGV6dAWHFDYa692bMrRc",
+          "_path": "patterns/EGV6dAWHFDYa692bMrRc",
+          "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+          "instrument": "sangban",
+          "title": "sangban",
+          "pattern": "x--o-o--",
+          "id": "EGV6dAWHFDYa692bMrRc"
+        },
+        {
+          "__ref": "patterns/BXK5qKT8wzT02pfAZI9u",
+          "_id": "BXK5qKT8wzT02pfAZI9u",
+          "_path": "patterns/BXK5qKT8wzT02pfAZI9u",
+          "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+          "instrument": "kenkeni",
+          "title": "kenkeni",
+          "pattern": "o---o---",
+          "id": "BXK5qKT8wzT02pfAZI9u"
+        },
+        {
+          "__ref": "patterns/FdinF6eaIFQ22pNMim5Z",
+          "_id": "FdinF6eaIFQ22pNMim5Z",
+          "_path": "patterns/FdinF6eaIFQ22pNMim5Z",
+          "pattern": "o--o-o-o--o-o-o-",
+          "instrument": "kenkeni2",
+          "title": "kenkeni2"
+        },
+        {
+          "__ref": "patterns/8ICrOPO4dcLZz3bkFupZ",
+          "_id": "8ICrOPO4dcLZz3bkFupZ",
+          "_path": "patterns/8ICrOPO4dcLZz3bkFupZ",
+          "pattern": "x-xx-x-xx-x-x-x-",
+          "instrument": "bell",
+          "title": "bell"
+        },
+        {
+          "__ref": "patterns/eDpYhL4snVmBUvo6botF",
+          "_id": "eDpYhL4snVmBUvo6botF",
+          "_path": "patterns/eDpYhL4snVmBUvo6botF",
+          "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+          "pattern": "s-ttb-ttb-s-s-s-",
+          "instrument": "djembe",
+          "title": "djembe"
+        }
+      ],
+      "tempo": 115,
+      "signal": "ttsttstts-tsttsbttsttstts-bstts-f-tt-f-tt-f-f--btttbtttbtttbtttb",
+      "published": true,
+      "description": "Learned from Thomas Guei.",
+      "title": "Shemufoli",
+      "tags": [
+        "4/4",
+        "shemufoli",
+        "dundun set"
+      ],
+      "updatedAt": "2024-09-25T19:50:56.991Z"
+    },
+    {
+      "_id": "wIKqJXlVJCLXVEjhmZOU",
+      "_path": "drums/wIKqJXlVJCLXVEjhmZOU",
+      "title": "soli sangban",
+      "patterns": [
+        {
+          "__ref": "patterns/2V3yUjWbwPRKXwgzDhtJ",
+          "_id": "2V3yUjWbwPRKXwgzDhtJ",
+          "_path": "patterns/2V3yUjWbwPRKXwgzDhtJ",
+          "instrument": "sangban",
+          "title": "sangban",
+          "pattern": "o---x-x--o--"
+        },
+        {
+          "__ref": "patterns/UfXuzVRyIuw2dKFY3vD4",
+          "_id": "UfXuzVRyIuw2dKFY3vD4",
+          "_path": "patterns/UfXuzVRyIuw2dKFY3vD4",
+          "pattern": "x-x-x-x-xx-x",
+          "instrument": "bell",
+          "title": "bell"
+        }
+      ],
+      "description": "",
+      "tempo": 130,
+      "swing": "<<",
+      "createdAt": "2021-12-31T23:00:00.805Z",
+      "slug": "soli-sangban",
+      "published": true,
+      "signal": "",
+      "tags": [
+        "soli",
+        "sangban",
+        "6/8"
+      ],
+      "updatedAt": "2024-06-18T18:49:10.483Z"
+    }
+  ],
+  "patterns": [
+    {
+      "_id": "0G2BAMsLhaw5vu64s7dY",
+      "_path": "patterns/0G2BAMsLhaw5vu64s7dY",
+      "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+      "pattern": "----o-o-",
+      "instrument": "kenkeni",
+      "title": "kenkeni"
+    },
+    {
+      "_id": "0ISk2s0ySs1l0sGVR3CB",
+      "_path": "patterns/0ISk2s0ySs1l0sGVR3CB",
+      "pattern": "",
+      "instrument": "dundunba",
+      "title": "dundunba"
+    },
+    {
+      "_id": "0RU32apTKfCsbMFNSj7o",
+      "_path": "patterns/0RU32apTKfCsbMFNSj7o",
+      "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+      "pattern": "s-ts--",
+      "instrument": "djembe",
+      "title": "djembe"
+    },
+    {
+      "_id": "0sXoZrdgsSVN1KKgUBaI",
+      "_path": "patterns/0sXoZrdgsSVN1KKgUBaI",
+      "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+      "pattern": "--o---o-",
+      "instrument": "kenkeni",
+      "title": "kenkeni"
+    },
+    {
+      "_id": "28VUvwnw8e9VFaZ1joNC",
+      "_path": "patterns/28VUvwnw8e9VFaZ1joNC",
+      "instrument": "kenkeni",
+      "title": "kenkeni",
+      "pattern": "----oo------",
+      "authorUid": "1DaMIjztNLfHUO5H8wXv68feMD83"
+    },
+    {
+      "_id": "2V3yUjWbwPRKXwgzDhtJ",
+      "_path": "patterns/2V3yUjWbwPRKXwgzDhtJ",
+      "instrument": "sangban",
+      "title": "sangban",
+      "pattern": "o---x-x--o--"
+    },
+    {
+      "_id": "3sFcgBqjRKbM7x01B19L",
+      "_path": "patterns/3sFcgBqjRKbM7x01B19L",
+      "instrument": "dundunba",
+      "title": "dundunba",
+      "pattern": "-------oo-oo-oo--------oo-oo-oo--------oo-o-oo-oo-oo-o-oo-oo-oo-"
+    },
+    {
+      "_id": "538A1aF0ohObYGq1a5W6",
+      "_path": "patterns/538A1aF0ohObYGq1a5W6",
+      "instrument": "dundunba",
+      "title": "dundunba",
+      "pattern": "--oo-oo---oo-oo---oo------------"
+    },
+    {
+      "_id": "5syc61v0QktH1Dndm8fm",
+      "_path": "patterns/5syc61v0QktH1Dndm8fm",
+      "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+      "pattern": "----o-o-",
+      "instrument": "kenkeni",
+      "title": "kenkeni"
+    },
+    {
+      "_id": "7M8Q5i50bEc7SDTAHOgT",
+      "_path": "patterns/7M8Q5i50bEc7SDTAHOgT",
+      "pattern": "--oo-o----o-----",
+      "instrument": "dundunba",
+      "title": "dundunba"
+    },
+    {
+      "_id": "7XDa6u3cNKeQPfiOHlqv",
+      "_path": "patterns/7XDa6u3cNKeQPfiOHlqv",
+      "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+      "instrument": "sangban",
+      "title": "sangban",
+      "pattern": "x--x---o--oo----x--x---oo-oo----x--x---oo-o-oo-o-o-o-o-oo-oo----",
+      "id": "7XDa6u3cNKeQPfiOHlqv"
+    },
+    {
+      "_id": "8EfSExfQHeU17iTeeF2p",
+      "_path": "patterns/8EfSExfQHeU17iTeeF2p",
+      "pattern": "x--o-o--o-o---x-",
+      "instrument": "sangban",
+      "title": "sangban"
+    },
+    {
+      "_id": "8ICrOPO4dcLZz3bkFupZ",
+      "_path": "patterns/8ICrOPO4dcLZz3bkFupZ",
+      "pattern": "x-xx-x-xx-x-x-x-",
+      "instrument": "bell",
+      "title": "bell"
+    },
+    {
+      "_id": "8nc7Oi3eoVO6PExIPZDU",
+      "_path": "patterns/8nc7Oi3eoVO6PExIPZDU",
+      "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+      "instrument": "bell",
+      "title": "bell",
+      "pattern": "x-xx-xx-xx-xx-xx-x-xx-x-x-xx-xx-xx-xx-xx-x-xx-xx-xx-xx-xx-x-x-xx-x-xx-xx-xx-xx-xx-x-",
+      "id": "8nc7Oi3eoVO6PExIPZDU"
+    },
+    {
+      "_id": "8vrAzwX49dgbd4XQU0FV",
+      "_path": "patterns/8vrAzwX49dgbd4XQU0FV",
+      "pattern": "s-bt-ss-st--s--t-ss-st-b",
+      "instrument": "djembe",
+      "title": "djembe"
+    },
+    {
+      "_id": "95gG9oNAPPSXKJNUUE2Y",
+      "_path": "patterns/95gG9oNAPPSXKJNUUE2Y",
+      "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+      "pattern": "----o-o-----o-o-",
+      "instrument": "kenkeni",
+      "title": "kenkeni"
+    },
+    {
+      "_id": "9jusMHyzUxTXRBIzKEjj",
+      "_path": "patterns/9jusMHyzUxTXRBIzKEjj",
+      "pattern": "o-o--x--o-o-",
+      "instrument": "sangban",
+      "title": "sangban"
+    },
+    {
+      "_id": "B6CyPc7pPhBbujBqFd3t",
+      "_path": "patterns/B6CyPc7pPhBbujBqFd3t",
+      "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+      "pattern": "o-----o-",
+      "instrument": "dundunba",
+      "title": "dundunba"
+    },
+    {
+      "_id": "BA1LhUma4tiEBdJ7H45N",
+      "_path": "patterns/BA1LhUma4tiEBdJ7H45N",
+      "pattern": "s-ts--",
+      "instrument": "djembe",
+      "title": "djembe"
+    },
+    {
+      "_id": "BMRhajPASLQHKOgLtYfi",
+      "_path": "patterns/BMRhajPASLQHKOgLtYfi",
+      "pattern": "oo--------x-----oo--------oo-oo-",
+      "instrument": "dundunba",
+      "title": "dundunba"
+    },
+    {
+      "_id": "BRqnKMJWlNYppiDVQZd8",
+      "_path": "patterns/BRqnKMJWlNYppiDVQZd8",
+      "pattern": "x--oo-x--oo-x--oo-x--oo-",
+      "instrument": "kenkeni",
+      "title": "kenkeni"
+    },
+    {
+      "_id": "BXK5qKT8wzT02pfAZI9u",
+      "_path": "patterns/BXK5qKT8wzT02pfAZI9u",
+      "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+      "instrument": "kenkeni",
+      "title": "kenkeni",
+      "pattern": "o---o---",
+      "id": "BXK5qKT8wzT02pfAZI9u"
+    },
+    {
+      "_id": "CEqKPD0IGLGu6hNWsg7i",
+      "_path": "patterns/CEqKPD0IGLGu6hNWsg7i",
+      "pattern": "",
+      "instrument": "bell",
+      "title": "bell"
+    },
+    {
+      "_id": "CGtZgtOmyOvkMirRIilJ",
+      "_path": "patterns/CGtZgtOmyOvkMirRIilJ",
+      "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+      "pattern": "-----------------------------------------------------------o--------o--------------o--o--o--o---",
+      "instrument": "kenkeni",
+      "title": "kenkeni"
+    },
+    {
+      "_id": "CKSSsAco98E4fY3KzXfS",
+      "_path": "patterns/CKSSsAco98E4fY3KzXfS",
+      "instrument": "bell",
+      "title": "bell",
+      "pattern": "x-xx-xx-x-x-x-x-",
+      "id": "CKSSsAco98E4fY3KzXfS"
+    },
+    {
+      "_id": "DMyul8Lnux3nSdLXOMpj",
+      "_path": "patterns/DMyul8Lnux3nSdLXOMpj",
+      "instrument": "kenkeni",
+      "title": "kenkeni",
+      "pattern": "------oo",
+      "id": "DMyul8Lnux3nSdLXOMpj"
+    },
+    {
+      "_id": "Dvhp9wLoD6HEdIwdFzNd",
+      "_path": "patterns/Dvhp9wLoD6HEdIwdFzNd",
+      "pattern": "----o-o-------------------------",
+      "instrument": "kenkeni2",
+      "title": "kenkeni2"
+    },
+    {
+      "_id": "EGV6dAWHFDYa692bMrRc",
+      "_path": "patterns/EGV6dAWHFDYa692bMrRc",
+      "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+      "instrument": "sangban",
+      "title": "sangban",
+      "pattern": "x--o-o--",
+      "id": "EGV6dAWHFDYa692bMrRc"
+    },
+    {
+      "_id": "EsJ3q8qKj9v94X1I8dGu",
+      "_path": "patterns/EsJ3q8qKj9v94X1I8dGu",
+      "instrument": "dundunba",
+      "title": "dundunba",
+      "id": "EsJ3q8qKj9v94X1I8dGu",
+      "pattern": "o-----x--oo-----o-----oo-o-o----"
+    },
+    {
+      "_id": "Eu88vCOo0odcYlEkBDlp",
+      "_path": "patterns/Eu88vCOo0odcYlEkBDlp",
+      "pattern": "b-stts--stts",
+      "instrument": "djembe",
+      "title": "djembe"
+    },
+    {
+      "_id": "ExZVgYBsZQZv5Q6oooJV",
+      "_path": "patterns/ExZVgYBsZQZv5Q6oooJV",
+      "pattern": "ss-ss-tts-b-sbtt",
+      "instrument": "djembe",
+      "title": "djembe"
+    },
+    {
+      "_id": "F0z9gDo95OehAKU6jTyV",
+      "_path": "patterns/F0z9gDo95OehAKU6jTyV",
+      "pattern": "",
+      "instrument": "dundunba",
+      "title": "dundunba"
+    },
+    {
+      "_id": "FK6zafbBBj3qoC1mbXaO",
+      "_path": "patterns/FK6zafbBBj3qoC1mbXaO",
+      "pattern": "o-o------x--",
+      "instrument": "sangban",
+      "title": "sangban"
+    },
+    {
+      "_id": "FQUoS72tbpZrsosWAfvM",
+      "_path": "patterns/FQUoS72tbpZrsosWAfvM",
+      "pattern": "s-bs-bstts-b",
+      "instrument": "djembe",
+      "title": "djembe"
+    },
+    {
+      "_id": "FdinF6eaIFQ22pNMim5Z",
+      "_path": "patterns/FdinF6eaIFQ22pNMim5Z",
+      "pattern": "o--o-o-o--o-o-o-",
+      "instrument": "kenkeni2",
+      "title": "kenkeni2"
+    },
+    {
+      "_id": "FdnOvUiZz1f3uWc1U1vG",
+      "_path": "patterns/FdnOvUiZz1f3uWc1U1vG",
+      "pattern": "o----oo-",
+      "instrument": "kenkeni",
+      "title": "kenkeni"
+    },
+    {
+      "_id": "Ft7x1MBhBfRmnDQLwJ6b",
+      "_path": "patterns/Ft7x1MBhBfRmnDQLwJ6b",
+      "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+      "pattern": "o---o---",
+      "instrument": "kenkeni",
+      "title": "kenkeni"
+    },
+    {
+      "_id": "FuxBWa7xdzHQ1a0BmVZo",
+      "_path": "patterns/FuxBWa7xdzHQ1a0BmVZo",
+      "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+      "pattern": "ttt-sss--ssss-----ssss-tttt-sss--ssss-s-s-ssss-tsss-ttt--b-sb-----b-sb-tsss-ttt--b-sb-sb-sb-sb-tttt-sss-tt-sttsttsttss-t",
+      "instrument": "djembe",
+      "title": "djembe"
+    },
+    {
+      "_id": "GThC8A5qp0Ykhyq7Nq1d",
+      "_path": "patterns/GThC8A5qp0Ykhyq7Nq1d",
+      "pattern": "o----oo-",
+      "instrument": "kenkeni",
+      "title": "kenkeni"
+    },
+    {
+      "_id": "GnsMUfInKXEmSSmjH5wA",
+      "_path": "patterns/GnsMUfInKXEmSSmjH5wA",
+      "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+      "pattern": "---o-----o--",
+      "instrument": "sangban",
+      "title": "sangban"
+    },
+    {
+      "_id": "HVatTy2jN4Yc8r4hrJLs",
+      "_path": "patterns/HVatTy2jN4Yc8r4hrJLs",
+      "instrument": "sangban",
+      "title": "sangban",
+      "pattern": "x--x-x--o-o-oo--x--x-x--o-o-oo--x--x-x--o-o-o--o---o----o-o-oo--"
+    },
+    {
+      "_id": "HXq3S5Ok7o22JnODCo9k",
+      "_path": "patterns/HXq3S5Ok7o22JnODCo9k",
+      "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+      "pattern": "o----------------------oo-------------oo-oo-oo-oo--------------------o-oo--------oo-o-o-o-o-oo-o",
+      "instrument": "dundunba",
+      "title": "dundunba"
+    },
+    {
+      "_id": "I3xFia6XndpGVcEHrNvr",
+      "_path": "patterns/I3xFia6XndpGVcEHrNvr",
+      "instrument": "sangban",
+      "title": "sangban",
+      "id": "I3xFia6XndpGVcEHrNvr",
+      "pattern": "o---o----o--------------o---o----oo-------------o---o----o--------------oo-oo----oo-oo----o-----"
+    },
+    {
+      "_id": "I8JAOBU0sY51G5zZuIHD",
+      "_path": "patterns/I8JAOBU0sY51G5zZuIHD",
+      "pattern": "o--o--o---x---o-",
+      "instrument": "sangban",
+      "title": "sangban"
+    },
+    {
+      "_id": "IBUlhGond0xCTBLWHJJc",
+      "_path": "patterns/IBUlhGond0xCTBLWHJJc",
+      "pattern": "",
+      "instrument": "dundunba",
+      "title": "dundunba"
+    },
+    {
+      "_id": "IVJl5IXaWGaue0pXbe12",
+      "_path": "patterns/IVJl5IXaWGaue0pXbe12",
+      "pattern": "o-----------------ooo-o-",
+      "instrument": "dundunba",
+      "title": "dundunba"
+    },
+    {
+      "_id": "IW7eErAaM2nx7qBjafxe",
+      "_path": "patterns/IW7eErAaM2nx7qBjafxe",
+      "instrument": "sangban",
+      "title": "sangban",
+      "pattern": "---o--o----o--o-o---------------"
+    },
+    {
+      "_id": "IaGH99IgXuMDB9muPHyT",
+      "_path": "patterns/IaGH99IgXuMDB9muPHyT",
+      "pattern": "x-xx-x-xx-x-x-x-",
+      "instrument": "bell",
+      "title": "bell"
+    },
+    {
+      "_id": "JIRbevyteBKLYG9lmypS",
+      "_path": "patterns/JIRbevyteBKLYG9lmypS",
+      "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+      "pattern": "----o-o-o---",
+      "instrument": "kenkeni",
+      "title": "kenkeni"
+    },
+    {
+      "_id": "JXlTYE5sAgWs1egze0RO",
+      "_path": "patterns/JXlTYE5sAgWs1egze0RO",
+      "pattern": "tts--ss-",
+      "instrument": "djembe",
+      "title": "djembe"
+    },
+    {
+      "_id": "KKVcdA5iFFzPrn7sujG5",
+      "_path": "patterns/KKVcdA5iFFzPrn7sujG5",
+      "instrument": "sangban",
+      "title": "sangban",
+      "pattern": "x--o-o--o-o--x--"
+    },
+    {
+      "_id": "Ka9GUDlA3noiZTFu2Vmm",
+      "_path": "patterns/Ka9GUDlA3noiZTFu2Vmm",
+      "pattern": "o----oo-oo-oo-------oo-o",
+      "instrument": "dundunba",
+      "title": "dundunba"
+    },
+    {
+      "_id": "KnE4wXwDYAyouQandNJM",
+      "_path": "patterns/KnE4wXwDYAyouQandNJM",
+      "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+      "pattern": "oo-------------ooo-------------ooo-------------ooo-oo-ooo-oo-o-o",
+      "instrument": "dundunba",
+      "title": "dundunba"
+    },
+    {
+      "_id": "Kncmd4iHpLDb6iNqmbL7",
+      "_path": "patterns/Kncmd4iHpLDb6iNqmbL7",
+      "instrument": "kenkeni",
+      "title": "kenkeni",
+      "pattern": "o----oo-",
+      "id": "Kncmd4iHpLDb6iNqmbL7"
+    },
+    {
+      "_id": "LiO3oGUdSvWhSVNzgIXb",
+      "_path": "patterns/LiO3oGUdSvWhSVNzgIXb",
+      "instrument": "sangban",
+      "title": "sangban",
+      "pattern": "x-------oo--x-------o---"
+    },
+    {
+      "_id": "MsgrPWPhckuAeiXs6mxq",
+      "_path": "patterns/MsgrPWPhckuAeiXs6mxq",
+      "pattern": "s--sf-tt",
+      "instrument": "djembe",
+      "title": "djembe"
+    },
+    {
+      "_id": "N3nF0CZ0xc5x5c0hjVx0",
+      "_path": "patterns/N3nF0CZ0xc5x5c0hjVx0",
+      "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+      "pattern": "----o-o-",
+      "instrument": "kenkeni",
+      "title": "kenkeni"
+    },
+    {
+      "_id": "OCpZEUvbbp7cwXrAvLjj",
+      "_path": "patterns/OCpZEUvbbp7cwXrAvLjj",
+      "instrument": "dundunba",
+      "pattern": "x-------x-o-----x-----oo-oo-----",
+      "title": "dundunba"
+    },
+    {
+      "_id": "OXiw7tSaeMIaKCwcFtA7",
+      "_path": "patterns/OXiw7tSaeMIaKCwcFtA7",
+      "instrument": "sangban",
+      "title": "sangban",
+      "pattern": "o--o--o---x---o-",
+      "id": "OXiw7tSaeMIaKCwcFtA7"
+    },
+    {
+      "_id": "OYM9y53GIPzeu4XSPXOX",
+      "_path": "patterns/OYM9y53GIPzeu4XSPXOX",
+      "instrument": "bell",
+      "title": "bell",
+      "pattern": "x-xx-x-xx-x-xx-x"
+    },
+    {
+      "_id": "OcEcgIqHmyFVNHsC2fga",
+      "_path": "patterns/OcEcgIqHmyFVNHsC2fga",
+      "instrument": "kenkeni",
+      "title": "kenkeni",
+      "id": "OcEcgIqHmyFVNHsC2fga",
+      "pattern": "o---o-----o-o-------------------"
+    },
+    {
+      "_id": "OeZmenozyS94UIJhvPnv",
+      "_path": "patterns/OeZmenozyS94UIJhvPnv",
+      "pattern": "",
+      "instrument": "kenkeni2",
+      "title": "kenkeni2"
+    },
+    {
+      "_id": "PzPiFqs2A5g9PxRedG4j",
+      "_path": "patterns/PzPiFqs2A5g9PxRedG4j",
+      "pattern": "--o-o---o-o---o-o-------",
+      "instrument": "sangban",
+      "title": "sangban"
+    },
+    {
+      "_id": "Qvu1szbalhlboMh1pRA7",
+      "_path": "patterns/Qvu1szbalhlboMh1pRA7",
+      "pattern": "-------oo-oo-------oo-oo",
+      "instrument": "dundunba",
+      "title": "dundunba"
+    },
+    {
+      "_id": "RWuTCHVydkmXSwCPcYr5",
+      "_path": "patterns/RWuTCHVydkmXSwCPcYr5",
+      "pattern": "------oo",
+      "instrument": "kenkeni2",
+      "title": "kenkeni (low)"
+    },
+    {
+      "_id": "RnnUrQC9ZOXJLvNhcWpv",
+      "_path": "patterns/RnnUrQC9ZOXJLvNhcWpv",
+      "pattern": "o-----o-",
+      "instrument": "kenkeni",
+      "title": "kenkeni"
+    },
+    {
+      "_id": "Rzy6p9bKLtwnVeSFegFb",
+      "_path": "patterns/Rzy6p9bKLtwnVeSFegFb",
+      "pattern": "o---o-o---o-",
+      "instrument": "dundunba",
+      "title": "dundunba"
+    },
+    {
+      "_id": "STvJYC0SFCmfYp3ODZX8",
+      "_path": "patterns/STvJYC0SFCmfYp3ODZX8",
+      "pattern": "",
+      "instrument": "kenkeni2",
+      "title": "kenkeni2"
+    },
+    {
+      "_id": "T5hG2Vanf0IlEGTsKpul",
+      "_path": "patterns/T5hG2Vanf0IlEGTsKpul",
+      "pattern": "--oo----",
+      "instrument": "kenkeni2",
+      "title": "kenkeni2"
+    },
+    {
+      "_id": "TLuoSkuuo9qvCs4fIZfz",
+      "_path": "patterns/TLuoSkuuo9qvCs4fIZfz",
+      "pattern": "o----oo-",
+      "instrument": "kenkeni",
+      "title": "kenkeni"
+    },
+    {
+      "_id": "ThKCGKU3bR0g8tc4Hc8j",
+      "_path": "patterns/ThKCGKU3bR0g8tc4Hc8j",
+      "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+      "instrument": "sangban",
+      "title": "sangban",
+      "pattern": "oooo--oooo--x--x--x--x--oooo--oooo--x--x--x--x-------o-o------o-o------o-x-o-x-o------o-o-------",
+      "id": "ThKCGKU3bR0g8tc4Hc8j"
+    },
+    {
+      "_id": "TnczGEaJj3YoA22VN7mq",
+      "_path": "patterns/TnczGEaJj3YoA22VN7mq",
+      "pattern": "x-xx-xx-x-x-",
+      "instrument": "bell",
+      "title": "sangban bell"
+    },
+    {
+      "_id": "UGrbfwlH6jq45AIZhFhK",
+      "_path": "patterns/UGrbfwlH6jq45AIZhFhK",
+      "instrument": "dundunba",
+      "title": "dundunba",
+      "id": "UGrbfwlH6jq45AIZhFhK",
+      "pattern": "--o---oo---oo----------o--o---oo---oo----------o--o---oo---oo----------o--o---oo---o--o--------o"
+    },
+    {
+      "_id": "UQH6WJCLQ9iFjtI12BnF",
+      "_path": "patterns/UQH6WJCLQ9iFjtI12BnF",
+      "pattern": "---oo---",
+      "instrument": "kenkeni",
+      "title": "kenkeni"
+    },
+    {
+      "_id": "UfXuzVRyIuw2dKFY3vD4",
+      "_path": "patterns/UfXuzVRyIuw2dKFY3vD4",
+      "pattern": "x-x-x-x-xx-x",
+      "instrument": "bell",
+      "title": "bell"
+    },
+    {
+      "_id": "UzTHOkNdOmt6IJKwWKty",
+      "_path": "patterns/UzTHOkNdOmt6IJKwWKty",
+      "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+      "pattern": "-o-o-oo-o-------",
+      "instrument": "sangban",
+      "title": "sangban"
+    },
+    {
+      "_id": "VrCFWHQepL6OjaVTR7xJ",
+      "_path": "patterns/VrCFWHQepL6OjaVTR7xJ",
+      "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+      "instrument": "sangban",
+      "title": "sangban",
+      "pattern": "x---x---x-o-o---x---x---x-o-oo--x---x--oo-o-o---x--o--o--o--o---",
+      "id": "VrCFWHQepL6OjaVTR7xJ"
+    },
+    {
+      "_id": "Vs2Bnmf0btrw8BKJDpg5",
+      "_path": "patterns/Vs2Bnmf0btrw8BKJDpg5",
+      "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+      "pattern": "--o-oo",
+      "instrument": "kenkeni",
+      "title": "kenkeni"
+    },
+    {
+      "_id": "VsgLtV05G2lqJKV42Ks5",
+      "_path": "patterns/VsgLtV05G2lqJKV42Ks5",
+      "pattern": "----o-o-o-------",
+      "instrument": "sangban",
+      "title": "sangban"
+    },
+    {
+      "_id": "WbKxeAhktzPF8kD4NJaG",
+      "_path": "patterns/WbKxeAhktzPF8kD4NJaG",
+      "instrument": "kenkeni",
+      "title": "kenkeni",
+      "pattern": "o----oo----oo----oo----o"
+    },
+    {
+      "_id": "X3r09Lz1DOeOY7oCRP4S",
+      "_path": "patterns/X3r09Lz1DOeOY7oCRP4S",
+      "instrument": "sangban",
+      "title": "sangban",
+      "id": "X3r09Lz1DOeOY7oCRP4S",
+      "pattern": "o-o--oo-"
+    },
+    {
+      "_id": "Yhnc6NGyMXk3GLeJsIWW",
+      "_path": "patterns/Yhnc6NGyMXk3GLeJsIWW",
+      "pattern": "",
+      "instrument": "kenkeni2",
+      "title": "kenkeni2"
+    },
+    {
+      "_id": "Z20kvqw0HGkfuYSlTHA2",
+      "_path": "patterns/Z20kvqw0HGkfuYSlTHA2",
+      "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+      "pattern": "x--x---o--oo----",
+      "instrument": "sangban",
+      "title": "sangban"
+    },
+    {
+      "_id": "Z8GBnhzyeOhHhQ1xsoP8",
+      "_path": "patterns/Z8GBnhzyeOhHhQ1xsoP8",
+      "instrument": "bell",
+      "title": "bell",
+      "id": "Z8GBnhzyeOhHhQ1xsoP8",
+      "pattern": "x-x-x-xx-xx-x-x-x-x-x-xx-x-x-xx-"
+    },
+    {
+      "_id": "aQH3zd8zM0EcyalkHXIR",
+      "_path": "patterns/aQH3zd8zM0EcyalkHXIR",
+      "pattern": "",
+      "instrument": "bell",
+      "title": "bell"
+    },
+    {
+      "_id": "bMpGmfxtPQplvvmGYI3v",
+      "_path": "patterns/bMpGmfxtPQplvvmGYI3v",
+      "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+      "pattern": "o-----------------------o---o---",
+      "instrument": "dundunba",
+      "title": "dundunba"
+    },
+    {
+      "_id": "bOlbc61aZohW1k6u7uOg",
+      "_path": "patterns/bOlbc61aZohW1k6u7uOg",
+      "instrument": "kenkeni",
+      "title": "kenkeni",
+      "pattern": "--o-oo"
+    },
+    {
+      "_id": "bX88MFY24mRHI8z0N3TG",
+      "_path": "patterns/bX88MFY24mRHI8z0N3TG",
+      "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+      "pattern": "------o-------o-",
+      "instrument": "dundunba",
+      "title": "dundunba"
+    },
+    {
+      "_id": "drJlXZKNLuJW1eU950yF",
+      "_path": "patterns/drJlXZKNLuJW1eU950yF",
+      "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+      "instrument": "djembe",
+      "title": "djembe",
+      "pattern": "s---f-f-s-b-f-f-",
+      "id": "drJlXZKNLuJW1eU950yF"
+    },
+    {
+      "_id": "eDpYhL4snVmBUvo6botF",
+      "_path": "patterns/eDpYhL4snVmBUvo6botF",
+      "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+      "pattern": "s-ttb-ttb-s-s-s-",
+      "instrument": "djembe",
+      "title": "djembe"
+    },
+    {
+      "_id": "ekGtwhxIIvCdDZTGsXb0",
+      "_path": "patterns/ekGtwhxIIvCdDZTGsXb0",
+      "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+      "pattern": "xx-oo-xx-oo-",
+      "instrument": "kenkeni",
+      "title": "kenkeni"
+    },
+    {
+      "_id": "fnMP247AMKwW2kW5WYuv",
+      "_path": "patterns/fnMP247AMKwW2kW5WYuv",
+      "author": "Szdun Dudumba",
+      "pattern": "oo-x-x--oo--x---",
+      "instrument": "kenkeni",
+      "title": "kenkeni"
+    },
+    {
+      "_id": "fqpQO2hFu0shdHhz1uSf",
+      "_path": "patterns/fqpQO2hFu0shdHhz1uSf",
+      "instrument": "sangban",
+      "title": "sangban",
+      "id": "fqpQO2hFu0shdHhz1uSf",
+      "pattern": "--oo--o---o-o-------------------"
+    },
+    {
+      "_id": "gMfC2Ldg4Yv5RiEtiRpd",
+      "_path": "patterns/gMfC2Ldg4Yv5RiEtiRpd",
+      "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+      "pattern": "---o----o-oo----",
+      "instrument": "sangban",
+      "title": "sangban"
+    },
+    {
+      "_id": "hNcnQQQj89AmvTBhfAJA",
+      "_path": "patterns/hNcnQQQj89AmvTBhfAJA",
+      "pattern": "o--x------ooo--o",
+      "instrument": "dundunba",
+      "title": "dundunba"
+    },
+    {
+      "_id": "iG63M5YoksExa5M2xR4J",
+      "_path": "patterns/iG63M5YoksExa5M2xR4J",
+      "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+      "instrument": "dundunba",
+      "title": "dundunba",
+      "pattern": "oooo--oooo--x--x--x--x--oooo--oooo--x--x--x--x--oooo-----oooo-----oooo-x-o-x-o-x-oooo-----o-----",
+      "id": "iG63M5YoksExa5M2xR4J"
+    },
+    {
+      "_id": "iuKVz13a1Z7aqp9LyoMi",
+      "_path": "patterns/iuKVz13a1Z7aqp9LyoMi",
+      "pattern": "x--x--oo-oo-x--x--x--oo-",
+      "instrument": "sangban",
+      "title": "sangban"
+    },
+    {
+      "_id": "jbMrbQbnuzTVlDm3NXbe",
+      "_path": "patterns/jbMrbQbnuzTVlDm3NXbe",
+      "pattern": "x-xx-xx-x-x-x-x-",
+      "instrument": "bell",
+      "title": "bell"
+    },
+    {
+      "_id": "jhRvDz7oOLeGR2pZxeQB",
+      "_path": "patterns/jhRvDz7oOLeGR2pZxeQB",
+      "instrument": "kenkeni2",
+      "title": "kenkeni2",
+      "pattern": "o-----o-",
+      "id": "jhRvDz7oOLeGR2pZxeQB"
+    },
+    {
+      "_id": "kkNAHejDvDbx2Xp9YRRA",
+      "_path": "patterns/kkNAHejDvDbx2Xp9YRRA",
+      "pattern": "",
+      "instrument": "kenkeni2",
+      "title": "kenkeni2"
+    },
+    {
+      "_id": "knzwFRz5LW1j0pxZWUw1",
+      "_path": "patterns/knzwFRz5LW1j0pxZWUw1",
+      "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+      "pattern": "tt-bs-b-s--sttss",
+      "instrument": "djembe",
+      "title": "djembe"
+    },
+    {
+      "_id": "ky7isaWnWuIRqMInmkj1",
+      "_path": "patterns/ky7isaWnWuIRqMInmkj1",
+      "pattern": "o----o",
+      "instrument": "kenkeni",
+      "title": "kenkeni"
+    },
+    {
+      "_id": "lGjxVnoGgJbNT3TGOX26",
+      "_path": "patterns/lGjxVnoGgJbNT3TGOX26",
+      "instrument": "kenkeni",
+      "title": "kenkeni",
+      "id": "lGjxVnoGgJbNT3TGOX26",
+      "pattern": "----o--o-o------o--o-o------o--o-o------o--o-o------o--o-o------o--o-o------o--o-o------o--o-o--"
+    },
+    {
+      "_id": "lku9czzRSOXJolp74TJj",
+      "_path": "patterns/lku9czzRSOXJolp74TJj",
+      "pattern": "--oo----",
+      "instrument": "kenkeni",
+      "title": "kenkeni (high)"
+    },
+    {
+      "_id": "lnwshjGhsqt0iyu0oGWK",
+      "_path": "patterns/lnwshjGhsqt0iyu0oGWK",
+      "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+      "pattern": "o-------oo------",
+      "instrument": "dundunba",
+      "title": "dundunba"
+    },
+    {
+      "_id": "lzXsr60A8jmwYCCAmlj8",
+      "_path": "patterns/lzXsr60A8jmwYCCAmlj8",
+      "author": "Szdun Dudumba",
+      "pattern": "---o-o-o--o---o-",
+      "instrument": "sangban",
+      "title": "sangban"
+    },
+    {
+      "_id": "mAPxeKSHRHkDODeTtaDT",
+      "_path": "patterns/mAPxeKSHRHkDODeTtaDT",
+      "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+      "pattern": "--------------------------------------------------------------------------------------------o-oo",
+      "instrument": "kenkeni",
+      "title": "kenkeni"
+    },
+    {
+      "_id": "mK9dlZl5qOaU2xbswdZv",
+      "_path": "patterns/mK9dlZl5qOaU2xbswdZv",
+      "instrument": "kenkeni",
+      "title": "kenkeni",
+      "pattern": "o----o"
+    },
+    {
+      "_id": "mwR7jgrAlYs1PpgoazyM",
+      "_path": "patterns/mwR7jgrAlYs1PpgoazyM",
+      "pattern": "o--o--o---x---o-",
+      "instrument": "sangban",
+      "title": "sangban"
+    },
+    {
+      "_id": "n4iBSEnnY4q2yUvTKr2o",
+      "_path": "patterns/n4iBSEnnY4q2yUvTKr2o",
+      "instrument": "sangban",
+      "title": "sangban",
+      "id": "n4iBSEnnY4q2yUvTKr2o",
+      "pattern": "o-o-x-x--o-o-x-x--"
+    },
+    {
+      "_id": "ntjYiFvsp9LC9kdMxlE6",
+      "_path": "patterns/ntjYiFvsp9LC9kdMxlE6",
+      "pattern": "--oo----------------------------",
+      "instrument": "sangban",
+      "title": "sangban"
+    },
+    {
+      "_id": "oE9KR8ea7NOCW8QCpnDT",
+      "_path": "patterns/oE9KR8ea7NOCW8QCpnDT",
+      "instrument": "sangban",
+      "title": "sangban",
+      "pattern": "o--o--o---x---o-",
+      "id": "oE9KR8ea7NOCW8QCpnDT"
+    },
+    {
+      "_id": "oHU0zKhpjcEqp4KDt7rX",
+      "_path": "patterns/oHU0zKhpjcEqp4KDt7rX",
+      "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+      "instrument": "djembe",
+      "title": "djembe",
+      "pattern": "s----bsss----bsss----bssssf-sst-",
+      "id": "oHU0zKhpjcEqp4KDt7rX"
+    },
+    {
+      "_id": "pEAuwA9WJClpGZKcVo9A",
+      "_path": "patterns/pEAuwA9WJClpGZKcVo9A",
+      "pattern": "x-x-x-xx-x-xx-x-x-xx-x-xx-x-x-xx-x-xx-x-x-xx-x-xx-x-x-xx-x-xx-x-x-xx-xx-xx-xx-xx-xx-xx-xx-xx-x-x",
+      "instrument": "bell",
+      "title": "bell"
+    },
+    {
+      "_id": "pFqJ3YpeSBwX6gr9Phv5",
+      "_path": "patterns/pFqJ3YpeSBwX6gr9Phv5",
+      "author": "Szdun Dudumba",
+      "pattern": "o-----o-",
+      "instrument": "dundunba",
+      "title": "dundunba"
+    },
+    {
+      "_id": "pumWeBLBBWPQ0cikC4Yz",
+      "_path": "patterns/pumWeBLBBWPQ0cikC4Yz",
+      "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+      "pattern": "x--x--x--x--x--o-o----o-x--x--x--x--x--o-o----o---o----o----o-oo-o-----o-----o----o-",
+      "instrument": "sangban",
+      "title": "sangban"
+    },
+    {
+      "_id": "rGZ4cV8WnhuaK4mnLUKu",
+      "_path": "patterns/rGZ4cV8WnhuaK4mnLUKu",
+      "pattern": "",
+      "instrument": "dundunba",
+      "title": "dundunba"
+    },
+    {
+      "_id": "sTryorpLblxwfLfjQEF8",
+      "_path": "patterns/sTryorpLblxwfLfjQEF8",
+      "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+      "pattern": "--oo--x---oo--x---oo--x---o---o-",
+      "instrument": "sangban",
+      "title": "sangban"
+    },
+    {
+      "_id": "sYDPK7DqD2wv1TViysmw",
+      "_path": "patterns/sYDPK7DqD2wv1TViysmw",
+      "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+      "pattern": "--o---------",
+      "instrument": "sangban",
+      "title": "sangban"
+    },
+    {
+      "_id": "swJCTwoXVog2we54GDer",
+      "_path": "patterns/swJCTwoXVog2we54GDer",
+      "pattern": "-oo--------o",
+      "instrument": "dundunba",
+      "title": "dundunba"
+    },
+    {
+      "_id": "t925PPDVRImk2u2Lw9fm",
+      "_path": "patterns/t925PPDVRImk2u2Lw9fm",
+      "instrument": "dundunba",
+      "title": "dundunba",
+      "pattern": "o-o------o-o-oo-o-",
+      "id": "t925PPDVRImk2u2Lw9fm"
+    },
+    {
+      "_id": "tNxq1AVivBM01RyGfUr6",
+      "_path": "patterns/tNxq1AVivBM01RyGfUr6",
+      "pattern": "o---",
+      "instrument": "kenkeni",
+      "title": "kenkeni"
+    },
+    {
+      "_id": "ugJT61hYW884L8BySdlm",
+      "_path": "patterns/ugJT61hYW884L8BySdlm",
+      "pattern": "x---o---oo--o-o-o---oo--",
+      "instrument": "sangban",
+      "title": "sangban"
+    },
+    {
+      "_id": "ulnLMDTbnIbbFB7wAUS9",
+      "_path": "patterns/ulnLMDTbnIbbFB7wAUS9",
+      "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+      "pattern": "--------------oo-o-oo------------------o-o-oo-oo-oo-oo-oo-oo-o-o-o-oo-oo-oo-oo-oo-o-",
+      "instrument": "dundunba",
+      "title": "dundunba"
+    },
+    {
+      "_id": "uy7ffRD5IRQrrwDgoQe1",
+      "_path": "patterns/uy7ffRD5IRQrrwDgoQe1",
+      "pattern": "o----oo-o----oo-o----oo-o----oo-",
+      "instrument": "kenkeni",
+      "title": "kenkeni"
+    },
+    {
+      "_id": "v8qlO6m6p0rErDF00Sc3",
+      "_path": "patterns/v8qlO6m6p0rErDF00Sc3",
+      "pattern": "o----oo-",
+      "instrument": "kenkeni",
+      "title": "kenkeni"
+    },
+    {
+      "_id": "vUbOvxpYeche11dlqS7A",
+      "_path": "patterns/vUbOvxpYeche11dlqS7A",
+      "instrument": "bell",
+      "title": "bell",
+      "pattern": "x-xx-x-xx-xx-x-xx-xx-x-xx-xx-x-xx-xx-x-xx-x-xx-x-x-x-x-xx-xx-xx-"
+    },
+    {
+      "_id": "vWNu0nktsoM2AI00qSsu",
+      "_path": "patterns/vWNu0nktsoM2AI00qSsu",
+      "pattern": "x-xx-xx-x-x-x-x-",
+      "instrument": "bell",
+      "title": "bell"
+    },
+    {
+      "_id": "vsiGTJFqmMNvw02jOiqk",
+      "_path": "patterns/vsiGTJFqmMNvw02jOiqk",
+      "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+      "instrument": "bell",
+      "title": "bell",
+      "pattern": "x-x-x-x-x-x-x-x-x-x-x-x-x-x-xx-xx-x-xx-xx-x-x-x-x-xx-xx-xx-xx-x-",
+      "id": "vsiGTJFqmMNvw02jOiqk"
+    },
+    {
+      "_id": "vyhu2DwVOPjJU1Zu3nct",
+      "_path": "patterns/vyhu2DwVOPjJU1Zu3nct",
+      "pattern": "oo--x-x-x---o-o-",
+      "instrument": "sangban",
+      "title": "sangban"
+    },
+    {
+      "_id": "wv6dZQ4bezpCmgIjVXW0",
+      "_path": "patterns/wv6dZQ4bezpCmgIjVXW0",
+      "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+      "instrument": "dundunba",
+      "title": "dundunba",
+      "pattern": "o------o-o-o",
+      "id": "wv6dZQ4bezpCmgIjVXW0"
+    },
+    {
+      "_id": "xLpwiP0EFg7kDyaclXPn",
+      "_path": "patterns/xLpwiP0EFg7kDyaclXPn",
+      "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+      "pattern": "o--------------oo----------oo-o-o--------------oo-o-oo-oo-o-oo-o",
+      "instrument": "dundunba",
+      "title": "dundunba"
+    },
+    {
+      "_id": "xTevIrB0ZhufMSN4gg4h",
+      "_path": "patterns/xTevIrB0ZhufMSN4gg4h",
+      "instrument": "dundunba",
+      "title": "dundunba",
+      "pattern": "o-o-----oo-o"
+    },
+    {
+      "_id": "xUeLAdeljB1bH3oipVSo",
+      "_path": "patterns/xUeLAdeljB1bH3oipVSo",
+      "pattern": "",
+      "instrument": "bell",
+      "title": "bell"
+    },
+    {
+      "_id": "xloBxQpodfifscjKxY24",
+      "_path": "patterns/xloBxQpodfifscjKxY24",
+      "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+      "pattern": "o---------o-----",
+      "instrument": "dundunba",
+      "title": "dundunba"
+    },
+    {
+      "_id": "yIH5boO5Rb0pAih5dZWr",
+      "_path": "patterns/yIH5boO5Rb0pAih5dZWr",
+      "instrument": "kenkeni",
+      "title": "kenkeni",
+      "pattern": "x--o-o--x---oo--"
+    },
+    {
+      "_id": "yWS8tPiHrVSZa0nEp1xv",
+      "_path": "patterns/yWS8tPiHrVSZa0nEp1xv",
+      "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
+      "pattern": "---------oooo-----oooo-----------oooo-o-o-oooo-----------o--o-----o--o-----------o--o--o--o--o-----------------o--o--o--",
+      "instrument": "dundunba",
+      "title": "dundunba"
+    },
+    {
+      "_id": "ygGhyEq4fpw7dndz37hn",
+      "_path": "patterns/ygGhyEq4fpw7dndz37hn",
+      "pattern": "o----o",
+      "instrument": "kenkeni",
+      "title": "kenkeni"
+    }
+  ]
+}

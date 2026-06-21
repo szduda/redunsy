@@ -213,24 +213,77 @@ export const useMidinike = (options: MidinikeOptions) => {
     [getOverlayBars, layerEntries],
   )
 
+  const storeCompiled = useCallback((compiled: ReturnType<typeof compileGroove>, primaryBars?: string[]) => {
+    compileRef.current = compiled
+    beatsRef.current = compiled.beats
+    if (primaryBars) lastBarsRef.current = primaryBars
+  }, [])
+
+  const recompileActivePattern = useCallback(
+    (pattern: string, resumeBeat?: number) => {
+      const tracks = lastTracksRef.current
+      if (Object.keys(tracks).length) {
+        if (strictGrooveLength && !tracksMatchGrooveLength(tracks, pattern.length)) {
+          midiSounds.current?.stopPlayLoop()
+          setPlaying(false)
+          setPaused(false)
+          playingRef.current = false
+          lastTracksRef.current = {}
+          return false
+        }
+
+        const result = buildMergedBeats(tracks, pattern)
+        if (!result || !barsFitGroove(result.primaryBars, pattern.length)) {
+          midiSounds.current?.stopPlayLoop()
+          setPlaying(false)
+          setPaused(false)
+          playingRef.current = false
+          return false
+        }
+
+        storeCompiled(result.compiled, result.primaryBars)
+        if (resumeBeat !== undefined) startLoopRef.current(resumeBeat)
+        return true
+      }
+
+      const bars = lastBarsRef.current
+      if (!bars.length) return true
+
+      if (!barsFitGroove(bars, pattern.length)) {
+        midiSounds.current?.stopPlayLoop()
+        setPlaying(false)
+        setPaused(false)
+        playingRef.current = false
+        return false
+      }
+
+      const soundMap = lastInstrumentRef.current
+        ? soundMapForInstrument(lastInstrumentRef.current)
+        : undefined
+      storeCompiled(buildBeats(bars, pattern, soundMap))
+      if (resumeBeat !== undefined) startLoopRef.current(resumeBeat)
+      return true
+    },
+    [buildBeats, buildMergedBeats, midiSounds, storeCompiled, strictGrooveLength],
+  )
+
   const compileBars = useCallback(
-    (bars: string[], groovePattern = groove, soundMap?: Record<string, number | null>) => {
+    (bars: string[], groovePattern: string, soundMap?: Record<string, number | null>) => {
       const compiled = buildBeats(bars, groovePattern, soundMap)
-      compileRef.current = compiled
-      beatsRef.current = compiled.beats
+      storeCompiled(compiled)
       return compiled
     },
-    [buildBeats, groove],
+    [buildBeats, storeCompiled],
   )
 
   const playLayer = useCallback(
     (bars: string[], groovePattern?: string, instrument?: string) => {
       const pattern = groovePattern ?? lastGroovePatternRef.current
       lastGroovePatternRef.current = pattern
+      setGrooveState(pattern)
       if (instrument) lastInstrumentRef.current = instrument
       lastTracksRef.current = {}
       lastBarsRef.current = bars
-      if (groovePattern) setGrooveState(groovePattern)
       const soundMap = lastInstrumentRef.current
         ? soundMapForInstrument(lastInstrumentRef.current)
         : undefined
@@ -238,24 +291,22 @@ export const useMidinike = (options: MidinikeOptions) => {
       startLoop(paused ? pausedAtRef.current : 0)
       return compiled
     },
-    [compileBars, groove, paused, startLoop],
+    [compileBars, paused, startLoop],
   )
 
   const play = useCallback(
     (tracks: PlayTracks, groovePattern?: string) => {
       const pattern = groovePattern ?? lastGroovePatternRef.current
       lastGroovePatternRef.current = pattern
-      if (groovePattern) setGrooveState(groovePattern)
+      setGrooveState(pattern)
       const result = buildMergedBeats(tracks, pattern)
       if (!result) return null
       lastTracksRef.current = tracks
-      lastBarsRef.current = result.primaryBars
-      compileRef.current = result.compiled
-      beatsRef.current = result.compiled.beats
+      storeCompiled(result.compiled, result.primaryBars)
       startLoop(paused ? pausedAtRef.current : 0)
       return result.compiled
     },
-    [buildMergedBeats, paused, startLoop],
+    [buildMergedBeats, paused, startLoop, storeCompiled],
   )
 
   const pause = useCallback(() => {
@@ -286,9 +337,7 @@ export const useMidinike = (options: MidinikeOptions) => {
     if (Object.keys(tracks).length) {
       const result = buildMergedBeats(tracks, pattern)
       if (!result) return null
-      lastBarsRef.current = result.primaryBars
-      compileRef.current = result.compiled
-      beatsRef.current = result.compiled.beats
+      storeCompiled(result.compiled, result.primaryBars)
       startLoop(0)
       return result.compiled
     }
@@ -297,12 +346,10 @@ export const useMidinike = (options: MidinikeOptions) => {
     const soundMap = lastInstrumentRef.current
       ? soundMapForInstrument(lastInstrumentRef.current)
       : undefined
-    const compiled = buildBeats(bars, pattern, soundMap)
-    compileRef.current = compiled
-    beatsRef.current = compiled.beats
+    storeCompiled(buildBeats(bars, pattern, soundMap))
     startLoop(0)
-    return compiled
-  }, [buildBeats, buildMergedBeats, startLoop])
+    return compileRef.current
+  }, [buildBeats, buildMergedBeats, startLoop, storeCompiled])
 
   const goTo = useCallback(
     (barIndex: number) => {
@@ -314,62 +361,16 @@ export const useMidinike = (options: MidinikeOptions) => {
     [startLoop],
   )
 
-  const setGroove = useCallback((pattern: string) => {
-    lastGroovePatternRef.current = pattern
-    setGrooveState(pattern)
-  }, [])
-
-  useEffect(() => {
-    const tracks = lastTracksRef.current
-    const pattern = lastGroovePatternRef.current
-    if (Object.keys(tracks).length) {
-      if (strictGrooveLength && !tracksMatchGrooveLength(tracks, pattern.length)) {
-        lastTracksRef.current = {}
-        if (playingRef.current) {
-          midiSounds.current?.stopPlayLoop()
-          setPlaying(false)
-          setPaused(false)
-          playingRef.current = false
-        }
-        return
-      }
-
-      const result = buildMergedBeats(tracks, pattern)
-      if (!result || !barsFitGroove(result.primaryBars, pattern.length)) {
-        if (playingRef.current) {
-          midiSounds.current?.stopPlayLoop()
-          setPlaying(false)
-          setPaused(false)
-          playingRef.current = false
-        }
-        return
-      }
-      lastBarsRef.current = result.primaryBars
-      compileRef.current = result.compiled
-      beatsRef.current = result.compiled.beats
-      if (playingRef.current) startLoopRef.current(noteIndexRef.current)
-      return
-    }
-
-    const bars = lastBarsRef.current
-    if (!bars.length) return
-    if (!barsFitGroove(bars, pattern.length)) {
-      if (playingRef.current) {
-        midiSounds.current?.stopPlayLoop()
-        setPlaying(false)
-        setPaused(false)
-        playingRef.current = false
-      }
-      return
-    }
-    const soundMap = lastInstrumentRef.current
-      ? soundMapForInstrument(lastInstrumentRef.current)
-      : undefined
-    const compiled = buildBeats(bars, pattern, soundMap)
-    compileRef.current = compiled
-    beatsRef.current = compiled.beats
-    if (playingRef.current) startLoopRef.current(noteIndexRef.current)
-  }, [buildBeats, buildMergedBeats, groove, midiSounds, strictGrooveLength])
+  const setGroove = useCallback(
+    (pattern: string) => {
+      if (pattern === lastGroovePatternRef.current && pattern === groove) return
+      lastGroovePatternRef.current = pattern
+      setGrooveState(pattern)
+      if (!playingRef.current) return
+      recompileActivePattern(pattern, noteIndexRef.current)
+    },
+    [groove, recompileActivePattern],
+  )
 
   useEffect(() => {
     if (!playingRef.current) return

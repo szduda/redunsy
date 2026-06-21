@@ -120,7 +120,7 @@ export const GroovyPlayer = () => {
 
   useScreenWakeLock({ active: playing, enabled: preventScreenSleep })
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     setGroove(groovePattern)
   }, [groovePattern, setGroove])
 
