@@ -4,6 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
+    "prebuild": "tsx scripts/generate-search-index.ts",
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
@@ -11,7 +12,13 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "test": "vitest run",
-    "test:watch": "vitest"
+    "test:watch": "vitest",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "drizzle-kit migrate",
+    "db:push": "drizzle-kit push",
+    "db:seed": "tsx scripts/seed-rhythms.ts",
+    "search-index": "tsx scripts/generate-search-index.ts",
+    "search-index:bootstrap": "tsx scripts/bootstrap-search-index.ts"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.101.0",

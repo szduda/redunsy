@@ -12,6 +12,7 @@ export const GARAGE_FILTER_QUERY_PARAMS = {
   instruments: 'instruments',
   artist: 'artist',
   origin: 'origin',
+  rhythmGroup: 'group',
   tags: 'tags',
   ownership: 'ownership',
 } as const
@@ -40,7 +41,7 @@ const parseOwnership = (value: string): OwnershipFilter =>
 const serializeCsv = (values: readonly (string | number)[]) =>
   values.length ? values.join(',') : ''
 
-const arraysEqual = <T,>(left: readonly T[], right: readonly T[]) =>
+const arraysEqual = <T>(left: readonly T[], right: readonly T[]) =>
   left.length === right.length && left.every((value, index) => value === right[index])
 
 export const filtersEqual = (left: GarageFilters, right: GarageFilters) =>
@@ -48,6 +49,7 @@ export const filtersEqual = (left: GarageFilters, right: GarageFilters) =>
   arraysEqual(left.instruments, right.instruments) &&
   arraysEqual(left.artist, right.artist) &&
   arraysEqual(left.origin, right.origin) &&
+  arraysEqual(left.rhythmGroup, right.rhythmGroup) &&
   arraysEqual(left.tags, right.tags) &&
   left.ownership === right.ownership
 
@@ -73,6 +75,9 @@ export const readGarageFiltersFromParams = (params: URLSearchParams): GarageFilt
 
   const origin = params.get(GARAGE_FILTER_QUERY_PARAMS.origin)
   if (origin) filters.origin = parseCsv(origin)
+
+  const rhythmGroup = params.get(GARAGE_FILTER_QUERY_PARAMS.rhythmGroup)
+  if (rhythmGroup) filters.rhythmGroup = parseCsv(rhythmGroup)
 
   const tags = params.get(GARAGE_FILTER_QUERY_PARAMS.tags)
   if (tags) filters.tags = parseCsv(tags)
@@ -105,6 +110,7 @@ export const buildAppQuerySearchParams = (searchTerm: string, filters: GarageFil
     ['instruments', serializeCsv(filters.instruments)],
     ['artist', serializeCsv(filters.artist)],
     ['origin', serializeCsv(filters.origin)],
+    ['rhythmGroup', serializeCsv(filters.rhythmGroup)],
     ['tags', serializeCsv(filters.tags)],
     ['ownership', filters.ownership === 'all' ? '' : filters.ownership],
   ]

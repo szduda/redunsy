@@ -87,7 +87,10 @@ const normalizeInstrument = (raw: string): RhythmInstrument | null => {
     return value as RhythmInstrument
   }
   // Variants such as "kenkeni2" or "kenkeni (high)" collapse to their base drum.
-  const base = value.replace(/[0-9].*$/, '').replace(/\s*\(.*\)$/, '').trim()
+  const base = value
+    .replace(/[0-9].*$/, '')
+    .replace(/\s*\(.*\)$/, '')
+    .trim()
   if ((RHYTHM_INSTRUMENTS as readonly string[]).includes(base)) {
     return base as RhythmInstrument
   }
@@ -127,10 +130,7 @@ const uniqueSlug = (candidate: string, fallback: string, taken: Set<string>): st
   return slug
 }
 
-const toRhythmPatterns = (
-  patterns: FirestorePattern[],
-  barSize: number,
-): RhythmPattern[] =>
+const toRhythmPatterns = (patterns: FirestorePattern[], barSize: number): RhythmPattern[] =>
   patterns.map((pattern, index) => {
     const instrument = (pattern.instrument ?? '').trim() || 'djembe'
     const title = (pattern.title ?? instrument).trim()

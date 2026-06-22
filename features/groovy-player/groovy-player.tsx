@@ -20,10 +20,16 @@ import { PageBottomNav } from '@/features/layout/page-bottom-nav'
 import { findRhythmBySlug } from '@/features/rhythm/rhythm-catalog'
 import { RhythmEditorButton } from '@/features/rhythm/rhythm-editor-button'
 import { trackBarsRecord, tracksFromRecord } from '@/features/rhythm/rhythm-helpers'
+import type { Rhythm } from '@/features/rhythm/rhythm.types'
 import { Button } from '@/features/theme/button'
 import { Text } from '@/features/theme/text'
 import { cn } from '@/features/theme/cn'
-import { metronomeBarForGrooveLength, tracksMatchGrooveLength, useMidinike, validateBarsForGroove } from '@/lib/midinike'
+import {
+  metronomeBarForGrooveLength,
+  tracksMatchGrooveLength,
+  useMidinike,
+  validateBarsForGroove,
+} from '@/lib/midinike'
 
 const LAYER_CONFIG = {
   instrument: 'djembe',
@@ -32,14 +38,19 @@ const LAYER_CONFIG = {
   grooves: [DEMO_SWING_PATTERN],
 }
 
-export const GroovyPlayer = () => {
+type GroovyPlayerProps = {
+  /** Build-time rhythm for static `/rhythm/[slug]` pages (no browser DB access). */
+  rhythm?: Rhythm
+}
+
+export const GroovyPlayer = ({ rhythm }: GroovyPlayerProps = {}) => {
   useTopNavSticky(false)
 
   const searchParams = useSearchParams()
   const rhythmSlug = searchParams.get('rhythm')
   const loadedRhythm = useMemo(
-    () => (rhythmSlug ? findRhythmBySlug(rhythmSlug) : null),
-    [rhythmSlug],
+    () => rhythm ?? (rhythmSlug ? findRhythmBySlug(rhythmSlug) : null),
+    [rhythm, rhythmSlug],
   )
 
   const barsPerRow = usePlayerStore((state) => state.barsPerRow)
@@ -63,7 +74,9 @@ export const GroovyPlayer = () => {
     () => (loadedRhythm ? trackBarsRecord(loadedRhythm) : demoTrackBars()),
     [loadedRhythm],
   )
-  const grooveLength = loadedRhythm ? swingBarSizeForMeter(loadedRhythm.meter) : PLAYER_GROOVE_LENGTH
+  const grooveLength = loadedRhythm
+    ? swingBarSizeForMeter(loadedRhythm.meter)
+    : PLAYER_GROOVE_LENGTH
   const groovePattern = resolveGroovePattern(swingPattern, grooveLength, swingEnabled)
 
   useLayoutEffect(() => {
@@ -86,24 +99,34 @@ export const GroovyPlayer = () => {
     [grooveLength, hasMetronome],
   )
 
-  const { play, pause, stop, restart, setGroove, setTempo: setMidinikeTempo, setInstrumentVolume, playing, activeBarIndex, beatIndex } =
-    useMidinike({
-      djembe: LAYER_CONFIG,
-      dundunba: { ...LAYER_CONFIG, instrument: 'dundunba', sounds: ['o', 'x'], lengths: ['8th'] },
-      sangban: { ...LAYER_CONFIG, instrument: 'sangban', sounds: ['o', 'x'], lengths: ['8th'] },
-      kenkeni: { ...LAYER_CONFIG, instrument: 'kenkeni', sounds: ['o', 'x'], lengths: ['8th'] },
-      bell: { ...LAYER_CONFIG, instrument: 'bell', sounds: ['x'], lengths: ['8th'] },
-      shaker: {
-        instrument: 'shaker',
-        sounds: ['x'],
-        lengths: ['8th'],
-        grooves: [DEMO_SWING_PATTERN],
-      },
-      getOverlayBars,
-      initialGroove: groovePattern,
-      loop: true,
-      tempo: loadedRhythm?.tempo ?? DEFAULT_TEMPO,
-    })
+  const {
+    play,
+    pause,
+    stop,
+    restart,
+    setGroove,
+    setTempo: setMidinikeTempo,
+    setInstrumentVolume,
+    playing,
+    activeBarIndex,
+    beatIndex,
+  } = useMidinike({
+    djembe: LAYER_CONFIG,
+    dundunba: { ...LAYER_CONFIG, instrument: 'dundunba', sounds: ['o', 'x'], lengths: ['8th'] },
+    sangban: { ...LAYER_CONFIG, instrument: 'sangban', sounds: ['o', 'x'], lengths: ['8th'] },
+    kenkeni: { ...LAYER_CONFIG, instrument: 'kenkeni', sounds: ['o', 'x'], lengths: ['8th'] },
+    bell: { ...LAYER_CONFIG, instrument: 'bell', sounds: ['x'], lengths: ['8th'] },
+    shaker: {
+      instrument: 'shaker',
+      sounds: ['x'],
+      lengths: ['8th'],
+      grooves: [DEMO_SWING_PATTERN],
+    },
+    getOverlayBars,
+    initialGroove: groovePattern,
+    loop: true,
+    tempo: loadedRhythm?.tempo ?? DEFAULT_TEMPO,
+  })
 
   useEffect(() => {
     stop()
@@ -136,7 +159,9 @@ export const GroovyPlayer = () => {
   const validatePlaybackTracks = () => {
     displayTracks.forEach((track) => validateBarsForGroove(track.bars, grooveLength))
     if (loadedRhythm && !tracksMatchGrooveLength(playbackTracks, grooveLength)) {
-      throw new Error(`Each bar must fill ${grooveLength} cells for beat size ${loadedRhythm.meter}`)
+      throw new Error(
+        `Each bar must fill ${grooveLength} cells for beat size ${loadedRhythm.meter}`,
+      )
     }
   }
 
@@ -193,13 +218,19 @@ export const GroovyPlayer = () => {
         {loadedRhythm ? (
           <div className="flex items-center justify-between gap-3 px-4 pt-4">
             <div>
-              <h1 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">{loadedRhythm.title}</h1>
+              <h1 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
+                {loadedRhythm.title}
+              </h1>
               <Text className="mt-0.5" variant="mono">
                 {loadedRhythm.meter}/4 · {loadedRhythm.author}
                 {loadedRhythm.userOwned ? ' · private' : ''}
               </Text>
             </div>
-            <RhythmEditorButton slug={loadedRhythm.slug} userOwned={loadedRhythm.userOwned} />
+            <RhythmEditorButton
+              slug={loadedRhythm.slug}
+              userOwned={loadedRhythm.userOwned}
+              rhythm={loadedRhythm}
+            />
           </div>
         ) : null}
 
@@ -218,7 +249,11 @@ export const GroovyPlayer = () => {
           ))}
         </div>
 
-        {playError ? <Text className="px-4 pb-2" variant="mono">{playError}</Text> : null}
+        {playError ? (
+          <Text className="px-4 pb-2" variant="mono">
+            {playError}
+          </Text>
+        ) : null}
       </section>
 
       <PageBottomNav>

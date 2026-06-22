@@ -6,7 +6,13 @@ import { useGarageFiltersStore } from '@/features/garage/garage-filters.store'
 import { useGarageFilterOptions } from '@/features/garage/use-garage-filter-options'
 import type { RhythmMeter } from '@/features/rhythm/rhythm.types'
 
-export type GarageFilterSectionId = 'meter' | 'instruments' | 'artist' | 'origin' | 'tags'
+export type GarageFilterSectionId =
+  | 'meter'
+  | 'instruments'
+  | 'artist'
+  | 'origin'
+  | 'rhythmGroup'
+  | 'tags'
 
 export type GarageFilterSection = {
   id: GarageFilterSectionId
@@ -29,11 +35,13 @@ export const useGarageFilterSections = (): GarageFilterSection[] => {
   const instruments = useGarageFiltersStore((state) => state.instruments)
   const artist = useGarageFiltersStore((state) => state.artist)
   const origin = useGarageFiltersStore((state) => state.origin)
+  const rhythmGroup = useGarageFiltersStore((state) => state.rhythmGroup)
   const tags = useGarageFiltersStore((state) => state.tags)
   const toggleMeter = useGarageFiltersStore((state) => state.toggleMeter)
   const toggleInstrument = useGarageFiltersStore((state) => state.toggleInstrument)
   const toggleArtist = useGarageFiltersStore((state) => state.toggleArtist)
   const toggleOrigin = useGarageFiltersStore((state) => state.toggleOrigin)
+  const toggleRhythmGroup = useGarageFiltersStore((state) => state.toggleRhythmGroup)
   const toggleTag = useGarageFiltersStore((state) => state.toggleTag)
 
   const meterLabels = options.meter.map(meterLabel)
@@ -57,7 +65,7 @@ export const useGarageFilterSections = (): GarageFilterSection[] => {
         title: 'Instruments',
         values: options.instruments,
         selected: instruments,
-        onToggle: (value) => toggleInstrument(value as typeof instruments[number]),
+        onToggle: (value) => toggleInstrument(value as (typeof instruments)[number]),
       })
     }
 
@@ -82,6 +90,16 @@ export const useGarageFilterSections = (): GarageFilterSection[] => {
       })
     }
 
+    if (options.rhythmGroup.length) {
+      sections.push({
+        id: 'rhythmGroup',
+        title: 'Rhythm group',
+        values: options.rhythmGroup,
+        selected: rhythmGroup,
+        onToggle: toggleRhythmGroup,
+      })
+    }
+
     if (options.tags.length) {
       sections.push({
         id: 'tags',
@@ -101,13 +119,16 @@ export const useGarageFilterSections = (): GarageFilterSection[] => {
     options.artist,
     options.instruments,
     options.origin,
+    options.rhythmGroup,
     options.tags,
     origin,
+    rhythmGroup,
     tags,
     toggleArtist,
     toggleInstrument,
     toggleMeter,
     toggleOrigin,
+    toggleRhythmGroup,
     toggleTag,
   ])
 }

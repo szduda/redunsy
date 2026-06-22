@@ -1,4 +1,4 @@
-import { MOCK_RHYTHM_CARDS } from '@/features/garage/mock-snippets'
+import { getRhythmIndexCards } from '@/features/garage/rhythm-index.store'
 import { listMyRhythms } from '@/features/rhythm/my-rhythms-storage'
 import { rhythmToCard } from '@/features/rhythm/rhythm-helpers'
 import type {
@@ -13,7 +13,7 @@ const API_DELAY_MS = 450
 const delay = (ms: number) => new Promise<void>((resolve) => setTimeout(resolve, ms))
 
 const allRhythmCards = (): RhythmCard[] => [
-  ...MOCK_RHYTHM_CARDS,
+  ...getRhythmIndexCards(),
   ...listMyRhythms().map(rhythmToCard),
 ]
 
@@ -25,8 +25,8 @@ export const matchesOwnership = (card: RhythmCard, ownership: GarageFilters['own
   return card.userOwned !== true
 }
 
-export const listMockRhythmCardsForOwnership = (ownership: GarageFilters['ownership']) =>
-  MOCK_RHYTHM_CARDS.filter((card) => matchesOwnership(card, ownership))
+export const listIndexRhythmCardsForOwnership = (ownership: GarageFilters['ownership']) =>
+  getRhythmIndexCards().filter((card) => matchesOwnership(card, ownership))
 
 export const listRhythmCardsForOwnership = (ownership: GarageFilters['ownership']) =>
   allRhythmCards().filter((card) => matchesOwnership(card, ownership))
@@ -38,6 +38,7 @@ const matchesSearch = (card: RhythmCard, search: string) => {
     card.author.toLowerCase().includes(query) ||
     card.description.toLowerCase().includes(query) ||
     card.origin.some((place) => place.toLowerCase().includes(query)) ||
+    card.rhythmGroup.some((group) => group.toLowerCase().includes(query)) ||
     card.tags.some((tag) => tag.toLowerCase().includes(query)) ||
     card.instruments.some((instrument) => instrument.toLowerCase().includes(query))
   )
@@ -53,6 +54,12 @@ const matchesFilters = (card: RhythmCard, filters: GarageFilters) => {
   }
   if (filters.artist.length && !filters.artist.includes(card.author)) return false
   if (filters.origin.length && !filters.origin.some((place) => card.origin.includes(place))) {
+    return false
+  }
+  if (
+    filters.rhythmGroup.length &&
+    !filters.rhythmGroup.some((group) => card.rhythmGroup.includes(group))
+  ) {
     return false
   }
   if (filters.tags.length && !filters.tags.some((tag) => card.tags.includes(tag))) return false

@@ -4,15 +4,23 @@ import {
   normalizeSwingPatternForMeter,
 } from '@/features/groovy-player/player.store'
 
-import type { Rhythm, RhythmCard, RhythmInstrument, RhythmMeter, Track } from '@/features/rhythm/rhythm.types'
+import type {
+  Rhythm,
+  RhythmCard,
+  RhythmInstrument,
+  RhythmMeter,
+  Track,
+} from '@/features/rhythm/rhythm.types'
 
 export const barSizeForMeter = (meter: RhythmMeter) => meter * 2
 
 export const emptyBar = (meter: RhythmMeter) => '-'.repeat(barSizeForMeter(meter))
 
-export const emptyBars = (meter: RhythmMeter, count = 2) => Array.from({ length: count }, () => emptyBar(meter))
+export const emptyBars = (meter: RhythmMeter, count = 2) =>
+  Array.from({ length: count }, () => emptyBar(meter))
 
-export const longestTrackBars = (tracks: Track[]) => Math.max(0, ...tracks.map((track) => track.bars.length))
+export const longestTrackBars = (tracks: Track[]) =>
+  Math.max(0, ...tracks.map((track) => track.bars.length))
 
 export const tracksFromRecord = (instruments: Record<string, Track>) => Object.values(instruments)
 
@@ -28,6 +36,7 @@ export const rhythmToCard = (rhythm: Rhythm): RhythmCard => {
     author: rhythm.author,
     origin: rhythm.origin,
     tags: rhythm.tags,
+    rhythmGroup: rhythm.rhythmGroup,
     swingPattern: rhythm.swingPattern,
     tempo: rhythm.tempo,
     signalPattern: rhythm.signalPattern,
@@ -38,9 +47,7 @@ export const rhythmToCard = (rhythm: Rhythm): RhythmCard => {
 }
 
 export const trackBarsRecord = (rhythm: Rhythm) =>
-  Object.fromEntries(
-    Object.values(rhythm.instruments).map((track) => [track.id, track.bars]),
-  )
+  Object.fromEntries(Object.values(rhythm.instruments).map((track) => [track.id, track.bars]))
 
 const INSTRUMENT_LABELS: Record<RhythmInstrument, string> = {
   djembe: 'Djembe',
@@ -50,7 +57,11 @@ const INSTRUMENT_LABELS: Record<RhythmInstrument, string> = {
   bell: 'Bell',
 }
 
-export const createTrack = (instrument: RhythmInstrument, meter: RhythmMeter, bars?: string[]): Track => ({
+export const createTrack = (
+  instrument: RhythmInstrument,
+  meter: RhythmMeter,
+  bars?: string[],
+): Track => ({
   id: instrument,
   name: INSTRUMENT_LABELS[instrument],
   instrument,
@@ -64,7 +75,9 @@ export const djembeStarterBars = (meter: RhythmMeter) => {
 
 export const randomHash = (length = 5) => {
   const alphabet = 'abcdefghijklmnopqrstuvwxyz0123456789'
-  return Array.from({ length }, () => alphabet[Math.floor(Math.random() * alphabet.length)]).join('')
+  return Array.from({ length }, () => alphabet[Math.floor(Math.random() * alphabet.length)]).join(
+    '',
+  )
 }
 
 export const defaultRhythmTitle = () => `rhythm-${randomHash()}`
@@ -122,6 +135,7 @@ export const createRhythm = ({
     author,
     origin: [],
     tags,
+    rhythmGroup: [],
     swingPattern: normalizeSwingPatternForMeter(swingPattern, meter),
     tempo,
     signalPattern,

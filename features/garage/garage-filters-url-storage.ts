@@ -14,6 +14,7 @@ export const garageFiltersUrlStorage: StateStorage = {
       filters.instruments.length > 0 ||
       filters.artist.length > 0 ||
       filters.origin.length > 0 ||
+      filters.rhythmGroup.length > 0 ||
       filters.tags.length > 0 ||
       filters.ownership !== 'all'
     if (!hasFilters) return null

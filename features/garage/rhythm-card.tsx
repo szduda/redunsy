@@ -12,8 +12,7 @@ type RhythmCardProps = {
   className?: string
 }
 
-const barsOnMeterLabel = (bars: number, meter: RhythmCard['meter']) =>
-  `${bars} bars on ${meter}`
+const barsOnMeterLabel = (bars: number, meter: RhythmCard['meter']) => `${bars} bars on ${meter}`
 
 const MyRhythmBadge = () => (
   <span
@@ -33,7 +32,7 @@ export const RhythmCardView = ({ card, className }: RhythmCardProps) => (
   >
     <Link
       className="flex flex-col h-full p-4"
-      href={`/player?rhythm=${card.slug}`}
+      href={card.userOwned ? `/player?rhythm=${card.slug}` : `/rhythm/${card.slug}`}
     >
       <div className="flex items-center gap-1.5 pr-10">
         {card.userOwned ? <MyRhythmBadge /> : null}

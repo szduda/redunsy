@@ -59,7 +59,7 @@ export const HomepageDesktop = () => (
       </Text>
 
       <section className="flex flex-col items-center gap-3 w-full">
-        <h2 className={sectionHeadingClass}>Got your own little piece of music?</h2>
+        <h2 className={sectionHeadingClass}>Got your own little piece of Africa?</h2>
         <Button href="/editor" variant="dimmed" className="w-md">
           Explore the Rhythm Editor
         </Button>

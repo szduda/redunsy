@@ -2,9 +2,9 @@
 
 import { useEffect, useMemo, useState } from 'react'
 
-import { filterOptionsFromRhythmCards } from '@/features/garage/mock-snippets'
+import { filterOptionsFromRhythmCards } from '@/features/garage/rhythm-index'
 import {
-  listMockRhythmCardsForOwnership,
+  listIndexRhythmCardsForOwnership,
   listRhythmCardsForOwnership,
 } from '@/features/garage/search-snippets'
 import { useGarageFiltersStore } from '@/features/garage/garage-filters.store'
@@ -22,7 +22,7 @@ export const useGarageFilterOptions = () => {
       filterOptionsFromRhythmCards(
         hydrated
           ? listRhythmCardsForOwnership(ownership)
-          : listMockRhythmCardsForOwnership(ownership),
+          : listIndexRhythmCardsForOwnership(ownership),
       ),
     [hydrated, ownership],
   )

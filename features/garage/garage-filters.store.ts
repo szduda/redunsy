@@ -2,7 +2,7 @@ import { create } from 'zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
 
 import { garageFiltersUrlStorage } from '@/features/garage/garage-filters-url-storage'
-import { filterOptionsFromRhythmCards } from '@/features/garage/mock-snippets'
+import { filterOptionsFromRhythmCards } from '@/features/garage/rhythm-index'
 import { listRhythmCardsForOwnership } from '@/features/garage/search-snippets'
 import {
   EMPTY_GARAGE_FILTERS,
@@ -15,24 +15,26 @@ type GarageFiltersState = GarageFilters & {
   toggleInstrument: (instrument: GarageFilters['instruments'][number]) => void
   toggleArtist: (artist: string) => void
   toggleOrigin: (origin: string) => void
+  toggleRhythmGroup: (rhythmGroup: string) => void
   toggleTag: (tag: string) => void
   setOwnership: (ownership: OwnershipFilter) => void
   clearFilters: () => void
 }
 
-const toggleValue = <T,>(values: T[], value: T) =>
+const toggleValue = <T>(values: T[], value: T) =>
   values.includes(value) ? values.filter((item) => item !== value) : [...values, value]
 
 const pruneFiltersForOwnership = (
   filters: GarageFilters,
   ownership: OwnershipFilter,
-): Pick<GarageFilters, 'meter' | 'instruments' | 'artist' | 'origin' | 'tags'> => {
+): Pick<GarageFilters, 'meter' | 'instruments' | 'artist' | 'origin' | 'rhythmGroup' | 'tags'> => {
   const options = filterOptionsFromRhythmCards(listRhythmCardsForOwnership(ownership))
   return {
     meter: filters.meter.filter((value) => options.meter.includes(value)),
     instruments: filters.instruments.filter((value) => options.instruments.includes(value)),
     artist: filters.artist.filter((value) => options.artist.includes(value)),
     origin: filters.origin.filter((value) => options.origin.includes(value)),
+    rhythmGroup: filters.rhythmGroup.filter((value) => options.rhythmGroup.includes(value)),
     tags: filters.tags.filter((value) => options.tags.includes(value)),
   }
 }
@@ -51,6 +53,8 @@ export const useGarageFiltersStore = create<GarageFiltersState>()(
         set((state) => ({ instruments: toggleValue(state.instruments, instrument) })),
       toggleArtist: (artist) => set((state) => ({ artist: toggleValue(state.artist, artist) })),
       toggleOrigin: (origin) => set((state) => ({ origin: toggleValue(state.origin, origin) })),
+      toggleRhythmGroup: (rhythmGroup) =>
+        set((state) => ({ rhythmGroup: toggleValue(state.rhythmGroup, rhythmGroup) })),
       toggleTag: (tag) => set((state) => ({ tags: toggleValue(state.tags, tag) })),
       setOwnership: (ownership) =>
         set((state) => ({
@@ -67,6 +71,7 @@ export const useGarageFiltersStore = create<GarageFiltersState>()(
         instruments: state.instruments,
         artist: state.artist,
         origin: state.origin,
+        rhythmGroup: state.rhythmGroup,
         tags: state.tags,
         ownership: state.ownership,
       }),
@@ -80,6 +85,7 @@ export const selectGarageFilters = (state: GarageFiltersState): GarageFilters =>
   instruments: state.instruments,
   artist: state.artist,
   origin: state.origin,
+  rhythmGroup: state.rhythmGroup,
   tags: state.tags,
   ownership: state.ownership,
 })
@@ -89,5 +95,6 @@ export const hasActiveGarageFilters = (state: GarageFiltersState) =>
   state.instruments.length > 0 ||
   state.artist.length > 0 ||
   state.origin.length > 0 ||
+  state.rhythmGroup.length > 0 ||
   state.tags.length > 0 ||
   state.ownership !== 'all'

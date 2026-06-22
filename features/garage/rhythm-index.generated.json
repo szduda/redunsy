@@ -1,0 +1,1046 @@
+[
+  {
+    "slug": "wassolon-soboninkun-variation",
+    "title": "Wassolon Soboninkun Variation",
+    "description": "",
+    "meter": 4,
+    "instruments": [
+      "sangban",
+      "kenkeni",
+      "bell"
+    ],
+    "longestTrack": 8,
+    "author": "",
+    "origin": [],
+    "tags": [
+      "4/4",
+      "soboninkun",
+      "wassolon",
+      "kassonke"
+    ],
+    "rhythmGroup": [
+      "soboninkun",
+      "wassolon",
+      "kassonke"
+    ],
+    "swingPattern": "--------",
+    "tempo": 125,
+    "signalPattern": "",
+    "createdAt": 1700588035883,
+    "updatedAt": 1732663431833,
+    "userOwned": false
+  },
+  {
+    "slug": "let-s-call-it-segefoli",
+    "title": "Shemufoli",
+    "description": "Learned from Thomas Guei.",
+    "meter": 4,
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni",
+      "bell",
+      "djembe"
+    ],
+    "longestTrack": 8,
+    "author": "",
+    "origin": [],
+    "tags": [
+      "4/4",
+      "shemufoli",
+      "dundun set"
+    ],
+    "rhythmGroup": [
+      "shemufoli"
+    ],
+    "swingPattern": "--------",
+    "tempo": 115,
+    "signalPattern": "ttsttstts-tsttsbttsttstts-bstts-f-tt-f-tt-f-f--btttbtttbtttbtttb",
+    "createdAt": 1699374395625,
+    "updatedAt": 1727293856991,
+    "userOwned": false
+  },
+  {
+    "slug": "sinte",
+    "title": "Sinte",
+    "description": "A non-traditional sinte arrangement.",
+    "meter": 4,
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni",
+      "djembe"
+    ],
+    "longestTrack": 8,
+    "author": "",
+    "origin": [],
+    "tags": [
+      "4/4",
+      "sinte",
+      "dundun set",
+      "variations"
+    ],
+    "rhythmGroup": [
+      "sinte"
+    ],
+    "swingPattern": "--------",
+    "tempo": 110,
+    "signalPattern": "s---f--tss-ss-f-tt-tt---",
+    "createdAt": 1723560024347,
+    "updatedAt": 1723560034528,
+    "userOwned": false
+  },
+  {
+    "slug": "lamban",
+    "title": "Lamban",
+    "description": "Transcription of lamban by Drissa Kone (Mali). Originally played on 2 khassonke dunduns.\n\nPay attention to the djembe accompaniment - it's a shifted passport accompaniment: |s--ss-tt| -> |tts--ss-|.",
+    "meter": 4,
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "bell",
+      "djembe"
+    ],
+    "longestTrack": 4,
+    "author": "",
+    "origin": [],
+    "tags": [
+      "lamban",
+      "sandia",
+      "djelidon",
+      "4/4",
+      "kassonke",
+      "drissa kone"
+    ],
+    "rhythmGroup": [
+      "lamban",
+      "sandia",
+      "djelidon",
+      "kassonke",
+      "drissa kone"
+    ],
+    "swingPattern": "--------",
+    "tempo": 110,
+    "signalPattern": "--f-t-t-t-ttss--",
+    "createdAt": 1640991600492,
+    "updatedAt": 1723558460339,
+    "userOwned": false
+  },
+  {
+    "slug": "madan-sangban",
+    "title": "Madan sangban",
+    "description": "",
+    "meter": 4,
+    "instruments": [
+      "sangban",
+      "bell"
+    ],
+    "longestTrack": 2,
+    "author": "",
+    "origin": [],
+    "tags": [
+      "madan",
+      "djagbe",
+      "sangban",
+      "4/4"
+    ],
+    "rhythmGroup": [
+      "madan",
+      "djagbe",
+      "sangban"
+    ],
+    "swingPattern": "--------",
+    "tempo": 110,
+    "signalPattern": "",
+    "createdAt": 1640991600701,
+    "updatedAt": 1718736591446,
+    "userOwned": false
+  },
+  {
+    "slug": "djansa-sangban",
+    "title": "djansa sangban",
+    "description": "Sangban pattern for djansa",
+    "meter": 4,
+    "instruments": [
+      "sangban",
+      "kenkeni",
+      "bell"
+    ],
+    "longestTrack": 2,
+    "author": "",
+    "origin": [],
+    "tags": [
+      "djansa",
+      "sangban",
+      "4/4"
+    ],
+    "rhythmGroup": [
+      "djansa",
+      "sangban"
+    ],
+    "swingPattern": "--------",
+    "tempo": 110,
+    "signalPattern": "",
+    "createdAt": 1640991600786,
+    "updatedAt": 1718736566158,
+    "userOwned": false
+  },
+  {
+    "slug": "soli-sangban",
+    "title": "soli sangban",
+    "description": "",
+    "meter": 3,
+    "instruments": [
+      "sangban",
+      "bell"
+    ],
+    "longestTrack": 2,
+    "author": "",
+    "origin": [],
+    "tags": [
+      "soli",
+      "sangban",
+      "6/8"
+    ],
+    "rhythmGroup": [
+      "soli",
+      "sangban"
+    ],
+    "swingPattern": "------",
+    "tempo": 130,
+    "signalPattern": "",
+    "createdAt": 1640991600805,
+    "updatedAt": 1718736550483,
+    "userOwned": false
+  },
+  {
+    "slug": "madan-sangban-variation",
+    "title": "Sangban for madan (variation)",
+    "description": "The last sound of the 2nd bar (muted stroke) is played slightly faster in this variation. Bell pattern has been adjusted to avoid triple strokes.",
+    "meter": 4,
+    "instruments": [
+      "sangban",
+      "bell"
+    ],
+    "longestTrack": 2,
+    "author": "",
+    "origin": [],
+    "tags": [
+      "madan",
+      "djagbe",
+      "sangban",
+      "4/4"
+    ],
+    "rhythmGroup": [
+      "madan",
+      "djagbe",
+      "sangban"
+    ],
+    "swingPattern": "--------",
+    "tempo": 110,
+    "signalPattern": "",
+    "createdAt": 1640991600854,
+    "updatedAt": 1718736526056,
+    "userOwned": false
+  },
+  {
+    "slug": "didadi-short-groove-for-dundun-set",
+    "title": "Didadi - short groove for dundun set",
+    "description": "",
+    "meter": 4,
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni",
+      "djembe"
+    ],
+    "longestTrack": 2,
+    "author": "",
+    "origin": [],
+    "tags": [
+      "4/4",
+      "didadi",
+      "dundun set",
+      "short loop"
+    ],
+    "rhythmGroup": [
+      "didadi"
+    ],
+    "swingPattern": "--------",
+    "tempo": 110,
+    "signalPattern": "",
+    "createdAt": 1697722579616,
+    "updatedAt": 1718736159591,
+    "userOwned": false
+  },
+  {
+    "slug": "gine-fare-intro-from-moribaya",
+    "title": "Gine Fare Intro from Moribaya",
+    "description": "",
+    "meter": 3,
+    "instruments": [
+      "dundunba",
+      "kenkeni",
+      "djembe"
+    ],
+    "longestTrack": 20,
+    "author": "",
+    "origin": [],
+    "tags": [
+      "6/8",
+      "gine fare",
+      "intro",
+      "break"
+    ],
+    "rhythmGroup": [
+      "gine fare"
+    ],
+    "swingPattern": "------",
+    "tempo": 140,
+    "signalPattern": "",
+    "createdAt": 1700073573736,
+    "updatedAt": 1711242463731,
+    "userOwned": false
+  },
+  {
+    "slug": "ngoron",
+    "title": "N'goron",
+    "description": "",
+    "meter": 4,
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni",
+      "djembe"
+    ],
+    "longestTrack": 4,
+    "author": "",
+    "origin": [],
+    "tags": [
+      "ngoron",
+      "dundun set",
+      "4/4"
+    ],
+    "rhythmGroup": [
+      "ngoron"
+    ],
+    "swingPattern": "--------",
+    "tempo": 110,
+    "signalPattern": "",
+    "createdAt": 1708277845182,
+    "updatedAt": 1710695286542,
+    "userOwned": false
+  },
+  {
+    "slug": "konkoba",
+    "title": "Konkoba dundun set",
+    "description": "An interesting 9/8 polirhythm. Sangban phrase has length of 3 beats, dundunba - 6 beats and kenkeni only 2 beats (kenkeni is 6/8 here). That means the rhythm loop consists of 1 dundunba phrase, 2 sangban phrases and 3 kenkeni phrases.",
+    "meter": 3,
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni"
+    ],
+    "longestTrack": 3,
+    "author": "",
+    "origin": [],
+    "tags": [
+      "9/8",
+      "konkoba",
+      "dundun set"
+    ],
+    "rhythmGroup": [
+      "konkoba"
+    ],
+    "swingPattern": "------",
+    "tempo": 160,
+    "signalPattern": "",
+    "createdAt": 1640991600269,
+    "updatedAt": 1699376994081,
+    "userOwned": false
+  },
+  {
+    "slug": "kon",
+    "title": "Kon (dunungbe)",
+    "description": "Traditionally played as first in a dununba sequence.",
+    "meter": 3,
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni",
+      "djembe"
+    ],
+    "longestTrack": 4,
+    "author": "",
+    "origin": [],
+    "tags": [
+      "kon",
+      "dunungbe",
+      "dunumba",
+      "dundun set",
+      "6/8"
+    ],
+    "rhythmGroup": [
+      "kon",
+      "dunungbe",
+      "dunumba"
+    ],
+    "swingPattern": "------",
+    "tempo": 110,
+    "signalPattern": "sstsss------",
+    "createdAt": 1643929200000,
+    "updatedAt": 1697679744781,
+    "userOwned": false
+  },
+  {
+    "slug": "djaa-kouroussa",
+    "title": "Djaa",
+    "description": "Sometimes spelled as dja.",
+    "meter": 3,
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni",
+      "bell",
+      "djembe"
+    ],
+    "longestTrack": 16,
+    "author": "",
+    "origin": [],
+    "tags": [
+      "6/8",
+      "djaa",
+      "dundun set"
+    ],
+    "rhythmGroup": [
+      "djaa"
+    ],
+    "swingPattern": "------",
+    "tempo": 130,
+    "signalPattern": "ttttt-tt-t--",
+    "createdAt": 1644102000000,
+    "updatedAt": 1697679744308,
+    "userOwned": false
+  },
+  {
+    "slug": "maane",
+    "title": "Maane groove",
+    "description": "",
+    "meter": 3,
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni",
+      "djembe"
+    ],
+    "longestTrack": 4,
+    "author": "",
+    "origin": [],
+    "tags": [
+      "maane",
+      "dundun set",
+      "6/8",
+      "mane",
+      "susu"
+    ],
+    "rhythmGroup": [
+      "maane",
+      "mane",
+      "susu"
+    ],
+    "swingPattern": "------",
+    "tempo": 140,
+    "signalPattern": "--fsss-tts--",
+    "createdAt": 1640991600716,
+    "updatedAt": 1697679743768,
+    "userOwned": false
+  },
+  {
+    "slug": "gine-fare",
+    "title": "Gine Fare Groove",
+    "description": "",
+    "meter": 3,
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni",
+      "djembe"
+    ],
+    "longestTrack": 16,
+    "author": "",
+    "origin": [],
+    "tags": [
+      "6/8",
+      "gine fare",
+      "dundun set",
+      "susu",
+      "yogui"
+    ],
+    "rhythmGroup": [
+      "gine fare",
+      "susu",
+      "yogui"
+    ],
+    "swingPattern": "------",
+    "tempo": 180,
+    "signalPattern": "ttt-sss--tttt-t-t-t-tt--",
+    "createdAt": 1695393729474,
+    "updatedAt": 1697679677055,
+    "userOwned": false
+  },
+  {
+    "slug": "djansa-set",
+    "title": "djansa dundun set",
+    "description": "Dun dun set arrangement",
+    "meter": 4,
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni",
+      "djembe"
+    ],
+    "longestTrack": 4,
+    "author": "",
+    "origin": [],
+    "tags": [
+      "djansa",
+      "dundun set",
+      "4/4"
+    ],
+    "rhythmGroup": [
+      "djansa"
+    ],
+    "swingPattern": "--------",
+    "tempo": 125,
+    "signalPattern": "",
+    "createdAt": 1640991600791,
+    "updatedAt": 1697679676625,
+    "userOwned": false
+  },
+  {
+    "slug": "balakulandjan-sangban-jam",
+    "title": "Balkulandjan sangban jam",
+    "description": "Example sangban variations.",
+    "meter": 4,
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "bell"
+    ],
+    "longestTrack": 8,
+    "author": "",
+    "origin": [],
+    "tags": [
+      "jam",
+      "balakulandjan",
+      "sangban",
+      "4/4"
+    ],
+    "rhythmGroup": [
+      "balakulandjan",
+      "sangban"
+    ],
+    "swingPattern": "--------",
+    "tempo": 110,
+    "signalPattern": "",
+    "createdAt": 1695844020058,
+    "updatedAt": 1697679675693,
+    "userOwned": false
+  },
+  {
+    "slug": "break",
+    "title": "The Last Break",
+    "description": "A common thank-you phrase.",
+    "meter": 4,
+    "instruments": [
+      "sangban",
+      "kenkeni"
+    ],
+    "longestTrack": 4,
+    "author": "",
+    "origin": [],
+    "tags": [
+      "break",
+      "outro",
+      "popular"
+    ],
+    "rhythmGroup": [],
+    "swingPattern": "--------",
+    "tempo": 80,
+    "signalPattern": "s-tts-t---f-f---",
+    "createdAt": 1693525473023,
+    "updatedAt": 1697679675145,
+    "userOwned": false
+  },
+  {
+    "slug": "marakadon",
+    "title": "Marakadon",
+    "description": "",
+    "meter": 3,
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni"
+    ],
+    "longestTrack": 2,
+    "author": "",
+    "origin": [],
+    "tags": [
+      "6/8",
+      "dundun set",
+      "marakadon",
+      "fula fare"
+    ],
+    "rhythmGroup": [
+      "marakadon",
+      "fula fare"
+    ],
+    "swingPattern": "------",
+    "tempo": 120,
+    "signalPattern": "",
+    "createdAt": 1695686925005,
+    "updatedAt": 1697679674669,
+    "userOwned": false
+  },
+  {
+    "slug": "dunumba-intro",
+    "title": "Dunumba intro",
+    "description": "A popular break for dunumba rhythms sequence. Usually played at the beginning. As always there are multiple variations and this is just one of them. I added the kenkeni phrase at the end just for reference.",
+    "meter": 3,
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni"
+    ],
+    "longestTrack": 16,
+    "author": "",
+    "origin": [],
+    "tags": [
+      "6/8",
+      "dunumba",
+      "intro",
+      "break",
+      "dundun set"
+    ],
+    "rhythmGroup": [
+      "dunumba"
+    ],
+    "swingPattern": "------",
+    "tempo": 110,
+    "signalPattern": "",
+    "createdAt": 1693774487240,
+    "updatedAt": 1697679674131,
+    "userOwned": false
+  },
+  {
+    "slug": "denaben",
+    "title": "Denaben Dundun or Lafe",
+    "description": "",
+    "meter": 4,
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni"
+    ],
+    "longestTrack": 8,
+    "author": "",
+    "origin": [],
+    "tags": [
+      "denaben",
+      "lafe",
+      "dundun set",
+      "dundun",
+      "4/4"
+    ],
+    "rhythmGroup": [
+      "denaben",
+      "lafe"
+    ],
+    "swingPattern": "--------",
+    "tempo": 110,
+    "signalPattern": "f-tt-t-tt-ttt---",
+    "createdAt": 1640991600634,
+    "updatedAt": 1697679673511,
+    "userOwned": false
+  },
+  {
+    "slug": "djagbe",
+    "title": "djagbe dundun set",
+    "description": "",
+    "meter": 4,
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni"
+    ],
+    "longestTrack": 2,
+    "author": "",
+    "origin": [],
+    "tags": [
+      "djagbe",
+      "dundun set",
+      "madan",
+      "4/4"
+    ],
+    "rhythmGroup": [
+      "djagbe",
+      "madan"
+    ],
+    "swingPattern": "--------",
+    "tempo": 100,
+    "signalPattern": "",
+    "createdAt": 1640991600422,
+    "updatedAt": 1697679667617,
+    "userOwned": false
+  },
+  {
+    "slug": "toro",
+    "title": "Toro dundun set",
+    "description": "You can try flexing and playing the last bar as noted, but I recommend just ignoring the kenkeni part there.",
+    "meter": 4,
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni"
+    ],
+    "longestTrack": 4,
+    "author": "",
+    "origin": [],
+    "tags": [
+      "toro",
+      "dundun set",
+      "4/4"
+    ],
+    "rhythmGroup": [
+      "toro"
+    ],
+    "swingPattern": "--------",
+    "tempo": 110,
+    "signalPattern": "",
+    "createdAt": 1640991600645,
+    "updatedAt": 1697679665938,
+    "userOwned": false
+  },
+  {
+    "slug": "zaouli-set",
+    "title": "Zaouli",
+    "description": "",
+    "meter": 4,
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni"
+    ],
+    "longestTrack": 2,
+    "author": "",
+    "origin": [],
+    "tags": [
+      "zaouli",
+      "dundun set",
+      "4/4"
+    ],
+    "rhythmGroup": [
+      "zaouli"
+    ],
+    "swingPattern": "--------",
+    "tempo": 135,
+    "signalPattern": "t--t---t--t--t--",
+    "createdAt": 1644361200000,
+    "updatedAt": 1697679462264,
+    "userOwned": false
+  },
+  {
+    "slug": "kawa",
+    "title": "Kawa",
+    "description": "Crazy one, really.",
+    "meter": 3,
+    "instruments": [
+      "sangban",
+      "kenkeni"
+    ],
+    "longestTrack": 4,
+    "author": "",
+    "origin": [],
+    "tags": [
+      "kawa",
+      "dundun set",
+      "6/8"
+    ],
+    "rhythmGroup": [
+      "kawa"
+    ],
+    "swingPattern": "------",
+    "tempo": 140,
+    "signalPattern": "",
+    "createdAt": 1644274800000,
+    "updatedAt": 1697679461254,
+    "userOwned": false
+  },
+  {
+    "slug": "dibon",
+    "title": "kassa dibon dundun set",
+    "description": "",
+    "meter": 4,
+    "instruments": [
+      "kenkeni",
+      "sangban",
+      "dundunba"
+    ],
+    "longestTrack": 4,
+    "author": "",
+    "origin": [],
+    "tags": [
+      "4/4",
+      "kassa",
+      "dibon",
+      "dundun set"
+    ],
+    "rhythmGroup": [
+      "kassa",
+      "dibon"
+    ],
+    "swingPattern": "--------",
+    "tempo": 110,
+    "signalPattern": "",
+    "createdAt": 1640991600804,
+    "updatedAt": 1697679460313,
+    "userOwned": false
+  },
+  {
+    "slug": "soli",
+    "title": "Soli dundun set",
+    "description": "Soli is quite dense rhythm. And quite fast (that's why it's called \"soli rapide\"). When played on dundun set we simplify the melody to make it easier for dundunfola to play. With increasing tempo you may need to simplify it even more - I do that by removing double strokes in dundunba and kenkeni parts.",
+    "meter": 3,
+    "instruments": [
+      "sangban",
+      "dundunba",
+      "kenkeni"
+    ],
+    "longestTrack": 2,
+    "author": "",
+    "origin": [],
+    "tags": [
+      "soli",
+      "dundun set",
+      "6/8",
+      "rapide"
+    ],
+    "rhythmGroup": [
+      "soli"
+    ],
+    "swingPattern": "------",
+    "tempo": 130,
+    "signalPattern": "",
+    "createdAt": 1640991600885,
+    "updatedAt": 1697679457833,
+    "userOwned": false
+  },
+  {
+    "slug": "soko",
+    "title": "Soko dundun set",
+    "description": "",
+    "meter": 3,
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni"
+    ],
+    "longestTrack": 4,
+    "author": "",
+    "origin": [],
+    "tags": [
+      "soko",
+      "6/8",
+      "dundun set"
+    ],
+    "rhythmGroup": [
+      "soko"
+    ],
+    "swingPattern": "------",
+    "tempo": 140,
+    "signalPattern": "",
+    "createdAt": 1640991600980,
+    "updatedAt": 1697679456729,
+    "userOwned": false
+  },
+  {
+    "slug": "soko-fast",
+    "title": "soko (fast)",
+    "description": "A pattern that you can play at the very fast tempo.",
+    "meter": 3,
+    "instruments": [
+      "dundunba",
+      "sangban"
+    ],
+    "longestTrack": 2,
+    "author": "",
+    "origin": [],
+    "tags": [
+      "soko",
+      "dundun set",
+      "rapide",
+      "6/8"
+    ],
+    "rhythmGroup": [
+      "soko"
+    ],
+    "swingPattern": "------",
+    "tempo": 180,
+    "signalPattern": "ttttt-tt-t--",
+    "createdAt": 1644447600000,
+    "updatedAt": 1697679397565,
+    "userOwned": false
+  },
+  {
+    "slug": "madan-drissa-kone",
+    "title": "madan by Drissa Kone Quartett",
+    "description": "Transcription of madan by Drissa Kone team. (source: https://www.youtube.com/watch?v=I3_IqLLV70k)",
+    "meter": 4,
+    "instruments": [
+      "kenkeni",
+      "sangban"
+    ],
+    "longestTrack": 2,
+    "author": "",
+    "origin": [],
+    "tags": [
+      "madan",
+      "4/4",
+      "drissa kone",
+      "kassonke"
+    ],
+    "rhythmGroup": [
+      "madan",
+      "drissa kone",
+      "kassonke"
+    ],
+    "swingPattern": "--------",
+    "tempo": 105,
+    "signalPattern": "",
+    "createdAt": 1644620400000,
+    "updatedAt": 1697679397042,
+    "userOwned": false
+  },
+  {
+    "slug": "kudani",
+    "title": "Kudani",
+    "description": "A modern rhythm composed by Mamady Keita",
+    "meter": 4,
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni"
+    ],
+    "longestTrack": 2,
+    "author": "Szdun Dudumba",
+    "origin": [],
+    "tags": [
+      "kudani",
+      "4/4",
+      "dundun set",
+      "mamady keita"
+    ],
+    "rhythmGroup": [
+      "kudani",
+      "mamady keita"
+    ],
+    "swingPattern": "--------",
+    "tempo": 110,
+    "signalPattern": "",
+    "createdAt": 1690848626622,
+    "updatedAt": 1697679396450,
+    "userOwned": false
+  },
+  {
+    "slug": "mendiani",
+    "title": "Mendiani for set",
+    "description": "",
+    "meter": 3,
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni",
+      "bell"
+    ],
+    "longestTrack": 2,
+    "author": "",
+    "origin": [],
+    "tags": [
+      "6/8",
+      "dundun set",
+      "mendiani"
+    ],
+    "rhythmGroup": [
+      "mendiani"
+    ],
+    "swingPattern": "------",
+    "tempo": 110,
+    "signalPattern": "f-ss-tsstss-",
+    "createdAt": 1692577966444,
+    "updatedAt": 1697679395815,
+    "userOwned": false
+  },
+  {
+    "slug": "soboninkun",
+    "title": "Soboninkun",
+    "description": "Other names: sobonikun, sogonikun, sogoninkun.",
+    "meter": 4,
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni",
+      "djembe"
+    ],
+    "longestTrack": 2,
+    "author": "",
+    "origin": [],
+    "tags": [
+      "dundun set",
+      "soboninkun",
+      "4/4",
+      "wassolon"
+    ],
+    "rhythmGroup": [
+      "soboninkun",
+      "wassolon"
+    ],
+    "swingPattern": "--------",
+    "tempo": 135,
+    "signalPattern": "f-tt-t-tt-sss---",
+    "createdAt": 1695746617947,
+    "updatedAt": 1697679315637,
+    "userOwned": false
+  },
+  {
+    "slug": "bolokonondo",
+    "title": "Bolokonondo Groove",
+    "description": "",
+    "meter": 3,
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni",
+      "bell",
+      "djembe"
+    ],
+    "longestTrack": 14,
+    "author": "",
+    "origin": [],
+    "tags": [
+      "6/8",
+      "bolokonondo",
+      "dunumba",
+      "sequential"
+    ],
+    "rhythmGroup": [
+      "bolokonondo",
+      "dunumba"
+    ],
+    "swingPattern": "------",
+    "tempo": 150,
+    "signalPattern": "sstsss------------------sstsss------tttssssssssstttssstttssstttsssttss-ssss-tttt-s--",
+    "createdAt": 1696610315357,
+    "updatedAt": 1697679160527,
+    "userOwned": false
+  }
+]

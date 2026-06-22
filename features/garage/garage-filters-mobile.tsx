@@ -2,10 +2,7 @@
 
 import { useEffect, useState } from 'react'
 
-import {
-  GarageFilterChipList,
-  GarageFilterSection,
-} from '@/features/garage/garage-filter-section'
+import { GarageFilterChipList, GarageFilterSection } from '@/features/garage/garage-filter-section'
 import type {
   GarageFilterSection as GarageFilterSectionData,
   GarageFilterSectionId,
@@ -25,6 +22,7 @@ const SECTION_ICONS: Record<GarageFilterSectionId, Icon> = {
   instruments: DjembeIcon,
   artist: UserIcon,
   origin: AfricaIcon,
+  rhythmGroup: TagIcon,
   tags: TagIcon,
 }
 
@@ -32,6 +30,7 @@ const SECTION_ICON_CLASS: Partial<Record<GarageFilterSectionId, string>> = {
   meter: 'text-redy',
   artist: 'text-greeny',
   origin: 'text-yellowy',
+  rhythmGroup: 'text-greeny',
   tags: 'text-redy',
 }
 
@@ -59,45 +58,43 @@ export const GarageFiltersMobile = ({ sections }: GarageFiltersMobileProps) => {
       <div className="flex items-center gap-1">
         <div className="flex min-w-0 flex-1 items-center gap-1 overflow-x-auto">
           {sections.map((section) => {
-          const Icon = SECTION_ICONS[section.id]
-          const isOpen = openSection === section.id
-          const activeCount = section.selected.length
-          const hasActive = activeCount > 0
+            const Icon = SECTION_ICONS[section.id]
+            const isOpen = openSection === section.id
+            const activeCount = section.selected.length
+            const hasActive = activeCount > 0
 
-          return (
-            <Button
-              key={section.id}
-              aria-expanded={isOpen}
-              aria-label={
-                hasActive ? `${section.title}, ${activeCount} active` : section.title
-              }
-              className={cn(
-                'relative size-10 shrink-0 rounded-full',
-                isOpen && 'bg-zinc-100 dark:bg-zinc-800/80',
-                hasActive && 'text-zinc-900 dark:text-zinc-100',
-              )}
-              onClick={() => toggleSection(section.id)}
-              variant="subtle"
-            >
-              <span
+            return (
+              <Button
+                key={section.id}
+                aria-expanded={isOpen}
+                aria-label={hasActive ? `${section.title}, ${activeCount} active` : section.title}
                 className={cn(
-                  'inline-flex size-5 items-center justify-center',
-                  SECTION_ICON_CLASS[section.id],
+                  'relative size-10 shrink-0 rounded-full',
+                  isOpen && 'bg-zinc-100 dark:bg-zinc-800/80',
+                  hasActive && 'text-zinc-900 dark:text-zinc-100',
                 )}
+                onClick={() => toggleSection(section.id)}
+                variant="subtle"
               >
-                <Icon />
-              </span>
-              {hasActive ? (
                 <span
-                  aria-hidden
-                  className="absolute top-0.5 right-0.5 flex size-3.5 min-w-3.5 items-center justify-center rounded-full bg-zinc-900/50 text-[9px] leading-none font-medium text-white dark:bg-white/50 dark:text-zinc-900"
+                  className={cn(
+                    'inline-flex size-5 items-center justify-center',
+                    SECTION_ICON_CLASS[section.id],
+                  )}
                 >
-                  {activeCount}
+                  <Icon />
                 </span>
-              ) : null}
-            </Button>
-          )
-        })}
+                {hasActive ? (
+                  <span
+                    aria-hidden
+                    className="absolute top-0.5 right-0.5 flex size-3.5 min-w-3.5 items-center justify-center rounded-full bg-zinc-900/50 text-[9px] leading-none font-medium text-white dark:bg-white/50 dark:text-zinc-900"
+                  >
+                    {activeCount}
+                  </span>
+                ) : null}
+              </Button>
+            )
+          })}
         </div>
         <GarageOwnershipFilterMobile />
       </div>
