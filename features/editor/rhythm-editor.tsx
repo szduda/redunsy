@@ -205,7 +205,7 @@ export const RhythmEditor = () => {
     <>
       <div className="flex w-full max-w-4xl flex-col gap-3">
         <Button
-          className="w-fit md:fixed md:left-4 md:top-16 md:z-20"
+          className="w-fit xl:fixed mt-3 md:mt-0 md:left-4 md:top-16 md:z-20"
           onClick={onBackToPicker}
           variant="subtle"
         >

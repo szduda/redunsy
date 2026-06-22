@@ -18,8 +18,14 @@ type CollapsibleMetadataProps = {
 }
 
 const fieldLabelClass = 'flex flex-col gap-1 text-sm'
-const selectClass =
-  'rounded-lg border border-zinc-200 bg-white px-3 py-2 dark:border-zinc-700 dark:bg-zinc-950'
+const beatSizeOptions = [3, 4] as const
+const beatSizeChipClass = (active: boolean) =>
+  cn(
+    'rounded-md border flex-1 px-2.5 py-1.5 text-base transition-colors',
+    active
+      ? 'border-zinc-900 bg-zinc-900 text-white dark:border-zinc-100 dark:bg-zinc-100 dark:text-zinc-900'
+      : 'border-zinc-300 text-zinc-600 hover:border-zinc-400 dark:border-zinc-700 dark:text-zinc-400 dark:hover:border-zinc-500',
+  )
 
 const capitalize = (value: string) =>
   value.length ? value[0].toUpperCase() + value.slice(1) : value
@@ -56,7 +62,7 @@ export const CollapsibleMetadata = ({ rhythm, onChange }: CollapsibleMetadataPro
             />
           </label>
 
-          <label className={cn(fieldLabelClass, 'col-span-12 mb-8')}>
+          <label className={cn(fieldLabelClass, 'col-span-12 mb-8 md:mb-4')}>
             <Text variant="mono">Description</Text>
             <Input
               onChange={(event) => onChange({ description: event.target.value })}
@@ -65,19 +71,27 @@ export const CollapsibleMetadata = ({ rhythm, onChange }: CollapsibleMetadataPro
             />
           </label>
 
-          <label className={cn(fieldLabelClass, 'col-span-3')}>
-            <Text variant="mono">Beat size</Text>
-            <select
-              className={cn(selectClass, 'w-full')}
-              onChange={(event) => onChange({ meter: Number(event.target.value) as 3 | 4 })}
-              value={rhythm.meter}
-            >
-              <option value={4}>4</option>
-              <option value={3}>3</option>
-            </select>
-          </label>
+          <div className={cn(fieldLabelClass, 'col-span-6 md:col-span-3')}>
+            <Text variant="mono">Meter</Text>
+            <div className="flex flex-wrap gap-2">
+              {beatSizeOptions.map((meter) => {
+                const active = rhythm.meter === meter
+                return (
+                  <button
+                    key={meter}
+                    aria-pressed={active}
+                    className={beatSizeChipClass(active)}
+                    onClick={() => onChange({ meter })}
+                    type="button"
+                  >
+                    on {meter}
+                  </button>
+                )
+              })}
+            </div>
+          </div>
 
-          <label className={cn(fieldLabelClass, 'col-span-3')}>
+          <label className={cn(fieldLabelClass, 'col-span-6 md:col-span-3')}>
             <Text variant="mono">Tempo</Text>
             <Input
               max={200}
@@ -89,7 +103,7 @@ export const CollapsibleMetadata = ({ rhythm, onChange }: CollapsibleMetadataPro
             />
           </label>
 
-          <label className={cn(fieldLabelClass, 'col-span-3')}>
+          <label className={cn(fieldLabelClass, 'col-span-6 md:col-span-3')}>
             <Text variant="mono">Swing pattern</Text>
             <SwingPatternField
               barSize={swingBarSizeForMeter(rhythm.meter)}
@@ -98,15 +112,18 @@ export const CollapsibleMetadata = ({ rhythm, onChange }: CollapsibleMetadataPro
               value={rhythm.swingPattern}
             />
           </label>
-          <label className={cn(fieldLabelClass, 'col-span-3')}>
+          <label className={cn(fieldLabelClass, 'col-span-6 md:col-span-3')}>
             <Text variant="mono">Signal pattern</Text>
             <Input
               onChange={(event) => onChange({ signalPattern: event.target.value })}
               value={rhythm.signalPattern}
+              className="w-full"
             />
           </label>
 
-          <label className={cn(fieldLabelClass, 'col-span-4')}>
+          <div className="col-span-12 py-2" />
+
+          <label className={cn(fieldLabelClass, 'col-span-12 md:col-span-4')}>
             <Text variant="mono">Rhythm group</Text>
             <Input
               className="w-full"
@@ -116,7 +133,7 @@ export const CollapsibleMetadata = ({ rhythm, onChange }: CollapsibleMetadataPro
             />
           </label>
 
-          <label className={cn(fieldLabelClass, 'col-span-4')}>
+          <label className={cn(fieldLabelClass, 'col-span-6 md:col-span-4')}>
             <Text variant="mono">Origin</Text>
             <Input
               className="w-full"
@@ -126,7 +143,7 @@ export const CollapsibleMetadata = ({ rhythm, onChange }: CollapsibleMetadataPro
             />
           </label>
 
-          <label className={cn(fieldLabelClass, 'col-span-4')}>
+          <label className={cn(fieldLabelClass, 'col-span-6 md:col-span-4')}>
             <Text variant="mono">Artist</Text>
             <Input
               className="w-full"
@@ -136,7 +153,7 @@ export const CollapsibleMetadata = ({ rhythm, onChange }: CollapsibleMetadataPro
             />
           </label>
 
-          <label className={cn(fieldLabelClass, 'col-span-12 mt-8 mb-2')}>
+          <label className={cn(fieldLabelClass, 'col-span-12 mb-2')}>
             <Text variant="mono">Tags</Text>
             <Input
               className="w-full"
