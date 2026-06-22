@@ -153,7 +153,7 @@ const MobileTempoSlider = ({ tempo, onTempoChange }: Omit<TempoSliderInputProps,
       <Button
         aria-expanded={open}
         aria-label={`Tempo ${tempo} BPM`}
-        className={cn('flex-col', open && popoverTriggerOpenClass)}
+        className={cn('flex-col mr-1.5', open && popoverTriggerOpenClass)}
         onClick={toggle}
         type="button"
         variant="subtle"

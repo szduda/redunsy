@@ -28,7 +28,7 @@ export const TrackVolume = ({
 }: TrackVolumeProps) => (
   <div
     className={cn(
-      'flex items-center rounded-lg border border-zinc-200/60 bg-white md:gap-1 md:border-transparent dark:bg-zinc-900 dark:lg:bg-transparent',
+      'flex items-center h-min rounded-lg border border-zinc-200/10 bg-white md:gap-1 md:border-transparent dark:bg-zinc-900 dark:lg:bg-transparent m-1',
       compact && 'shrink-0',
       className,
     )}
@@ -37,12 +37,12 @@ export const TrackVolume = ({
       active={muted}
       aria-label={muted ? 'Unmute track' : 'Mute track'}
       aria-pressed={!muted}
-      className="text-yellowy"
+      className="!text-redy-light/80 px-4"
       onClick={onToggleMute}
     >
       {muted ?
-        <SpeakerMutedIcon className="size-4 lg:size-5" /> :
-        <SpeakerIcon className="size-4 lg:size-5" />
+        <SpeakerMutedIcon className="size-5 lg:size-6" /> :
+        <SpeakerIcon className="size-5 lg:size-6" />
       }
     </IconButton>
 
@@ -65,7 +65,7 @@ export const TrackVolume = ({
           <Button
             aria-expanded={open}
             className={cn(
-              '!rounded-l-none !border-l border-l-zinc-200 font-semibold text-lg dark:border-l-zinc-950',
+              '!rounded-l-none !border-l border-l-zinc-200 font-semibold text-lg dark:border-l-zinc-950 py-1',
               open && popoverTriggerOpenClass,
             )}
             onClick={toggle}

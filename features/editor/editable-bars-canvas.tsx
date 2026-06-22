@@ -14,8 +14,7 @@ import { buildDragSlots } from '@/features/editor/notation/reorder-bars'
 import type { NoteSelection } from '@/features/editor/notation/bar-note-edits'
 import { setupCanvasDpi } from '@/features/groovy-player/canvas/canvas-dpi'
 import { darkCanvasColors, lightCanvasColors } from '@/features/groovy-player/canvas/canvas-colors'
-import { findPatternLength } from '@/features/groovy-player/canvas/find-pattern-length'
-import { BAR_GAP_PX, barHeightForBarsPerRow, renderBars } from '@/features/groovy-player/canvas/renderers'
+import { canvasHeightForBars, renderBars } from '@/features/groovy-player/canvas/renderers'
 import { useCanvasWidth } from '@/features/groovy-player/canvas/use-canvas-width'
 import { useIsDark } from '@/features/store/theme.store'
 import { Button } from '@/features/theme/button'
@@ -70,11 +69,8 @@ const EditableBars = ({
   } | null>(null)
   const [drag, setDrag] = useState<BarDragState | null>(null)
   const { width: canvasWidth, dpr } = useCanvasWidth(containerRef)
-  const barsInPattern = Math.max(findPatternLength(bars, 8), barsPerRow)
-  const barHeight = barHeightForBarsPerRow(barsPerRow)
   const hash = bars.join('')
-  const canvasHeight =
-    (barHeight + 2 * BAR_GAP_PX) * Math.ceil(barsInPattern / barsPerRow) - 2 * BAR_GAP_PX
+  const canvasHeight = canvasHeightForBars(canvasWidth, barsPerRow, bars)
   const barCursor = selection?.barIndex ?? -1
 
   useLayoutEffect(() => {
@@ -93,7 +89,6 @@ const EditableBars = ({
           instrument,
           context,
           canvasWidth,
-          barHeight,
           barsPerRow,
           palette,
         })
@@ -103,7 +98,6 @@ const EditableBars = ({
           canvas,
           context,
           canvasWidth,
-          barHeight,
           barsPerRow,
           highlightedBarIndex: barCursor,
           palette,
@@ -129,7 +123,6 @@ const EditableBars = ({
         instrument,
         context,
         canvasWidth,
-        barHeight,
         pointerX: drag.pointerX,
         pointerY: drag.pointerY,
         palette,
@@ -142,7 +135,6 @@ const EditableBars = ({
     canvasHeight,
     dpr,
     barsPerRow,
-    barHeight,
     instrument,
     bars.length,
     barCursor,
@@ -185,7 +177,6 @@ const EditableBars = ({
         x,
         y,
         canvasWidth,
-        barHeight,
         barsPerRow,
         slots,
         currentDrop,
@@ -254,7 +245,6 @@ const EditableBars = ({
           x,
           y,
           canvasWidth,
-          barHeight,
           barsPerRow,
           slots,
           currentDrop,

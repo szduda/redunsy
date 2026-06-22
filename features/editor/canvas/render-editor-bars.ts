@@ -1,7 +1,14 @@
 import { YELOWY_BORDER } from '@/features/editor/canvas/draw-selection-border'
 import type { DragSlot } from '@/features/editor/notation/reorder-bars'
 import { darkCanvasColors, type CanvasColors } from '@/features/groovy-player/canvas/canvas-colors'
-import { BAR_GAP_PX, layoutBar, renderBar } from '@/features/groovy-player/canvas/renderers'
+import {
+  BAR_GAP_PX,
+  barTopForIndex,
+  barWidthForCanvas,
+  layoutBar,
+  renderBar,
+  rowHeightsForBars,
+} from '@/features/groovy-player/canvas/renderers'
 import type { CanvasElement } from '@/features/groovy-player/canvas/types'
 
 type RenderEditorBarSlotsArgs = {
@@ -9,7 +16,6 @@ type RenderEditorBarSlotsArgs = {
   instrument: string
   context: CanvasRenderingContext2D
   canvasWidth: number
-  barHeight: number
   barsPerRow: number
   palette?: CanvasColors
 }
@@ -18,12 +24,13 @@ const drawGapSlot = (
   context: CanvasRenderingContext2D,
   slotIndex: number,
   canvasWidth: number,
-  barHeight: number,
   barsPerRow: number,
+  rowHeights: number[],
 ) => {
-  const barHeightGross = barHeight + 2 * BAR_GAP_PX
-  const barWidth = (canvasWidth - (barsPerRow - 1) * BAR_GAP_PX) / barsPerRow
-  const top = Math.trunc(slotIndex / barsPerRow) * barHeightGross
+  const barWidth = barWidthForCanvas(canvasWidth, barsPerRow)
+  const row = Math.trunc(slotIndex / barsPerRow)
+  const barHeight = rowHeights[row] ?? 0
+  const top = barTopForIndex(slotIndex, barsPerRow, rowHeights)
   const left = (slotIndex % barsPerRow) * (barWidth + BAR_GAP_PX)
 
   context.fillStyle = 'rgba(249, 201, 38, 0.08)'
@@ -40,16 +47,16 @@ export const renderEditorBarSlots = ({
   instrument,
   context,
   canvasWidth,
-  barHeight,
   barsPerRow,
   palette = darkCanvasColors,
 }: RenderEditorBarSlotsArgs) => {
   const barsForLayout = slots.map((slot) => slot.bar ?? '-'.repeat(8))
+  const rowHeights = rowHeightsForBars(canvasWidth, barsPerRow, barsForLayout)
   const elements: CanvasElement[] = []
 
   slots.forEach((slot, slotIndex) => {
     if (slot.bar === null) {
-      drawGapSlot(context, slotIndex, canvasWidth, barHeight, barsPerRow)
+      drawGapSlot(context, slotIndex, canvasWidth, barsPerRow, rowHeights)
       return
     }
 
@@ -59,9 +66,9 @@ export const renderEditorBarSlots = ({
       canvas: context.canvas,
       context,
       canvasWidth,
-      barHeight,
       barIndex: slotIndex,
       barsPerRow,
+      rowHeights,
     })
     elements.push(...slotElements)
   })
@@ -74,7 +81,6 @@ export const renderGhostBar = ({
   instrument,
   context,
   canvasWidth,
-  barHeight,
   pointerX,
   pointerY,
   palette = darkCanvasColors,
@@ -83,7 +89,6 @@ export const renderGhostBar = ({
   instrument: string
   context: CanvasRenderingContext2D
   canvasWidth: number
-  barHeight: number
   pointerX: number
   pointerY: number
   palette?: CanvasColors
@@ -91,7 +96,6 @@ export const renderGhostBar = ({
   const layout = layoutBar({
     bars: [bar],
     canvasWidth,
-    barHeight,
     barIndex: 0,
     barsPerRow: 1,
     palette,
@@ -111,7 +115,6 @@ export const renderGhostBar = ({
     canvas: context.canvas,
     context,
     canvasWidth,
-    barHeight,
     barIndex: 0,
     barsPerRow: 1,
   })

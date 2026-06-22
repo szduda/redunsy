@@ -5,7 +5,7 @@ import { memo, useLayoutEffect, useRef } from 'react'
 import { setupCanvasDpi } from './canvas-dpi'
 import { darkCanvasColors, lightCanvasColors } from './canvas-colors'
 import { findPatternLength } from './find-pattern-length'
-import { BAR_GAP_PX, barHeightForBarsPerRow, renderBars } from './renderers'
+import { canvasHeightForBars, renderBars } from './renderers'
 import { useCanvasWidth } from './use-canvas-width'
 import { usePlayerStore } from '@/features/groovy-player/player.store'
 import { useIsDark } from '@/features/store/theme.store'
@@ -27,10 +27,8 @@ const Bars = ({ bars, activeIndex = -1, barsPerRow, instrument, id }: BarsCanvas
   const containerRef = useRef<HTMLDivElement>(null)
   const { width: canvasWidth, dpr } = useCanvasWidth(containerRef)
   const barsInPattern = Math.max(findPatternLength(bars, 8), barsPerRow)
-  const barHeight = barHeightForBarsPerRow(barsPerRow)
   const hash = bars.join('')
-  const canvasHeight =
-    (barHeight + 2 * BAR_GAP_PX) * Math.ceil(barsInPattern / barsPerRow) - 2 * BAR_GAP_PX
+  const canvasHeight = canvasHeightForBars(canvasWidth, barsPerRow, bars)
   const highlightedBarIndex =
     activeIndex < 0 ? -1 : barsInPattern > 1 ? activeIndex % barsInPattern : activeIndex
 
@@ -51,7 +49,6 @@ const Bars = ({ bars, activeIndex = -1, barsPerRow, instrument, id }: BarsCanvas
       canvas,
       context,
       canvasWidth,
-      barHeight,
       barsPerRow,
       highlightedBarIndex,
       palette,
@@ -65,7 +62,6 @@ const Bars = ({ bars, activeIndex = -1, barsPerRow, instrument, id }: BarsCanvas
     canvasHeight,
     dpr,
     barsPerRow,
-    barHeight,
     instrument,
     bars.length,
     highlightedBarIndex,

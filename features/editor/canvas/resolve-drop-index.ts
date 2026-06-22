@@ -1,6 +1,12 @@
 import { canvasLogicalPoint } from '@/features/editor/canvas/canvas-pointer'
 import type { DragSlot } from '@/features/editor/notation/reorder-bars'
-import { BAR_GAP_PX } from '@/features/groovy-player/canvas/renderers'
+import {
+  BAR_GAP_PX,
+  barTopForIndex,
+  barWidthForCanvas,
+  rowHeightsForBars,
+  rowIndexFromY,
+} from '@/features/groovy-player/canvas/renderers'
 
 export const canvasPointFromPage = (
   canvas: HTMLCanvasElement,
@@ -34,14 +40,14 @@ export const slotIndexFromPoint = (
   x: number,
   y: number,
   canvasWidth: number,
-  barHeight: number,
   barsPerRow: number,
+  bars: string[],
 ) => {
-  const barHeightGross = barHeight + 2 * BAR_GAP_PX
-  const barWidth = (canvasWidth - (barsPerRow - 1) * BAR_GAP_PX) / barsPerRow
-  const row = Math.max(0, Math.floor(y / barHeightGross))
+  const barWidth = barWidthForCanvas(canvasWidth, barsPerRow)
+  const rowHeights = rowHeightsForBars(canvasWidth, barsPerRow, bars)
+  const row = rowIndexFromY(y, rowHeights)
   const col = Math.max(0, Math.min(Math.floor(x / (barWidth + BAR_GAP_PX)), barsPerRow - 1))
-  return { slotIndex: row * barsPerRow + col, barWidth, barHeightGross }
+  return { slotIndex: row * barsPerRow + col, barWidth, rowHeights, row }
 }
 
 export const resolveDropIndex = (
@@ -76,29 +82,29 @@ export const resolveDropIndexFromDrag = (
   x: number,
   y: number,
   canvasWidth: number,
-  barHeight: number,
   barsPerRow: number,
   slots: DragSlot[],
   currentDrop: number,
 ) => {
   if (!slots.length) return sourceIndex
 
-  const { slotIndex, barWidth, barHeightGross } = slotIndexFromPoint(
+  const slotBars = slots.map((slot) => slot.bar ?? '-'.repeat(8))
+  const { slotIndex, barWidth, rowHeights } = slotIndexFromPoint(
     x,
     y,
     canvasWidth,
-    barHeight,
     barsPerRow,
+    slotBars,
   )
 
   const lastSlotIndex = slots.length - 1
   const lastRow = Math.floor(lastSlotIndex / barsPerRow)
-  const lastCol = lastSlotIndex % barsPerRow
-  const lastLeft = lastCol * (barWidth + BAR_GAP_PX)
-  const lastTop = lastRow * barHeightGross
+  const lastLeft = (lastSlotIndex % barsPerRow) * (barWidth + BAR_GAP_PX)
+  const lastTop = barTopForIndex(lastSlotIndex, barsPerRow, rowHeights)
+  const lastBarHeight = rowHeights[lastRow] ?? 0
 
   const pastLastHorizontally = x >= lastLeft + barWidth
-  const belowLastBar = y >= lastTop + barHeight
+  const belowLastBar = y >= lastTop + lastBarHeight
   if (pastLastHorizontally || belowLastBar) return barCount
 
   if (slotIndex >= slots.length) return barCount

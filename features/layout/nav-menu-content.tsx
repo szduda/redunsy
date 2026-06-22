@@ -5,9 +5,9 @@ import { cn } from '@/features/theme/cn'
 
 export const NAV_MENU_ITEMS = [
   { href: '/', label: 'Home' },
-  { href: '/player', label: 'Player' },
-  { href: '/editor', label: 'Editor' },
   { href: '/garage', label: 'Garage' },
+  { href: '/player', label: 'Player Demo' },
+  { href: '/editor', label: 'Rhythm Editor' },
 ] as const
 
 const linkStyles = {
@@ -43,7 +43,7 @@ export const NavMenuContent = ({ onClose, variant = 'default' }: NavMenuContentP
             : 'border-t border-zinc-200 dark:border-zinc-800',
         )}
       >
-        <ThemeSwitch className="px-2" />
+        <ThemeSwitch className="px-2 opacity-60" />
       </div>
     </nav>
   )

@@ -26,7 +26,7 @@ export const HomepageDesktop = () => (
       </section>
 
       <Text className={introClass}>
-        <span className="font-bold text-white tracking-wide text-center inline-block w-full py-2">
+        <span className="font-bold text-black dark:text-white tracking-wide text-center inline-block w-full py-2">
           Welcome to the digital library of West African Rhythms.
         </span>
         <br />

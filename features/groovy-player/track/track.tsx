@@ -55,7 +55,8 @@ export const Track = ({
   return (
     <section className={cn("flex justify-center gap-2 border-b last:border-b-0 border-zinc-200/60 dark:border-zinc-800/60 py-1 lg:py-2", compact ? 'pr-1 md:pr-2 lg:pr-4' : 'flex-col')}>
       <div className="flex items-center justify-between gap-2 lg:gap-3 flex-wrap px-1 md:px-2 lg:px-4">
-        <CollapseLabel collapsed={collapsed} onClick={() => setCollapsed((value) => !value)}>
+        <CollapseLabel collapsed={collapsed} onClick={() => setCollapsed((value) => !value)}
+        className={cn(compact ? 'w-24' : 'lg:w-full')}>
           {name}
         </CollapseLabel>
 

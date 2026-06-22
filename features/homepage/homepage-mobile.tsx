@@ -93,7 +93,7 @@ export const HomepageMobile = () => (
             </span>
           </ActionCard>
 
-          <ActionCard href="/editor" label="Editor" title="Write your own rhythm">
+          <ActionCard href="/editor" label="Rhythm Editor" title="Write your own rhythm">
             <span className="text-sm text-zinc-600 dark:text-zinc-400">
               Got inspiration? Shape it in the most beautiful human language there is.
             </span>

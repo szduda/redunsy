@@ -7,11 +7,48 @@ import type { BarGlyph } from './bar-layout'
 import type { CanvasElement } from './types'
 
 export const BAR_GAP_PX = 1
-export const BAR_HEIGHT_LARGE_PX = 48
-export const BAR_HEIGHT_DENSE_PX = 40
+export const NOTE_ASPECT_W_OVER_H = 3 / 4
 
-export const barHeightForBarsPerRow = (barsPerRow: number) =>
-  barsPerRow >= 3 ? BAR_HEIGHT_DENSE_PX : BAR_HEIGHT_LARGE_PX
+export const barWidthForCanvas = (canvasWidth: number, barsPerRow: number) =>
+  (canvasWidth - (barsPerRow - 1) * BAR_GAP_PX) / barsPerRow
+
+export const noteHeightFromWidth = (width: number) => width / NOTE_ASPECT_W_OVER_H
+
+export const barHeightForBar = (canvasWidth: number, barsPerRow: number, bar: string) => {
+  const { cellCount } = parseBarLayout(bar)
+  return noteHeightFromWidth(barWidthForCanvas(canvasWidth, barsPerRow) / cellCount)
+}
+
+export const rowHeightsForBars = (canvasWidth: number, barsPerRow: number, bars: string[]) => {
+  const rowCount = Math.ceil(bars.length / barsPerRow)
+  return Array.from({ length: rowCount }, (_, row) => {
+    const rowBars = bars.slice(row * barsPerRow, (row + 1) * barsPerRow)
+    return Math.max(0, ...rowBars.map((bar) => barHeightForBar(canvasWidth, barsPerRow, bar)))
+  })
+}
+
+export const barTopForIndex = (barIndex: number, barsPerRow: number, rowHeights: number[]) => {
+  const row = Math.trunc(barIndex / barsPerRow)
+  let top = 0
+  for (let index = 0; index < row; index += 1) top += (rowHeights[index] ?? 0) + 2 * BAR_GAP_PX
+  return top
+}
+
+export const canvasHeightForBars = (canvasWidth: number, barsPerRow: number, bars: string[]) => {
+  const rowHeights = rowHeightsForBars(canvasWidth, barsPerRow, bars)
+  if (!rowHeights.length) return 0
+  return rowHeights.reduce((sum, height) => sum + height + 2 * BAR_GAP_PX, 0) - 2 * BAR_GAP_PX
+}
+
+export const rowIndexFromY = (y: number, rowHeights: number[]) => {
+  let top = 0
+  for (let row = 0; row < rowHeights.length; row += 1) {
+    const gross = rowHeights[row] + 2 * BAR_GAP_PX
+    if (y < top + gross) return row
+    top += gross
+  }
+  return Math.max(0, rowHeights.length - 1)
+}
 
 export const colors = darkCanvasColors
 
@@ -53,7 +90,6 @@ type BarRendererArgs = {
   canvas: HTMLCanvasElement
   context: CanvasRenderingContext2D
   canvasWidth: number
-  barHeight: number
   barIndex?: number
   barsPerRow?: number
   highlighted?: boolean
@@ -61,6 +97,7 @@ type BarRendererArgs = {
 
 type LayoutBarArgs = Omit<BarRendererArgs, 'canvas' | 'context' | 'instrument'> & {
   palette?: CanvasColors
+  rowHeights?: number[]
 }
 
 export type LaidOutBar = {
@@ -72,19 +109,19 @@ export type LaidOutBar = {
 export const layoutBar = ({
   bars,
   canvasWidth,
-  barHeight,
   barIndex = 0,
   barsPerRow = 2,
   highlighted = false,
   palette = darkCanvasColors,
+  rowHeights = rowHeightsForBars(canvasWidth, barsPerRow, bars),
 }: LayoutBarArgs): LaidOutBar => {
   const bar = bars[barIndex]
   const { cellCount, glyphs } = parseBarLayout(bar)
-  const barHeightGross = barHeight + 2 * BAR_GAP_PX
-  const barWidth = (canvasWidth - (barsPerRow - 1) * BAR_GAP_PX) / barsPerRow
-  const eighthWidth = barWidth / cellCount
+  const barWidth = barWidthForCanvas(canvasWidth, barsPerRow)
+  const noteWidth = barWidth / cellCount
+  const barHeight = noteHeightFromWidth(noteWidth)
   const beatCells = onBeatCellIndexes(cellCount)
-  const top = Math.trunc(barIndex / barsPerRow) * barHeightGross
+  const top = barTopForIndex(barIndex, barsPerRow, rowHeights)
   const barLeft = (barIndex % barsPerRow) * (barWidth + BAR_GAP_PX)
 
   const barEl: CanvasElement = {
@@ -111,10 +148,10 @@ export const layoutBar = ({
         : highlighted
           ? palette.g0
           : palette.b1,
-      width: eighthWidth,
+      width: noteWidth,
       height: barHeight,
       top,
-      left: barLeft + glyph.position * eighthWidth,
+      left: barLeft + glyph.position * noteWidth,
       note: glyph.note,
       barIndex,
       noteIndex,
@@ -129,18 +166,18 @@ export const renderBar = ({
   instrument,
   context,
   canvasWidth,
-  barHeight,
   barIndex = 0,
   barsPerRow = 2,
   highlighted = false,
-}: BarRendererArgs) => {
+  rowHeights,
+}: BarRendererArgs & { rowHeights?: number[] }) => {
   const layout = layoutBar({
     bars,
     canvasWidth,
-    barHeight,
     barIndex,
     barsPerRow,
     highlighted,
+    rowHeights,
   })
 
   renderBarWrapper({ context, el: layout.barEl })
@@ -228,22 +265,22 @@ export const renderBars = ({
   instrument,
   context,
   canvasWidth,
-  barHeight,
   barsPerRow = 2,
   highlightedBarIndex = -1,
   palette = darkCanvasColors,
   showBarIndex = false,
   markTriplets = false,
 }: RenderBarsArgs) => {
+  const rowHeights = rowHeightsForBars(canvasWidth, barsPerRow, bars)
   const layouts = bars.map((_, barIndex) =>
     layoutBar({
       bars,
       canvasWidth,
-      barHeight,
       barIndex,
       barsPerRow,
       highlighted: barIndex === highlightedBarIndex,
       palette,
+      rowHeights,
     }),
   )
 
