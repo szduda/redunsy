@@ -10,12 +10,14 @@ import { useTopNavSticky } from '@/features/layout/use-top-nav-sticky'
 import {
   DEFAULT_TEMPO,
   DEMO_SWING_PATTERN,
+  isSwingPatternEmpty,
   PLAYER_GROOVE_LENGTH,
   resolveGroovePattern,
   swingBarSizeForMeter,
   usePlayerStore,
 } from '@/features/groovy-player/player.store'
 import { Track } from '@/features/groovy-player/track/track'
+import { useSpaceTogglePlay } from '@/features/groovy-player/use-space-toggle-play'
 import { PageBottomNav } from '@/features/layout/page-bottom-nav'
 import { findRhythmBySlug } from '@/features/rhythm/rhythm-catalog'
 import { RhythmEditorButton } from '@/features/rhythm/rhythm-editor-button'
@@ -47,11 +49,20 @@ export const GroovyPlayer = ({ rhythm }: GroovyPlayerProps = {}) => {
   useTopNavSticky(false)
 
   const searchParams = useSearchParams()
-  const rhythmSlug = searchParams.get('rhythm')
-  const loadedRhythm = useMemo(
-    () => rhythm ?? (rhythmSlug ? findRhythmBySlug(rhythmSlug) : null),
-    [rhythm, rhythmSlug],
-  )
+  // Both `useSearchParams()` (returns null during static build) and
+  // `findRhythmBySlug` (reads localStorage) are client-only. Read them
+  // together after mount so server and client render the same initial tree.
+  const [clientState, setClientState] = useState<{
+    slug: string | null
+    rhythm: Rhythm | null
+  }>({ slug: null, rhythm: null })
+  useEffect(() => {
+    const slug = searchParams.get('rhythm')
+    setClientState({ slug, rhythm: slug ? findRhythmBySlug(slug) : null })
+  }, [searchParams])
+
+  const rhythmSlug = clientState.slug
+  const loadedRhythm = rhythm ?? clientState.rhythm
 
   const barsPerRow = usePlayerStore((state) => state.barsPerRow)
   const tempo = usePlayerStore((state) => state.tempo)
@@ -60,6 +71,7 @@ export const GroovyPlayer = ({ rhythm }: GroovyPlayerProps = {}) => {
   const swingPattern = usePlayerStore((state) => state.swingPattern)
   const swingEnabled = usePlayerStore((state) => state.swingEnabled)
   const setSwingPattern = usePlayerStore((state) => state.setSwingPattern)
+  const setSwingEnabled = usePlayerStore((state) => state.setSwingEnabled)
   const setTempo = usePlayerStore((state) => state.setTempo)
   const hasMetronome = usePlayerStore((state) => state.hasMetronome)
   const fullBleed = usePlayerStore((state) => state.fullBleed)
@@ -87,8 +99,9 @@ export const GroovyPlayer = ({ rhythm }: GroovyPlayerProps = {}) => {
   useEffect(() => {
     if (!loadedRhythm) return
     setSwingPattern(loadedRhythm.swingPattern, grooveLength)
+    setSwingEnabled(!isSwingPatternEmpty(loadedRhythm.swingPattern))
     setTempo(loadedRhythm.tempo)
-  }, [grooveLength, loadedRhythm, setSwingPattern, setTempo])
+  }, [grooveLength, loadedRhythm, setSwingEnabled, setSwingPattern, setTempo])
 
   const getOverlayBars = useCallback(
     (patternBars: string[], _groove: string) => {
@@ -143,8 +156,8 @@ export const GroovyPlayer = ({ rhythm }: GroovyPlayerProps = {}) => {
   useEffect(() => () => stop(), [stop])
 
   useEffect(() => {
-    setSwingBarSize(PLAYER_GROOVE_LENGTH)
-  }, [setSwingBarSize])
+    setSwingBarSize(grooveLength)
+  }, [grooveLength, setSwingBarSize])
 
   useScreenWakeLock({ active: playing, enabled: preventScreenSleep })
 
@@ -194,6 +207,8 @@ export const GroovyPlayer = ({ rhythm }: GroovyPlayerProps = {}) => {
     [setInstrumentVolume],
   )
 
+  useSpaceTogglePlay(onTogglePlayPause)
+
   if (rhythmSlug && !loadedRhythm) {
     return (
       <div className="flex flex-col items-center gap-4 py-16">
@@ -222,7 +237,8 @@ export const GroovyPlayer = ({ rhythm }: GroovyPlayerProps = {}) => {
                 {loadedRhythm.title}
               </h1>
               <Text className="mt-0.5" variant="mono">
-                {loadedRhythm.meter}/4 · {loadedRhythm.author}
+                {loadedRhythm.meter}/4
+                {loadedRhythm.author.length ? ` · ${loadedRhythm.author.join(', ')}` : ''}
                 {loadedRhythm.userOwned ? ' · private' : ''}
               </Text>
             </div>

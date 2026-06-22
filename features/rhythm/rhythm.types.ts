@@ -32,7 +32,7 @@ export type RhythmCard = {
   meter: RhythmMeter
   instruments: RhythmInstrument[]
   longestTrack: number
-  author: string
+  author: string[]
   origin: string[]
   tags: string[]
   rhythmGroup: string[]
@@ -49,7 +49,7 @@ export type Rhythm = {
   title: string
   description: string
   meter: RhythmMeter
-  author: string
+  author: string[]
   origin: string[]
   tags: string[]
   rhythmGroup: string[]

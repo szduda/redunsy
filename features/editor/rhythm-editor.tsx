@@ -10,15 +10,26 @@ import { NoteKeyboard } from '@/features/editor/note-keyboard'
 import { useEditorKeyboard } from '@/features/editor/use-editor-keyboard'
 import { useNoteEditor } from '@/features/editor/use-note-editor'
 import { PlayerBottomNav } from '@/features/groovy-player/player-bottom-nav'
-import { defaultSwingPatternForMeter, isSwingPatternEmpty, resolveGroovePattern, usePlayerStore } from '@/features/groovy-player/player.store'
+import {
+  defaultSwingPatternForMeter,
+  isSwingPatternEmpty,
+  resolveGroovePattern,
+  usePlayerStore,
+} from '@/features/groovy-player/player.store'
 import { TrackVolume } from '@/features/groovy-player/track/track-volume'
+import { useSpaceTogglePlay } from '@/features/groovy-player/use-space-toggle-play'
 import { PageBottomNav } from '@/features/layout/page-bottom-nav'
 import { useTopNavSticky } from '@/features/layout/use-top-nav-sticky'
 import { trackBarsRecord } from '@/features/rhythm/rhythm-helpers'
 import { Button } from '@/features/theme/button'
 import { Text } from '@/features/theme/text'
 import { cn } from '@/features/theme/cn'
-import { metronomeBarForGrooveLength, tracksMatchGrooveLength, useMidinike, validateBarsForGroove } from '@/lib/midinike'
+import {
+  metronomeBarForGrooveLength,
+  tracksMatchGrooveLength,
+  useMidinike,
+  validateBarsForGroove,
+} from '@/lib/midinike'
 
 const LAYER_CONFIG = {
   instrument: 'djembe',
@@ -45,6 +56,7 @@ export const RhythmEditor = () => {
   const swingPattern = usePlayerStore((state) => state.swingPattern)
   const swingEnabled = usePlayerStore((state) => state.swingEnabled)
   const setSwingPattern = usePlayerStore((state) => state.setSwingPattern)
+  const setSwingEnabled = usePlayerStore((state) => state.setSwingEnabled)
   const hasMetronome = usePlayerStore((state) => state.hasMetronome)
   const setIsPlaying = usePlayerStore((state) => state.setIsPlaying)
   const setBeatIndex = usePlayerStore((state) => state.setBeatIndex)
@@ -80,19 +92,28 @@ export const RhythmEditor = () => {
     [barSize, hasMetronome],
   )
 
-  const { play, pause, stop, restart, setGroove, setTempo: setMidinikeTempo, setInstrumentVolume, playing, beatIndex } =
-    useMidinike({
-      djembe: LAYER_CONFIG,
-      dundunba: { ...LAYER_CONFIG, instrument: 'dundunba', sounds: ['o', 'x'], lengths: ['8th'] },
-      sangban: { ...LAYER_CONFIG, instrument: 'sangban', sounds: ['o', 'x'], lengths: ['8th'] },
-      kenkeni: { ...LAYER_CONFIG, instrument: 'kenkeni', sounds: ['o', 'x'], lengths: ['8th'] },
-      shaker: { instrument: 'shaker', sounds: ['x'], lengths: ['8th'] },
-      getOverlayBars,
-      initialGroove: groovePattern,
-      strictGrooveLength: true,
-      loop: true,
-      tempo: rhythm?.tempo ?? 110,
-    })
+  const {
+    play,
+    pause,
+    stop,
+    restart,
+    setGroove,
+    setTempo: setMidinikeTempo,
+    setInstrumentVolume,
+    playing,
+    beatIndex,
+  } = useMidinike({
+    djembe: LAYER_CONFIG,
+    dundunba: { ...LAYER_CONFIG, instrument: 'dundunba', sounds: ['o', 'x'], lengths: ['8th'] },
+    sangban: { ...LAYER_CONFIG, instrument: 'sangban', sounds: ['o', 'x'], lengths: ['8th'] },
+    kenkeni: { ...LAYER_CONFIG, instrument: 'kenkeni', sounds: ['o', 'x'], lengths: ['8th'] },
+    shaker: { instrument: 'shaker', sounds: ['x'], lengths: ['8th'] },
+    getOverlayBars,
+    initialGroove: groovePattern,
+    strictGrooveLength: true,
+    loop: true,
+    tempo: rhythm?.tempo ?? 110,
+  })
 
   useEffect(() => {
     stop()
@@ -107,11 +128,11 @@ export const RhythmEditor = () => {
 
   useEffect(() => {
     if (!rhythm) return
-    const pattern = isSwingPatternEmpty(rhythm.swingPattern)
-      ? defaultSwingPatternForMeter(rhythm.meter)
-      : rhythm.swingPattern
+    const empty = isSwingPatternEmpty(rhythm.swingPattern)
+    const pattern = empty ? defaultSwingPatternForMeter(rhythm.meter) : rhythm.swingPattern
     setSwingPattern(pattern, barSize)
-  }, [barSize, rhythm?.meter, rhythm?.slug, rhythm?.swingPattern, setSwingPattern])
+    setSwingEnabled(!empty)
+  }, [barSize, rhythm?.meter, rhythm?.slug, rhythm?.swingPattern, setSwingEnabled, setSwingPattern])
 
   useEffect(() => {
     setMidinikeTempo(tempo)
@@ -141,7 +162,9 @@ export const RhythmEditor = () => {
       return
     }
     try {
-      Object.values(rhythm.instruments).forEach((track) => validateBarsForGroove(track.bars, barSize))
+      Object.values(rhythm.instruments).forEach((track) =>
+        validateBarsForGroove(track.bars, barSize),
+      )
       if (!tracksMatchGrooveLength(trackBars, barSize)) {
         throw new Error(`Each bar must fill ${barSize} cells for beat size ${rhythm.meter}`)
       }
@@ -155,7 +178,9 @@ export const RhythmEditor = () => {
   const onRestart = () => {
     if (!rhythm) return
     try {
-      Object.values(rhythm.instruments).forEach((track) => validateBarsForGroove(track.bars, barSize))
+      Object.values(rhythm.instruments).forEach((track) =>
+        validateBarsForGroove(track.bars, barSize),
+      )
       if (!tracksMatchGrooveLength(trackBars, barSize)) {
         throw new Error(`Each bar must fill ${barSize} cells for beat size ${rhythm.meter}`)
       }
@@ -165,6 +190,8 @@ export const RhythmEditor = () => {
       setPlayError(error instanceof Error ? error.message : 'Could not restart pattern')
     }
   }
+
+  useSpaceTogglePlay(onTogglePlayPause)
 
   if (!rhythm || !focusedTrack) return null
 
@@ -183,63 +210,67 @@ export const RhythmEditor = () => {
         </div>
 
         <section className="flex w-full flex-col gap-2 bg-white md:rounded-xl md:border md:border-zinc-100 dark:bg-zinc-900/60 dark:border-transparent">
-        <CollapsibleMetadata onChange={patchActiveRhythm} rhythm={rhythm} />
+          <CollapsibleMetadata onChange={patchActiveRhythm} rhythm={rhythm} />
 
-        <div className="flex flex-wrap gap-2 border-b border-zinc-200/60 px-2 py-2 dark:border-zinc-800/60 md:px-4">
-          {tracks.map((track) => (
-            <button
-              key={track.id}
-              className={cn(
-                'rounded-full px-3 py-1 text-sm font-medium transition-colors',
-                track.id === focusedTrack.id
-                  ? 'bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900'
-                  : 'bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300',
-              )}
-              onClick={() => setFocusedTrackId(track.id)}
-              type="button"
-            >
-              {track.name}
-            </button>
-          ))}
-        </div>
-
-        <section className="flex flex-col gap-2 px-1 py-2 md:px-4">
-          <div className="flex items-center justify-between gap-2">
-            <Text className="font-semibold">{focusedTrack.name}</Text>
-            <TrackVolume
-              compact
-              muted={false}
-              onToggleMute={() => onVolumeLevelChange(focusedTrack.instrument, 0)}
-              onVolumeChange={(value) => onVolumeLevelChange(focusedTrack.instrument, value)}
-              volume={50}
-            />
+          <div className="flex flex-wrap gap-2 border-b border-zinc-200/60 px-2 py-2 dark:border-zinc-800/60 md:px-4">
+            {tracks.map((track) => (
+              <button
+                key={track.id}
+                className={cn(
+                  'rounded-full px-3 py-1 text-sm font-medium transition-colors',
+                  track.id === focusedTrack.id
+                    ? 'bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900'
+                    : 'bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300',
+                )}
+                onClick={() => setFocusedTrackId(track.id)}
+                type="button"
+              >
+                {track.name}
+              </button>
+            ))}
           </div>
 
-          <EditableBarsCanvas
-            bars={focusedTrack.bars}
-            barsPerRow={barsPerRow}
-            beatSize={rhythm.meter}
-            id={focusedTrack.id}
-            instrument={focusedTrack.instrument}
-            onBarsChange={(bars) => updateTrackBars(focusedTrack.id, bars)}
-            onNavigate={noteEditor.navigate}
-            onReorderBar={noteEditor.reorderBarAt}
-            onSelectNote={noteEditor.selectNote}
-            selection={noteEditor.selection}
-          />
+          <section className="flex flex-col gap-2 px-1 py-2 md:px-4">
+            <div className="flex items-center justify-between gap-2">
+              <Text className="font-semibold">{focusedTrack.name}</Text>
+              <TrackVolume
+                compact
+                muted={false}
+                onToggleMute={() => onVolumeLevelChange(focusedTrack.instrument, 0)}
+                onVolumeChange={(value) => onVolumeLevelChange(focusedTrack.instrument, value)}
+                volume={50}
+              />
+            </div>
 
-          <NoteKeyboard
-            bars={focusedTrack.bars}
-            instrument={focusedTrack.instrument}
-            onConvertToEighth={noteEditor.convertToEighth}
-            onConvertToSixteenth={noteEditor.convertToSixteenth}
-            onConvertToTriplet={noteEditor.convertToTriplet}
-            onSelectSound={noteEditor.setSound}
-            selection={noteEditor.selection}
-          />
-        </section>
+            <EditableBarsCanvas
+              bars={focusedTrack.bars}
+              barsPerRow={barsPerRow}
+              beatSize={rhythm.meter}
+              id={focusedTrack.id}
+              instrument={focusedTrack.instrument}
+              onBarsChange={(bars) => updateTrackBars(focusedTrack.id, bars)}
+              onNavigate={noteEditor.navigate}
+              onReorderBar={noteEditor.reorderBarAt}
+              onSelectNote={noteEditor.selectNote}
+              selection={noteEditor.selection}
+            />
 
-        {playError ? <Text className="px-4 pb-2" variant="mono">{playError}</Text> : null}
+            <NoteKeyboard
+              bars={focusedTrack.bars}
+              instrument={focusedTrack.instrument}
+              onConvertToEighth={noteEditor.convertToEighth}
+              onConvertToSixteenth={noteEditor.convertToSixteenth}
+              onConvertToTriplet={noteEditor.convertToTriplet}
+              onSelectSound={noteEditor.setSound}
+              selection={noteEditor.selection}
+            />
+          </section>
+
+          {playError ? (
+            <Text className="px-4 pb-2" variant="mono">
+              {playError}
+            </Text>
+          ) : null}
         </section>
       </div>
 

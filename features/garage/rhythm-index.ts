@@ -8,13 +8,15 @@ import { RHYTHM_INSTRUMENTS, type RhythmCard } from '@/features/rhythm/rhythm.ty
  */
 export const RHYTHM_INDEX = rhythmIndexJson as RhythmCard[]
 
+const uniqueSorted = (values: string[]) => [...new Set(values.filter(Boolean))].sort()
+
 export const filterOptionsFromRhythmCards = (cards: RhythmCard[]) => ({
   meter: [3, 4] as const,
   instruments: RHYTHM_INSTRUMENTS,
-  artist: [...new Set(cards.map((card) => card.author).filter(Boolean))].sort(),
-  origin: [...new Set(cards.flatMap((card) => card.origin))].sort(),
-  rhythmGroup: [...new Set(cards.flatMap((card) => card.rhythmGroup))].sort(),
-  tags: [...new Set(cards.flatMap((card) => card.tags))].sort(),
+  artist: uniqueSorted(cards.flatMap((card) => card.author)),
+  origin: uniqueSorted(cards.flatMap((card) => card.origin)),
+  rhythmGroup: uniqueSorted(cards.flatMap((card) => card.rhythmGroup)),
+  tags: uniqueSorted(cards.flatMap((card) => card.tags)),
 })
 
 export const GARAGE_FILTER_OPTIONS = filterOptionsFromRhythmCards(RHYTHM_INDEX)

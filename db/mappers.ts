@@ -8,23 +8,27 @@ import type {
   Track,
 } from '@/features/rhythm/rhythm.types'
 
+/** Longest instrument track (bar count) — derived, never stored on the row. */
+export const longestTrackFromPatterns = (patterns: RhythmPattern[]) =>
+  Math.max(0, ...patterns.map((pattern) => pattern.bars.length))
+
 /** A rhythm row reduced to the searchable card meta (no notation/patterns). */
 export const rowToCard = (row: RhythmRow): RhythmCard => ({
   slug: row.slug,
   title: row.title,
-  description: row.description,
+  description: row.description ?? '',
   meter: row.meter as RhythmMeter,
   instruments: row.instruments as RhythmInstrument[],
-  longestTrack: row.longestTrack,
-  author: row.author,
-  origin: row.origin,
-  tags: row.tags,
-  rhythmGroup: row.rhythmGroup,
-  swingPattern: row.swingPattern,
-  tempo: row.tempo,
-  signalPattern: row.signalPattern,
+  longestTrack: longestTrackFromPatterns(row.patterns ?? []),
+  author: row.author ?? [],
+  origin: row.origin ?? [],
+  tags: row.tags ?? [],
+  rhythmGroup: row.rhythmGroup ?? [],
+  swingPattern: row.swingPattern ?? '',
+  tempo: row.tempo ?? 0,
+  signalPattern: row.signalPattern ?? '',
   createdAt: row.createdAt.getTime(),
-  updatedAt: row.updatedAt.getTime(),
+  updatedAt: (row.updatedAt ?? row.createdAt).getTime(),
   userOwned: false,
 })
 
@@ -33,7 +37,7 @@ export type RhythmDetail = RhythmCard & { patterns: RhythmPattern[] }
 
 export const rowToDetail = (row: RhythmRow): RhythmDetail => ({
   ...rowToCard(row),
-  patterns: row.patterns,
+  patterns: row.patterns ?? [],
 })
 
 /** Build a player/editor {@link Rhythm} from a detail record, keyed by track id. */

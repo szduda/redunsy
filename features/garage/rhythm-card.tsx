@@ -14,6 +14,9 @@ type RhythmCardProps = {
 
 const barsOnMeterLabel = (bars: number, meter: RhythmCard['meter']) => `${bars} bars on ${meter}`
 
+const capitalize = (value: string) =>
+  value.length ? value[0].toUpperCase() + value.slice(1) : value
+
 const MyRhythmBadge = () => (
   <span
     aria-hidden
@@ -46,8 +49,7 @@ export const RhythmCardView = ({ card, className }: RhythmCardProps) => (
       </h2>
 
       <Text className="mt-1">
-        {card.author}
-        {card.origin.length ? ` · ${card.origin.join(' · ')}` : ''}
+        {[...(card.author ?? []), ...(card.origin ?? []).map(capitalize)].join(' · ')}
       </Text>
 
       <Text className="mt-2" variant="mono">
@@ -55,14 +57,19 @@ export const RhythmCardView = ({ card, className }: RhythmCardProps) => (
       </Text>
 
       <div className="mt-3 flex flex-wrap gap-1.5">
-        {card.tags.map((tag) => (
-          <span
-            key={tag}
-            className="rounded-full bg-zinc-100 px-2 py-0.5 text-xs text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400"
-          >
-            {tag}
-          </span>
-        ))}
+        {[
+          ...(card.rhythmGroup ?? []),
+          ...(card.tags ?? []).filter((tag) => !(card.rhythmGroup ?? []).includes(tag)),
+        ].map(
+          (tag) => (
+            <span
+              key={tag}
+              className="rounded-full bg-zinc-100 px-2 py-0.5 text-xs text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400"
+            >
+              {tag}
+            </span>
+          ),
+        )}
       </div>
     </Link>
 

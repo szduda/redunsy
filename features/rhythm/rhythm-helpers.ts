@@ -92,7 +92,7 @@ export const slugFromTitle = (title: string) =>
 type CreateRhythmInput = {
   title?: string
   description?: string
-  author?: string
+  author?: string[]
   meter?: RhythmMeter
   layers?: RhythmInstrument[]
   tempo?: number
@@ -105,7 +105,7 @@ type CreateRhythmInput = {
 export const createRhythm = ({
   title = defaultRhythmTitle(),
   description = '',
-  author = '',
+  author = [],
   meter = 4,
   layers = ['djembe'],
   tempo = DEFAULT_TEMPO,

@@ -11,13 +11,11 @@ type SearchState = {
   clearSearchTerm: () => void
 }
 
-const normalizeSearchTerm = (searchTerm: string) => searchTerm.trim()
-
 export const useSearchStore = create<SearchState>()(
   persist(
     (set) => ({
       searchTerm: '',
-      setSearchTerm: (searchTerm) => set({ searchTerm: normalizeSearchTerm(searchTerm) }),
+      setSearchTerm: (searchTerm) => set({ searchTerm }),
       clearSearchTerm: () => set({ searchTerm: '' }),
     }),
     {

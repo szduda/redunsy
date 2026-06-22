@@ -1,6 +1,11 @@
 'use client'
 
-import { hasActiveGarageFilters, useGarageFiltersStore } from '@/features/garage/garage-filters.store'
+import { useEffect, useState } from 'react'
+
+import {
+  hasActiveGarageFilters,
+  useGarageFiltersStore,
+} from '@/features/garage/garage-filters.store'
 import { CloseIcon } from '@/features/icons/close-icon'
 import { SearchIcon } from '@/features/icons/search-icon'
 import { useSearchStore } from '@/features/store/search.store'
@@ -22,11 +27,27 @@ export const GarageSearchInput = ({
   const clearSearchTerm = useSearchStore((state) => state.clearSearchTerm)
   const clearFilters = useGarageFiltersStore((state) => state.clearFilters)
   const hasFilters = useGarageFiltersStore(hasActiveGarageFilters)
-  const canClear = searchTerm.length > 0 || hasFilters
+  const canClear = searchTerm.trim().length > 0 || hasFilters
+
+  // Local draft keeps raw input (with spaces) while the Zustand store holds the
+  // trimmed value used for URL serialisation and search queries.
+  const [draft, setDraft] = useState(searchTerm)
+
+  // Sync draft when the search term changes from an external source (URL navigation,
+  // clear button) but not when we ourselves just updated the store.
+  useEffect(() => {
+    setDraft((prev) => {
+      // Only overwrite when the external value differs from the trimmed draft,
+      // i.e. the change came from outside (not from our own typing).
+      if (prev.trim() !== searchTerm) return searchTerm
+      return prev
+    })
+  }, [searchTerm])
 
   const clearAll = () => {
     clearSearchTerm()
     clearFilters()
+    setDraft('')
   }
 
   return (
@@ -36,21 +57,26 @@ export const GarageSearchInput = ({
         <Input
           aria-label="Search sheets"
           className="w-full pl-9"
-          onChange={({ target }) => setSearchTerm(target.value)}
+          onChange={({ target }) => {
+            const value = target.value
+            setDraft(value)
+            setSearchTerm(value.trim())
+          }}
           placeholder={placeholder}
           type="search"
-          value={searchTerm}
+          value={draft}
         />
       </div>
-      <Button
-        aria-label="Clear search and filters"
-        className="rounded-full enabled:text-redy enabled:hover:text-redy-light"
-        disabled={!canClear}
-        onClick={clearAll}
-        variant="subtle"
-      >
-        <CloseIcon />
-      </Button>
+      {canClear && (
+        <Button
+          aria-label="Clear search and filters"
+          className="rounded-full enabled:text-redy enabled:hover:text-redy-light"
+          onClick={clearAll}
+          variant="subtle"
+        >
+          <CloseIcon />
+        </Button>
+      )}
     </div>
   )
 }

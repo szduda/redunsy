@@ -29,6 +29,9 @@ const meterFromLabel = (label: string): RhythmMeter => (label === 'on 3' ? 3 : 4
 
 const artistChipLabel = (value: string) => (value ? value : 'Various Artists')
 
+const capitalize = (value: string) =>
+  value.length ? value[0].toUpperCase() + value.slice(1) : value
+
 export const useGarageFilterSections = (): GarageFilterSection[] => {
   const options = useGarageFilterOptions()
   const meter = useGarageFiltersStore((state) => state.meter)
@@ -87,6 +90,7 @@ export const useGarageFilterSections = (): GarageFilterSection[] => {
         values: options.origin,
         selected: origin,
         onToggle: toggleOrigin,
+        formatLabel: capitalize,
       })
     }
 

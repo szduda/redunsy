@@ -100,13 +100,17 @@ export const GarageFiltersMobile = ({ sections }: GarageFiltersMobileProps) => {
       </div>
 
       {activeSection ? (
-        <GarageFilterChipList
-          className="border-t border-zinc-200 pt-2 dark:border-zinc-800"
-          formatLabel={activeSection.formatLabel}
-          selected={activeSection.selected}
-          values={activeSection.values}
-          onToggle={activeSection.onToggle}
-        />
+        <div className="flex flex-col gap-1.5 border-t border-zinc-200 pt-2 dark:border-zinc-800">
+          <span className="text-xs font-semibold tracking-widest text-zinc-500 uppercase dark:text-zinc-400">
+            {activeSection.title}
+          </span>
+          <GarageFilterChipList
+            formatLabel={activeSection.formatLabel}
+            selected={activeSection.selected}
+            values={activeSection.values}
+            onToggle={activeSection.onToggle}
+          />
+        </div>
       ) : null}
     </div>
   )

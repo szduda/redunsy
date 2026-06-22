@@ -24,7 +24,3 @@ alwaysApply: true
 - `features/shared/` — cross-feature client providers and primitives.
 - `features/store/` — app-wide Zustand stores.
 - `features/<feature>/` — feature modules (`*.store.ts`, component modules).
-
-## React components
-
-- Use `.tsx` for any file that contains JSX.

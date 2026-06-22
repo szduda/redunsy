@@ -1,0 +1,26 @@
+---
+description: Run playback test suite when touching audio/groove/player code
+globs: lib/midinike/**/*.ts,features/groovy-player/**/*.{ts,tsx},features/editor/rhythm-editor.tsx
+alwaysApply: false
+---
+
+# Playback test suite
+
+After making changes to any file matched by this rule, run the playback test suite to catch groove-length or timing regressions:
+
+```bash
+npm run test:playback
+```
+
+This suite covers:
+- Groove length consistency per meter (`swingBarSizeForMeter` → 6 for 3/4, 8 for 4/4)
+- Demo player: 6-cell notation bars compiled against the 8-cell groove
+- Meter=3 playback: bars and groove both 6 cells, 3/4 tempo
+- Meter=4 playback: bars and groove both 8 cells, 4/4 tempo
+- Player initialization: store's persisted 8-char pattern correctly trimmed for meter=3 rhythms
+- Tempo ratio: 3/4 tempo is exactly 75% of 4/4 at the same BPM
+
+Key invariants that must hold:
+- `resolveGroovePattern(storePattern, swingBarSizeForMeter(meter), enabled).length === swingBarSizeForMeter(meter)`
+- `tracksMatchGrooveLength(tracks, swingBarSizeForMeter(rhythm.meter))` must pass before `play()` is called
+- A groove and its bars must always share the same `cellsPerBar` value inside `compileGroove`

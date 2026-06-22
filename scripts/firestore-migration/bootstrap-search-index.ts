@@ -1,15 +1,20 @@
 import { readFileSync, writeFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 
-import { transformFirestoreExport, type FirestoreExport } from '@/db/transform'
+import { longestTrackFromPatterns } from '@/db/mappers'
 import type { RhythmCard, RhythmInstrument, RhythmMeter } from '@/features/rhythm/rhythm.types'
+
+import { transformFirestoreExport, type FirestoreExport } from './transform'
 
 /**
  * DB-free generator for the static search index. Produces the exact same file
  * as `generate-search-index` (which reads Postgres) straight from the export,
  * so the app can build before the database has been provisioned / seeded.
  */
-const EXPORT_PATH = resolve(process.cwd(), 'data/firestore-joined-2026-06-19.json')
+const EXPORT_PATH = resolve(
+  process.cwd(),
+  'scripts/firestore-migration/firestore-joined-2026-06-19.json',
+)
 const OUTPUT_PATH = resolve(process.cwd(), 'features/garage/rhythm-index.generated.json')
 
 const data = JSON.parse(readFileSync(EXPORT_PATH, 'utf8')) as FirestoreExport
@@ -23,13 +28,13 @@ const cards: RhythmCard[] = transformFirestoreExport(data)
     description: row.description ?? '',
     meter: row.meter as RhythmMeter,
     instruments: (row.instruments ?? []) as RhythmInstrument[],
-    longestTrack: row.longestTrack ?? 0,
-    author: row.author ?? '',
+    longestTrack: longestTrackFromPatterns(row.patterns ?? []),
+    author: row.author ?? [],
     origin: row.origin ?? [],
     tags: row.tags ?? [],
     rhythmGroup: row.rhythmGroup ?? [],
     swingPattern: row.swingPattern ?? '',
-    tempo: row.tempo as number,
+    tempo: (row.tempo ?? 0) as number,
     signalPattern: row.signalPattern ?? '',
     createdAt: (row.createdAt as Date).getTime(),
     updatedAt: (row.updatedAt as Date).getTime(),

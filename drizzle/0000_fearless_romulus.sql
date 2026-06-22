@@ -1,0 +1,20 @@
+CREATE TABLE "rhythms" (
+	"id" text PRIMARY KEY NOT NULL,
+	"slug" text NOT NULL,
+	"title" text NOT NULL,
+	"meter" integer NOT NULL,
+	"instruments" text[] DEFAULT '{}' NOT NULL,
+	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
+	"description" text,
+	"author" text[],
+	"origin" text[],
+	"tags" text[],
+	"rhythm_group" text[],
+	"swing_pattern" text,
+	"tempo" integer,
+	"signal_pattern" text,
+	"published" boolean,
+	"patterns" jsonb,
+	"updated_at" timestamp with time zone,
+	CONSTRAINT "rhythms_slug_unique" UNIQUE("slug")
+);

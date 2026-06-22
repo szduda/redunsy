@@ -37,10 +37,7 @@ const defaultCreatorDraft = (): CreatorDraft => ({
   fillDjembe: false,
 })
 
-const resolveSwingPattern = (
-  current: Rhythm,
-  patch: Partial<Rhythm>,
-): string => {
+const resolveSwingPattern = (current: Rhythm, patch: Partial<Rhythm>): string => {
   const meter = patch.meter ?? current.meter
   if (patch.meter !== undefined && patch.meter !== current.meter) {
     return defaultSwingPatternForMeter(meter)
@@ -96,7 +93,9 @@ export const useEditorStore = create<EditorState>((set, get) => ({
       rhythms,
       view,
       activeSlug,
-      focusedTrackId: activeSlug ? Object.keys(rhythms[activeSlug]?.instruments ?? {})[0] ?? null : null,
+      focusedTrackId: activeSlug
+        ? (Object.keys(rhythms[activeSlug]?.instruments ?? {})[0] ?? null)
+        : null,
       creatorStep: 1,
       creatorDraft: defaultCreatorDraft(),
     })
@@ -141,7 +140,10 @@ export const useEditorStore = create<EditorState>((set, get) => ({
     const rhythm = createRhythm({
       title,
       description: creatorDraft.description.trim(),
-      author: creatorDraft.author.trim(),
+      author: creatorDraft.author
+        .split(',')
+        .map((name) => name.trim())
+        .filter(Boolean),
       meter: creatorDraft.meter,
       layers: creatorDraft.layers,
       tempo: creatorDraft.tempo,

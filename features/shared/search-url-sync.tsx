@@ -3,7 +3,12 @@
 import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useCallback, useEffect } from 'react'
 
-import { sanitizeGarageFilters, selectGarageFilters, useGarageFiltersStore } from '@/features/garage/garage-filters.store'
+import {
+  sanitizeGarageFilters,
+  selectGarageFilters,
+  useGarageFiltersStore,
+} from '@/features/garage/garage-filters.store'
+import { usePaginationStore } from '@/features/garage/pagination.store'
 import {
   buildAppQueryHref,
   filtersEqual,
@@ -12,7 +17,7 @@ import {
 import { useSearchStore } from '@/features/store/search.store'
 
 const syncUrlToStores = (searchParams: URLSearchParams) => {
-  const { searchTerm, filters: rawFilters } = parseAppQueryFromSearchParams(searchParams)
+  const { searchTerm, filters: rawFilters, page } = parseAppQueryFromSearchParams(searchParams)
   const filters = sanitizeGarageFilters(rawFilters)
   const currentSearch = useSearchStore.getState().searchTerm
   const currentFilters = selectGarageFilters(useGarageFiltersStore.getState())
@@ -23,6 +28,10 @@ const syncUrlToStores = (searchParams: URLSearchParams) => {
 
   if (!filtersEqual(currentFilters, filters)) {
     useGarageFiltersStore.setState(filters)
+  }
+
+  if (usePaginationStore.getState().page !== page) {
+    usePaginationStore.setState({ page })
   }
 }
 
@@ -35,7 +44,8 @@ export const SearchUrlSync = () => {
   const syncStoresToUrl = useCallback(() => {
     const searchTerm = useSearchStore.getState().searchTerm
     const filters = selectGarageFilters(useGarageFiltersStore.getState())
-    const nextHref = buildAppQueryHref(pathname, searchTerm, filters)
+    const page = usePaginationStore.getState().page
+    const nextHref = buildAppQueryHref(pathname, searchTerm, filters, page)
     const currentHref = queryString ? `${pathname}?${queryString}` : pathname
     if (nextHref === currentHref) return
     router.replace(nextHref, { scroll: false })
@@ -48,6 +58,7 @@ export const SearchUrlSync = () => {
   useEffect(() => {
     const unsubscribeSearch = useSearchStore.subscribe((state, previous) => {
       if (state.searchTerm === previous.searchTerm) return
+      usePaginationStore.setState({ page: 1 })
       syncStoresToUrl()
     })
 
@@ -55,12 +66,19 @@ export const SearchUrlSync = () => {
       const current = selectGarageFilters(state)
       const prior = selectGarageFilters(previous)
       if (filtersEqual(current, prior)) return
+      usePaginationStore.setState({ page: 1 })
+      syncStoresToUrl()
+    })
+
+    const unsubscribePage = usePaginationStore.subscribe((state, previous) => {
+      if (state.page === previous.page) return
       syncStoresToUrl()
     })
 
     return () => {
       unsubscribeSearch()
       unsubscribeFilters()
+      unsubscribePage()
     }
   }, [syncStoresToUrl])
 

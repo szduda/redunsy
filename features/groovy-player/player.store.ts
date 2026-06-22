@@ -41,6 +41,13 @@ export const isSwingPatternIncorrect = (pattern: string, barSize: number) =>
 export const fitSwingPattern = (pattern: string, barSize: number) =>
   pattern.slice(0, barSize).padEnd(barSize, '-')
 
+/** Valid groove cell symbols (see {@link import('@/lib/midinike').grooveOffset}). */
+const GROOVE_CHARS = new Set(['-', '<', '(', '>', ')'])
+
+/** Drop invalid characters and fit to the groove length — used on input blur/enter. */
+export const sanitizeSwingPattern = (pattern: string, barSize: number) =>
+  fitSwingPattern([...pattern].filter((char) => GROOVE_CHARS.has(char)).join(''), barSize)
+
 /** Eight-cell demo swing derived from {@link DEFAULT_SWING_PATTERN}. */
 export const DEMO_SWING_PATTERN = fitSwingPattern(DEFAULT_SWING_PATTERN, PLAYER_GROOVE_LENGTH)
 
@@ -82,6 +89,7 @@ type PlayerState = {
   setSwingBarSize: (barSize: number) => void
   swingEnabled: boolean
   toggleSwingEnabled: () => void
+  setSwingEnabled: (swingEnabled: boolean) => void
   hasMetronome: boolean
   toggleHasMetronome: () => void
   showBarIndex: boolean
@@ -135,6 +143,7 @@ export const usePlayerStore = create<PlayerState>()(
         if (isSwingPatternIncorrect(state.swingPattern, state.swingBarSize)) return
         set({ swingEnabled: !state.swingEnabled })
       },
+      setSwingEnabled: (swingEnabled) => set({ swingEnabled }),
       hasMetronome: false,
       toggleHasMetronome: () => set({ hasMetronome: !get().hasMetronome }),
       showBarIndex: true,

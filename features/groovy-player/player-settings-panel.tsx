@@ -11,10 +11,7 @@ import { TripletBracketIcon } from '@/features/icons/triplet-bracket-icon'
 import { WarningIcon } from '@/features/icons/warning-icon'
 import { IconButton } from '@/features/groovy-player/icon-button'
 import { SwingPatternField } from '@/features/groovy-player/swing-pattern-field'
-import {
-  isSwingPatternIncorrect,
-  usePlayerStore,
-} from '@/features/groovy-player/player.store'
+import { isSwingPatternIncorrect, usePlayerStore } from '@/features/groovy-player/player.store'
 import { BOTTOM_NAV_OFFSET_CLASS } from '@/features/layout/constants'
 import { useIsMobile } from '@/features/shared/use-is-mobile'
 import { Switch } from '@/features/theme/switch'
@@ -58,7 +55,10 @@ const BarsPerRowControl = () => {
           >
             <span className="font-mono font-bold text-lg leading-none">−</span>
           </IconButton>
-          <Text variant="mono" className="min-w-12 text-center text-sm font-bold !text-black dark:!text-white">
+          <Text
+            variant="mono"
+            className="min-w-12 text-center text-sm font-bold !text-black dark:!text-white"
+          >
             {barsPerRow} col{barsPerRow === 1 ? '' : 's'}
           </Text>
           <IconButton
@@ -78,6 +78,7 @@ const BarsPerRowControl = () => {
 const SwingPatternSection = () => {
   const swingPattern = usePlayerStore((state) => state.swingPattern)
   const swingBarSize = usePlayerStore((state) => state.swingBarSize)
+  const setSwingPattern = usePlayerStore((state) => state.setSwingPattern)
   const swingIncorrect = isSwingPatternIncorrect(swingPattern, swingBarSize)
 
   return (
@@ -93,7 +94,10 @@ const SwingPatternSection = () => {
           ) : null}
         </div>
         <SwingPatternField
+          barSize={swingBarSize}
           className="w-24 rounded-md border border-zinc-300 bg-white px-2 py-1 font-mono text-sm outline-none focus:border-zinc-500 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-100"
+          onCommit={(value) => setSwingPattern(value, swingBarSize)}
+          value={swingPattern}
         />
       </div>
     </SettingRow>
@@ -124,7 +128,9 @@ export const PlayerSettingsPanel = ({ open, onClose }: PlayerSettingsPanelProps)
 
   const panelContent = (
     <div className="grid w-full grid-cols-[auto_minmax(0,1fr)] items-center gap-x-3 gap-y-4">
-      <Text className="col-span-2 text-xs font-semibold tracking-widest uppercase opacity-40">Player settings</Text>
+      <Text className="col-span-2 text-xs font-semibold tracking-widest uppercase opacity-40">
+        Player settings
+      </Text>
       <BarsPerRowControl />
       <SwingPatternSection />
       <SettingRow icon={<BarIndexIcon />}>
@@ -160,16 +166,16 @@ export const PlayerSettingsPanel = ({ open, onClose }: PlayerSettingsPanelProps)
         className={cn(
           isMobile
             ? cn(
-              'fixed inset-x-0 z-40 max-h-[calc(100dvh-7.5rem)] overflow-y-auto border-t',
-              BOTTOM_NAV_OFFSET_CLASS,
-              'border-zinc-200 bg-background p-5 dark:border-zinc-800',
-            )
+                'fixed inset-x-0 z-40 max-h-[calc(100dvh-7.5rem)] overflow-y-auto border-t',
+                BOTTOM_NAV_OFFSET_CLASS,
+                'border-zinc-200 bg-background p-5 dark:border-zinc-800',
+              )
             : cn(
-              'fixed right-0 z-40 w-80 max-h-[calc(100dvh-5rem)] overflow-y-auto',
-              BOTTOM_NAV_OFFSET_CLASS,
-              'border border-b-0 border-zinc-200 bg-background p-6 dark:border-zinc-800',
-              'rounded-tl-xl',
-            ),
+                'fixed right-0 z-40 w-80 max-h-[calc(100dvh-5rem)] overflow-y-auto',
+                BOTTOM_NAV_OFFSET_CLASS,
+                'border border-b-0 border-zinc-200 bg-background p-6 dark:border-zinc-800',
+                'rounded-tl-xl',
+              ),
         )}
         role="dialog"
         aria-modal

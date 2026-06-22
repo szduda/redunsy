@@ -44,24 +44,63 @@ const COMPOUND_METERS = new Set(['6/8', '9/8', '12/8', '3/4'])
 const SIMPLE_METERS = new Set(['4/4', '2/4'])
 const METER_TAG = /^\d+\/\d+$/
 
-/** Generic / structural tags that describe form rather than a rhythm family. */
-const NON_GROUP_TAGS = new Set([
-  'dundun set',
-  'dundun',
-  'intro',
-  'outro',
-  'break',
-  'variation',
-  'variations',
-  'sequential',
-  'short loop',
-  'rapide',
-  'popular',
-  'jam',
-  'modern',
-  'traditional',
-  'groove',
+/**
+ * Known artists. Authors are *derived* — the legacy `author` field is dropped and
+ * a name is only attached when it is mentioned in the title/description/tags.
+ */
+const AUTHOR_MATCHERS = [
+  { needle: 'mamady keita', name: 'Mamady Keita' },
+  { needle: 'drissa kone', name: 'Drissa Kone' },
+] as const
+
+/** Geo region / ethnicity tags — these belong in `origin`, not `tags`. */
+const ORIGIN_TAGS = new Set(['susu', 'kassonke', 'wassolon'])
+
+/**
+ * Tags to discard entirely — test junk, instrument names that crept into tags,
+ * or any value that is neither a descriptor nor a family name.
+ */
+const JUNK_TAGS = new Set(['tag', 'tag2', 'sangban', 'dundun', 'dundun set'])
+
+/** Rhythm family names — these belong in `rhythm_group`, not `tags`. */
+const RHYTHM_NAME_TAGS = new Set([
+  'balakulandjan',
+  'bolokonondo',
+  'denaben',
+  'dibon',
+  'didadi',
+  'dunumba',
+  'djaa',
+  'djagbe',
+  'djansa',
+  'djelidon',
+  'dunungbe',
+  'fula fare',
+  'gine fare',
+  'kassa',
+  'kawa',
+  'kon',
+  'konkoba',
+  'kudani',
+  'lafe',
+  'lamban',
+  'madan',
+  'mane',
+  'marakadon',
+  'mendiani',
+  'ngoron',
+  'sandia',
+  'shemufoli',
+  'sinte',
+  'soboninkun',
+  'soko',
+  'soli',
+  'toro',
+  'yogui',
+  'zaouli',
 ])
+
+const isAuthorTag = (tag: string) => AUTHOR_MATCHERS.some((matcher) => tag === matcher.needle)
 
 const meterFromTags = (tags: string[]): RhythmMeter => {
   if (tags.some((tag) => COMPOUND_METERS.has(tag))) return 3
@@ -108,8 +147,59 @@ const toDate = (iso?: string): Date => {
   return Number.isNaN(date.getTime()) ? new Date(0) : date
 }
 
-const deriveRhythmGroup = (tags: string[]): string[] =>
-  tags.filter((tag) => !METER_TAG.test(tag) && !NON_GROUP_TAGS.has(tag.toLowerCase()))
+const GROOVE_SYMBOLS = new Set(['<', '(', '>', ')'])
+
+/** Pick the most common groove shift symbol in a legacy `swing` shorthand. */
+const dominantGrooveSymbol = (swing: string): string | null => {
+  const counts = new Map<string, number>()
+  for (const char of swing) {
+    if (GROOVE_SYMBOLS.has(char)) counts.set(char, (counts.get(char) ?? 0) + 1)
+  }
+  let best: string | null = null
+  let bestCount = 0
+  for (const [symbol, count] of counts) {
+    if (count > bestCount) {
+      best = symbol
+      bestCount = count
+    }
+  }
+  return best
+}
+
+/**
+ * The export carried both `swing` ("<<") and a placeholder `swing_pattern`; they
+ * are merged into a single barSize-wide groove. The legacy shorthand is applied
+ * to the off-beat eighths (odd grid positions), straight otherwise.
+ */
+const swingPatternFromSwing = (swing: string | undefined, barSize: number): string => {
+  const symbol = swing ? dominantGrooveSymbol(swing) : null
+  if (!symbol) return '-'.repeat(barSize)
+  return Array.from({ length: barSize }, (_, index) => (index % 2 === 1 ? symbol : '-')).join('')
+}
+
+type ClassifiedTags = { origin: string[]; rhythmGroup: string[]; tags: string[] }
+
+/** Split the raw tag bag into origin / rhythm group / leftover descriptive tags. */
+const classifyTags = (rawTags: string[]): ClassifiedTags => {
+  const origin = new Set<string>()
+  const rhythmGroup = new Set<string>()
+  const tags = new Set<string>()
+  for (const raw of rawTags) {
+    const tag = raw.trim().toLowerCase()
+    if (!tag || METER_TAG.test(tag) || isAuthorTag(tag) || JUNK_TAGS.has(tag)) continue
+    if (ORIGIN_TAGS.has(tag)) origin.add(tag)
+    else if (RHYTHM_NAME_TAGS.has(tag)) rhythmGroup.add(tag)
+    else tags.add(tag)
+  }
+  return { origin: [...origin], rhythmGroup: [...rhythmGroup], tags: [...tags] }
+}
+
+const deriveAuthors = (texts: string[]): string[] => {
+  const haystack = texts.join(' \u0001 ').toLowerCase()
+  return AUTHOR_MATCHERS.filter((matcher) => haystack.includes(matcher.needle)).map(
+    (matcher) => matcher.name,
+  )
+}
 
 const slugify = (value: string): string =>
   value
@@ -155,27 +245,28 @@ const cardInstruments = (patterns: RhythmPattern[]): RhythmInstrument[] => {
 }
 
 const toRhythmRow = (drum: FirestoreDrum, taken: Set<string>): RhythmInsert => {
-  const tags = drum.tags ?? []
-  const meter = meterFromTags(tags)
+  const rawTags = drum.tags ?? []
+  const { origin, rhythmGroup, tags } = classifyTags(rawTags)
+  const meter = meterFromTags(rawTags)
   const barSize = barSizeForMeter(meter)
   const patterns = toRhythmPatterns(drum.patterns ?? [], barSize)
   const createdAt = toDate(drum.createdAt)
   const updatedAt = drum.updatedAt ? toDate(drum.updatedAt) : createdAt
+  const title = (drum.title ?? '').trim() || 'Untitled'
+  const description = (drum.description ?? '').trim()
 
   return {
     id: drum._id,
-    slug: uniqueSlug(slugify(drum.slug ?? ''), slugify(drum.title ?? '') || drum._id, taken),
-    title: (drum.title ?? '').trim() || 'Untitled',
-    description: (drum.description ?? '').trim(),
+    slug: uniqueSlug(slugify(drum.slug ?? ''), slugify(title) || drum._id, taken),
+    title,
     meter,
-    author: (drum.author ?? '').trim(),
-    origin: [],
-    tags,
-    rhythmGroup: deriveRhythmGroup(tags),
     instruments: cardInstruments(patterns),
-    longestTrack: Math.max(0, ...patterns.map((pattern) => pattern.bars.length)),
-    swing: drum.swing ?? '',
-    swingPattern: '-'.repeat(barSize),
+    description,
+    author: deriveAuthors([title, description, ...rawTags]),
+    origin,
+    tags,
+    rhythmGroup,
+    swingPattern: swingPatternFromSwing(drum.swing, barSize),
     tempo: normalizeTempo(drum.tempo),
     signalPattern: drum.signal ?? '',
     published: drum.published === true,

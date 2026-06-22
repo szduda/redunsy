@@ -7,6 +7,8 @@ import {
 } from '@/features/rhythm/rhythm.types'
 import { SEARCH_QUERY_PARAM } from '@/features/store/search.store'
 
+export const PAGE_QUERY_PARAM = 'page'
+
 export const GARAGE_FILTER_QUERY_PARAMS = {
   meter: 'meter',
   instruments: 'instruments',
@@ -93,12 +95,18 @@ export const readGarageFiltersFromUrl = (): GarageFilters => {
   return readGarageFiltersFromParams(new URLSearchParams(window.location.search))
 }
 
+export const readPageFromParams = (params: URLSearchParams): number => {
+  const raw = Number(params.get(PAGE_QUERY_PARAM))
+  return Number.isInteger(raw) && raw > 1 ? raw : 1
+}
+
 export const parseAppQueryFromSearchParams = (params: URLSearchParams) => ({
   searchTerm: readSearchTermFromParams(params),
   filters: readGarageFiltersFromParams(params),
+  page: readPageFromParams(params),
 })
 
-export const buildAppQuerySearchParams = (searchTerm: string, filters: GarageFilters) => {
+export const buildAppQuerySearchParams = (searchTerm: string, filters: GarageFilters, page = 1) => {
   const params = new URLSearchParams()
 
   if (searchTerm) {
@@ -119,10 +127,17 @@ export const buildAppQuerySearchParams = (searchTerm: string, filters: GarageFil
     if (value) params.set(GARAGE_FILTER_QUERY_PARAMS[key], value)
   })
 
+  if (page > 1) params.set(PAGE_QUERY_PARAM, String(page))
+
   return params
 }
 
-export const buildAppQueryHref = (pathname: string, searchTerm: string, filters: GarageFilters) => {
-  const query = buildAppQuerySearchParams(searchTerm, filters).toString()
+export const buildAppQueryHref = (
+  pathname: string,
+  searchTerm: string,
+  filters: GarageFilters,
+  page = 1,
+) => {
+  const query = buildAppQuerySearchParams(searchTerm, filters, page).toString()
   return query ? `${pathname}?${query}` : pathname
 }

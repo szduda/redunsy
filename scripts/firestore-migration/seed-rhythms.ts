@@ -3,18 +3,21 @@ import { resolve } from 'node:path'
 
 import { config } from 'dotenv'
 
-import type { FirestoreExport } from '@/db/transform'
+import type { FirestoreExport } from './transform'
 
 config({ path: '.env.local' })
 config({ path: '.env' })
 
-const EXPORT_PATH = resolve(process.cwd(), 'data/firestore-joined-2026-06-19.json')
+const EXPORT_PATH = resolve(
+  process.cwd(),
+  'scripts/firestore-migration/firestore-joined-2026-06-19.json',
+)
 
 const main = async () => {
   // Imported lazily so dotenv runs before the client reads the connection string.
   const { db } = await import('@/db/client')
   const { rhythms } = await import('@/db/schema')
-  const { transformFirestoreExport } = await import('@/db/transform')
+  const { transformFirestoreExport } = await import('./transform')
 
   const data = JSON.parse(readFileSync(EXPORT_PATH, 'utf8')) as FirestoreExport
   const rows = transformFirestoreExport(data)

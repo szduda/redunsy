@@ -10,18 +10,14 @@
       "bell"
     ],
     "longestTrack": 8,
-    "author": "",
-    "origin": [],
-    "tags": [
-      "4/4",
-      "soboninkun",
+    "author": [],
+    "origin": [
       "wassolon",
       "kassonke"
     ],
+    "tags": [],
     "rhythmGroup": [
-      "soboninkun",
-      "wassolon",
-      "kassonke"
+      "soboninkun"
     ],
     "swingPattern": "--------",
     "tempo": 125,
@@ -43,13 +39,9 @@
       "djembe"
     ],
     "longestTrack": 8,
-    "author": "",
+    "author": [],
     "origin": [],
-    "tags": [
-      "4/4",
-      "shemufoli",
-      "dundun set"
-    ],
+    "tags": [],
     "rhythmGroup": [
       "shemufoli"
     ],
@@ -72,12 +64,9 @@
       "djembe"
     ],
     "longestTrack": 8,
-    "author": "",
+    "author": [],
     "origin": [],
     "tags": [
-      "4/4",
-      "sinte",
-      "dundun set",
       "variations"
     ],
     "rhythmGroup": [
@@ -102,22 +91,17 @@
       "djembe"
     ],
     "longestTrack": 4,
-    "author": "",
-    "origin": [],
-    "tags": [
-      "lamban",
-      "sandia",
-      "djelidon",
-      "4/4",
-      "kassonke",
-      "drissa kone"
+    "author": [
+      "Drissa Kone"
     ],
+    "origin": [
+      "kassonke"
+    ],
+    "tags": [],
     "rhythmGroup": [
       "lamban",
       "sandia",
-      "djelidon",
-      "kassonke",
-      "drissa kone"
+      "djelidon"
     ],
     "swingPattern": "--------",
     "tempo": 110,
@@ -136,20 +120,14 @@
       "bell"
     ],
     "longestTrack": 2,
-    "author": "",
+    "author": [],
     "origin": [],
-    "tags": [
-      "madan",
-      "djagbe",
-      "sangban",
-      "4/4"
-    ],
+    "tags": [],
     "rhythmGroup": [
       "madan",
-      "djagbe",
-      "sangban"
+      "djagbe"
     ],
-    "swingPattern": "--------",
+    "swingPattern": "->->->->",
     "tempo": 110,
     "signalPattern": "",
     "createdAt": 1640991600701,
@@ -167,18 +145,13 @@
       "bell"
     ],
     "longestTrack": 2,
-    "author": "",
+    "author": [],
     "origin": [],
-    "tags": [
-      "djansa",
-      "sangban",
-      "4/4"
-    ],
+    "tags": [],
     "rhythmGroup": [
-      "djansa",
-      "sangban"
+      "djansa"
     ],
-    "swingPattern": "--------",
+    "swingPattern": "->->->->",
     "tempo": 110,
     "signalPattern": "",
     "createdAt": 1640991600786,
@@ -195,18 +168,13 @@
       "bell"
     ],
     "longestTrack": 2,
-    "author": "",
+    "author": [],
     "origin": [],
-    "tags": [
-      "soli",
-      "sangban",
-      "6/8"
-    ],
+    "tags": [],
     "rhythmGroup": [
-      "soli",
-      "sangban"
+      "soli"
     ],
-    "swingPattern": "------",
+    "swingPattern": "-<-<-<",
     "tempo": 130,
     "signalPattern": "",
     "createdAt": 1640991600805,
@@ -223,20 +191,14 @@
       "bell"
     ],
     "longestTrack": 2,
-    "author": "",
+    "author": [],
     "origin": [],
-    "tags": [
-      "madan",
-      "djagbe",
-      "sangban",
-      "4/4"
-    ],
+    "tags": [],
     "rhythmGroup": [
       "madan",
-      "djagbe",
-      "sangban"
+      "djagbe"
     ],
-    "swingPattern": "--------",
+    "swingPattern": "->->->->",
     "tempo": 110,
     "signalPattern": "",
     "createdAt": 1640991600854,
@@ -255,18 +217,15 @@
       "djembe"
     ],
     "longestTrack": 2,
-    "author": "",
+    "author": [],
     "origin": [],
     "tags": [
-      "4/4",
-      "didadi",
-      "dundun set",
       "short loop"
     ],
     "rhythmGroup": [
       "didadi"
     ],
-    "swingPattern": "--------",
+    "swingPattern": "->->->->",
     "tempo": 110,
     "signalPattern": "",
     "createdAt": 1697722579616,
@@ -284,18 +243,16 @@
       "djembe"
     ],
     "longestTrack": 20,
-    "author": "",
+    "author": [],
     "origin": [],
     "tags": [
-      "6/8",
-      "gine fare",
       "intro",
       "break"
     ],
     "rhythmGroup": [
       "gine fare"
     ],
-    "swingPattern": "------",
+    "swingPattern": "-<-<-<",
     "tempo": 140,
     "signalPattern": "",
     "createdAt": 1700073573736,
@@ -314,13 +271,9 @@
       "djembe"
     ],
     "longestTrack": 4,
-    "author": "",
+    "author": [],
     "origin": [],
-    "tags": [
-      "ngoron",
-      "dundun set",
-      "4/4"
-    ],
+    "tags": [],
     "rhythmGroup": [
       "ngoron"
     ],
@@ -342,17 +295,13 @@
       "kenkeni"
     ],
     "longestTrack": 3,
-    "author": "",
+    "author": [],
     "origin": [],
-    "tags": [
-      "9/8",
-      "konkoba",
-      "dundun set"
-    ],
+    "tags": [],
     "rhythmGroup": [
       "konkoba"
     ],
-    "swingPattern": "------",
+    "swingPattern": "-<-<-<",
     "tempo": 160,
     "signalPattern": "",
     "createdAt": 1640991600269,
@@ -371,21 +320,15 @@
       "djembe"
     ],
     "longestTrack": 4,
-    "author": "",
+    "author": [],
     "origin": [],
-    "tags": [
-      "kon",
-      "dunungbe",
-      "dunumba",
-      "dundun set",
-      "6/8"
-    ],
+    "tags": [],
     "rhythmGroup": [
       "kon",
       "dunungbe",
       "dunumba"
     ],
-    "swingPattern": "------",
+    "swingPattern": "-<-<-<",
     "tempo": 110,
     "signalPattern": "sstsss------",
     "createdAt": 1643929200000,
@@ -405,17 +348,13 @@
       "djembe"
     ],
     "longestTrack": 16,
-    "author": "",
+    "author": [],
     "origin": [],
-    "tags": [
-      "6/8",
-      "djaa",
-      "dundun set"
-    ],
+    "tags": [],
     "rhythmGroup": [
       "djaa"
     ],
-    "swingPattern": "------",
+    "swingPattern": "->->->",
     "tempo": 130,
     "signalPattern": "ttttt-tt-t--",
     "createdAt": 1644102000000,
@@ -434,21 +373,17 @@
       "djembe"
     ],
     "longestTrack": 4,
-    "author": "",
-    "origin": [],
-    "tags": [
-      "maane",
-      "dundun set",
-      "6/8",
-      "mane",
+    "author": [],
+    "origin": [
       "susu"
+    ],
+    "tags": [
+      "maane"
     ],
     "rhythmGroup": [
-      "maane",
-      "mane",
-      "susu"
+      "mane"
     ],
-    "swingPattern": "------",
+    "swingPattern": "-<-<-<",
     "tempo": 140,
     "signalPattern": "--fsss-tts--",
     "createdAt": 1640991600716,
@@ -467,21 +402,16 @@
       "djembe"
     ],
     "longestTrack": 16,
-    "author": "",
-    "origin": [],
-    "tags": [
-      "6/8",
-      "gine fare",
-      "dundun set",
-      "susu",
-      "yogui"
+    "author": [],
+    "origin": [
+      "susu"
     ],
+    "tags": [],
     "rhythmGroup": [
       "gine fare",
-      "susu",
       "yogui"
     ],
-    "swingPattern": "------",
+    "swingPattern": "-<-<-<",
     "tempo": 180,
     "signalPattern": "ttt-sss--tttt-t-t-t-tt--",
     "createdAt": 1695393729474,
@@ -500,17 +430,13 @@
       "djembe"
     ],
     "longestTrack": 4,
-    "author": "",
+    "author": [],
     "origin": [],
-    "tags": [
-      "djansa",
-      "dundun set",
-      "4/4"
-    ],
+    "tags": [],
     "rhythmGroup": [
       "djansa"
     ],
-    "swingPattern": "--------",
+    "swingPattern": "->->->->",
     "tempo": 125,
     "signalPattern": "",
     "createdAt": 1640991600791,
@@ -528,17 +454,13 @@
       "bell"
     ],
     "longestTrack": 8,
-    "author": "",
+    "author": [],
     "origin": [],
     "tags": [
-      "jam",
-      "balakulandjan",
-      "sangban",
-      "4/4"
+      "jam"
     ],
     "rhythmGroup": [
-      "balakulandjan",
-      "sangban"
+      "balakulandjan"
     ],
     "swingPattern": "--------",
     "tempo": 110,
@@ -557,7 +479,7 @@
       "kenkeni"
     ],
     "longestTrack": 4,
-    "author": "",
+    "author": [],
     "origin": [],
     "tags": [
       "break",
@@ -565,7 +487,7 @@
       "popular"
     ],
     "rhythmGroup": [],
-    "swingPattern": "--------",
+    "swingPattern": "->->->->",
     "tempo": 80,
     "signalPattern": "s-tts-t---f-f---",
     "createdAt": 1693525473023,
@@ -583,19 +505,14 @@
       "kenkeni"
     ],
     "longestTrack": 2,
-    "author": "",
+    "author": [],
     "origin": [],
-    "tags": [
-      "6/8",
-      "dundun set",
-      "marakadon",
-      "fula fare"
-    ],
+    "tags": [],
     "rhythmGroup": [
       "marakadon",
       "fula fare"
     ],
-    "swingPattern": "------",
+    "swingPattern": "->->->",
     "tempo": 120,
     "signalPattern": "",
     "createdAt": 1695686925005,
@@ -613,19 +530,16 @@
       "kenkeni"
     ],
     "longestTrack": 16,
-    "author": "",
+    "author": [],
     "origin": [],
     "tags": [
-      "6/8",
-      "dunumba",
       "intro",
-      "break",
-      "dundun set"
+      "break"
     ],
     "rhythmGroup": [
       "dunumba"
     ],
-    "swingPattern": "------",
+    "swingPattern": "-<-<-<",
     "tempo": 110,
     "signalPattern": "",
     "createdAt": 1693774487240,
@@ -643,20 +557,14 @@
       "kenkeni"
     ],
     "longestTrack": 8,
-    "author": "",
+    "author": [],
     "origin": [],
-    "tags": [
-      "denaben",
-      "lafe",
-      "dundun set",
-      "dundun",
-      "4/4"
-    ],
+    "tags": [],
     "rhythmGroup": [
       "denaben",
       "lafe"
     ],
-    "swingPattern": "--------",
+    "swingPattern": "->->->->",
     "tempo": 110,
     "signalPattern": "f-tt-t-tt-ttt---",
     "createdAt": 1640991600634,
@@ -674,19 +582,14 @@
       "kenkeni"
     ],
     "longestTrack": 2,
-    "author": "",
+    "author": [],
     "origin": [],
-    "tags": [
-      "djagbe",
-      "dundun set",
-      "madan",
-      "4/4"
-    ],
+    "tags": [],
     "rhythmGroup": [
       "djagbe",
       "madan"
     ],
-    "swingPattern": "--------",
+    "swingPattern": "->->->->",
     "tempo": 100,
     "signalPattern": "",
     "createdAt": 1640991600422,
@@ -704,13 +607,9 @@
       "kenkeni"
     ],
     "longestTrack": 4,
-    "author": "",
+    "author": [],
     "origin": [],
-    "tags": [
-      "toro",
-      "dundun set",
-      "4/4"
-    ],
+    "tags": [],
     "rhythmGroup": [
       "toro"
     ],
@@ -732,13 +631,9 @@
       "kenkeni"
     ],
     "longestTrack": 2,
-    "author": "",
+    "author": [],
     "origin": [],
-    "tags": [
-      "zaouli",
-      "dundun set",
-      "4/4"
-    ],
+    "tags": [],
     "rhythmGroup": [
       "zaouli"
     ],
@@ -759,17 +654,13 @@
       "kenkeni"
     ],
     "longestTrack": 4,
-    "author": "",
+    "author": [],
     "origin": [],
-    "tags": [
-      "kawa",
-      "dundun set",
-      "6/8"
-    ],
+    "tags": [],
     "rhythmGroup": [
       "kawa"
     ],
-    "swingPattern": "------",
+    "swingPattern": "-<-<-<",
     "tempo": 140,
     "signalPattern": "",
     "createdAt": 1644274800000,
@@ -787,19 +678,14 @@
       "dundunba"
     ],
     "longestTrack": 4,
-    "author": "",
+    "author": [],
     "origin": [],
-    "tags": [
-      "4/4",
-      "kassa",
-      "dibon",
-      "dundun set"
-    ],
+    "tags": [],
     "rhythmGroup": [
       "kassa",
       "dibon"
     ],
-    "swingPattern": "--------",
+    "swingPattern": "->->->->",
     "tempo": 110,
     "signalPattern": "",
     "createdAt": 1640991600804,
@@ -817,18 +703,15 @@
       "kenkeni"
     ],
     "longestTrack": 2,
-    "author": "",
+    "author": [],
     "origin": [],
     "tags": [
-      "soli",
-      "dundun set",
-      "6/8",
       "rapide"
     ],
     "rhythmGroup": [
       "soli"
     ],
-    "swingPattern": "------",
+    "swingPattern": "-<-<-<",
     "tempo": 130,
     "signalPattern": "",
     "createdAt": 1640991600885,
@@ -846,17 +729,13 @@
       "kenkeni"
     ],
     "longestTrack": 4,
-    "author": "",
+    "author": [],
     "origin": [],
-    "tags": [
-      "soko",
-      "6/8",
-      "dundun set"
-    ],
+    "tags": [],
     "rhythmGroup": [
       "soko"
     ],
-    "swingPattern": "------",
+    "swingPattern": "->->->",
     "tempo": 140,
     "signalPattern": "",
     "createdAt": 1640991600980,
@@ -873,13 +752,10 @@
       "sangban"
     ],
     "longestTrack": 2,
-    "author": "",
+    "author": [],
     "origin": [],
     "tags": [
-      "soko",
-      "dundun set",
-      "rapide",
-      "6/8"
+      "rapide"
     ],
     "rhythmGroup": [
       "soko"
@@ -901,20 +777,17 @@
       "sangban"
     ],
     "longestTrack": 2,
-    "author": "",
-    "origin": [],
-    "tags": [
-      "madan",
-      "4/4",
-      "drissa kone",
+    "author": [
+      "Drissa Kone"
+    ],
+    "origin": [
       "kassonke"
     ],
+    "tags": [],
     "rhythmGroup": [
-      "madan",
-      "drissa kone",
-      "kassonke"
+      "madan"
     ],
-    "swingPattern": "--------",
+    "swingPattern": "->->->->",
     "tempo": 105,
     "signalPattern": "",
     "createdAt": 1644620400000,
@@ -932,19 +805,15 @@
       "kenkeni"
     ],
     "longestTrack": 2,
-    "author": "Szdun Dudumba",
+    "author": [
+      "Mamady Keita"
+    ],
     "origin": [],
-    "tags": [
-      "kudani",
-      "4/4",
-      "dundun set",
-      "mamady keita"
-    ],
+    "tags": [],
     "rhythmGroup": [
-      "kudani",
-      "mamady keita"
+      "kudani"
     ],
-    "swingPattern": "--------",
+    "swingPattern": "->->->->",
     "tempo": 110,
     "signalPattern": "",
     "createdAt": 1690848626622,
@@ -963,17 +832,13 @@
       "bell"
     ],
     "longestTrack": 2,
-    "author": "",
+    "author": [],
     "origin": [],
-    "tags": [
-      "6/8",
-      "dundun set",
-      "mendiani"
-    ],
+    "tags": [],
     "rhythmGroup": [
       "mendiani"
     ],
-    "swingPattern": "------",
+    "swingPattern": "-<-<-<",
     "tempo": 110,
     "signalPattern": "f-ss-tsstss-",
     "createdAt": 1692577966444,
@@ -992,19 +857,15 @@
       "djembe"
     ],
     "longestTrack": 2,
-    "author": "",
-    "origin": [],
-    "tags": [
-      "dundun set",
-      "soboninkun",
-      "4/4",
+    "author": [],
+    "origin": [
       "wassolon"
     ],
+    "tags": [],
     "rhythmGroup": [
-      "soboninkun",
-      "wassolon"
+      "soboninkun"
     ],
-    "swingPattern": "--------",
+    "swingPattern": "-<-<-<-<",
     "tempo": 135,
     "signalPattern": "f-tt-t-tt-sss---",
     "createdAt": 1695746617947,
@@ -1024,19 +885,16 @@
       "djembe"
     ],
     "longestTrack": 14,
-    "author": "",
+    "author": [],
     "origin": [],
     "tags": [
-      "6/8",
-      "bolokonondo",
-      "dunumba",
       "sequential"
     ],
     "rhythmGroup": [
       "bolokonondo",
       "dunumba"
     ],
-    "swingPattern": "------",
+    "swingPattern": "-<-<-<",
     "tempo": 150,
     "signalPattern": "sstsss------------------sstsss------tttssssssssstttssstttssstttsssttss-ssss-tttt-s--",
     "createdAt": 1696610315357,
