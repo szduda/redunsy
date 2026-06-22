@@ -85,17 +85,12 @@ export const useEditorStore = create<EditorState>((set, get) => ({
   hydrateFromStorage: () => {
     const rhythms = readMyRhythms()
     const entries = Object.values(rhythms)
-    const view: EditorView =
-      entries.length === 0 ? 'creator' : entries.length === 1 ? 'editor' : 'picker'
-    const activeSlug = entries.length === 1 ? entries[0].slug : null
     set({
       hydrated: true,
       rhythms,
-      view,
-      activeSlug,
-      focusedTrackId: activeSlug
-        ? (Object.keys(rhythms[activeSlug]?.instruments ?? {})[0] ?? null)
-        : null,
+      view: entries.length === 0 ? 'creator' : 'picker',
+      activeSlug: null,
+      focusedTrackId: null,
       creatorStep: 1,
       creatorDraft: defaultCreatorDraft(),
     })

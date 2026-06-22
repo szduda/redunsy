@@ -1,7 +1,6 @@
 'use client'
 
 import { useEffect } from 'react'
-import { useRouter } from 'next/navigation'
 
 import { CreatorFlow } from '@/features/editor/creator-flow'
 import { useEditorStore } from '@/features/editor/editor.store'
@@ -16,10 +15,8 @@ type EditorPageProps = {
 }
 
 export const EditorPage = ({ slug }: EditorPageProps) => {
-  const router = useRouter()
   const hydrated = useEditorStore((state) => state.hydrated)
   const view = useEditorStore((state) => state.view)
-  const activeSlug = useEditorStore((state) => state.activeSlug)
   const hydrateFromStorage = useEditorStore((state) => state.hydrateFromStorage)
   const openRhythm = useEditorStore((state) => state.openRhythm)
 
@@ -31,13 +28,6 @@ export const EditorPage = ({ slug }: EditorPageProps) => {
     if (!hydrated || !slug) return
     openRhythm(slug)
   }, [hydrated, openRhythm, slug])
-
-  useEffect(() => {
-    if (!hydrated || slug) return
-    if (view === 'editor' && activeSlug) {
-      router.replace(`/editor/${activeSlug}`)
-    }
-  }, [activeSlug, hydrated, router, slug, view])
 
   if (!hydrated) {
     return (
