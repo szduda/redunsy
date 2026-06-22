@@ -4,6 +4,7 @@ import { useCallback, useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 
 import { CollapsibleMetadata } from '@/features/editor/collapsible-metadata'
+import { BackIcon } from '@/features/icons/back-icon'
 import { EditableBarsCanvas } from '@/features/editor/editable-bars-canvas'
 import { useEditorStore } from '@/features/editor/editor.store'
 import { NoteKeyboard } from '@/features/editor/note-keyboard'
@@ -203,11 +204,13 @@ export const RhythmEditor = () => {
   return (
     <>
       <div className="flex w-full max-w-4xl flex-col gap-3">
-        <div className="flex justify-start px-1 md:px-0">
-          <Button onClick={onBackToPicker} variant="outlined">
-            Back to My Rhythms
-          </Button>
-        </div>
+        <Button
+          className="w-fit md:fixed md:left-4 md:top-16 md:z-20"
+          onClick={onBackToPicker}
+          variant="subtle"
+        >
+          <BackIcon className="size-4 mr-1" /> Back to My Rhythms
+        </Button>
 
         <section className="flex w-full flex-col gap-2 bg-white md:rounded-xl md:border md:border-zinc-100 dark:bg-zinc-900/60 dark:border-transparent">
           <CollapsibleMetadata onChange={patchActiveRhythm} rhythm={rhythm} />
@@ -266,11 +269,7 @@ export const RhythmEditor = () => {
             />
           </section>
 
-          {playError ? (
-            <Text className="px-4 pb-2" variant="mono">
-              {playError}
-            </Text>
-          ) : null}
+          {playError ? <Text className="px-4 pb-2" variant="mono">{playError}</Text> : null}
         </section>
       </div>
 
