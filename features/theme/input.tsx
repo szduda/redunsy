@@ -1,6 +1,7 @@
 'use client'
 
 import {
+  useEffect,
   useRef,
   useState,
   type ChangeEvent,
@@ -22,12 +23,15 @@ const chipsShellClass = 'flex w-[200px] flex-wrap items-center gap-1 px-2 py-1.5
 type InputBaseProps = Omit<ComponentPropsWithoutRef<'input'>, 'value' | 'onChange' | 'defaultValue'>
 
 export type TextInputProps = InputBaseProps & {
+  wrapperClassName?: string
   value?: string | number | readonly string[]
   onChange?: ChangeEventHandler<HTMLInputElement>
   onGetSuggestions?: (value: string) => string[]
+  onSuggestionCommit?: (value: string) => void
 }
 
 export type ChipsInputProps = InputBaseProps & {
+  wrapperClassName?: string
   value: string[]
   onChange: (values: string[]) => void
   onGetSuggestions?: (value: string) => string[]
@@ -43,6 +47,52 @@ const appendChip = (values: string[], draft: string) => {
   return [...values, next]
 }
 
+const wrapSuggestionIndex = (current: number, delta: 1 | -1, length: number) => {
+  if (length === 0) return -1
+  if (current < 0) return delta === 1 ? 0 : length - 1
+  return (current + delta + length) % length
+}
+
+const handleSuggestionKeyDown = (
+  event: KeyboardEvent<HTMLInputElement>,
+  suggestions: string[],
+  activeIndex: number,
+  setActiveIndex: (index: number) => void,
+  onActiveSelect: (suggestion: string) => void,
+  onSuggestionCommit?: (suggestion: string) => void,
+) => {
+  if (!suggestions.length) return false
+
+  if (event.key === 'ArrowDown') {
+    event.preventDefault()
+    setActiveIndex(wrapSuggestionIndex(activeIndex, 1, suggestions.length))
+    return true
+  }
+
+  if (event.key === 'ArrowUp') {
+    event.preventDefault()
+    setActiveIndex(wrapSuggestionIndex(activeIndex, -1, suggestions.length))
+    return true
+  }
+
+  if (event.key === 'Enter' && activeIndex >= 0) {
+    event.preventDefault()
+    const suggestion = suggestions[activeIndex]
+    onActiveSelect(suggestion)
+    onSuggestionCommit?.(suggestion)
+    setActiveIndex(-1)
+    event.currentTarget.blur()
+    return true
+  }
+
+  if (event.key === 'Escape') {
+    setActiveIndex(-1)
+    return true
+  }
+
+  return false
+}
+
 const ChipsInput = ({
   className,
   onChange,
@@ -54,6 +104,7 @@ const ChipsInput = ({
   const inputRef = useRef<HTMLInputElement>(null)
   const [draft, setDraft] = useState('')
   const [focused, setFocused] = useState(false)
+  const [activeIndex, setActiveIndex] = useState(-1)
   const [lastValue, setLastValue] = useState(value)
 
   if (value !== lastValue) {
@@ -63,6 +114,11 @@ const ChipsInput = ({
 
   const suggestions = (onGetSuggestions?.(draft) ?? []).filter((item) => !value.includes(item))
   const showSuggestions = focused && suggestions.length > 0
+  const suggestionKey = suggestions.join('\u0000')
+
+  useEffect(() => {
+    setActiveIndex(-1)
+  }, [draft, suggestionKey])
 
   const commitDraft = (raw: string) => {
     const nextValues = appendChip(value, raw)
@@ -72,7 +128,19 @@ const ChipsInput = ({
 
   const onDraftChange = ({ target }: ChangeEvent<HTMLInputElement>) => setDraft(target.value)
 
+  const onSuggestionSelect = (suggestion: string) => {
+    onChange(appendChip(value, suggestion))
+    setDraft('')
+    setActiveIndex(-1)
+    inputRef.current?.focus()
+  }
+
   const onDraftKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (
+      handleSuggestionKeyDown(event, suggestions, activeIndex, setActiveIndex, onSuggestionSelect)
+    ) {
+      return
+    }
     if (event.key === 'Enter' || event.key === ',') {
       event.preventDefault()
       commitDraft(draft)
@@ -81,12 +149,6 @@ const ChipsInput = ({
     if (event.key === 'Backspace' && draft === '' && value.length > 0) {
       onChange(value.slice(0, -1))
     }
-  }
-
-  const onSuggestionSelect = (suggestion: string) => {
-    onChange(appendChip(value, suggestion))
-    setDraft('')
-    inputRef.current?.focus()
   }
 
   return (
@@ -106,7 +168,10 @@ const ChipsInput = ({
         <input
           {...props}
           className="min-w-[3ch] flex-1 border-0 bg-transparent px-1 py-0.5 outline-none"
-          onBlur={() => setFocused(false)}
+          onBlur={() => {
+            setFocused(false)
+            setActiveIndex(-1)
+          }}
           onChange={onDraftChange}
           onFocus={() => setFocused(true)}
           onKeyDown={onDraftKeyDown}
@@ -117,6 +182,7 @@ const ChipsInput = ({
       </div>
       {onGetSuggestions ? (
         <InputSuggestionsPopover
+          activeIndex={activeIndex}
           anchorRef={anchorRef}
           onSelect={onSuggestionSelect}
           open={showSuggestions}
@@ -127,34 +193,71 @@ const ChipsInput = ({
   )
 }
 
-const TextInput = ({ className, onChange, onGetSuggestions, value, ...props }: TextInputProps) => {
+const TextInput = ({
+  className,
+  wrapperClassName,
+  onChange,
+  onGetSuggestions,
+  onKeyDown,
+  onSuggestionCommit,
+  value,
+  ...props
+}: TextInputProps) => {
   const anchorRef = useRef<HTMLDivElement>(null)
   const [focused, setFocused] = useState(false)
+  const [activeIndex, setActiveIndex] = useState(-1)
   const textValue = value === undefined || value === null ? '' : String(value)
   const suggestions = onGetSuggestions?.(textValue) ?? []
   const showSuggestions = focused && suggestions.length > 0
+  const suggestionKey = suggestions.join('\u0000')
+
+  useEffect(() => {
+    setActiveIndex(-1)
+  }, [textValue, suggestionKey])
 
   const onSuggestionSelect = (suggestion: string) => {
     onChange?.({
       target: { value: suggestion },
     } as ChangeEvent<HTMLInputElement>)
+    setActiveIndex(-1)
     anchorRef.current?.querySelector('input')?.focus()
+  }
+
+  const onInputKeyDown = (event: KeyboardEvent<HTMLInputElement>) => {
+    if (
+      handleSuggestionKeyDown(
+        event,
+        suggestions,
+        activeIndex,
+        setActiveIndex,
+        onSuggestionSelect,
+        onSuggestionCommit,
+      )
+    ) {
+      return
+    }
+    onKeyDown?.(event)
   }
 
   return (
     <>
-      <div className="relative" ref={anchorRef}>
+      <div className={cn('relative w-full', wrapperClassName)} ref={anchorRef}>
         <input
           {...props}
           className={cn(base, className)}
-          onBlur={() => setFocused(false)}
+          onBlur={() => {
+            setFocused(false)
+            setActiveIndex(-1)
+          }}
           onChange={onChange}
           onFocus={() => setFocused(true)}
+          onKeyDown={onInputKeyDown}
           value={value}
         />
       </div>
       {onGetSuggestions ? (
         <InputSuggestionsPopover
+          activeIndex={activeIndex}
           anchorRef={anchorRef}
           onSelect={onSuggestionSelect}
           open={showSuggestions}

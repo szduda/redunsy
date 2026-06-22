@@ -24,22 +24,27 @@ type NavMenuContentProps = {
   variant?: keyof typeof linkStyles
 }
 
-export const NavMenuContent = ({ onClose, variant = 'default' }: NavMenuContentProps) => (
-  <nav className="flex flex-col gap-1">
-    {NAV_MENU_ITEMS.map(({ href, label }) => (
-      <Link key={href} className={linkStyles[variant]} href={href} onClick={onClose}>
-        {label}
-      </Link>
-    ))}
-    <div
-      className={cn(
-        'mt-2 pt-4',
-        variant === 'homepage'
-          ? 'opacity-50 hover:opacity-100 ml-1'
-          : 'border-t border-zinc-200 dark:border-zinc-800',
-      )}
-    >
-      <ThemeSwitch className="px-2" />
-    </div>
-  </nav>
-)
+export const NavMenuContent = ({ onClose, variant = 'default' }: NavMenuContentProps) => {
+  const items =
+    variant === 'homepage' ? NAV_MENU_ITEMS.filter((item) => item.href !== '/') : NAV_MENU_ITEMS
+
+  return (
+    <nav className="flex flex-col gap-1">
+      {items.map(({ href, label }) => (
+        <Link key={href} className={linkStyles[variant]} href={href} onClick={onClose}>
+          {label}
+        </Link>
+      ))}
+      <div
+        className={cn(
+          'mt-2 pt-4',
+          variant === 'homepage'
+            ? 'opacity-50 hover:opacity-100 ml-1'
+            : 'border-t border-zinc-200 dark:border-zinc-800',
+        )}
+      >
+        <ThemeSwitch className="px-2" />
+      </div>
+    </nav>
+  )
+}

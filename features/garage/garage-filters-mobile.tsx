@@ -17,21 +17,32 @@ import { GarageOwnershipFilterMobile } from '@/features/garage/garage-ownership-
 import { Button } from '@/features/theme/button'
 import { cn } from '@/features/theme/cn'
 
-const SECTION_ICONS: Record<GarageFilterSectionId, Icon> = {
+const SECTION_ICONS: Record<Exclude<GarageFilterSectionId, 'rhythmGroup'>, Icon> = {
   meter: MetronomeIcon,
   instruments: DjembeIcon,
   artist: UserIcon,
   origin: AfricaIcon,
-  rhythmGroup: TagIcon,
   tags: TagIcon,
 }
 
-const SECTION_ICON_CLASS: Partial<Record<GarageFilterSectionId, string>> = {
+const SECTION_ICON_CLASS: Partial<Record<Exclude<GarageFilterSectionId, 'rhythmGroup'>, string>> = {
   meter: 'text-redy',
   artist: 'text-greeny',
   origin: 'text-yellowy',
-  rhythmGroup: 'text-greeny',
   tags: 'text-redy',
+}
+
+type MobileGarageFilterSection = Omit<GarageFilterSectionData, 'id'> & {
+  id: Exclude<GarageFilterSectionId, 'rhythmGroup'>
+}
+
+const MOBILE_TOGGLE_SECTIONS = (sections: GarageFilterSectionData[]): MobileGarageFilterSection[] =>
+  sections.filter((section): section is MobileGarageFilterSection => section.id !== 'rhythmGroup')
+
+const mobileActiveCount = (section: MobileGarageFilterSection, sections: GarageFilterSectionData[]) => {
+  if (section.id !== 'origin') return section.selected.length
+  const rhythmGroup = sections.find((item) => item.id === 'rhythmGroup')
+  return section.selected.length + (rhythmGroup?.selected.length ?? 0)
 }
 
 type GarageFiltersMobileProps = {
@@ -40,27 +51,29 @@ type GarageFiltersMobileProps = {
 
 export const GarageFiltersMobile = ({ sections }: GarageFiltersMobileProps) => {
   const [openSection, setOpenSection] = useState<GarageFilterSectionId | null>(null)
+  const toggleSections = MOBILE_TOGGLE_SECTIONS(sections)
 
   useEffect(() => {
-    if (openSection && !sections.some((section) => section.id === openSection)) {
+    if (openSection && !toggleSections.some((section) => section.id === openSection)) {
       setOpenSection(null)
     }
-  }, [openSection, sections])
+  }, [openSection, toggleSections])
 
   const toggleSection = (id: GarageFilterSectionId) => {
     setOpenSection((current) => (current === id ? null : id))
   }
 
-  const activeSection = sections.find((section) => section.id === openSection)
+  const activeSection = toggleSections.find((section) => section.id === openSection)
+  const rhythmGroupSection = sections.find((section) => section.id === 'rhythmGroup')
 
   return (
     <div className="flex flex-col gap-2 lg:hidden">
       <div className="flex items-center gap-1">
         <div className="flex min-w-0 flex-1 items-center gap-1 overflow-x-auto">
-          {sections.map((section) => {
+          {toggleSections.map((section) => {
             const Icon = SECTION_ICONS[section.id]
             const isOpen = openSection === section.id
-            const activeCount = section.selected.length
+            const activeCount = mobileActiveCount(section, sections)
             const hasActive = activeCount > 0
 
             return (
@@ -100,7 +113,7 @@ export const GarageFiltersMobile = ({ sections }: GarageFiltersMobileProps) => {
       </div>
 
       {activeSection ? (
-        <div className="flex flex-col gap-1.5 border-t border-zinc-200 pt-2 dark:border-zinc-800">
+        <div className="flex flex-col gap-1.5 -mx-3 -mb-3 p-3 bg-zinc-200/40 dark:bg-zinc-800/40 border-t border-zinc-200 dark:border-zinc-800">
           <span className="text-xs font-semibold tracking-widest text-zinc-500 uppercase dark:text-zinc-400">
             {activeSection.title}
           </span>
@@ -110,6 +123,18 @@ export const GarageFiltersMobile = ({ sections }: GarageFiltersMobileProps) => {
             values={activeSection.values}
             onToggle={activeSection.onToggle}
           />
+          {activeSection.id === 'origin' && rhythmGroupSection ? (
+            <>
+              <span className="mt-2 text-xs font-semibold tracking-widest text-zinc-500 uppercase dark:text-zinc-400">
+                {rhythmGroupSection.title}
+              </span>
+              <GarageFilterChipList
+                selected={rhythmGroupSection.selected}
+                values={rhythmGroupSection.values}
+                onToggle={rhythmGroupSection.onToggle}
+              />
+            </>
+          ) : null}
         </div>
       ) : null}
     </div>

@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 
 import { CollapsibleMetadata } from '@/features/editor/collapsible-metadata'
 import { BackIcon } from '@/features/icons/back-icon'
+import { Note16Icon } from '@/features/icons/note-16-icon'
 import { EditableBarsCanvas } from '@/features/editor/editable-bars-canvas'
 import { useEditorStore } from '@/features/editor/editor.store'
 import { NoteKeyboard } from '@/features/editor/note-keyboard'
@@ -20,8 +21,9 @@ import {
 import { TrackVolume } from '@/features/groovy-player/track/track-volume'
 import { useSpaceTogglePlay } from '@/features/groovy-player/use-space-toggle-play'
 import { PageBottomNav } from '@/features/layout/page-bottom-nav'
+import { FixedSideActions } from '@/features/layout/fixed-side-actions'
 import { useTopNavSticky } from '@/features/layout/use-top-nav-sticky'
-import { trackBarsRecord } from '@/features/rhythm/rhythm-helpers'
+import { slugFromTitle, trackBarsRecord } from '@/features/rhythm/rhythm-helpers'
 import { Button } from '@/features/theme/button'
 import { Text } from '@/features/theme/text'
 import { cn } from '@/features/theme/cn'
@@ -201,19 +203,33 @@ export const RhythmEditor = () => {
     router.replace('/editor')
   }
 
+  const onTitleBlur = (title: string) => {
+    const previousSlug = activeSlug
+    patchActiveRhythm({ title })
+    const nextSlug = slugFromTitle(title)
+    if (nextSlug !== previousSlug) {
+      router.replace(`/editor/${nextSlug}`, { scroll: false })
+    }
+  }
+
   return (
     <>
       <div className="flex w-full max-w-4xl flex-col gap-3">
-        <Button
-          className="w-fit xl:fixed mt-3 md:mt-0 md:left-4 md:top-16 md:z-20"
-          onClick={onBackToPicker}
-          variant="subtle"
-        >
-          <BackIcon className="size-4 mr-1" /> Back to My Rhythms
-        </Button>
+        <FixedSideActions>
+          <Button onClick={onBackToPicker} variant="subtle" className='!justify-start'>
+            <BackIcon className="size-4 mr-1" /> Back to My Rhythms
+          </Button>
+          <Button href={`/player?rhythm=${rhythm.slug}`} variant="subtle" className='!justify-start'>
+            <Note16Icon className="mr-1 size-4" /> Show in Player
+          </Button>
+        </FixedSideActions>
 
         <section className="flex w-full flex-col gap-2 bg-white md:rounded-xl md:border md:border-zinc-100 dark:bg-zinc-900/60 dark:border-transparent">
-          <CollapsibleMetadata onChange={patchActiveRhythm} rhythm={rhythm} />
+          <CollapsibleMetadata
+            onChange={patchActiveRhythm}
+            onTitleBlur={onTitleBlur}
+            rhythm={rhythm}
+          />
 
           <div className="flex flex-wrap gap-2 border-b border-zinc-200/60 px-2 py-2 dark:border-zinc-800/60 md:px-4">
             {tracks.map((track) => (

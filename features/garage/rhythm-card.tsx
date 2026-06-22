@@ -2,7 +2,6 @@
 
 import Link from 'next/link'
 
-import { RhythmEditorButton } from '@/features/rhythm/rhythm-editor-button'
 import type { RhythmCard } from '@/features/rhythm/rhythm.types'
 import { Text } from '@/features/theme/text'
 import { cn } from '@/features/theme/cn'
@@ -29,7 +28,7 @@ const MyRhythmBadge = () => (
 export const RhythmCardView = ({ card, className }: RhythmCardProps) => (
   <div
     className={cn(
-      'relative rounded-xl border border-zinc-200 bg-white transition-colors hover:border-zinc-300 dark:border-zinc-800 dark:bg-zinc-950 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-900/60',
+      'rounded-xl border border-zinc-200 bg-white transition-colors hover:border-zinc-300 dark:border-zinc-800 dark:bg-zinc-950 dark:hover:border-zinc-700 hover:bg-zinc-50 dark:hover:bg-zinc-900/60',
       className,
     )}
   >
@@ -37,14 +36,14 @@ export const RhythmCardView = ({ card, className }: RhythmCardProps) => (
       className="flex flex-col h-full p-4"
       href={card.userOwned ? `/player?rhythm=${card.slug}` : `/rhythm/${card.slug}`}
     >
-      <div className="flex items-center gap-1.5 pr-10">
+      <div className="flex items-center gap-1.5">
         {card.userOwned ? <MyRhythmBadge /> : null}
         <span className="font-mono text-xs text-zinc-500">
           {barsOnMeterLabel(card.longestTrack, card.meter)}
         </span>
       </div>
 
-      <h2 className="mt-1 pr-10 text-lg font-semibold text-zinc-900 dark:text-zinc-100">
+      <h2 className="mt-1 text-lg font-semibold text-zinc-900 dark:text-zinc-100">
         {card.title}
       </h2>
 
@@ -72,9 +71,5 @@ export const RhythmCardView = ({ card, className }: RhythmCardProps) => (
         )}
       </div>
     </Link>
-
-    <div className="absolute top-2 right-2">
-      <RhythmEditorButton slug={card.slug} userOwned={card.userOwned} />
-    </div>
   </div>
 )

@@ -101,9 +101,11 @@ export const useEditorStore = create<EditorState>((set, get) => ({
     })
   },
   openRhythm: (slug) => {
-    const rhythm = get().rhythms[slug]
+    const rhythms = readMyRhythms()
+    const rhythm = rhythms[slug]
     if (!rhythm) return
     set({
+      rhythms,
       view: 'editor',
       activeSlug: slug,
       previousSlug: slug,

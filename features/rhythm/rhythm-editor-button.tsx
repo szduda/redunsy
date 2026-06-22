@@ -29,7 +29,7 @@ export const RhythmEditorButton = ({
       <Button
         aria-label="Open in editor"
         className={cn('rounded-full', className)}
-        href={`/editor?rhythm=${slug}`}
+        href={`/editor/${slug}`}
         variant="subtle"
       >
         <EditIcon />
@@ -59,7 +59,7 @@ export const RhythmEditorButton = ({
       onClick={() => {
         const source = findRhythmBySlug(slug) ?? rhythm
         const saved = copyRhythmToMyRhythms(source)
-        router.push(`/editor?rhythm=${saved.slug}`)
+        router.push(`/editor/${saved.slug}`)
       }}
       variant="subtle"
     >

@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 import {
   hasActiveGarageFilters,
@@ -109,8 +109,8 @@ const GaragePagination = ({
   onPageSizeChange,
 }: PaginationProps) =>
   Boolean(total) && (
-    <nav aria-label="Pagination" className="flex items-center justify-between gap-3">
-      <div className="flex items-center gap-2">
+    <nav aria-label="Pagination" className="flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between lg:gap-3">
+      <div className="flex items-center justify-between md:justify-start gap-2">
         <Button
           aria-label="Previous page"
           disabled={disabled || page <= 1}
@@ -128,13 +128,15 @@ const GaragePagination = ({
           Next
         </Button>
       </div>
-      <Text variant="mono">
-        Page {page} of {totalPages}
-      </Text>
-      <span className="font-mono text-xs text-zinc-500">
-        Showing <PageSizePopover onChange={onPageSizeChange} value={pageSize} /> of {total} result
-        {total === 1 ? '' : 's'}
-      </span>
+      <div className="flex items-center justify-between gap-3 p-1 lg:contents">
+        <Text variant="mono">
+          Page {page} of {totalPages}
+        </Text>
+        <span className="font-mono text-xs text-zinc-500">
+          Showing <PageSizePopover onChange={onPageSizeChange} value={pageSize} /> of {total} result
+          {total === 1 ? '' : 's'}
+        </span>
+      </div>
     </nav>
   )
 
@@ -149,6 +151,14 @@ export const GarageResults = () => {
   const setPage = usePaginationStore((state) => state.setPage)
   const pageSize = usePaginationStore((state) => state.pageSize)
   const setPageSize = usePaginationStore((state) => state.setPageSize)
+
+  const goToPage = useCallback(
+    (nextPage: number) => {
+      setPage(nextPage)
+      window.scrollTo(0, 0)
+    },
+    [setPage],
+  )
 
   const { data, isLoading, isFetching, isPlaceholderData } = useGarageSnippets(debouncedSearch)
 
@@ -174,15 +184,15 @@ export const GarageResults = () => {
       }
       if (event.key === 'ArrowLeft' && page > 1) {
         event.preventDefault()
-        setPage(page - 1)
+        goToPage(page - 1)
       } else if (event.key === 'ArrowRight' && page < totalPages) {
         event.preventDefault()
-        setPage(page + 1)
+        goToPage(page + 1)
       }
     }
     window.addEventListener('keydown', onKeyDown)
     return () => window.removeEventListener('keydown', onKeyDown)
-  }, [page, totalPages, setPage])
+  }, [goToPage, page, totalPages])
 
   return (
     <div className="flex min-w-0 flex-col gap-4">
@@ -210,7 +220,7 @@ export const GarageResults = () => {
       {!showSpinner ? (
         <GaragePagination
           disabled={isFetching}
-          onPageChange={setPage}
+          onPageChange={goToPage}
           onPageSizeChange={setPageSize}
           page={page}
           pageSize={pageSize}

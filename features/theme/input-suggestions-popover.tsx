@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useLayoutEffect, useState, type CSSProperties, type RefObject } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type RefObject } from 'react'
 import { createPortal } from 'react-dom'
 
 import { cn } from '@/features/theme/cn'
@@ -11,6 +11,7 @@ type InputSuggestionsPopoverProps = {
   anchorRef: RefObject<HTMLElement | null>
   open: boolean
   suggestions: string[]
+  activeIndex: number
   onSelect: (value: string) => void
 }
 
@@ -19,7 +20,7 @@ const positionForAnchor = (anchor: HTMLElement): CSSProperties => {
   return {
     top: rect.bottom + POPOVER_GAP_PX,
     left: rect.left,
-    width: 192,
+    minWidth: rect.width,
     maxHeight: 128,
   }
 }
@@ -28,9 +29,11 @@ export const InputSuggestionsPopover = ({
   anchorRef,
   open,
   suggestions,
+  activeIndex,
   onSelect,
 }: InputSuggestionsPopoverProps) => {
   const [style, setStyle] = useState<CSSProperties>()
+  const listRef = useRef<HTMLDivElement>(null)
 
   const updatePosition = () => {
     if (!anchorRef.current) return
@@ -56,19 +59,26 @@ export const InputSuggestionsPopover = ({
     }
   }, [open])
 
+  useLayoutEffect(() => {
+    if (!open || activeIndex < 0) return
+    listRef.current?.children[activeIndex]?.scrollIntoView({ block: 'nearest' })
+  }, [activeIndex, open, suggestions])
+
   if (!open || suggestions.length === 0 || typeof document === 'undefined') return null
 
   return createPortal(
     <div
-      className="fixed z-50 overflow-y-auto rounded-md border border-zinc-300 bg-white py-1 shadow-lg dark:border-zinc-700 dark:bg-zinc-950"
+      className="fixed z-50 overflow-y-auto rounded-md border border-zinc-200 bg-zinc-50 py-1 shadow-lg dark:border-zinc-800 dark:bg-zinc-900"
       onMouseDown={(event) => event.preventDefault()}
+      ref={listRef}
       style={style}
     >
-      {suggestions.map((suggestion) => (
+      {suggestions.map((suggestion, index) => (
         <button
           className={cn(
             'block w-full px-3 py-1.5 text-left font-mono text-sm text-zinc-900',
             'hover:bg-zinc-100 dark:text-zinc-100 dark:hover:bg-zinc-800',
+            index === activeIndex && 'bg-zinc-100 dark:bg-zinc-800',
           )}
           key={suggestion}
           onClick={() => onSelect(suggestion)}

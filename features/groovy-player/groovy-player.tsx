@@ -1,11 +1,14 @@
 'use client'
 
-import { useSearchParams } from 'next/navigation'
+import { useRouter, useSearchParams } from 'next/navigation'
 import { useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react'
 
 import { DEMO_TRACKS, demoTrackBars } from '@/features/groovy-player/demo-tracks'
 import { PlayerBottomNav } from '@/features/groovy-player/player-bottom-nav'
 import { useScreenWakeLock } from '@/features/groovy-player/use-screen-wake-lock'
+import { EditIcon } from '@/features/icons/edit-icon'
+import { ForkIcon } from '@/features/icons/fork-icon'
+import { FixedSideActions } from '@/features/layout/fixed-side-actions'
 import { useTopNavSticky } from '@/features/layout/use-top-nav-sticky'
 import {
   DEFAULT_TEMPO,
@@ -19,7 +22,7 @@ import {
 import { Track } from '@/features/groovy-player/track/track'
 import { useSpaceTogglePlay } from '@/features/groovy-player/use-space-toggle-play'
 import { PageBottomNav } from '@/features/layout/page-bottom-nav'
-import { findRhythmBySlug } from '@/features/rhythm/rhythm-catalog'
+import { findRhythmBySlug, forkRhythmToMyRhythms } from '@/features/rhythm/rhythm-catalog'
 import { RhythmEditorButton } from '@/features/rhythm/rhythm-editor-button'
 import { trackBarsRecord, tracksFromRecord } from '@/features/rhythm/rhythm-helpers'
 import type { Rhythm } from '@/features/rhythm/rhythm.types'
@@ -47,6 +50,7 @@ type GroovyPlayerProps = {
 
 export const GroovyPlayer = ({ rhythm }: GroovyPlayerProps = {}) => {
   useTopNavSticky(false)
+  const router = useRouter()
 
   const searchParams = useSearchParams()
   // Both `useSearchParams()` (returns null during static build) and
@@ -209,6 +213,13 @@ export const GroovyPlayer = ({ rhythm }: GroovyPlayerProps = {}) => {
 
   useSpaceTogglePlay(onTogglePlayPause)
 
+  const onFork = () => {
+    if (!loadedRhythm) return
+    const source = findRhythmBySlug(loadedRhythm.slug) ?? loadedRhythm
+    const forked = forkRhythmToMyRhythms(source)
+    router.push(`/editor/${forked.slug}`)
+  }
+
   if (rhythmSlug && !loadedRhythm) {
     return (
       <div className="flex flex-col items-center gap-4 py-16">
@@ -222,17 +233,34 @@ export const GroovyPlayer = ({ rhythm }: GroovyPlayerProps = {}) => {
 
   return (
     <>
-      <section
-        className={cn(
-          'flex w-full flex-col gap-4 bg-white dark:bg-zinc-900/60',
-          fullBleed
-            ? 'md:rounded-none md:border-0'
-            : 'max-w-4xl md:rounded-xl md:border md:border-zinc-100 dark:border-transparent',
-        )}
-      >
-        {loadedRhythm ? (
-          <div className="flex items-center justify-between gap-3 px-4 pt-4">
-            <div>
+      <div className={cn("flex w-full flex-col gap-3", !fullBleed && "lg:pt-4 xl:pt-6")} >
+        {(loadedRhythm && !fullBleed) ? (
+          <FixedSideActions>
+            <Button className="!justify-start" onClick={onFork} variant="subtle">
+              <ForkIcon className="mr-1 size-4" /> Fork
+            </Button>
+            {loadedRhythm.userOwned ? (
+              <Button
+                className="!justify-start"
+                href={`/editor/${loadedRhythm.slug}`}
+                variant="subtle"
+              >
+                <EditIcon className="mr-1 size-4" /> Edit
+              </Button>
+            ) : null}
+          </FixedSideActions>
+        ) : null}
+
+        <section
+          className={cn(
+            'flex w-full flex-col gap-4 bg-white dark:bg-zinc-900/60 overflow-hidden',
+            fullBleed
+              ? 'md:rounded-none md:border-0'
+              : 'md:rounded-xl md:border md:border-zinc-100 dark:border-transparent max-w-4xl mx-auto',
+          )}
+        >
+          {loadedRhythm ? (
+            <div className="px-4 pt-4">
               <h1 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
                 {loadedRhythm.title}
               </h1>
@@ -242,35 +270,30 @@ export const GroovyPlayer = ({ rhythm }: GroovyPlayerProps = {}) => {
                 {loadedRhythm.userOwned ? ' · private' : ''}
               </Text>
             </div>
-            <RhythmEditorButton
-              slug={loadedRhythm.slug}
-              userOwned={loadedRhythm.userOwned}
-              rhythm={loadedRhythm}
-            />
+          ) : null}
+
+          <div className="flex flex-col">
+            {displayTracks.map((track) => (
+              <Track
+                activeIndex={activeBarIndex}
+                bars={track.bars}
+                barsPerRow={barsPerRow}
+                id={track.id}
+                instrument={track.instrument}
+                key={track.id}
+                name={track.name}
+                onVolumeLevelChange={onVolumeLevelChange}
+              />
+            ))}
           </div>
-        ) : null}
 
-        <div className="flex flex-col">
-          {displayTracks.map((track) => (
-            <Track
-              activeIndex={activeBarIndex}
-              bars={track.bars}
-              barsPerRow={barsPerRow}
-              id={track.id}
-              instrument={track.instrument}
-              key={track.id}
-              name={track.name}
-              onVolumeLevelChange={onVolumeLevelChange}
-            />
-          ))}
-        </div>
-
-        {playError ? (
-          <Text className="px-4 pb-2" variant="mono">
-            {playError}
-          </Text>
-        ) : null}
-      </section>
+          {playError ? (
+            <Text className="px-4 pb-2" variant="mono">
+              {playError}
+            </Text>
+          ) : null}
+        </section>
+      </div >
 
       <PageBottomNav>
         <PlayerBottomNav

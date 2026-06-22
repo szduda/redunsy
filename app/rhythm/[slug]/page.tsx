@@ -35,7 +35,7 @@ const RhythmPage = async ({ params }: RhythmPageProps) => {
   const rhythm = detailToRhythm(detail)
 
   return (
-    <main className="flex flex-1 justify-center lg:p-4 xl:p-6">
+    <main className="flex flex-1 justify-center lg:pb-4 xl:pb-6">
       <Suspense>
         <GroovyPlayer rhythm={rhythm} />
       </Suspense>

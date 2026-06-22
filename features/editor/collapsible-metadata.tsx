@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { suggestFromOptions } from '@/features/editor/suggest-from-options'
 import { GARAGE_FILTER_OPTIONS } from '@/features/garage/rhythm-index'
@@ -15,6 +15,7 @@ import { cn } from '@/features/theme/cn'
 type CollapsibleMetadataProps = {
   rhythm: Rhythm
   onChange: (patch: Partial<Rhythm>) => void
+  onTitleBlur: (title: string) => void
 }
 
 const fieldLabelClass = 'flex flex-col gap-1 text-sm'
@@ -43,8 +44,13 @@ const collapsedMetadataSummary = (rhythm: Rhythm) => {
   return parts.join(' · ')
 }
 
-export const CollapsibleMetadata = ({ rhythm, onChange }: CollapsibleMetadataProps) => {
+export const CollapsibleMetadata = ({ rhythm, onChange, onTitleBlur }: CollapsibleMetadataProps) => {
   const [open, setOpen] = useState(false)
+  const [titleDraft, setTitleDraft] = useState(rhythm.title)
+
+  useEffect(() => {
+    setTitleDraft(rhythm.title)
+  }, [rhythm.slug, rhythm.title])
 
   return (
     <section className="border-b border-zinc-200/60 px-2 py-2 dark:border-zinc-800/60 md:px-4">
@@ -56,9 +62,13 @@ export const CollapsibleMetadata = ({ rhythm, onChange }: CollapsibleMetadataPro
           <label className={cn(fieldLabelClass, 'col-span-12')}>
             <Text variant="mono">Title</Text>
             <Input
-              onChange={(event) => onChange({ title: event.target.value })}
-              value={rhythm.title}
               className="w-full"
+              onBlur={() => {
+                const trimmed = titleDraft.trim()
+                if (trimmed !== rhythm.title) onTitleBlur(trimmed)
+              }}
+              onChange={(event) => setTitleDraft(event.target.value)}
+              value={titleDraft}
             />
           </label>
 
