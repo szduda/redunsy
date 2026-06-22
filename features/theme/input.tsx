@@ -95,6 +95,7 @@ const handleSuggestionKeyDown = (
 
 const ChipsInput = ({
   className,
+  onBlur,
   onChange,
   onGetSuggestions,
   value,
@@ -168,7 +169,8 @@ const ChipsInput = ({
         <input
           {...props}
           className="min-w-[3ch] flex-1 border-0 bg-transparent px-1 py-0.5 outline-none"
-          onBlur={() => {
+          onBlur={(event) => {
+            onBlur?.(event)
             setFocused(false)
             setActiveIndex(-1)
           }}
@@ -196,6 +198,7 @@ const ChipsInput = ({
 const TextInput = ({
   className,
   wrapperClassName,
+  onBlur,
   onChange,
   onGetSuggestions,
   onKeyDown,
@@ -245,7 +248,8 @@ const TextInput = ({
         <input
           {...props}
           className={cn(base, className)}
-          onBlur={() => {
+          onBlur={(event) => {
+            onBlur?.(event)
             setFocused(false)
             setActiveIndex(-1)
           }}
