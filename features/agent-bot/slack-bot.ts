@@ -1,3 +1,4 @@
+import pg from 'pg'
 import { Chat } from 'chat'
 import { createSlackAdapter } from '@chat-adapter/slack'
 import { createPostgresState } from '@chat-adapter/state-pg'
@@ -9,12 +10,25 @@ import { createDrizzleStateProvider } from './agent-state'
 
 const agentState = createDrizzleStateProvider()
 
+/**
+ * @chat-adapter/state-pg uses node-postgres (pg) which rejects Supabase's
+ * self-signed cert by default. We create the Pool explicitly so we can pass
+ * ssl: { rejectUnauthorized: false } — same trust level as our postgres.js client.
+ */
+const pgPool = new pg.Pool({
+  connectionString:
+    process.env.POSTGRES_URL ??
+    process.env.POSTGRES_URL_NON_POOLING ??
+    process.env.DATABASE_URL,
+  ssl: { rejectUnauthorized: false },
+})
+
 export const bot = new Chat({
   userName: 'dunsy-agent',
   adapters: {
     slack: createSlackAdapter(),
   },
-  state: createPostgresState(),
+  state: createPostgresState({ client: pgPool }),
   /**
    * Force-release any existing lock so a new Slack message can interrupt
    * a long-running agent turn (e.g. user sends a correction mid-run).
