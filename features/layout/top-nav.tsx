@@ -1,8 +1,9 @@
 'use client'
 
+import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 
-import { SearchIcon } from '@/features/icons/search-icon'
+import { HelpIcon } from '@/features/icons/help-icon'
 import { AppLogo } from '@/features/layout/app-logo'
 import { TOP_NAV_BG_CLASS, TOP_NAV_HEIGHT_CLASS } from '@/features/layout/constants'
 import { topNavItemClass } from '@/features/layout/top-nav-item'
@@ -30,9 +31,14 @@ export const TopNav = () => {
 
         <AppLogo />
 
-        <button aria-label="Search" className={cn(topNavItemClass)} type="button">
-          <SearchIcon />
-        </button>
+        <Link
+          aria-current={pathname === '/help' ? 'page' : undefined}
+          aria-label="Help"
+          className={cn(topNavItemClass, pathname === '/help' && 'text-zinc-100')}
+          href="/help"
+        >
+          <HelpIcon />
+        </Link>
       </nav>
     </header>
   )

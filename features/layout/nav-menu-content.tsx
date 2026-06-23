@@ -1,5 +1,6 @@
 import Link from 'next/link'
 
+import { HelpIcon } from '@/features/icons/help-icon'
 import { ThemeSwitch } from '@/features/theme/theme-switch'
 import { cn } from '@/features/theme/cn'
 
@@ -45,6 +46,16 @@ export const NavMenuContent = ({ onClose, variant = 'default' }: NavMenuContentP
       >
         <ThemeSwitch className="px-2 opacity-60" />
       </div>
+      {variant === 'homepage' ? (
+        <Link
+          className={cn(linkStyles.homepage, 'mt-12 inline-flex items-center gap-2')}
+          href="/help"
+          onClick={onClose}
+        >
+          <HelpIcon className="size-5 shrink-0" />
+          Help
+        </Link>
+      ) : null}
     </nav>
   )
 }

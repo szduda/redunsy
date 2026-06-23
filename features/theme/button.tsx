@@ -9,6 +9,7 @@ type ButtonProps = Omit<ComponentPropsWithoutRef<'button'>, 'href'> & {
   variant?: ButtonVariant
   link?: boolean
   href?: string
+  targetBlank?: boolean
 }
 
 const base =
@@ -35,17 +36,14 @@ export const Button = ({
   type = 'button',
   link = false,
   href,
+  targetBlank = false,
   disabled,
   children,
   ...props
 }: ButtonProps) => {
   const resolvedVariant = variant ?? (link || href ? 'link' : 'outlined')
   const isLink = resolvedVariant === 'link'
-  const styles = cn(
-    isLink ? linkBase : base,
-    !isLink && variants[resolvedVariant],
-    className,
-  )
+  const styles = cn(isLink ? linkBase : base, !isLink && variants[resolvedVariant], className)
 
   if (href) {
     return (
@@ -53,6 +51,8 @@ export const Button = ({
         aria-disabled={disabled}
         className={cn(styles, disabled && 'pointer-events-none opacity-50')}
         href={href}
+        rel={targetBlank ? 'noreferrer' : undefined}
+        target={targetBlank ? '_blank' : undefined}
       >
         {children}
       </Link>
