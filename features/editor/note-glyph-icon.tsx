@@ -31,7 +31,7 @@ const renderNoteGlyph = (note: string, instrument: string) => {
       return (
         <>
           <circle className="fill-current" cx="12" cy="12" r="7" />
-          <circle className={holeClass} cx="12" cy="12" r="3" />
+          <circle className={holeClass} cx="12" cy="12" r="4" />
           <path
             className="stroke-current"
             d="M8 8 L16 16 M16 8 L8 16"
@@ -68,7 +68,7 @@ const renderNoteGlyph = (note: string, instrument: string) => {
       return (
         <>
           <circle className="fill-current" cx="12" cy="12" r="7" />
-          <circle className={holeClass} cx="12" cy="12" r="3" />
+          <circle className={holeClass} cx="12" cy="12" r="4" />
           <path
             className="stroke-current"
             d="M8 8 L16 16 M16 8 L8 16"
@@ -83,7 +83,7 @@ const renderNoteGlyph = (note: string, instrument: string) => {
       return (
         <>
           <circle className="fill-current" cx="10" cy="10" r="5" />
-          <circle className={holeClass} cx="10" cy="10" r="2" />
+          <circle className={holeClass} cx="10" cy="10" r="3" />
           <path
             className="stroke-current"
             d="M7 7 L13 13 M13 7 L7 13"
@@ -92,7 +92,7 @@ const renderNoteGlyph = (note: string, instrument: string) => {
             strokeWidth="1.5"
           />
           <circle className="fill-current" cx="14" cy="14" r="5" />
-          <circle className={holeClass} cx="14" cy="14" r="2" />
+          <circle className={holeClass} cx="14" cy="14" r="3" />
           <path
             className="stroke-current"
             d="M11 11 L17 17 M17 11 L11 17"

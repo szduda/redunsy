@@ -63,10 +63,7 @@ const HELP_ICON_RENDERERS: Record<HelpIconKey, Icon> = {
   djembe: iconRenderer(DjembeIcon, 'scale-125'),
   shekere: ({ className, ...props }) => (
     <ShekereIcon
-      className={cn(
-        'size-20 shrink-0 opacity-20 saturate-0 lg:size-28 !text-zinc-500 dark:!text-zinc-400',
-        className,
-      )}
+      className={cn('size-20 shrink-0 lg:size-28', helpIconClass(className))}
       {...props}
     />
   ),
