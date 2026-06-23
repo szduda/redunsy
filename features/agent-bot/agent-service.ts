@@ -2,7 +2,7 @@ import { Agent, CursorAgentError } from '@cursor/sdk'
 
 import { buildSystemPrompt } from './system-prompt'
 
-const REPO_URL = process.env.CURSOR_REPO_URL ?? 'github.com/szduda/redunsy'
+const REPO_URL = process.env.CURSOR_REPO_URL ?? 'https://github.com/szduda/redunsy'
 
 const apiKey = () => {
   const key = process.env.CURSOR_API_KEY

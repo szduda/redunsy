@@ -23,12 +23,16 @@ export const branchToPreviewUrl = (branchName: string): string => {
 export const promptToBranchName = (prompt: string): string => {
   const slug = prompt
     .toLowerCase()
-    .replace(/<[^>]+>/g, '') // strip Slack mention markup
+    // Chat SDK normalises <@USERID> → @userid; also strip raw <tag> forms
+    .replace(/@\S+/g, '')
+    .replace(/<[^>]+>/g, '')
     .replace(/[^a-z0-9\s]/g, '')
     .trim()
     .replace(/\s+/g, '-')
     .replace(/-+/g, '-')
-    .slice(0, 48)
+    .slice(0, 44)
     .replace(/-$/, '')
-  return `agent/${slug}`
+  // Short timestamp suffix keeps branch names unique across sessions
+  const suffix = Date.now().toString(36).slice(-4)
+  return `agent/${slug}-${suffix}`
 }
