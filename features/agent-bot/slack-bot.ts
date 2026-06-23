@@ -11,15 +11,29 @@ import { createDrizzleStateProvider } from './agent-state'
 const agentState = createDrizzleStateProvider()
 
 /**
- * @chat-adapter/state-pg uses node-postgres (pg) which rejects Supabase's
- * self-signed cert by default. We create the Pool explicitly so we can pass
- * ssl: { rejectUnauthorized: false } — same trust level as our postgres.js client.
+ * pg-connection-string treats `sslmode=require` as an alias for `verify-full`
+ * (rejectUnauthorized: true). When that's in the connection string it wins over
+ * our ssl object via Object.assign merge. Stripping it before creating the Pool
+ * lets our explicit `rejectUnauthorized: false` take effect uncontested.
  */
+const stripSslMode = (url: string) => {
+  try {
+    const parsed = new URL(url)
+    parsed.searchParams.delete('sslmode')
+    return parsed.toString()
+  } catch {
+    return url
+  }
+}
+
+const rawConnectionString =
+  process.env.POSTGRES_URL ??
+  process.env.POSTGRES_URL_NON_POOLING ??
+  process.env.DATABASE_URL ??
+  ''
+
 const pgPool = new pg.Pool({
-  connectionString:
-    process.env.POSTGRES_URL ??
-    process.env.POSTGRES_URL_NON_POOLING ??
-    process.env.DATABASE_URL,
+  connectionString: stripSslMode(rawConnectionString),
   ssl: { rejectUnauthorized: false },
 })
 
