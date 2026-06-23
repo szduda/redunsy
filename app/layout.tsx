@@ -1,4 +1,4 @@
-import type { Metadata } from 'next'
+import type { Metadata, Viewport } from 'next'
 import { Geist, Geist_Mono } from 'next/font/google'
 
 import { AppLayout } from '@/features/layout/app-layout'
@@ -19,6 +19,18 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: 'Redunsy',
   description: 'Groovy player on re.dunsy.app',
+  applicationName: 'Redunsy',
+  appleWebApp: {
+    capable: true,
+    title: 'Redunsy',
+  },
+}
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#ffffff' },
+    { media: '(prefers-color-scheme: dark)', color: '#09090b' },
+  ],
 }
 
 const RootLayout = ({
