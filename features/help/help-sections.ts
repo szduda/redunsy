@@ -14,7 +14,7 @@ export const HELP_SECTIONS: HelpSection[] = [
             icon: 'play',
             title: 'Player demo',
             description:
-              'Open Player Demo from the menu to explore a built-in example without picking a rhythm from the Garage. Use it to try transport controls, tempo, metronome, swing, and player settings.',
+              'Open Player Demo from the menu to explore a built-in example without picking a rhythm from the Garage. Use it to try audio controls, tempo, metronome, swing, and player settings.',
           },
           {
             icon: 'fork',
@@ -26,6 +26,7 @@ export const HELP_SECTIONS: HelpSection[] = [
       },
       {
         title: 'Garage',
+        tileBg: 'bg-redy/20',
         description:
           'The Garage is the main library browser. Search, filter, and open any published rhythm in the player.',
         subitems: [
@@ -45,6 +46,7 @@ export const HELP_SECTIONS: HelpSection[] = [
       },
       {
         title: 'Rhythm Editor',
+        tileBg: 'bg-yellowy/30',
         description:
           'Write your own patterns layer by layer. Pick instruments, set tempo and metadata, then edit bars on a canvas. Changes auto-save to My Rhythms.',
         subitems: [
@@ -71,8 +73,81 @@ export const HELP_SECTIONS: HelpSection[] = [
     ],
   },
   {
+    id: 'notation',
+    title: 'Drum notation',
+    tileBg: 'bg-yellowy/30',
+    intro:
+      'Bars use a fixed grid: 6 cells in 3/4, 8 cells in 4/4. Darker cells mark main beats — where you would stamp your foot. Lighter cells are off-beats.',
+    topics: [
+      {
+        title: 'Bar and beats',
+        description:
+          'Every track is a stack of bars. Each bar fills a fixed grid of eighth-note cells — 8 in 4/4, 6 in 3/4 — matching the rhythm meter. Cells with a darker background are main beats; lighter cells are off-beats. While playing, the whole active bar turns green. In the editor, one cell at a time gets a yellow outline when selected.',
+        demo: 'bar-beats',
+      },
+      {
+        title: 'Dundun open / djembe bass',
+        description:
+          'Open stroke on dundun drums: strike and let the stick rebound. On djembe this is bass — a low, open hit.',
+        glyphs: [
+          { instrument: 'dundunba', note: 'o' },
+          { instrument: 'djembe', note: 'b' },
+        ],
+      },
+      {
+        title: 'Dundun closed / djembe slap',
+        description:
+          'Closed stroke: strike and lightly press the stick on the skin to shorten the sound. On djembe this is slap — a sharp, high hit with a crossed ring.',
+        glyphs: [
+          { instrument: 'dundunba', note: 'x' },
+          { instrument: 'djembe', note: 's' },
+        ],
+      },
+      {
+        title: 'Djembe tone',
+        description:
+          'A ringing mid pitch between bass and slap — the everyday hand tone on the djembe.',
+        glyphs: [{ instrument: 'djembe', note: 't' }],
+      },
+      {
+        title: 'Bell sound',
+        description: 'Metal on metal — shown as a cross. Used on bell and kenkeni bell patterns.',
+        glyphs: [{ instrument: 'bell', note: 'x' }],
+      },
+      {
+        title: 'Rest',
+        description: 'A silence on that subdivision — shown as a small dot.',
+        glyphs: [{ instrument: 'djembe', note: '-' }],
+      },
+      {
+        title: 'Flam',
+        description:
+          'Two quick hits before the main note. Grace notes are drawn slightly offset from the primary stroke.',
+        glyphs: [
+          { instrument: 'djembe', note: 'r' },
+          { instrument: 'djembe', note: 'f' },
+        ],
+      },
+      {
+        icon: 'note16',
+        title: 'Sixteenth notes',
+        description:
+          'One eighth slot can hold two sixteenth notes. Select a plain note in the editor and tap 16th to convert.',
+        demoBar: { meter: 4, pattern: '[bt]ss-tt--' },
+      },
+      {
+        icon: 'triplet',
+        title: 'Triplets',
+        description:
+          'Three notes share two eighth cells as an eighth-note triplet. Select a plain note in the editor and tap Triplet to convert.',
+        demoBar: { meter: 4, pattern: 's{bts}-tt--' },
+      },
+    ],
+  },
+  {
     id: 'player',
     title: 'Player features',
+    tileBg: 'bg-greeny/30',
     topics: [
       {
         icons: ['play', 'pause', 'stop', 'restart'],
@@ -121,6 +196,7 @@ export const HELP_SECTIONS: HelpSection[] = [
   {
     id: 'player-settings',
     title: 'Player settings',
+    tileBg: 'bg-greeny/30',
     intro: 'Open the gear icon in the bottom bar to adjust layout and display options.',
     topics: [
       {
@@ -139,7 +215,7 @@ export const HELP_SECTIONS: HelpSection[] = [
         icon: 'pepper',
         title: 'Swing pattern',
         description:
-          'Edit the swing pattern text directly in settings. The pattern length must match the rhythm meter — 6 characters for 3/4, 8 for 4/4. A warning icon appears when the length is wrong.',
+          'Each character controls how notes in one eighth-note slot are shifted on the playback grid. `-` plays straight on the beat. `<` and `(` pull hits earlier (strong / weak). `>` and `)` push them later (strong / weak). Main downbeats are never shifted. The pattern length must match the rhythm meter — 6 characters for 3/4, 8 for 4/4. A warning icon appears when the length is wrong. Examples: Soli-style `-<(-<(`, Marakadon-style `->)->)`, common 4/4 swing `->->->->`, or the rarer delayed variant `--->--->`.',
       },
       {
         icon: 'barIndex',
@@ -157,82 +233,13 @@ export const HELP_SECTIONS: HelpSection[] = [
         icon: 'screenAwake',
         title: 'Prevent screen sleep',
         description:
-          'Keeps the screen awake during playback so the highlight bar stays visible through a long practice session.',
+          'Keeps the screen awake during playback so the highlight bar stays visible through a long practice session. Uses the browser Screen Wake Lock API — macOS does not show a separate system permission dialog for this, but it only works while the tab is visible and may stop when you switch away or if the browser blocks wake lock (for example on low battery).',
       },
       {
         icon: 'fullBleed',
         title: 'Full bleed',
         description:
-          'Desktop only. Stretches the player edge to edge and hides side margins for maximum notation width.',
-      },
-    ],
-  },
-  {
-    id: 'notation',
-    title: 'Drum notation',
-    intro:
-      'Bars use a fixed grid: 6 cells in 3/4, 8 cells in 4/4. Darker cells mark main beats — where you would stamp your foot. Lighter cells are off-beats.',
-    topics: [
-      {
-        title: 'Bar and beats',
-        description:
-          'Every track is a stack of bars. Each bar fills a fixed grid of eighth-note cells — 8 in 4/4, 6 in 3/4 — matching the rhythm meter. Cells with a darker background are main beats; lighter cells are off-beats. While playing, the whole active bar turns green. In the editor, one cell at a time gets a yellow outline when selected.',
-        demo: 'bar-beats',
-      },
-      {
-        title: 'Dundun open / djembe bass',
-        description:
-          'Open stroke on dundun drums: strike and let the stick rebound. On djembe this is bass — a low, open hit.',
-        glyphs: [
-          { instrument: 'dundunba', note: 'o' },
-          { instrument: 'djembe', note: 'b' },
-        ],
-      },
-      {
-        title: 'Dundun closed / djembe slap',
-        description:
-          'Closed stroke: strike and lightly press the stick on the skin to shorten the sound. On djembe this is slap — a sharp, high hit with a crossed ring.',
-        glyphs: [
-          { instrument: 'dundunba', note: 'x' },
-          { instrument: 'djembe', note: 's' },
-        ],
-      },
-      {
-        title: 'Djembe tone',
-        description:
-          'A ringing mid pitch between bass and slap — the everyday hand tone on the djembe.',
-        glyphs: [{ instrument: 'djembe', note: 't' }],
-      },
-      {
-        title: 'Bell sound',
-        description: 'Metal on metal — shown as a cross. Used on bell and kenkeni bell patterns.',
-        glyphs: [{ instrument: 'bell', note: 'x' }],
-      },
-      {
-        title: 'Rest',
-        description: 'A silence on that subdivision — shown as a small dot.',
-        glyphs: [{ instrument: 'djembe', note: '-' }],
-      },
-      {
-        title: 'Flam',
-        description:
-          'Two quick hits before the main note: r for a tone flam, f for a slap flam. Grace notes are drawn slightly offset.',
-        glyphs: [
-          { instrument: 'djembe', note: 'r' },
-          { instrument: 'djembe', note: 'f' },
-        ],
-      },
-      {
-        icon: 'note16',
-        title: 'Sixteenth notes',
-        description:
-          'Wrap two characters in square brackets to split one eighth slot into sixteenths, e.g. [bt] or [ss]. Select a plain note in the editor and tap 16th to convert.',
-      },
-      {
-        icon: 'triplet',
-        title: 'Triplets',
-        description:
-          'Wrap three characters in curly braces for an eighth-note triplet, e.g. {bts}. Select a plain note and tap Triplet in the editor to convert.',
+          'Desktop only. Stretches the player edge to edge and hides side margins for maximum notation width. In this mode the side panel is hidden, so Fork and Edit are not available until you turn full bleed off.',
       },
     ],
   },

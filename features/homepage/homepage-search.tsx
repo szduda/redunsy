@@ -36,7 +36,7 @@ export const HomepageSearch = () => {
         event.currentTarget.blur()
       }}
       onSuggestionCommit={commit}
-      placeholder="Search rhythms, artists, regions..."
+      placeholder="Rhythm, artist, region..."
       type="search"
       value={draft}
     />

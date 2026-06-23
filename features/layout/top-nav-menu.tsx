@@ -4,8 +4,8 @@ import { useEffect, useState } from 'react'
 import { createPortal } from 'react-dom'
 
 import { MenuIcon } from '@/features/icons/menu-icon'
-import { Popover } from '@/features/groovy-player/popover'
 import { TOP_NAV_HALO_STROKE_CLASS } from '@/features/layout/constants'
+import { MobileNavMenu } from '@/features/layout/mobile-nav-menu'
 import { NavMenuContent } from '@/features/layout/nav-menu-content'
 import { topNavItemClass } from '@/features/layout/top-nav-item'
 import { useIsMobile } from '@/features/shared/use-is-mobile'
@@ -99,21 +99,7 @@ export const TopNavMenu = () => {
   const [open, setOpen] = useState(false)
   const close = () => setOpen(false)
 
-  if (isMobile) {
-    return (
-      <Popover
-        full
-        panel={({ close: closePopover }) => (
-          <div className="mx-auto flex w-full max-w-4xl flex-col px-3 py-4 md:px-4">
-            <NavMenuContent onClose={closePopover} variant="mobile" />
-          </div>
-        )}
-        panelClassName="!border-zinc-800 !bg-zinc-900/95 backdrop-blur"
-      >
-        {({ open: popoverOpen, toggle }) => <MenuButton onClick={toggle} open={popoverOpen} />}
-      </Popover>
-    )
-  }
+  if (isMobile) return <MobileNavMenu />
 
   return (
     <>

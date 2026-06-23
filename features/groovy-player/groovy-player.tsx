@@ -4,7 +4,9 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react'
 
 import { DEMO_TRACKS, demoTrackBars } from '@/features/groovy-player/demo-tracks'
+import { forkPlayerDemoToMyRhythms } from '@/features/groovy-player/demo-rhythm'
 import { PlayerBottomNav } from '@/features/groovy-player/player-bottom-nav'
+import { PlayerDemoBanner } from '@/features/groovy-player/player-demo-banner'
 import { useScreenWakeLock } from '@/features/groovy-player/use-screen-wake-lock'
 import { EditIcon } from '@/features/icons/edit-icon'
 import { ForkIcon } from '@/features/icons/fork-icon'
@@ -59,7 +61,10 @@ export const GroovyPlayer = ({ rhythm }: GroovyPlayerProps = {}) => {
   const [clientState, setClientState] = useState<{
     slug: string | null
     rhythm: Rhythm | null
-  }>({ slug: null, rhythm: null })
+  }>(() => {
+    const slug = searchParams.get('rhythm')
+    return { slug, rhythm: slug ? findRhythmBySlug(slug) : null }
+  })
   useEffect(() => {
     const slug = searchParams.get('rhythm')
     setClientState({ slug, rhythm: slug ? findRhythmBySlug(slug) : null })
@@ -67,6 +72,7 @@ export const GroovyPlayer = ({ rhythm }: GroovyPlayerProps = {}) => {
 
   const rhythmSlug = clientState.slug
   const loadedRhythm = rhythm ?? clientState.rhythm
+  const isPlayerDemo = !rhythm && !rhythmSlug && !loadedRhythm
 
   const barsPerRow = usePlayerStore((state) => state.barsPerRow)
   const tempo = usePlayerStore((state) => state.tempo)
@@ -220,6 +226,11 @@ export const GroovyPlayer = ({ rhythm }: GroovyPlayerProps = {}) => {
     router.push(`/editor/${forked.slug}`)
   }
 
+  const onForkDemo = () => {
+    const forked = forkPlayerDemoToMyRhythms(tempo, swingPattern)
+    router.push(`/editor/${forked.slug}`)
+  }
+
   if (rhythmSlug && !loadedRhythm) {
     return (
       <div className="flex flex-col items-center gap-4 py-16">
@@ -233,7 +244,9 @@ export const GroovyPlayer = ({ rhythm }: GroovyPlayerProps = {}) => {
 
   return (
     <>
-      <div className={cn("flex w-full flex-col gap-3", !fullBleed && "lg:pt-4 xl:pt-6")} >
+      <div className={cn('flex w-full flex-col gap-3', !fullBleed && 'lg:pt-4 xl:pt-6')}>
+        {isPlayerDemo ? <PlayerDemoBanner onFork={onForkDemo} /> : null}
+
         {(loadedRhythm && !fullBleed) ? (
           <FixedSideActions>
             <Button className="!justify-start" onClick={onFork} variant="subtle">

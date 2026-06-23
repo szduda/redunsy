@@ -35,6 +35,12 @@ export type HelpGlyph = {
 
 export type HelpTopicDemo = 'bar-beats'
 
+export type HelpTopicDemoBar = {
+  meter: 3 | 4
+  pattern: string
+  instrument?: string
+}
+
 export type HelpTopic = {
   title: string
   description: string
@@ -43,7 +49,9 @@ export type HelpTopic = {
   glyphs?: HelpGlyph[]
   subitems?: HelpTopic[]
   demo?: HelpTopicDemo
+  demoBar?: HelpTopicDemoBar
   extra?: ReactNode
+  tileBg?: string
 }
 
 export type HelpSection = {
@@ -51,4 +59,5 @@ export type HelpSection = {
   title: string
   intro?: string
   topics: HelpTopic[]
+  tileBg?: string
 }

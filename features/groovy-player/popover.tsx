@@ -92,10 +92,22 @@ const resolveDirection = (
   return space[preferred] >= space[opposite] ? preferred : opposite
 }
 
-const getFullPanelStyle = (root: HTMLElement): CSSProperties => {
-  const headerBottom = root.closest('header')?.getBoundingClientRect().bottom
+const getFullPanelTop = (root: HTMLElement, anchor: 'header' | 'trigger'): number =>
+  anchor === 'trigger'
+    ? root.getBoundingClientRect().bottom + POPOVER_GAP_PX
+    : (root.closest('header')?.getBoundingClientRect().bottom ?? 0)
+
+const getFullPanelStyle = (root: HTMLElement, anchor: 'header' | 'trigger'): CSSProperties => ({
+  top: getFullPanelTop(root, anchor),
+  left: 0,
+  right: 0,
+  bottom: 0,
+})
+
+const getFullBackdropStyle = (root: HTMLElement, anchor: 'header' | 'trigger'): CSSProperties => {
+  const panelTop = getFullPanelTop(root, anchor)
   return {
-    top: headerBottom ?? 0,
+    top: anchor === 'trigger' ? 0 : panelTop,
     left: 0,
     right: 0,
     bottom: 0,
@@ -114,20 +126,29 @@ type PopoverPanelProps = {
 type PopoverProps = {
   panel: ReactNode | ((props: PopoverPanelProps) => ReactNode)
   panelClassName?: string
+  backdropClassName?: string
   preferredDirection?: PopoverDirection
   full?: boolean
+  fullAnchor?: 'header' | 'trigger'
+  fullBackdrop?: boolean
+  rootClassName?: string
   children: (props: PopoverRenderProps) => ReactNode
 }
 
 export const Popover = ({
   panel,
   panelClassName,
+  backdropClassName,
   preferredDirection = 'bottom',
   full = false,
+  fullAnchor = 'header',
+  fullBackdrop = false,
+  rootClassName,
   children,
 }: PopoverProps) => {
   const [open, setOpen] = useState(false)
   const [panelStyle, setPanelStyle] = useState<CSSProperties>()
+  const [backdropStyle, setBackdropStyle] = useState<CSSProperties>()
   const rootRef = useRef<HTMLDivElement>(null)
   const panelRef = useRef<HTMLDivElement>(null)
   const close = () => setOpen(false)
@@ -138,9 +159,12 @@ export const Popover = ({
     if (!trigger || !panelEl) return
 
     if (full) {
-      setPanelStyle(getFullPanelStyle(trigger))
+      setPanelStyle(getFullPanelStyle(trigger, fullAnchor))
+      setBackdropStyle(fullBackdrop ? getFullBackdropStyle(trigger, fullAnchor) : undefined)
       return
     }
+
+    setBackdropStyle(undefined)
 
     const triggerRect = trigger.getBoundingClientRect()
     const direction = resolveDirection(preferredDirection, triggerRect, {
@@ -159,10 +183,11 @@ export const Popover = ({
   useLayoutEffect(() => {
     if (!open) {
       setPanelStyle(undefined)
+      setBackdropStyle(undefined)
       return
     }
     updatePosition()
-  }, [full, open, preferredDirection, panel])
+  }, [full, fullAnchor, open, preferredDirection, panel])
 
   useEffect(() => {
     if (!open) return
@@ -190,22 +215,34 @@ export const Popover = ({
   const panelContent = typeof panel === 'function' ? panel({ close }) : panel
 
   return (
-    <div ref={rootRef} className="relative">
+    <div ref={rootRef} className={cn('relative inline-flex', rootClassName)}>
       {children({ open, toggle })}
       {open && typeof document !== 'undefined'
         ? createPortal(
-            <div
-              ref={panelRef}
-              className={cn(
-                full ? popoverPanelFullBaseClass : popoverPanelBaseClass,
-                !full && 'w-32',
-                panelClassName,
-              )}
-              style={panelStyle}
-              onPointerDown={(event) => event.stopPropagation()}
-            >
-              {panelContent}
-            </div>,
+            <>
+              {full && fullBackdrop ? (
+                <div
+                  aria-hidden
+                  className={cn(
+                    'fixed z-30',
+                    backdropClassName ?? 'bg-zinc-900/95 backdrop-blur',
+                  )}
+                  style={backdropStyle}
+                />
+              ) : null}
+              <div
+                ref={panelRef}
+                className={cn(
+                  full ? popoverPanelFullBaseClass : popoverPanelBaseClass,
+                  !full && 'w-32',
+                  panelClassName,
+                )}
+                style={panelStyle}
+                onPointerDown={(event) => event.stopPropagation()}
+              >
+                {panelContent}
+              </div>
+            </>,
             document.body,
           )
         : null}
