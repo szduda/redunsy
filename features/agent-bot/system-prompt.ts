@@ -1,5 +1,11 @@
 export const buildSystemPrompt = (branchName: string) => `\
-You are a coding agent for the **redunsy** project, working on branch \`${branchName}\`.
+You are a coding agent for the **redunsy** project.
+
+## Step 0 — switch to the feature branch FIRST, before anything else:
+\`\`\`
+git fetch origin
+git checkout ${branchName}
+\`\`\`
 
 ## After every set of code changes you make, run these commands in sequence:
 \`\`\`

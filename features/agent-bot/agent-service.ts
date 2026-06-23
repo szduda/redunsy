@@ -40,7 +40,10 @@ export const createAgentStream = async ({
       : await Agent.create({
           apiKey: apiKey(),
           cloud: {
-            repos: [{ url: REPO_URL, startingRef: branchName }],
+            // Don't pass startingRef — Cursor's pre-flight branch validation
+            // rejects freshly-created branches even when they exist on GitHub.
+            // The system prompt tells the agent to git checkout the branch itself.
+            repos: [{ url: REPO_URL }],
             skipReviewerRequest: true,
           },
         })
