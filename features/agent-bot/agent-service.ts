@@ -57,7 +57,23 @@ export const createAgentStream = async ({
     ? prompt
     : `${buildSystemPrompt(branchName)}\n\n${prompt}`
 
-  const run = await agent.send(fullPrompt)
+  // Cursor validates the branch during send(). If the GitHub ref hasn't
+  // propagated yet, retry up to 2 more times with increasing back-off.
+  let run: Awaited<ReturnType<typeof agent.send>>
+  for (let attempt = 0; ; attempt++) {
+    try {
+      run = await agent.send(fullPrompt)
+      break
+    } catch (err) {
+      const isValidationError =
+        err instanceof CursorAgentError && (err as { code?: string }).code === 'validation_error'
+      if (isValidationError && attempt < 2) {
+        await new Promise((r) => setTimeout(r, 3000 * (attempt + 1)))
+        continue
+      }
+      throw err
+    }
+  }
 
   return {
     [Symbol.asyncIterator]() {

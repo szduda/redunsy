@@ -62,6 +62,9 @@ bot.onNewMention(async (thread, message) => {
   )
 
   await createBranch(branchName)
+  // GitHub ref propagation can take a moment; Cursor validates the branch
+  // during agent.send() — wait before handing off to avoid a 400 race.
+  await new Promise((r) => setTimeout(r, 3000))
 
   const stream = await createAgentStream({
     existingAgentId: null,
