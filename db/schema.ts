@@ -35,3 +35,6 @@ export const rhythms = pgTable('rhythms', {
 
 export type RhythmRow = typeof rhythms.$inferSelect
 export type RhythmInsert = typeof rhythms.$inferInsert
+
+export { agentSessions } from '@/features/agent-bot/agent-session.schema'
+export type { AgentSession, AgentSessionInsert } from '@/features/agent-bot/agent-session.schema'
