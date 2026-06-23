@@ -54,9 +54,7 @@
         "agent_sessions_thread_id_unique": {
           "name": "agent_sessions_thread_id_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "thread_id"
-          ]
+          "columns": ["thread_id"]
         }
       },
       "policies": {},
@@ -179,9 +177,7 @@
         "rhythms_slug_unique": {
           "name": "rhythms_slug_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "slug"
-          ]
+          "columns": ["slug"]
         }
       },
       "policies": {},

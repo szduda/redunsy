@@ -63,9 +63,7 @@ export const useNoteEditor = (
       if (nextBars === bars) return
       onBarsChange(nextBars)
       setSelection((current) =>
-        current
-          ? { ...current, barIndex: remapBarIndex(current.barIndex, from, to) }
-          : null,
+        current ? { ...current, barIndex: remapBarIndex(current.barIndex, from, to) } : null,
       )
     },
     [bars, onBarsChange],

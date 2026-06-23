@@ -1,4 +1,4 @@
-var _drum_djembe_flam_slap = {
+const _drum_djembe_flam_slap = {
   zones: [
     {
       midi: 0, //MIDI program

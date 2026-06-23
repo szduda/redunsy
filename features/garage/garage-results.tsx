@@ -109,7 +109,10 @@ const GaragePagination = ({
   onPageSizeChange,
 }: PaginationProps) =>
   Boolean(total) && (
-    <nav aria-label="Pagination" className="flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between lg:gap-3">
+    <nav
+      aria-label="Pagination"
+      className="flex flex-col gap-2 lg:flex-row lg:items-center lg:justify-between lg:gap-3"
+    >
       <div className="flex items-center justify-between md:justify-start gap-2">
         <Button
           aria-label="Previous page"

@@ -1,4 +1,4 @@
-var _shaker = {
+const _shaker = {
   zones: [
     {
       midi: 128,

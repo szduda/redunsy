@@ -27,7 +27,10 @@ export const flattenBarNotes = (bars: string[]): FlatNote[] =>
     }))
   })
 
-export const getSelectedFlatNote = (bars: string[], selection: NoteSelection | null): FlatNote | null => {
+export const getSelectedFlatNote = (
+  bars: string[],
+  selection: NoteSelection | null,
+): FlatNote | null => {
   if (!selection) return null
   const bar = bars[selection.barIndex]
   if (!bar) return null
@@ -71,7 +74,10 @@ export const setNoteAtGlyph = (bar: string, glyphIndex: number, note: string) =>
   return replaceCharAt(bar, location.charIndex, note)
 }
 
-const nextPlainGlyphIndex = (glyphIndex: number, locations: ReturnType<typeof getGlyphLocations>) => {
+const nextPlainGlyphIndex = (
+  glyphIndex: number,
+  locations: ReturnType<typeof getGlyphLocations>,
+) => {
   for (let index = glyphIndex + 1; index < locations.length; index += 1) {
     if (locations[index].kind === 'plain') return index
     return null

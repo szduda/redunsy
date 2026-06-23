@@ -1,6 +1,13 @@
 'use client'
 
-import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type RefObject } from 'react'
+import {
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type RefObject,
+} from 'react'
 import { createPortal } from 'react-dom'
 
 import { cn } from '@/features/theme/cn'

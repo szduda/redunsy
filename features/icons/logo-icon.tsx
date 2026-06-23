@@ -9,7 +9,8 @@ type LogoIconProps = FancyIconProps & {
   onStickClick?: () => void
 }
 
-const drumClass = 'saturate-80 contrast-150 brightness-70 dark:saturate-100 dark:contrast-100 dark:brightness-100'
+const drumClass =
+  'saturate-80 contrast-150 brightness-70 dark:saturate-100 dark:contrast-100 dark:brightness-100'
 
 export const LogoIcon: FC<LogoIconProps> = ({
   onStickClick = () => null,

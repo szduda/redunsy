@@ -1,4 +1,4 @@
-var _drum_dundunba_open = {
+const _drum_dundunba_open = {
   zones: [
     {
       midi: 0, //MIDI program

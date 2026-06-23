@@ -1,4 +1,4 @@
-var _drum_djembe_mute_tone = {
+const _drum_djembe_mute_tone = {
   zones: [
     {
       midi: 0, //MIDI program

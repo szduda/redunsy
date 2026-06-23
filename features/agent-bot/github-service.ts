@@ -29,7 +29,8 @@ export const createBranch = async (branchName: string): Promise<void> => {
       err !== null &&
       'status' in err &&
       (err as { status: number }).status === 422
-    ) return
+    )
+      return
     throw err
   }
 }

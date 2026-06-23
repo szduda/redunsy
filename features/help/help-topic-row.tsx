@@ -10,8 +10,7 @@ type HelpTopicRowProps = {
   topic: HelpTopic
 }
 
-const topicRowClass =
-  'border-b border-zinc-200/80 py-6 last:border-b-0 dark:border-zinc-800/80'
+const topicRowClass = 'border-b border-zinc-200/80 py-6 last:border-b-0 dark:border-zinc-800/80'
 
 const hasIconsColumn = (topic: HelpTopic) =>
   Boolean(topic.icons?.length || topic.icon || topic.glyphs?.length)
@@ -87,10 +86,7 @@ export const HelpTopicRow = ({ topic }: HelpTopicRowProps) => {
 
   return (
     <article
-      className={cn(
-        'grid grid-cols-[minmax(0,1fr)_minmax(0,3fr)] gap-x-6 gap-y-2',
-        topicRowClass,
-      )}
+      className={cn('grid grid-cols-[minmax(0,1fr)_minmax(0,3fr)] gap-x-6 gap-y-2', topicRowClass)}
     >
       <HelpTopicIconsColumn topic={topic} />
       <HelpTopicContent topic={topic} />

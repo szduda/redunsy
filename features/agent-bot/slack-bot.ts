@@ -27,10 +27,7 @@ const stripSslMode = (url: string) => {
 }
 
 const rawConnectionString =
-  process.env.POSTGRES_URL ??
-  process.env.POSTGRES_URL_NON_POOLING ??
-  process.env.DATABASE_URL ??
-  ''
+  process.env.POSTGRES_URL ?? process.env.POSTGRES_URL_NON_POOLING ?? process.env.DATABASE_URL ?? ''
 
 const pgPool = new pg.Pool({
   connectionString: stripSslMode(rawConnectionString),
@@ -57,9 +54,7 @@ bot.onNewMention(async (thread, message) => {
   const branchName = promptToBranchName(message.text)
   const previewUrl = branchToPreviewUrl(branchName)
 
-  await thread.post(
-    `Creating branch \`${branchName}\`...\n> Preview: ${previewUrl}`,
-  )
+  await thread.post(`Creating branch \`${branchName}\`...\n> Preview: ${previewUrl}`)
 
   await createBranch(branchName)
 

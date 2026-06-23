@@ -2,10 +2,7 @@
 
 import { PepperIcon } from '@/features/icons/pepper-icon'
 import { IconButton } from '@/features/groovy-player/icon-button'
-import {
-  isSwingPatternIncorrect,
-  usePlayerStore,
-} from '@/features/groovy-player/player.store'
+import { isSwingPatternIncorrect, usePlayerStore } from '@/features/groovy-player/player.store'
 import { cn } from '@/features/theme/cn'
 
 export const SwingToggle = () => {

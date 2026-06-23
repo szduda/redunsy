@@ -31,8 +31,14 @@ export const DEMO_TRACKS: DemoTrack[] = [
       'f-fss-',
       'sss-ss',
       's-sss-',
-      'b---[ss]s','sst--t','tsttst','t-ssbb',
-      'b---[ss]s','sst--t','tst-tt','t-s[ttt-s-]',
+      'b---[ss]s',
+      'sst--t',
+      'tsttst',
+      't-ssbb',
+      'b---[ss]s',
+      'sst--t',
+      'tst-tt',
+      't-s[ttt-s-]',
       '[ttt-]ssbt',
       't-f---',
     ],
@@ -60,7 +66,14 @@ export const DEMO_TRACKS: DemoTrack[] = [
 export const demoTrackBars = () =>
   Object.fromEntries(DEMO_TRACKS.map((track) => [track.id, track.bars])) as Record<string, string[]>
 
-export const previewWindowStart = (activeIndex: number, barCount: number, collapsedBarsPerRow: number = 2) => {
+export const previewWindowStart = (
+  activeIndex: number,
+  barCount: number,
+  collapsedBarsPerRow: number = 2,
+) => {
   if (barCount <= collapsedBarsPerRow || activeIndex < 0) return 0
-  return Math.min(Math.floor(activeIndex / collapsedBarsPerRow) * collapsedBarsPerRow, barCount - collapsedBarsPerRow)
+  return Math.min(
+    Math.floor(activeIndex / collapsedBarsPerRow) * collapsedBarsPerRow,
+    barCount - collapsedBarsPerRow,
+  )
 }

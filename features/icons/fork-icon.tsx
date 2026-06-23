@@ -13,6 +13,10 @@ export const ForkIcon: Icon = (props) => (
     <circle cx="6" cy="6" r="2.25" />
     <circle cx="6" cy="18" r="2.25" />
     <circle cx="18" cy="12" r="2.25" />
-    <path d="M6 8.25v7.5M8.25 6h5.5a4.5 4.5 0 0 1 4.5 4.5v1.5" strokeLinecap="round" strokeLinejoin="round" />
+    <path
+      d="M6 8.25v7.5M8.25 6h5.5a4.5 4.5 0 0 1 4.5 4.5v1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
   </svg>
 )

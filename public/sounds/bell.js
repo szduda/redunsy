@@ -1,4 +1,4 @@
-var _bell = {
+const _bell = {
   zones: [
     {
       midi: 128,

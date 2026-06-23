@@ -39,7 +39,9 @@ const TempoMinMaxLabels = ({ vertical = false }: { vertical?: boolean }) => (
   <div
     className={cn(
       'font-mono text-xs text-zinc-500',
-      vertical ? 'flex h-24 flex-col-reverse justify-between text-right' : 'flex w-full justify-between',
+      vertical
+        ? 'flex h-24 flex-col-reverse justify-between text-right'
+        : 'flex w-full justify-between',
     )}
   >
     <span>{MIN_TEMPO}</span>
@@ -52,7 +54,11 @@ const VerticalTempoSlider = ({
   onTempoChange,
   className,
 }: Omit<TempoSliderInputProps, 'vertical'>) => {
-  const setTempoFromPointer = ({ currentTarget, clientY, pointerId }: PointerEvent<HTMLDivElement>) => {
+  const setTempoFromPointer = ({
+    currentTarget,
+    clientY,
+    pointerId,
+  }: PointerEvent<HTMLDivElement>) => {
     if (!currentTarget.hasPointerCapture(pointerId)) return
     onTempoChange(tempoFromClientY(clientY, currentTarget))
   }
@@ -108,10 +114,17 @@ const VerticalTempoSliderWithLabels = ({
   </div>
 )
 
-const TempoSliderInput = ({ tempo, onTempoChange, className, vertical = false }: TempoSliderInputProps) => {
-  if (vertical) return <VerticalTempoSlider className={className} onTempoChange={onTempoChange} tempo={tempo} />
+const TempoSliderInput = ({
+  tempo,
+  onTempoChange,
+  className,
+  vertical = false,
+}: TempoSliderInputProps) => {
+  if (vertical)
+    return <VerticalTempoSlider className={className} onTempoChange={onTempoChange} tempo={tempo} />
 
-  const onChange = ({ target }: ChangeEvent<HTMLInputElement>) => onTempoChange(Number(target.value))
+  const onChange = ({ target }: ChangeEvent<HTMLInputElement>) =>
+    onTempoChange(Number(target.value))
 
   return (
     <input
@@ -127,7 +140,10 @@ const TempoSliderInput = ({ tempo, onTempoChange, className, vertical = false }:
   )
 }
 
-const DesktopTempoSlider = ({ tempo, onTempoChange }: Omit<TempoSliderInputProps, 'vertical' | 'className'>) => (
+const DesktopTempoSlider = ({
+  tempo,
+  onTempoChange,
+}: Omit<TempoSliderInputProps, 'vertical' | 'className'>) => (
   <div className="flex w-40 flex-col items-end gap-1 pr-5">
     <Text variant="mono" className="font-bold">
       {tempo} BPM
@@ -137,7 +153,10 @@ const DesktopTempoSlider = ({ tempo, onTempoChange }: Omit<TempoSliderInputProps
   </div>
 )
 
-const MobileTempoSlider = ({ tempo, onTempoChange }: Omit<TempoSliderInputProps, 'vertical' | 'className'>) => (
+const MobileTempoSlider = ({
+  tempo,
+  onTempoChange,
+}: Omit<TempoSliderInputProps, 'vertical' | 'className'>) => (
   <Popover
     panel={
       <div className="flex flex-col items-center gap-3">

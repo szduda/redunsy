@@ -29,7 +29,11 @@ export type DragSlot = {
   originalIndex: number | null
 }
 
-export const buildDragSlots = (bars: string[], sourceIndex: number, dropIndex: number): DragSlot[] => {
+export const buildDragSlots = (
+  bars: string[],
+  sourceIndex: number,
+  dropIndex: number,
+): DragSlot[] => {
   const remaining = bars
     .map((bar, index) => ({ bar, originalIndex: index }))
     .filter((entry) => entry.originalIndex !== sourceIndex)

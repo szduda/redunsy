@@ -216,10 +216,14 @@ export const RhythmEditor = () => {
     <>
       <div className="flex w-full max-w-4xl flex-col gap-3">
         <FixedSideActions>
-          <Button onClick={onBackToPicker} variant="subtle" className='!justify-start'>
+          <Button onClick={onBackToPicker} variant="subtle" className="!justify-start">
             <BackIcon className="size-4 mr-1" /> Back to My Rhythms
           </Button>
-          <Button href={`/player?rhythm=${rhythm.slug}`} variant="subtle" className='!justify-start'>
+          <Button
+            href={`/player?rhythm=${rhythm.slug}`}
+            variant="subtle"
+            className="!justify-start"
+          >
             <Note16Icon className="mr-1 size-4" /> Show in Player
           </Button>
         </FixedSideActions>
@@ -285,7 +289,11 @@ export const RhythmEditor = () => {
             />
           </section>
 
-          {playError ? <Text className="px-4 pb-2" variant="mono">{playError}</Text> : null}
+          {playError ? (
+            <Text className="px-4 pb-2" variant="mono">
+              {playError}
+            </Text>
+          ) : null}
         </section>
       </div>
 

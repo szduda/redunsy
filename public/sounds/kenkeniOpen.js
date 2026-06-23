@@ -1,4 +1,4 @@
-var _drum_kenkeni_open = {
+const _drum_kenkeni_open = {
   zones: [
     {
       midi: 0, //MIDI program

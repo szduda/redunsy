@@ -1,6 +1,9 @@
 'use client'
 
-import { getSelectedFlatNote, getSelectionEditKind } from '@/features/editor/notation/bar-note-edits'
+import {
+  getSelectedFlatNote,
+  getSelectionEditKind,
+} from '@/features/editor/notation/bar-note-edits'
 import type { NoteSelection } from '@/features/editor/notation/bar-note-edits'
 import { instrumentSounds } from '@/features/editor/instrument-sounds'
 import { NoteGlyphIcon } from '@/features/editor/note-glyph-icon'

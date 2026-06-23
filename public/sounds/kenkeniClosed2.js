@@ -1,4 +1,4 @@
-var _drum_kenkeni_closed_2 = {
+const _drum_kenkeni_closed_2 = {
   zones: [
     {
       midi: 0, //MIDI program

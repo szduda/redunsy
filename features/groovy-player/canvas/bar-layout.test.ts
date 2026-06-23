@@ -33,12 +33,7 @@ describe('parseBarLayout', () => {
     const layout = parseBarLayout('[tt]ts')
     expect(layout.cellCount).toBe(3)
     expect(layout.glyphs.map((g) => g.position)).toEqual([0, 0.5, 1, 2])
-    expect(layout.glyphs.map((g) => g.kind)).toEqual([
-      'eighth',
-      'sixteenth',
-      'eighth',
-      'eighth',
-    ])
+    expect(layout.glyphs.map((g) => g.kind)).toEqual(['eighth', 'sixteenth', 'eighth', 'eighth'])
   })
 
   it('renders rest between triplet groups after glue hyphen', () => {

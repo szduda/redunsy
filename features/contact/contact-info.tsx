@@ -41,8 +41,7 @@ const labelClass: Record<ContactInfoVariant, string> = {
 
 const pageItemClass = 'flex flex-col items-center gap-2 min-w-24'
 
-const linkClass =
-  'group text-zinc-600 transition-colors dark:text-zinc-400'
+const linkClass = 'group text-zinc-600 transition-colors dark:text-zinc-400'
 
 const iconHoverClass =
   'shrink-0 text-zinc-500 transition-colors group-hover:text-yellowy dark:text-zinc-400 dark:group-hover:text-yellowy'

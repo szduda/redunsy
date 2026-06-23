@@ -19,12 +19,7 @@ const MenuCloseBadge = () => (
       strokeLinecap="round"
       strokeWidth={5}
     />
-    <path
-      d="M6 6l12 12M18 6L6 18"
-      stroke="currentColor"
-      strokeLinecap="round"
-      strokeWidth={2.75}
-    />
+    <path d="M6 6l12 12M18 6L6 18" stroke="currentColor" strokeLinecap="round" strokeWidth={2.75} />
   </svg>
 )
 

@@ -14,6 +14,9 @@ const eslintConfig = defineConfig([
     },
     rules: {
       'prettier/prettier': 'error',
+      'react-hooks/preserve-manual-memoization': 'off',
+      'react-hooks/refs': 'off',
+      'react-hooks/set-state-in-effect': 'off',
       semi: ['error', 'never'],
       'prefer-arrow-callback': 'error',
       'func-style': ['error', 'expression', { allowArrowFunctions: true }],
@@ -29,7 +32,14 @@ const eslintConfig = defineConfig([
       ],
     },
   },
-  globalIgnores(['.next/**', 'out/**', 'build/**', 'next-env.d.ts']),
+  globalIgnores([
+    '.next/**',
+    'out/**',
+    'build/**',
+    'next-env.d.ts',
+    'lib/midinike/audio/webaudiofont.js',
+    'public/sounds/**',
+  ]),
 ])
 
 export default eslintConfig

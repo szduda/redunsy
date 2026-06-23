@@ -6,11 +6,9 @@ const REPO_URL = process.env.CURSOR_REPO_URL ?? 'https://github.com/szduda/redun
 
 const apiKey = () => {
   const key = process.env.CURSOR_API_KEY
-  if (!key) throw new ConfigError('CURSOR_API_KEY is not set')
+  if (!key) throw new Error('CURSOR_API_KEY is not set')
   return key
 }
-
-class ConfigError extends Error {}
 
 type AgentStreamParams = {
   existingAgentId: string | null
@@ -56,9 +54,7 @@ export const createAgentStream = async ({
 
   await onAgentIdReady(agent.agentId)
 
-  const fullPrompt = existingAgentId
-    ? prompt
-    : `${buildSystemPrompt(branchName)}\n\n${prompt}`
+  const fullPrompt = existingAgentId ? prompt : `${buildSystemPrompt(branchName)}\n\n${prompt}`
 
   // Cursor validates the branch during send(). If the GitHub ref hasn't
   // propagated yet, retry up to 2 more times with increasing back-off.

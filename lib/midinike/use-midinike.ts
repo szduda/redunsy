@@ -68,7 +68,10 @@ export const useMidinike = (options: MidinikeOptions) => {
 
   const beatsRef = useRef<BeatMatrix>([])
   const compileRef = useRef(
-    compileGroove({ bars: [emptyBar(resolvedInitialGroove.length)], groove: resolvedInitialGroove }),
+    compileGroove({
+      bars: [emptyBar(resolvedInitialGroove.length)],
+      groove: resolvedInitialGroove,
+    }),
   )
   const noteIndexRef = useRef(0)
   const pausedAtRef = useRef(0)
@@ -202,7 +205,8 @@ export const useMidinike = (options: MidinikeOptions) => {
         bars: primaryBars,
         groove: groovePattern,
         soundMap: soundMapForInstrument(
-          entries.find(([name]) => name === primaryName)?.[1].instrument ?? entries[0][1].instrument,
+          entries.find(([name]) => name === primaryName)?.[1].instrument ??
+            entries[0][1].instrument,
         ),
       })
       return {
@@ -213,11 +217,14 @@ export const useMidinike = (options: MidinikeOptions) => {
     [getOverlayBars, layerEntries],
   )
 
-  const storeCompiled = useCallback((compiled: ReturnType<typeof compileGroove>, primaryBars?: string[]) => {
-    compileRef.current = compiled
-    beatsRef.current = compiled.beats
-    if (primaryBars) lastBarsRef.current = primaryBars
-  }, [])
+  const storeCompiled = useCallback(
+    (compiled: ReturnType<typeof compileGroove>, primaryBars?: string[]) => {
+      compileRef.current = compiled
+      beatsRef.current = compiled.beats
+      if (primaryBars) lastBarsRef.current = primaryBars
+    },
+    [],
+  )
 
   const recompileActivePattern = useCallback(
     (pattern: string, resumeBeat?: number) => {

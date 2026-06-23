@@ -9,13 +9,7 @@ export const BarIndexIcon: Icon = (props) => (
     style={{ backgroundColor: darkCanvasColors.b2 }}
     {...props}
   >
-    <text
-      fontFamily="ui-monospace, monospace"
-      fontSize="10"
-      textAnchor="middle"
-      x="12"
-      y="20"
-    >
+    <text fontFamily="ui-monospace, monospace" fontSize="10" textAnchor="middle" x="12" y="20">
       16
     </text>
   </svg>

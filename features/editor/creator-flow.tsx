@@ -131,7 +131,8 @@ export const CreatorFlow = () => {
     <div className="flex w-full max-w-lg flex-col gap-4">
       <Text>Step 3 — ready to edit</Text>
       <Text className="opacity-70">
-        Two empty bars per layer. Metadata stays collapsed at the top in the editor and saves automatically.
+        Two empty bars per layer. Metadata stays collapsed at the top in the editor and saves
+        automatically.
       </Text>
       <div className="flex gap-2">
         <Button onClick={finishCreator}>Open editor</Button>

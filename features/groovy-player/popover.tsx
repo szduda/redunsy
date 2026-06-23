@@ -1,6 +1,13 @@
 'use client'
 
-import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react'
+import {
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type ReactNode,
+} from 'react'
 import { createPortal } from 'react-dom'
 
 import { cn } from '@/features/theme/cn'
@@ -223,10 +230,7 @@ export const Popover = ({
               {full && fullBackdrop ? (
                 <div
                   aria-hidden
-                  className={cn(
-                    'fixed z-30',
-                    backdropClassName ?? 'bg-zinc-900/95 backdrop-blur',
-                  )}
+                  className={cn('fixed z-30', backdropClassName ?? 'bg-zinc-900/95 backdrop-blur')}
                   style={backdropStyle}
                 />
               ) : null}

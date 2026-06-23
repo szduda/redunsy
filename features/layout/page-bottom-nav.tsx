@@ -23,7 +23,10 @@ type BottomNavSlotProviderProps = {
   onHasBottomNavChange: (visible: boolean) => void
 }
 
-export const BottomNavSlotProvider = ({ children, onHasBottomNavChange }: BottomNavSlotProviderProps) => (
+export const BottomNavSlotProvider = ({
+  children,
+  onHasBottomNavChange,
+}: BottomNavSlotProviderProps) => (
   <BottomNavSlotContext.Provider value={{ setHasBottomNav: onHasBottomNavChange }}>
     {children}
   </BottomNavSlotContext.Provider>

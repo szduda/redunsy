@@ -5,10 +5,7 @@ config({ path: '.env.local' })
 config({ path: '.env' })
 
 const rawUrl =
-  process.env.POSTGRES_URL_NON_POOLING ??
-  process.env.POSTGRES_URL ??
-  process.env.DATABASE_URL ??
-  ''
+  process.env.POSTGRES_URL_NON_POOLING ?? process.env.POSTGRES_URL ?? process.env.DATABASE_URL ?? ''
 
 // pg-connection-string maps sslmode=require to rejectUnauthorized: true (verify-full alias).
 // Strip it so drizzle-kit can connect to Supabase without cert rejection.

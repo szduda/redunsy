@@ -1,4 +1,4 @@
-var _drum_djembe_open_bass = {
+const _drum_djembe_open_bass = {
   zones: [
     {
       midi: 0, //MIDI program
