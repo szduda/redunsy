@@ -9,16 +9,19 @@ const getOctokit = () => new Octokit({ auth: process.env.GITHUB_TOKEN })
 export const createBranch = async (branchName: string): Promise<void> => {
   const octokit = getOctokit()
 
-  const { data: ref } = await octokit.git.getRef({
+  // Use repos.getBranch instead of git.getRef: the ref path parameter in
+  // getRef gets URL-encoded (heads/main → heads%2Fmain) by Octokit, causing
+  // a 404. getBranch uses a clean branch-name path parameter without slashes.
+  const { data: branch } = await octokit.repos.getBranch({
     owner: OWNER,
     repo: REPO,
-    ref: `heads/${BASE_BRANCH}`,
+    branch: BASE_BRANCH,
   })
 
   await octokit.git.createRef({
     owner: OWNER,
     repo: REPO,
     ref: `refs/heads/${branchName}`,
-    sha: ref.object.sha,
+    sha: branch.commit.sha,
   })
 }
