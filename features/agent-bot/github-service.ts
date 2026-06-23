@@ -2,7 +2,7 @@ import { Octokit } from '@octokit/rest'
 
 const OWNER = process.env.GITHUB_REPO_OWNER ?? 'szduda'
 const REPO = process.env.GITHUB_REPO_NAME ?? 'redunsy'
-const BASE_BRANCH = process.env.GITHUB_BASE_BRANCH ?? 'main'
+const BASE_BRANCH = process.env.GITHUB_BASE_BRANCH ?? 'master'
 
 const getOctokit = () => new Octokit({ auth: process.env.GITHUB_TOKEN })
 
