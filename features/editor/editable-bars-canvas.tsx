@@ -3,11 +3,13 @@
 import { memo, useLayoutEffect, useRef, useState } from 'react'
 
 import { applyBarPatternAction } from '@/features/editor/canvas/bar-pattern-actions'
-import { canvasLogicalPoint, detectBarAtPoint, detectNoteAtPoint } from '@/features/editor/canvas/canvas-pointer'
-import { canvasPointFromPage } from '@/features/editor/canvas/resolve-drop-index'
 import {
-  resolveDropIndexFromDrag,
-} from '@/features/editor/canvas/resolve-drop-index'
+  canvasLogicalPoint,
+  detectBarAtPoint,
+  detectNoteAtPoint,
+} from '@/features/editor/canvas/canvas-pointer'
+import { canvasPointFromPage } from '@/features/editor/canvas/resolve-drop-index'
+import { resolveDropIndexFromDrag } from '@/features/editor/canvas/resolve-drop-index'
 import { drawSelectionBorder } from '@/features/editor/canvas/draw-selection-border'
 import { renderEditorBarSlots, renderGhostBar } from '@/features/editor/canvas/render-editor-bars'
 import { buildDragSlots } from '@/features/editor/notation/reorder-bars'
@@ -91,6 +93,7 @@ const EditableBars = ({
           canvasWidth,
           barsPerRow,
           palette,
+          dark: prefersDark,
         })
       : renderBars({
           bars,
@@ -114,7 +117,7 @@ const EditableBars = ({
           element.barIndex === selection.barIndex &&
           element.noteIndex === selection.glyphIndex,
       )
-      if (selected) drawSelectionBorder(context, selected)
+      if (selected) drawSelectionBorder(context, selected, prefersDark)
     }
 
     if (drag) {
@@ -270,7 +273,11 @@ const EditableBars = ({
     }
 
     const target = getNoteTarget(event)
-    if (!target?.element || target.element.barIndex === undefined || target.element.noteIndex === undefined) {
+    if (
+      !target?.element ||
+      target.element.barIndex === undefined ||
+      target.element.noteIndex === undefined
+    ) {
       event.currentTarget.releasePointerCapture(event.pointerId)
       return
     }
@@ -310,9 +317,7 @@ const EditableBars = ({
 
       <div className="flex flex-wrap items-center justify-end gap-2 px-1">
         {selection ? (
-          <span className="font-mono text-xs text-zinc-500">
-            Bar {selection.barIndex + 1}
-          </span>
+          <span className="font-mono text-xs text-zinc-500">Bar {selection.barIndex + 1}</span>
         ) : null}
         <Button
           className={cn(!selection && 'opacity-30 saturate-0')}

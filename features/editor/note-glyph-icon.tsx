@@ -82,13 +82,20 @@ const renderNoteGlyph = (note: string, instrument: string) => {
     case 'f':
       return (
         <>
-          <circle className="fill-current opacity-80" cx="10" cy="10" r="5" />
+          <circle className="fill-current" cx="10" cy="10" r="5" />
           <circle className={holeClass} cx="10" cy="10" r="2" />
+          <path
+            className="stroke-current"
+            d="M7 7 L13 13 M13 7 L7 13"
+            fill="none"
+            strokeLinecap="round"
+            strokeWidth="1.5"
+          />
           <circle className="fill-current" cx="14" cy="14" r="5" />
           <circle className={holeClass} cx="14" cy="14" r="2" />
           <path
             className="stroke-current"
-            d="M7 7 L11 11 M11 7 L7 11 M13 13 L17 17 M17 13 L13 17"
+            d="M11 11 L17 17 M17 11 L11 17"
             fill="none"
             strokeLinecap="round"
             strokeWidth="1.5"
@@ -99,7 +106,7 @@ const renderNoteGlyph = (note: string, instrument: string) => {
     case 'r':
       return (
         <>
-          <circle className="fill-current opacity-80" cx="10" cy="10" r="5" />
+          <circle className="fill-current" cx="10" cy="10" r="5" />
           <circle className={holeClass} cx="10" cy="10" r="2.5" />
           <circle className="fill-current" cx="14" cy="14" r="5" />
           <circle className={holeClass} cx="14" cy="14" r="2.5" />

@@ -8,13 +8,16 @@ import { ForkIcon } from '@/features/icons/fork-icon'
 import { FullBleedIcon } from '@/features/icons/full-bleed-icon'
 import { MetronomeIcon } from '@/features/icons/metronome-icon'
 import { Note16Icon } from '@/features/icons/note-16-icon'
+import { PauseIcon } from '@/features/icons/pause-icon'
 import { PepperIcon } from '@/features/icons/pepper-icon'
 import { PlayIcon } from '@/features/icons/play-icon'
+import { RestartIcon } from '@/features/icons/restart-icon'
 import { ScreenAwakeIcon } from '@/features/icons/screen-awake-icon'
 import { SearchIcon } from '@/features/icons/search-icon'
 import { SettingsIcon } from '@/features/icons/settings-icon'
 import { ShekereIcon } from '@/features/icons/shekere-icon'
 import { SpeakerIcon } from '@/features/icons/speaker-icon'
+import { StopIcon } from '@/features/icons/stop-icon'
 import { TagIcon } from '@/features/icons/tag-icon'
 import type { Icon, IconProps } from '@/features/icons/types'
 import { TripletBracketIcon } from '@/features/icons/triplet-bracket-icon'
@@ -43,6 +46,9 @@ const HELP_ICON_RENDERERS: Record<HelpIconKey, Icon> = {
   edit: iconRenderer(EditIcon),
   fork: iconRenderer(ForkIcon),
   play: iconRenderer(PlayIcon),
+  pause: iconRenderer(PauseIcon),
+  stop: iconRenderer(StopIcon),
+  restart: iconRenderer(RestartIcon),
   tempo: ({ className }) => (
     <Text
       variant="mono"
@@ -56,10 +62,16 @@ const HELP_ICON_RENDERERS: Record<HelpIconKey, Icon> = {
   ),
   djembe: iconRenderer(DjembeIcon, 'scale-125'),
   shekere: ({ className, ...props }) => (
-    <ShekereIcon className={cn('size-20 shrink-0 lg:size-28', className)} {...props} />
+    <ShekereIcon
+      className={cn(
+        'size-20 shrink-0 opacity-20 saturate-0 lg:size-28 !text-zinc-500 dark:!text-zinc-400',
+        className,
+      )}
+      {...props}
+    />
   ),
   pepper: ({ className, ...props }) => (
-    <PepperIcon className={cn('size-20 shrink-0 saturate-0 lg:size-28', className)} {...props} />
+    <PepperIcon className={cn('size-20 shrink-0 text-yellowy lg:size-28', className)} {...props} />
   ),
   speaker: iconRenderer(SpeakerIcon),
   collapse: iconRenderer(ChevronDownIcon),

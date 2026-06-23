@@ -10,6 +10,9 @@ type HelpTopicRowProps = {
   nested?: boolean
 }
 
+const hasIconsColumn = (topic: HelpTopic) =>
+  Boolean(topic.icons?.length || topic.icon || topic.glyphs?.length)
+
 const HelpTopicIconsColumn = ({
   topic,
   compact = false,
@@ -64,15 +67,17 @@ const HelpNestedTopicRow = ({ topic }: { topic: HelpTopic }) => (
 export const HelpTopicRow = ({ topic, nested = false }: HelpTopicRowProps) => {
   if (nested) return <HelpNestedTopicRow topic={topic} />
 
-  if (topic.subitems?.length) {
+  if (topic.subitems?.length || !hasIconsColumn(topic)) {
     return (
       <article className="border-b border-zinc-200/80 py-6 last:border-b-0 dark:border-zinc-800/80">
         <HelpTopicContent topic={topic} />
-        <div className="mt-4 space-y-1">
-          {topic.subitems.map((subitem) => (
-            <HelpNestedTopicRow key={subitem.title} topic={subitem} />
-          ))}
-        </div>
+        {topic.subitems?.length ? (
+          <div className="mt-4 space-y-1">
+            {topic.subitems.map((subitem) => (
+              <HelpNestedTopicRow key={subitem.title} topic={subitem} />
+            ))}
+          </div>
+        ) : null}
       </article>
     )
   }

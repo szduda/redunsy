@@ -1,4 +1,4 @@
-import { YELOWY_BORDER } from '@/features/editor/canvas/draw-selection-border'
+import { yellowyBorderColor, yellowyGapFill } from '@/lib/theme/yellowy'
 import type { DragSlot } from '@/features/editor/notation/reorder-bars'
 import { darkCanvasColors, type CanvasColors } from '@/features/groovy-player/canvas/canvas-colors'
 import {
@@ -18,6 +18,7 @@ type RenderEditorBarSlotsArgs = {
   canvasWidth: number
   barsPerRow: number
   palette?: CanvasColors
+  dark?: boolean
 }
 
 const drawGapSlot = (
@@ -26,6 +27,7 @@ const drawGapSlot = (
   canvasWidth: number,
   barsPerRow: number,
   rowHeights: number[],
+  dark: boolean,
 ) => {
   const barWidth = barWidthForCanvas(canvasWidth, barsPerRow)
   const row = Math.trunc(slotIndex / barsPerRow)
@@ -33,9 +35,9 @@ const drawGapSlot = (
   const top = barTopForIndex(slotIndex, barsPerRow, rowHeights)
   const left = (slotIndex % barsPerRow) * (barWidth + BAR_GAP_PX)
 
-  context.fillStyle = 'rgba(249, 201, 38, 0.08)'
+  context.fillStyle = yellowyGapFill(dark)
   context.fillRect(left, top, barWidth, barHeight)
-  context.strokeStyle = YELOWY_BORDER
+  context.strokeStyle = yellowyBorderColor(dark)
   context.lineWidth = 2
   context.setLineDash([5, 4])
   context.strokeRect(left + 1, top + 1, barWidth - 2, barHeight - 2)
@@ -49,6 +51,7 @@ export const renderEditorBarSlots = ({
   canvasWidth,
   barsPerRow,
   palette = darkCanvasColors,
+  dark = true,
 }: RenderEditorBarSlotsArgs) => {
   const barsForLayout = slots.map((slot) => slot.bar ?? '-'.repeat(8))
   const rowHeights = rowHeightsForBars(canvasWidth, barsPerRow, barsForLayout)
@@ -56,7 +59,7 @@ export const renderEditorBarSlots = ({
 
   slots.forEach((slot, slotIndex) => {
     if (slot.bar === null) {
-      drawGapSlot(context, slotIndex, canvasWidth, barsPerRow, rowHeights)
+      drawGapSlot(context, slotIndex, canvasWidth, barsPerRow, rowHeights, dark)
       return
     }
 

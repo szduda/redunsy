@@ -40,23 +40,17 @@ export const TrackVolume = ({
       className="!text-redy-light/80 px-4"
       onClick={onToggleMute}
     >
-      {muted ?
-        <SpeakerMutedIcon className="size-5 lg:size-6" /> :
-        <SpeakerIcon className="size-5 lg:size-6" />
-      }
+      {muted ? <SpeakerMutedIcon className="size-5" /> : <SpeakerIcon className="size-5" />}
     </IconButton>
 
     {compact ? (
       <Popover
         panel={
           <div className="flex flex-col gap-3 items-center">
-            <VolumeSlider
-              muted={muted}
-              onVolumeChange={onVolumeChange}
-              vertical
-              volume={volume}
-            />
-            <Text variant="mono" className="uppercase text-[10px] font-medium">Volume</Text>
+            <VolumeSlider muted={muted} onVolumeChange={onVolumeChange} vertical volume={volume} />
+            <Text variant="mono" className="uppercase text-[10px] font-medium">
+              Volume
+            </Text>
           </div>
         }
         panelClassName="w-auto items-center p-3 rounded-lg"
@@ -65,7 +59,7 @@ export const TrackVolume = ({
           <Button
             aria-expanded={open}
             className={cn(
-              '!rounded-l-none !border-l border-l-zinc-200 font-semibold text-lg dark:border-l-zinc-950 py-1',
+              '!rounded-l-none !border-l border-l-zinc-200 font-semibold text-base dark:border-l-zinc-950 py-1',
               open && popoverTriggerOpenClass,
             )}
             onClick={toggle}

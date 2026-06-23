@@ -102,14 +102,15 @@ export const Logo = ({
           height={iconSize}
           innerClass2="animate-dundun origin-center"
           {...iconProps}
-          className={cn('',
+          className={cn(
+            '',
             stableLayout && 'absolute top-0 left-0',
             !dundunUnlocked
               ? 'pointer-events-none opacity-0'
               : cn(
-                'animate-spin-logo-once origin-center -rotate-[15deg] transition-all delay-100 duration-500',
-                !stableLayout && 'absolute',
-              ),
+                  'animate-spin-logo-once origin-center -rotate-[15deg] transition-all delay-100 duration-500',
+                  !stableLayout && 'absolute',
+                ),
           )}
         />
         <LogoIcon
@@ -125,7 +126,7 @@ export const Logo = ({
         />
         <div
           className={cn(
-            'absolute font-bold text-yellowy transition ease-in-out',
+            'absolute font-bold text-yellowy-logo transition ease-in-out',
             hint === '4' ? 'duration-1000' : 'duration-500',
             !hintVisible && 'opacity-0',
             compact
@@ -156,11 +157,11 @@ export const Logo = ({
           stableLayout
             ? 'translate-y-12 -translate-x-1'
             : dundunUnlocked &&
-            (compact ? 'translate-x-0 translate-y-4' : 'translate-y-12 -translate-x-1'),
+                (compact ? 'translate-x-0 translate-y-4' : 'translate-y-12 -translate-x-1'),
         )}
       >
         dunsy<small className={cn('opacity-50', compact ? 'text-xs' : 'text-2xl')}>.app</small>
       </h1>
-    </Link >
+    </Link>
   )
 }

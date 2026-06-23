@@ -88,7 +88,8 @@ export const DemoBar = ({
         palette,
       })
       const glyphIndex = glyphIndexForEighth(layout, eighth)
-      if (glyphIndex >= 0) drawSelectionBorder(context, layout.noteElements[glyphIndex])
+      if (glyphIndex >= 0)
+        drawSelectionBorder(context, layout.noteElements[glyphIndex], prefersDark)
     }
   }, [active, bar, canvasHeight, canvasId, canvasWidth, dpr, eighth, instrument, prefersDark])
 

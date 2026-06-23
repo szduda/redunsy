@@ -11,17 +11,17 @@ export const ShekereIcon: Icon = ({ className, ...props }) => (
     viewBox="0 0 36 36"
     fill="none"
     aria-hidden
-    className={className}
+    className={cn('text-yellowy', className)}
     {...props}
   >
     <g clipPath="url(#shekere-icon-clip)">
       <path
         d="M22.5511 15.457C29.9274 4.77858 -2.76483 33.2726 0.748637 35.3382C4.2621 37.4038 15.1749 26.1353 22.5511 15.457Z"
-        fill="#F9C926"
+        fill="currentColor"
       />
       <path
         d="M29.8675 23.2864C12.3708 38.5464 1.22379 15.101 11.8109 4.7744C22.3979 -5.55224 47.3641 8.0263 29.8675 23.2864Z"
-        fill="#F9C926"
+        fill="currentColor"
       />
       <g className={shellFillClass}>
         <circle cx="19.1738" cy="8.72652" r="1.8602" transform="rotate(45.7134 19.1738 8.72652)" />

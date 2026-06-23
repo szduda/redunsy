@@ -75,8 +75,8 @@ export const HELP_SECTIONS: HelpSection[] = [
     title: 'Player features',
     topics: [
       {
-        icon: 'play',
-        title: 'Transport',
+        icons: ['play', 'pause', 'stop', 'restart'],
+        title: 'Audio Controls',
         description:
           'Play and pause from the bottom bar. Stop resets playback to the beginning. Restart jumps back to bar one while staying in play mode. Press Space anywhere outside a text field to toggle play and pause.',
       },
