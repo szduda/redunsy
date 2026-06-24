@@ -93,6 +93,8 @@ type CreateRhythmInput = {
   title?: string
   description?: string
   author?: string[]
+  origin?: string[]
+  rhythmGroup?: string[]
   meter?: RhythmMeter
   layers?: RhythmInstrument[]
   tempo?: number
@@ -106,6 +108,8 @@ export const createRhythm = ({
   title = defaultRhythmTitle(),
   description = '',
   author = [],
+  origin = [],
+  rhythmGroup = [],
   meter = 4,
   layers = ['djembe'],
   tempo = DEFAULT_TEMPO,
@@ -133,9 +137,9 @@ export const createRhythm = ({
     description,
     meter,
     author,
-    origin: [],
+    origin,
     tags,
-    rhythmGroup: [],
+    rhythmGroup,
     swingPattern: normalizeSwingPatternForMeter(swingPattern, meter),
     tempo,
     signalPattern,

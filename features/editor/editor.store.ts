@@ -14,12 +14,14 @@ export type EditorView = 'picker' | 'creator' | 'editor'
 export type CreatorDraft = {
   title: string
   description: string
-  author: string
+  author: string[]
+  origin: string[]
+  rhythmGroup: string[]
   meter: RhythmMeter
   tempo: number
   swingPattern: string
   signalPattern: string
-  tags: string
+  tags: string[]
   layers: RhythmInstrument[]
   fillDjembe: boolean
 }
@@ -27,12 +29,14 @@ export type CreatorDraft = {
 const defaultCreatorDraft = (): CreatorDraft => ({
   title: '',
   description: '',
-  author: '',
+  author: [],
+  origin: [],
+  rhythmGroup: [],
   meter: 4,
   tempo: DEFAULT_TEMPO,
   swingPattern: defaultSwingPatternForMeter(4),
   signalPattern: '',
-  tags: '',
+  tags: [],
   layers: ['djembe'],
   fillDjembe: false,
 })
@@ -137,19 +141,15 @@ export const useEditorStore = create<EditorState>((set, get) => ({
     const rhythm = createRhythm({
       title,
       description: creatorDraft.description.trim(),
-      author: creatorDraft.author
-        .split(',')
-        .map((name) => name.trim())
-        .filter(Boolean),
+      author: creatorDraft.author,
+      origin: creatorDraft.origin,
+      rhythmGroup: creatorDraft.rhythmGroup,
       meter: creatorDraft.meter,
       layers: creatorDraft.layers,
       tempo: creatorDraft.tempo,
       swingPattern: creatorDraft.swingPattern,
       signalPattern: creatorDraft.signalPattern,
-      tags: creatorDraft.tags
-        .split(',')
-        .map((tag) => tag.trim())
-        .filter(Boolean),
+      tags: creatorDraft.tags,
       fillDjembe: creatorDraft.fillDjembe,
     })
     const rhythms = persistRhythm(rhythm)
