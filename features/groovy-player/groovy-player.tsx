@@ -247,24 +247,31 @@ export const GroovyPlayer = ({ rhythm }: GroovyPlayerProps = {}) => {
       <div className={cn('flex w-full flex-col gap-3', !fullBleed && 'lg:pt-4 xl:pt-6')}>
         {isPlayerDemo ? <PlayerDemoBanner onFork={onForkDemo} /> : null}
 
-        {loadedRhythm && !fullBleed ? (
+        {!fullBleed ? (
           <FixedSideActions>
-            {rhythm ? (
-              <Button className="!justify-start" href="/editor" variant="subtle">
-                <BackIcon className="mr-1 size-4" /> Back to My Rhythms
-              </Button>
-            ) : null}
-            <Button className="!justify-start" onClick={onFork} variant="subtle">
-              <ForkIcon className="mr-1 size-4" /> Fork
+            <Button
+              className="!justify-start"
+              href={rhythmSlug ? '/editor' : '/garage'}
+              variant="subtle"
+            >
+              <BackIcon className="mr-1 size-4" />
+              {rhythmSlug ? 'Back to My Rhythms' : 'Back to garage'}
             </Button>
-            {loadedRhythm.userOwned ? (
-              <Button
-                className="!justify-start"
-                href={`/editor/${loadedRhythm.slug}`}
-                variant="subtle"
-              >
-                <EditIcon className="mr-1 size-4" /> Edit
-              </Button>
+            {loadedRhythm ? (
+              <>
+                <Button className="!justify-start" onClick={onFork} variant="subtle">
+                  <ForkIcon className="mr-1 size-4" /> Fork
+                </Button>
+                {loadedRhythm.userOwned ? (
+                  <Button
+                    className="!justify-start"
+                    href={`/editor/${loadedRhythm.slug}`}
+                    variant="subtle"
+                  >
+                    <EditIcon className="mr-1 size-4" /> Edit
+                  </Button>
+                ) : null}
+              </>
             ) : null}
           </FixedSideActions>
         ) : null}
