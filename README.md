@@ -23,15 +23,13 @@ Live at [re.dunsy.app](https://re.dunsy.app).
 ┌─────────────────────────────────────────────────────────────────┐
 │  app/                     Next.js routes (mostly static)        │
 │  ├── page, garage, player, editor, help, contact               │
-│  ├── rhythm/[slug]        pre-rendered from Postgres at build   │
-│  └── api/slack            Slack webhook → Cursor agent bot      │
+│  └── rhythm/[slug]        pre-rendered from Postgres at build   │
 ├─────────────────────────────────────────────────────────────────┤
 │  features/<name>/         Feature modules (UI + stores + hooks)│
 │  ├── groovy-player        Playback UI, transport, settings    │
 │  ├── editor               Canvas notation editor                │
 │  ├── garage               Search, filters, pagination           │
 │  ├── rhythm               Shared types and localStorage catalog │
-│  ├── agent-bot            Slack + GitHub + Cursor agent flow    │
 │  ├── store/               Cross-cutting Zustand stores          │
 │  └── theme/, layout/, icons/  Shared UI primitives              │
 ├─────────────────────────────────────────────────────────────────┤
@@ -69,11 +67,6 @@ The groovy player and editor both depend on midinike; playback timing invariants
 | **Garage** | `/garage` | Fuse.js search, faceted filters, pagination over the static index |
 | **Editor** | `/editor`, `/editor/[slug]` | Visual bar editor, metadata, fork/save to localStorage |
 | **Help** | `/help` | Notation reference and interactive demos |
-| **Agent bot** | `POST /api/slack` | Slack bot that spawns Cursor cloud agents on GitHub branches |
-
-### Agent bot (optional)
-
-The Slack integration (`features/agent-bot/`) uses the [Chat SDK](https://github.com/vercel/chat) with Postgres-backed state. Incoming messages create a GitHub branch, run a [Cursor cloud agent](https://cursor.com), and reply with a Vercel preview URL. This path is only active when the required secrets are configured in production.
 
 ## Project layout
 
@@ -98,8 +91,6 @@ scripts/              Build-time index generation, DB seeding
 | `@tanstack/react-query` | Async data and query caching |
 | `fuse.js` | Fuzzy search over the rhythm index |
 | `tailwind-merge` | Conditional class merging |
-| `chat`, `@chat-adapter/slack`, `@chat-adapter/state-pg` | Slack bot adapter |
-| `@cursor/sdk`, `@octokit/rest` | Cursor agents and GitHub branch creation |
 
 **Development**
 
@@ -133,11 +124,7 @@ Create `.env.local` (or pull from Vercel with `vercel env pull`):
 
 | Variable | Required for | Purpose |
 | --- | --- | --- |
-| `POSTGRES_URL` or `DATABASE_URL` | Build, DB scripts, agent bot | Postgres connection string |
-| `CURSOR_API_KEY` | Agent bot | Cursor cloud agent API |
-| `GITHUB_TOKEN` | Agent bot | Branch creation in the repo |
-| `GITHUB_REPO_OWNER`, `GITHUB_REPO_NAME` | Agent bot | Target repository (defaults: `szduda/redunsy`) |
-| Slack signing secrets | Agent bot | Configured via Chat SDK / Vercel integration |
+| `POSTGRES_URL` or `DATABASE_URL` | Build, DB scripts | Postgres connection string |
 
 ### Database
 
@@ -164,4 +151,4 @@ npm run search-index   # Regenerate garage search JSON from Postgres
 
 ## Deployment
 
-Deployed on Vercel. Static rhythm pages and the garage search index are produced at build time; the Slack webhook runs as a serverless function with `maxDuration = 300`.
+Deployed on Vercel. Static rhythm pages and the garage search index are produced at build time.
