@@ -11,12 +11,7 @@ export const ThemeScript = () => {
   useServerInsertedHTML(() => {
     if (inserted.current) return null
     inserted.current = true
-    return (
-      <script
-        dangerouslySetInnerHTML={{ __html: themeInitScript }}
-        id="redunsy-theme-init"
-      />
-    )
+    return <script dangerouslySetInnerHTML={{ __html: themeInitScript }} id="redunsy-theme-init" />
   })
 
   return null

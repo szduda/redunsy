@@ -114,12 +114,21 @@ export const HomepageMobile = () => (
           <ActionCard variant="browse" href="/garage" label="Garage" title="Browse the collection">
             <span className="text-sm text-zinc-600 dark:text-zinc-400">
               Dig through growing pages of rhythms from Casamance, Kouroussa, Hamana.
-              <br/><br/>Listen to the melodies of both Balandougou and Bamako.
-              <br/><br/>Try the Khassonké style.
+              <br />
+              <br />
+              Listen to the melodies of both Balandougou and Bamako.
+              <br />
+              <br />
+              Try the Khassonké style.
             </span>
           </ActionCard>
 
-          <ActionCard variant="modify" href="/editor" label="Rhythm Editor" title="Write your own rhythm">
+          <ActionCard
+            variant="modify"
+            href="/editor"
+            label="Rhythm Editor"
+            title="Write your own rhythm"
+          >
             <span className="text-sm text-zinc-600 dark:text-zinc-400">
               Got inspiration? Shape it in the most beautiful language known to mankind - music.
             </span>
@@ -130,7 +139,12 @@ export const HomepageMobile = () => (
           <h2 className="text-center text-sm font-semibold uppercase tracking-[0.18em] text-zinc-500 dark:text-zinc-400">
             New here?
           </h2>
-          <ActionCard variant="listen" href="/player" label="Player Demo" title="Try the GroovyPlayer">
+          <ActionCard
+            variant="listen"
+            href="/player"
+            label="Player Demo"
+            title="Try the GroovyPlayer"
+          >
             <span className="text-sm text-zinc-600 dark:text-zinc-400">
               Explore built-in demo composition and djembe notation — play along and try audio
               controls, tempo, metronome, and swing.

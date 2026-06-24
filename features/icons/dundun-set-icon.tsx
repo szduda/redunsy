@@ -1,13 +1,7 @@
-import { type FancyIcon } from '@/features/icons/types'
+import { type IconProps } from '@/features/icons/types'
 
-export const DundunSetIcon: FancyIcon = ({ innerClass, innerClass2, ...props }) => (
-  <svg
-    height="59"
-    viewBox="0 0 93 59"
-    fill="none"
-    xmlns="http://www.w3.org/2000/svg"
-    {...props}
-  >
+export const DundunSetIcon = (props: IconProps) => (
+  <svg height="59" viewBox="0 0 93 59" fill="none" xmlns="http://www.w3.org/2000/svg" {...props}>
     <path
       fillRule="evenodd"
       clipRule="evenodd"

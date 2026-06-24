@@ -19,7 +19,11 @@ import {
 import { compileGroove } from '@/lib/midinike/groove/compile-groove'
 import { barSlotCount } from '@/lib/midinike/groove/compile-groove.test-helpers'
 import { calcPlaybackTempo } from '@/lib/midinike/groove/playback-tempo'
-import { barsMatchGrooveLength, tracksMatchGrooveLength, validateBarsForGroove } from '@/lib/midinike/notation/fit-bar'
+import {
+  barsMatchGrooveLength,
+  tracksMatchGrooveLength,
+  validateBarsForGroove,
+} from '@/lib/midinike/notation/fit-bar'
 import { barCellCount, TICKS_PER_EIGHTH } from '@/lib/midinike/notation/cell-duration'
 
 // ---------------------------------------------------------------------------
@@ -36,12 +40,12 @@ const METER3_BARS = ['b--b--', 'ttstts', 'b-tb-t']
 const METER3_DUNDUN_BARS = ['o--o--', 'o----o']
 
 /** Straight (no-swing) grooves per meter. */
-const GROOVE4 = '--------'  // 8 cells for 4/4
-const GROOVE3 = '------'    // 6 cells for 3/4
+const GROOVE4 = '--------' // 8 cells for 4/4
+const GROOVE3 = '------' // 6 cells for 3/4
 
 /** Swing grooves per meter derived from the default demo swing. */
-const SWING4 = DEMO_SWING_PATTERN                        // '-<(-<(--' — 8 cells
-const SWING3 = fitSwingPattern(DEMO_SWING_PATTERN, 6)    // '-<(-<(' — 6 cells
+const SWING4 = DEMO_SWING_PATTERN // '-<(-<(--' — 8 cells
+const SWING3 = fitSwingPattern(DEMO_SWING_PATTERN, 6) // '-<(-<(' — 6 cells
 
 // ---------------------------------------------------------------------------
 // 1. Groove sizing invariants
@@ -258,8 +262,8 @@ describe('player initialization — store carries 8-char pattern, rhythm needs 6
   it('resolveGroovePattern always trims the store pattern to the correct groove length', () => {
     // Simulates GroovyPlayer: store starts with DEMO_SWING_PATTERN (8 chars from
     // localStorage), but the rhythm has meter=3, so grooveLength=6.
-    const storeSwingPattern = DEMO_SWING_PATTERN  // 8 chars — from localStorage hydration
-    const grooveLength = swingBarSizeForMeter(3)   // 6
+    const storeSwingPattern = DEMO_SWING_PATTERN // 8 chars — from localStorage hydration
+    const grooveLength = swingBarSizeForMeter(3) // 6
 
     const groove = resolveGroovePattern(storeSwingPattern, grooveLength, true)
     expect(groove.length).toBe(6)

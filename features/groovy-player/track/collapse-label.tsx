@@ -12,12 +12,14 @@ type Props = {
 
 export const CollapseLabel = ({ children, onClick, collapsed, className }: Props) => (
   <button
-    className=
-    {cn('flex min-w-0 items-center py-2 gap-0.5 md:gap-1 font-semibold text-zinc-900 dark:text-zinc-100 text-sm md:text-sm shrink-0', className)}
+    className={cn(
+      'flex min-w-0 items-center py-2 gap-0.5 md:gap-1 font-semibold text-zinc-900 dark:text-zinc-100 text-sm md:text-sm shrink-0',
+      className,
+    )}
     onClick={onClick}
     type="button"
   >
     {collapsed ? <ChevronUpIcon /> : <ChevronDownIcon />}
-    <span className='truncate'>{children}</span>
+    <span className="truncate">{children}</span>
   </button>
 )

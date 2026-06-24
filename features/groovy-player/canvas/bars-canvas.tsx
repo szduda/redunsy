@@ -57,13 +57,13 @@ const Bars = ({ bars, activeIndex = -1, barsPerRow, instrument, id }: BarsCanvas
     })
   }, [
     hash,
+    bars,
     canvasId,
     canvasWidth,
     canvasHeight,
     dpr,
     barsPerRow,
     instrument,
-    bars.length,
     highlightedBarIndex,
     prefersDark,
     showBarIndex,

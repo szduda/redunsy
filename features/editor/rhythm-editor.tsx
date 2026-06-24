@@ -127,7 +127,7 @@ export const RhythmEditor = () => {
   useEffect(() => {
     if (!rhythm) return
     setTempo(rhythm.tempo)
-  }, [rhythm?.slug, rhythm?.tempo, setTempo])
+  }, [rhythm, setTempo])
 
   useEffect(() => {
     if (!rhythm) return
@@ -135,7 +135,7 @@ export const RhythmEditor = () => {
     const pattern = empty ? defaultSwingPatternForMeter(rhythm.meter) : rhythm.swingPattern
     setSwingPattern(pattern, barSize)
     setSwingEnabled(!empty)
-  }, [barSize, rhythm?.meter, rhythm?.slug, rhythm?.swingPattern, setSwingEnabled, setSwingPattern])
+  }, [barSize, rhythm, setSwingEnabled, setSwingPattern])
 
   useEffect(() => {
     setMidinikeTempo(tempo)
@@ -188,7 +188,7 @@ export const RhythmEditor = () => {
         throw new Error(`Each bar must fill ${barSize} cells for beat size ${rhythm.meter}`)
       }
       setPlayError(null)
-      restart() ?? play(trackBars, groovePattern)
+      if (!restart()) play(trackBars, groovePattern)
     } catch (error) {
       setPlayError(error instanceof Error ? error.message : 'Could not restart pattern')
     }
@@ -216,10 +216,14 @@ export const RhythmEditor = () => {
     <>
       <div className="flex w-full max-w-4xl flex-col gap-3">
         <FixedSideActions>
-          <Button onClick={onBackToPicker} variant="subtle" className='!justify-start'>
+          <Button onClick={onBackToPicker} variant="subtle" className="!justify-start">
             <BackIcon className="size-4 mr-1" /> Back to My Rhythms
           </Button>
-          <Button href={`/player?rhythm=${rhythm.slug}`} variant="subtle" className='!justify-start'>
+          <Button
+            href={`/player?rhythm=${rhythm.slug}`}
+            variant="subtle"
+            className="!justify-start"
+          >
             <Note16Icon className="mr-1 size-4" /> Show in Player
           </Button>
         </FixedSideActions>
@@ -285,7 +289,11 @@ export const RhythmEditor = () => {
             />
           </section>
 
-          {playError ? <Text className="px-4 pb-2" variant="mono">{playError}</Text> : null}
+          {playError ? (
+            <Text className="px-4 pb-2" variant="mono">
+              {playError}
+            </Text>
+          ) : null}
         </section>
       </div>
 

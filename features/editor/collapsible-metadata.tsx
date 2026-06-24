@@ -44,7 +44,11 @@ const collapsedMetadataSummary = (rhythm: Rhythm) => {
   return parts.join(' · ')
 }
 
-export const CollapsibleMetadata = ({ rhythm, onChange, onTitleBlur }: CollapsibleMetadataProps) => {
+export const CollapsibleMetadata = ({
+  rhythm,
+  onChange,
+  onTitleBlur,
+}: CollapsibleMetadataProps) => {
   const [open, setOpen] = useState(false)
   const [titleDraft, setTitleDraft] = useState(rhythm.title)
 

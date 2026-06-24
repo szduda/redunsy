@@ -14,8 +14,7 @@ export const useCanvasWidth = (containerRef: RefObject<HTMLElement | null>): Can
     const element = containerRef.current
     if (!element) return
 
-    const measure = () =>
-      setLayout({ width: element.clientWidth, dpr: getDevicePixelRatio() })
+    const measure = () => setLayout({ width: element.clientWidth, dpr: getDevicePixelRatio() })
     measure()
 
     const observer = new ResizeObserver(measure)

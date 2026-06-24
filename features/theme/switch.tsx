@@ -40,9 +40,7 @@ export const Switch = ({
     </button>
   )
 
-  const labelSpan = (
-    <span className="text-sm text-zinc-600 dark:text-zinc-400">{label}</span>
-  )
+  const labelSpan = <span className="text-sm text-zinc-600 dark:text-zinc-400">{label}</span>
 
   return (
     <label

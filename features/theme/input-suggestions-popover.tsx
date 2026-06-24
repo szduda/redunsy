@@ -1,6 +1,14 @@
 'use client'
 
-import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type RefObject } from 'react'
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type RefObject,
+} from 'react'
 import { createPortal } from 'react-dom'
 
 import { cn } from '@/features/theme/cn'
@@ -35,10 +43,10 @@ export const InputSuggestionsPopover = ({
   const [style, setStyle] = useState<CSSProperties>()
   const listRef = useRef<HTMLDivElement>(null)
 
-  const updatePosition = () => {
+  const updatePosition = useCallback(() => {
     if (!anchorRef.current) return
     setStyle(positionForAnchor(anchorRef.current))
-  }
+  }, [anchorRef])
 
   useLayoutEffect(() => {
     if (!open) {
@@ -46,7 +54,7 @@ export const InputSuggestionsPopover = ({
       return
     }
     updatePosition()
-  }, [anchorRef, open, suggestions])
+  }, [open, suggestions, updatePosition])
 
   useEffect(() => {
     if (!open) return
@@ -57,7 +65,7 @@ export const InputSuggestionsPopover = ({
       window.removeEventListener('resize', onViewportChange)
       window.removeEventListener('scroll', onViewportChange, true)
     }
-  }, [open])
+  }, [open, updatePosition])
 
   useLayoutEffect(() => {
     if (!open || activeIndex < 0) return

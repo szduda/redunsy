@@ -43,9 +43,7 @@ export const RhythmCardView = ({ card, className }: RhythmCardProps) => (
         </span>
       </div>
 
-      <h2 className="mt-1 text-lg font-semibold text-zinc-900 dark:text-zinc-100">
-        {card.title}
-      </h2>
+      <h2 className="mt-1 text-lg font-semibold text-zinc-900 dark:text-zinc-100">{card.title}</h2>
 
       <Text className="mt-1">
         {[...(card.author ?? []), ...(card.origin ?? []).map(capitalize)].join(' · ')}
@@ -59,16 +57,14 @@ export const RhythmCardView = ({ card, className }: RhythmCardProps) => (
         {[
           ...(card.rhythmGroup ?? []),
           ...(card.tags ?? []).filter((tag) => !(card.rhythmGroup ?? []).includes(tag)),
-        ].map(
-          (tag) => (
-            <span
-              key={tag}
-              className="rounded-full bg-zinc-100 px-2 py-0.5 text-xs text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400"
-            >
-              {tag}
-            </span>
-          ),
-        )}
+        ].map((tag) => (
+          <span
+            key={tag}
+            className="rounded-full bg-zinc-100 px-2 py-0.5 text-xs text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400"
+          >
+            {tag}
+          </span>
+        ))}
       </div>
     </Link>
   </div>

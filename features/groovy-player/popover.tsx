@@ -1,6 +1,14 @@
 'use client'
 
-import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties, type ReactNode } from 'react'
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type ReactNode,
+} from 'react'
 import { createPortal } from 'react-dom'
 
 import { cn } from '@/features/theme/cn'
@@ -153,7 +161,7 @@ export const Popover = ({
   const panelRef = useRef<HTMLDivElement>(null)
   const close = () => setOpen(false)
 
-  const updatePosition = () => {
+  const updatePosition = useCallback(() => {
     const trigger = rootRef.current
     const panelEl = panelRef.current
     if (!trigger || !panelEl) return
@@ -178,7 +186,7 @@ export const Popover = ({
       left: position.left,
       transform: position.transform,
     })
-  }
+  }, [full, fullAnchor, fullBackdrop, preferredDirection])
 
   useLayoutEffect(() => {
     if (!open) {
@@ -187,7 +195,7 @@ export const Popover = ({
       return
     }
     updatePosition()
-  }, [full, fullAnchor, open, preferredDirection, panel])
+  }, [open, panel, updatePosition])
 
   useEffect(() => {
     if (!open) return
@@ -198,7 +206,7 @@ export const Popover = ({
       window.removeEventListener('resize', onViewportChange)
       window.removeEventListener('scroll', onViewportChange, true)
     }
-  }, [full, open, preferredDirection])
+  }, [open, updatePosition])
 
   useEffect(() => {
     if (!open) return
@@ -223,10 +231,7 @@ export const Popover = ({
               {full && fullBackdrop ? (
                 <div
                   aria-hidden
-                  className={cn(
-                    'fixed z-30',
-                    backdropClassName ?? 'bg-zinc-900/95 backdrop-blur',
-                  )}
+                  className={cn('fixed z-30', backdropClassName ?? 'bg-zinc-900/95 backdrop-blur')}
                   style={backdropStyle}
                 />
               ) : null}

@@ -25,7 +25,6 @@ import { Track } from '@/features/groovy-player/track/track'
 import { useSpaceTogglePlay } from '@/features/groovy-player/use-space-toggle-play'
 import { PageBottomNav } from '@/features/layout/page-bottom-nav'
 import { findRhythmBySlug, forkRhythmToMyRhythms } from '@/features/rhythm/rhythm-catalog'
-import { RhythmEditorButton } from '@/features/rhythm/rhythm-editor-button'
 import { trackBarsRecord, tracksFromRecord } from '@/features/rhythm/rhythm-helpers'
 import type { Rhythm } from '@/features/rhythm/rhythm.types'
 import { Button } from '@/features/theme/button'
@@ -114,7 +113,7 @@ export const GroovyPlayer = ({ rhythm }: GroovyPlayerProps = {}) => {
   }, [grooveLength, loadedRhythm, setSwingEnabled, setSwingPattern, setTempo])
 
   const getOverlayBars = useCallback(
-    (patternBars: string[], _groove: string) => {
+    (patternBars: string[]) => {
       if (!hasMetronome) return null
       const metronomeBar = metronomeBarForGrooveLength(grooveLength)
       return patternBars.map(() => metronomeBar)
@@ -206,7 +205,7 @@ export const GroovyPlayer = ({ rhythm }: GroovyPlayerProps = {}) => {
     try {
       validatePlaybackTracks()
       setPlayError(null)
-      restart() ?? play(playbackTracks, groovePattern)
+      if (!restart()) play(playbackTracks, groovePattern)
     } catch (error) {
       setPlayError(error instanceof Error ? error.message : 'Could not restart pattern')
     }
@@ -247,7 +246,7 @@ export const GroovyPlayer = ({ rhythm }: GroovyPlayerProps = {}) => {
       <div className={cn('flex w-full flex-col gap-3', !fullBleed && 'lg:pt-4 xl:pt-6')}>
         {isPlayerDemo ? <PlayerDemoBanner onFork={onForkDemo} /> : null}
 
-        {(loadedRhythm && !fullBleed) ? (
+        {loadedRhythm && !fullBleed ? (
           <FixedSideActions>
             <Button className="!justify-start" onClick={onFork} variant="subtle">
               <ForkIcon className="mr-1 size-4" /> Fork
@@ -306,7 +305,7 @@ export const GroovyPlayer = ({ rhythm }: GroovyPlayerProps = {}) => {
             </Text>
           ) : null}
         </section>
-      </div >
+      </div>
 
       <PageBottomNav>
         <PlayerBottomNav

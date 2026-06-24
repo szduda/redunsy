@@ -1,13 +1,7 @@
 import type { Icon } from '@/features/icons/types'
 
 export const Note16Icon: Icon = (props) => (
-  <svg
-    aria-hidden
-    className="size-4"
-    fill="currentColor"
-    viewBox="0 0 24 24"
-    {...props}
-  >
+  <svg aria-hidden className="size-4" fill="currentColor" viewBox="0 0 24 24" {...props}>
     <ellipse cx="8.5" cy="17.5" rx="3.25" ry="2.75" transform="rotate(-22 8.5 17.5)" />
     <rect height="13" rx="0.75" width="1.5" x="11" y="4.5" />
     <path

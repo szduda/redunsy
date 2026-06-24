@@ -6,7 +6,6 @@ import { HomepageSearch } from '@/features/homepage/homepage-search'
 import { Logo } from '@/features/logo/logo'
 import { Button } from '@/features/theme/button'
 import { Text } from '@/features/theme/text'
-import { cn } from '@/features/theme/cn'
 
 const sectionHeadingClass = 'text-2xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100'
 
@@ -60,7 +59,11 @@ export const HomepageDesktop = () => (
 
       <section className="flex flex-col items-center gap-3 w-full">
         <h2 className={sectionHeadingClass}>Got your own solo phrase or break?</h2>
-        <Button href="/editor" variant="dimmed" className="w-md font-semibold tracking-widest text-base">
+        <Button
+          href="/editor"
+          variant="dimmed"
+          className="w-md font-semibold tracking-widest text-base"
+        >
           Create New Rhythm
         </Button>
       </section>

@@ -56,12 +56,11 @@ export const ContactForm = () => {
 
   return (
     <section aria-label="Contact form">
-      <form
-        className={cn(panelClass, 'w-full space-y-4')}
-        onSubmit={onSubmit}
-      >
+      <form className={cn(panelClass, 'w-full space-y-4')} onSubmit={onSubmit}>
         <div className="space-y-1.5">
-          <label className={labelClass} htmlFor="contact-name">Name</label>
+          <label className={labelClass} htmlFor="contact-name">
+            Name
+          </label>
           <Input
             className="w-full"
             id="contact-name"
@@ -75,7 +74,9 @@ export const ContactForm = () => {
         </div>
 
         <div className="space-y-1.5">
-          <label className={labelClass} htmlFor="contact-email">Email</label>
+          <label className={labelClass} htmlFor="contact-email">
+            Email
+          </label>
           <Input
             className="w-full"
             id="contact-email"

@@ -37,23 +37,25 @@ const stickRenderer: NoteRenderer = (ctx, el) => {
 
 type FlamRenderer = (notes: [NoteRenderer, NoteRenderer]) => NoteRenderer
 
-const flamRenderer: FlamRenderer = (notes) => (ctx, el, bgColor = el.bgColor) => {
-  const top = el.top - getR(el) * 0.2
-  const left = el.left - getR(el) * 0.1
-  const [leftRenderer, rightRenderer] = notes
-  leftRenderer(
-    ctx,
-    {
-      ...el,
-      top,
-      left,
-      height: el.height * 0.8,
-      width: el.width * 0.8,
-    },
-    bgColor,
-  )
-  rightRenderer(ctx, { ...el, top: el.top + 1, left: el.left + 1 }, bgColor)
-}
+const flamRenderer: FlamRenderer =
+  (notes) =>
+  (ctx, el, bgColor = el.bgColor) => {
+    const top = el.top - getR(el) * 0.2
+    const left = el.left - getR(el) * 0.1
+    const [leftRenderer, rightRenderer] = notes
+    leftRenderer(
+      ctx,
+      {
+        ...el,
+        top,
+        left,
+        height: el.height * 0.8,
+        width: el.width * 0.8,
+      },
+      bgColor,
+    )
+    rightRenderer(ctx, { ...el, top: el.top + 1, left: el.left + 1 }, bgColor)
+  }
 
 const ttFlamRenderer: NoteRenderer = flamRenderer([soundMidRenderer, soundMidRenderer])
 const ssFlamRenderer: NoteRenderer = flamRenderer([soundHighRenderer, soundHighRenderer])

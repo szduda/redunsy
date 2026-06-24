@@ -30,7 +30,11 @@ const VerticalVolumeSlider = ({
 }: Omit<VolumeSliderProps, 'vertical'>) => {
   const displayVolume = muted ? 0 : volume
 
-  const setVolumeFromPointer = ({ currentTarget, clientY, pointerId }: PointerEvent<HTMLDivElement>) => {
+  const setVolumeFromPointer = ({
+    currentTarget,
+    clientY,
+    pointerId,
+  }: PointerEvent<HTMLDivElement>) => {
     if (!currentTarget.hasPointerCapture(pointerId)) return
     onVolumeChange(volumeFromClientY(clientY, currentTarget))
   }

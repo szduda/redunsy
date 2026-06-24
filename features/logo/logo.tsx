@@ -100,7 +100,6 @@ export const Logo = ({
       >
         <DundunSetIcon
           height={iconSize}
-          innerClass2="animate-dundun origin-center"
           {...iconProps}
           className={cn(
             '',

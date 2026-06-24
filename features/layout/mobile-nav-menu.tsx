@@ -30,8 +30,7 @@ type MenuButtonProps = {
 
 const menuButtonClass = {
   topNav: topNavItemClass,
-  homepage:
-    'flex items-center justify-center rounded-md p-2 text-white !bg-black/40',
+  homepage: 'flex items-center justify-center rounded-md p-2 text-white !bg-black/40',
 } as const
 
 const MenuButton = ({ open, onClick, variant = 'topNav' }: MenuButtonProps) => (

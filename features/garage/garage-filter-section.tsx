@@ -26,7 +26,12 @@ type GarageFilterOptionProps = {
 
 export const GarageFilterOption = ({ checked, label, onChange }: GarageFilterOptionProps) => (
   <label className="flex cursor-pointer items-center gap-2 rounded px-1 py-0.5 text-sm text-zinc-700 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-900">
-    <input checked={checked} className="accent-zinc-900 dark:accent-zinc-100" onChange={onChange} type="checkbox" />
+    <input
+      checked={checked}
+      className="accent-zinc-900 dark:accent-zinc-100"
+      onChange={onChange}
+      type="checkbox"
+    />
     <span>{label}</span>
   </label>
 )

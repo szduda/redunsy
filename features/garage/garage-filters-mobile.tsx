@@ -39,7 +39,10 @@ type MobileGarageFilterSection = Omit<GarageFilterSectionData, 'id'> & {
 const MOBILE_TOGGLE_SECTIONS = (sections: GarageFilterSectionData[]): MobileGarageFilterSection[] =>
   sections.filter((section): section is MobileGarageFilterSection => section.id !== 'rhythmGroup')
 
-const mobileActiveCount = (section: MobileGarageFilterSection, sections: GarageFilterSectionData[]) => {
+const mobileActiveCount = (
+  section: MobileGarageFilterSection,
+  sections: GarageFilterSectionData[],
+) => {
   if (section.id !== 'origin') return section.selected.length
   const rhythmGroup = sections.find((item) => item.id === 'rhythmGroup')
   return section.selected.length + (rhythmGroup?.selected.length ?? 0)

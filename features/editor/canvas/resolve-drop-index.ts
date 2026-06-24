@@ -24,7 +24,14 @@ export type BarBounds = {
 }
 
 export const barBoundsFromElements = (
-  elements: { type: string; barIndex?: number; left: number; top: number; width: number; height: number }[],
+  elements: {
+    type: string
+    barIndex?: number
+    left: number
+    top: number
+    width: number
+    height: number
+  }[],
 ) =>
   elements
     .filter((element) => element.type === 'bar' && element.barIndex !== undefined)

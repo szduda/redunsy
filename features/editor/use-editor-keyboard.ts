@@ -16,7 +16,10 @@ type EditorKeyboardActions = {
 
 export const useEditorKeyboard = (instrument: string, actions: EditorKeyboardActions | null) => {
   const actionsRef = useRef(actions)
-  actionsRef.current = actions
+
+  useEffect(() => {
+    actionsRef.current = actions
+  }, [actions])
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {

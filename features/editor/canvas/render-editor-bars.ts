@@ -17,7 +17,6 @@ type RenderEditorBarSlotsArgs = {
   context: CanvasRenderingContext2D
   canvasWidth: number
   barsPerRow: number
-  palette?: CanvasColors
   dark?: boolean
 }
 
@@ -50,7 +49,6 @@ export const renderEditorBarSlots = ({
   context,
   canvasWidth,
   barsPerRow,
-  palette = darkCanvasColors,
   dark = true,
 }: RenderEditorBarSlotsArgs) => {
   const barsForLayout = slots.map((slot) => slot.bar ?? '-'.repeat(8))

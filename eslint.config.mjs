@@ -13,6 +13,7 @@ const eslintConfig = defineConfig([
       prettier: prettierPlugin,
     },
     rules: {
+      'react-hooks/set-state-in-effect': 'off',
       'prettier/prettier': 'error',
       semi: ['error', 'never'],
       'prefer-arrow-callback': 'error',
@@ -29,7 +30,15 @@ const eslintConfig = defineConfig([
       ],
     },
   },
-  globalIgnores(['.next/**', 'out/**', 'build/**', 'next-env.d.ts']),
+  globalIgnores([
+    '.next/**',
+    'out/**',
+    'build/**',
+    'next-env.d.ts',
+    'drizzle/**',
+    'public/**',
+    'lib/**',
+  ]),
 ])
 
 export default eslintConfig

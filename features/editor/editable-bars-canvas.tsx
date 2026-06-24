@@ -92,7 +92,6 @@ const EditableBars = ({
           context,
           canvasWidth,
           barsPerRow,
-          palette,
           dark: prefersDark,
         })
       : renderBars({

@@ -17,9 +17,5 @@ export const Providers = ({ children }: ProvidersProps) =>
     QueryProvider,
     null,
     createElement(ThemeScript, null),
-    createElement(
-      ThemeProvider,
-      null,
-      createElement(MidiSoundsProvider, null, children),
-    ),
+    createElement(ThemeProvider, null, createElement(MidiSoundsProvider, null, children)),
   )
