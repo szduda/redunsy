@@ -15,10 +15,10 @@ type CreatorStepMonitorProps = {
   compact?: boolean
 }
 
-const stepCircleClass = (active: boolean, completed: boolean) =>
+const stepCircleClass = (active: boolean, completed: boolean, isCompact: boolean) =>
   cn(
     'flex shrink-0 items-center justify-center rounded-full border font-semibold transition-colors',
-    compact ? 'size-6 text-[10px]' : 'size-7 text-xs',
+    isCompact ? 'size-6 text-[10px]' : 'size-7 text-xs',
     completed
       ? 'border-zinc-900 bg-zinc-900 text-white dark:border-zinc-100 dark:bg-zinc-100 dark:text-zinc-900'
       : active
@@ -43,7 +43,7 @@ export const CreatorStepMonitor = ({ currentStep, compact = false }: CreatorStep
         return (
           <li key={step} className="flex items-center gap-1">
             <div className="flex min-w-0 items-center gap-1.5">
-              <span className={stepCircleClass(active, completed)}>{step}</span>
+              <span className={stepCircleClass(active, completed, compact)}>{step}</span>
               {!compact ? (
                 <Text
                   className={cn(
