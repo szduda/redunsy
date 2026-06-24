@@ -1,36 +1,154 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Redunsy
 
-## Getting Started
+West African drum rhythm player and editor. Browse a catalogue of djembe, dundun, and bell patterns, play them with swing and metronome, fork public rhythms into your own collection, and compose new ones — all in the browser.
 
-First, run the development server:
+Live at [re.dunsy.app](https://re.dunsy.app).
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Tech stack
+
+| Layer | Choices |
+| --- | --- |
+| Framework | [Next.js 16](https://nextjs.org) (App Router), React 19, TypeScript |
+| Styling | Tailwind CSS 4, custom theme primitives in `features/theme/` |
+| Client state | [Zustand](https://zustand.docs.pmnd.rs) per feature; [TanStack Query](https://tanstack.com/query) for async UI |
+| Database | [PostgreSQL](https://www.postgresql.org) via [Drizzle ORM](https://orm.drizzle.team) + `postgres` driver |
+| Audio engine | Custom **midinike** library (`lib/midinike/`) — notation parsing, groove compilation, WebAudio playback |
+| Search | [Fuse.js](https://fusejs.io) over a build-time JSON index |
+| Testing | [Vitest](https://vitest.dev) (unit + playback invariants) |
+| Deployment | [Vercel](https://vercel.com) |
+
+## Architecture overview
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│  app/                     Next.js routes (mostly static)        │
+│  ├── page, garage, player, editor, help, contact               │
+│  └── rhythm/[slug]        pre-rendered from Postgres at build   │
+├─────────────────────────────────────────────────────────────────┤
+│  features/<name>/         Feature modules (UI + stores + hooks)│
+│  ├── groovy-player        Playback UI, transport, settings    │
+│  ├── editor               Canvas notation editor                │
+│  ├── garage               Search, filters, pagination           │
+│  ├── rhythm               Shared types and localStorage catalog │
+│  ├── store/               Cross-cutting Zustand stores          │
+│  └── theme/, layout/, icons/  Shared UI primitives              │
+├─────────────────────────────────────────────────────────────────┤
+│  lib/midinike/            Audio/notation engine (framework-free)│
+│  db/                      Drizzle schema, server-only queries   │
+└─────────────────────────────────────────────────────────────────┘
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The codebase follows **functional programming** conventions: no classes, feature-colocated stores, and imports from concrete module paths (no barrel `index` files in features).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### Data model
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Published rhythms live in **Postgres** (`db/schema.ts`). Each row stores metadata plus instrument patterns as JSONB. At **build time**, the catalogue is read once to:
 
-## Learn More
+1. Pre-render static `/rhythm/[slug]` player pages.
+2. Generate `features/garage/rhythm-index.generated.json` for client-side search (no runtime DB access in the browser).
 
-To learn more about Next.js, take a look at the following resources:
+**User-owned rhythms** (created, forked, or edited) are stored in **localStorage** and resolved client-side. The editor and `/player?rhythm=<slug>` route work entirely in the browser for private collections.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Midinike (playback engine)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+`lib/midinike/` is the core audio stack, independent of React:
 
-## Deploy on Vercel
+- **Notation** — parses bar strings (`t`, `b`, `s`, triplets `[…]`, swing groups `{…}`) into timed cell hits.
+- **Groove** — compiles bars against a swing pattern to produce beat matrices for playback.
+- **Audio** — WebAudioFont-based drum samples with per-track volume and metronome.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+The groovy player and editor both depend on midinike; playback timing invariants are guarded by `npm run test:playback`.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+### Feature modules
+
+| Feature | Route(s) | Responsibility |
+| --- | --- | --- |
+| **Groovy player** | `/rhythm/[slug]`, `/player` | Multi-track playback, tempo, swing, metronome, wake lock |
+| **Garage** | `/garage` | Fuse.js search, faceted filters, pagination over the static index |
+| **Editor** | `/editor`, `/editor/[slug]` | Visual bar editor, metadata, fork/save to localStorage |
+| **Help** | `/help` | Notation reference and interactive demos |
+
+## Project layout
+
+```
+app/                  Routes and global styles
+db/                   Drizzle schema, mappers, server-only queries
+drizzle/              SQL migrations
+features/             Feature modules (stores, hooks, components)
+lib/midinike/         Notation parser, groove compiler, audio player
+scripts/              Build-time index generation, DB seeding
+```
+
+## Core dependencies
+
+**Runtime**
+
+| Package | Role |
+| --- | --- |
+| `next`, `react`, `react-dom` | App framework and UI |
+| `drizzle-orm`, `postgres` | Database access |
+| `zustand` | Client state management |
+| `@tanstack/react-query` | Async data and query caching |
+| `fuse.js` | Fuzzy search over the rhythm index |
+| `tailwind-merge` | Conditional class merging |
+
+**Development**
+
+| Package | Role |
+| --- | --- |
+| `typescript`, `eslint`, `prettier` | Type-checking and linting |
+| `vitest` | Unit and playback tests |
+| `drizzle-kit` | Schema migrations |
+| `tsx` | Script runner (index generation, seeding) |
+| `tailwindcss`, `@tailwindcss/postcss` | CSS framework |
+
+## Getting started
+
+### Prerequisites
+
+- Node.js 20+
+- PostgreSQL (for local DB work and fresh search-index builds)
+
+### Install and run
+
+```bash
+npm install
+npm run dev
+```
+
+Open [http://localhost:3000](http://localhost:3000). The dev server works without a database — the committed search index and static rhythm pages are used as fallbacks.
+
+### Environment variables
+
+Create `.env.local` (or pull from Vercel with `vercel env pull`):
+
+| Variable | Required for | Purpose |
+| --- | --- | --- |
+| `POSTGRES_URL` or `DATABASE_URL` | Build, DB scripts | Postgres connection string |
+
+### Database
+
+```bash
+npm run db:push        # Push schema to local Postgres
+npm run db:migrate     # Run migrations
+npm run db:seed        # Seed rhythms from migration scripts
+npm run search-index   # Regenerate garage search JSON from Postgres
+```
+
+`npm run build` runs `prebuild` automatically, which regenerates the search index when a connection string is available.
+
+### Scripts
+
+| Command | Description |
+| --- | --- |
+| `npm run dev` | Start development server |
+| `npm run build` | Production build (regenerates search index first) |
+| `npm run start` | Serve production build |
+| `npm run lint` | ESLint |
+| `npm run test` | Run all Vitest suites |
+| `npm run test:playback` | Playback timing and groove-length invariants |
+| `npm run format` | Prettier write |
+
+## Deployment
+
+Deployed on Vercel. Static rhythm pages and the garage search index are produced at build time.
