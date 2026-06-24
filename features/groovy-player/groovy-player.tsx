@@ -8,6 +8,7 @@ import { forkPlayerDemoToMyRhythms } from '@/features/groovy-player/demo-rhythm'
 import { PlayerBottomNav } from '@/features/groovy-player/player-bottom-nav'
 import { PlayerDemoBanner } from '@/features/groovy-player/player-demo-banner'
 import { useScreenWakeLock } from '@/features/groovy-player/use-screen-wake-lock'
+import { BackIcon } from '@/features/icons/back-icon'
 import { EditIcon } from '@/features/icons/edit-icon'
 import { ForkIcon } from '@/features/icons/fork-icon'
 import { FixedSideActions } from '@/features/layout/fixed-side-actions'
@@ -248,6 +249,11 @@ export const GroovyPlayer = ({ rhythm }: GroovyPlayerProps = {}) => {
 
         {loadedRhythm && !fullBleed ? (
           <FixedSideActions>
+            {rhythm ? (
+              <Button className="!justify-start" href="/editor" variant="subtle">
+                <BackIcon className="mr-1 size-4" /> Back to My Rhythms
+              </Button>
+            ) : null}
             <Button className="!justify-start" onClick={onFork} variant="subtle">
               <ForkIcon className="mr-1 size-4" /> Fork
             </Button>
