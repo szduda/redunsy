@@ -48,13 +48,7 @@
           "title": "djembe"
         }
       ],
-      "tags": [
-        "6/8",
-        "gine fare",
-        "dundun set",
-        "susu",
-        "yogui"
-      ],
+      "tags": ["6/8", "gine fare", "dundun set", "susu", "yogui"],
       "published": true,
       "updatedAt": "2023-10-19T01:41:17.055Z"
     },
@@ -66,11 +60,7 @@
       "tempo": 125,
       "createdAt": "2021-12-31T23:00:00.791Z",
       "slug": "djansa-set",
-      "tags": [
-        "djansa",
-        "dundun set",
-        "4/4"
-      ],
+      "tags": ["djansa", "dundun set", "4/4"],
       "swing": "-->",
       "patterns": [
         {
@@ -118,12 +108,7 @@
       "tempo": 125,
       "title": "Wassolon Soboninkun Variation",
       "slug": "wassolon-soboninkun-variation",
-      "tags": [
-        "4/4",
-        "soboninkun",
-        "wassolon",
-        "kassonke"
-      ],
+      "tags": ["4/4", "soboninkun", "wassolon", "kassonke"],
       "createdAt": "2023-11-21T17:33:55.883Z",
       "published": true,
       "swing": "",
@@ -215,12 +200,7 @@
       ],
       "tempo": 150,
       "slug": "bolokonondo",
-      "tags": [
-        "6/8",
-        "bolokonondo",
-        "dunumba",
-        "sequential"
-      ],
+      "tags": ["6/8", "bolokonondo", "dunumba", "sequential"],
       "createdAt": "2023-10-06T16:38:35.357Z",
       "description": "",
       "title": "Bolokonondo Groove",
@@ -265,12 +245,7 @@
       "tempo": 140,
       "title": "Gine Fare Intro from Moribaya",
       "slug": "gine-fare-intro-from-moribaya",
-      "tags": [
-        "6/8",
-        "gine fare",
-        "intro",
-        "break"
-      ],
+      "tags": ["6/8", "gine fare", "intro", "break"],
       "createdAt": "2023-11-15T18:39:33.736Z",
       "published": true,
       "updatedAt": "2024-03-24T01:07:43.731Z"
@@ -322,12 +297,7 @@
       "title": "Sinte",
       "signal": "s---f--tss-ss-f-tt-tt---",
       "slug": "sinte",
-      "tags": [
-        "4/4",
-        "sinte",
-        "dundun set",
-        "variations"
-      ],
+      "tags": ["4/4", "sinte", "dundun set", "variations"],
       "createdAt": "2024-08-13T14:40:24.347Z",
       "published": true,
       "updatedAt": "2024-08-13T14:40:34.528Z"
@@ -362,12 +332,7 @@
       "title": "Sangban for madan (variation)",
       "signal": "",
       "published": true,
-      "tags": [
-        "madan",
-        "djagbe",
-        "sangban",
-        "4/4"
-      ],
+      "tags": ["madan", "djagbe", "sangban", "4/4"],
       "updatedAt": "2024-06-18T18:48:46.056Z"
     },
     {
@@ -381,12 +346,7 @@
       "slug": "soboninkun",
       "swing": "<<<",
       "description": "Other names: sobonikun, sogonikun, sogoninkun.",
-      "tags": [
-        "dundun set",
-        "soboninkun",
-        "4/4",
-        "wassolon"
-      ],
+      "tags": ["dundun set", "soboninkun", "4/4", "wassolon"],
       "patterns": [
         {
           "__ref": "patterns/bX88MFY24mRHI8z0N3TG",
@@ -473,11 +433,7 @@
       "tempo": 110,
       "title": "N'goron",
       "slug": "ngoron",
-      "tags": [
-        "ngoron",
-        "dundun set",
-        "4/4"
-      ],
+      "tags": ["ngoron", "dundun set", "4/4"],
       "createdAt": "2024-02-18T17:37:25.182Z",
       "published": true,
       "swing": "",
@@ -524,12 +480,7 @@
       "createdAt": "2023-08-01T00:10:26.622Z",
       "swing": ">",
       "slug": "kudani",
-      "tags": [
-        "kudani",
-        "4/4",
-        "dundun set",
-        "mamady keita"
-      ],
+      "tags": ["kudani", "4/4", "dundun set", "mamady keita"],
       "published": true,
       "updatedAt": "2023-10-19T01:36:36.450Z"
     },
@@ -569,11 +520,7 @@
         }
       ],
       "signal": "",
-      "tags": [
-        "9/8",
-        "konkoba",
-        "dundun set"
-      ],
+      "tags": ["9/8", "konkoba", "dundun set"],
       "published": true,
       "swing": "<<",
       "tempo": 160,
@@ -621,11 +568,7 @@
       "createdAt": "2022-02-08T23:00:00.000Z",
       "signal": "t--t---t--t--t--",
       "slug": "zaouli-set",
-      "tags": [
-        "zaouli",
-        "dundun set",
-        "4/4"
-      ],
+      "tags": ["zaouli", "dundun set", "4/4"],
       "published": true,
       "updatedAt": "2023-10-19T01:37:42.264Z"
     },
@@ -684,11 +627,7 @@
       ],
       "description": "Sometimes spelled as dja.",
       "title": "Djaa",
-      "tags": [
-        "6/8",
-        "djaa",
-        "dundun set"
-      ],
+      "tags": ["6/8", "djaa", "dundun set"],
       "published": true,
       "updatedAt": "2023-10-19T01:42:24.308Z"
     },
@@ -734,11 +673,7 @@
       "swing": "<<",
       "signal": "f-ss-tsstss-",
       "slug": "mendiani",
-      "tags": [
-        "6/8",
-        "dundun set",
-        "mendiani"
-      ],
+      "tags": ["6/8", "dundun set", "mendiani"],
       "published": true,
       "updatedAt": "2023-10-19T01:36:35.815Z"
     },
@@ -789,12 +724,7 @@
       "tempo": 110,
       "title": "Didadi - short groove for dundun set",
       "slug": "didadi-short-groove-for-dundun-set",
-      "tags": [
-        "4/4",
-        "didadi",
-        "dundun set",
-        "short loop"
-      ],
+      "tags": ["4/4", "didadi", "dundun set", "short loop"],
       "createdAt": "2023-10-19T13:36:19.616Z",
       "published": true,
       "description": "",
@@ -808,14 +738,7 @@
       "tempo": 110,
       "createdAt": "2021-12-31T23:00:00.492Z",
       "slug": "lamban",
-      "tags": [
-        "lamban",
-        "sandia",
-        "djelidon",
-        "4/4",
-        "kassonke",
-        "drissa kone"
-      ],
+      "tags": ["lamban", "sandia", "djelidon", "4/4", "kassonke", "drissa kone"],
       "published": true,
       "swing": "",
       "patterns": [
@@ -886,12 +809,7 @@
       "tempo": 180,
       "signal": "ttttt-tt-t--",
       "slug": "soko-fast",
-      "tags": [
-        "soko",
-        "dundun set",
-        "rapide",
-        "6/8"
-      ],
+      "tags": ["soko", "dundun set", "rapide", "6/8"],
       "published": true,
       "updatedAt": "2023-10-19T01:36:37.565Z"
     },
@@ -931,12 +849,7 @@
         }
       ],
       "title": "Balkulandjan sangban jam",
-      "tags": [
-        "jam",
-        "balakulandjan",
-        "sangban",
-        "4/4"
-      ],
+      "tags": ["jam", "balakulandjan", "sangban", "4/4"],
       "createdAt": "2023-09-27T19:47:00.058Z",
       "slug": "balakulandjan-sangban-jam",
       "swing": "",
@@ -977,11 +890,7 @@
       "description": "A common thank-you phrase.",
       "title": "The Last Break",
       "signal": "s-tts-t---f-f---",
-      "tags": [
-        "break",
-        "outro",
-        "popular"
-      ],
+      "tags": ["break", "outro", "popular"],
       "published": true,
       "updatedAt": "2023-10-19T01:41:15.145Z"
     },
@@ -1018,12 +927,7 @@
       "swing": ">",
       "createdAt": "2021-12-31T23:00:00.804Z",
       "slug": "dibon",
-      "tags": [
-        "4/4",
-        "kassa",
-        "dibon",
-        "dundun set"
-      ],
+      "tags": ["4/4", "kassa", "dibon", "dundun set"],
       "published": true,
       "updatedAt": "2023-10-19T01:37:40.313Z"
     },
@@ -1072,13 +976,7 @@
       "description": "",
       "signal": "f-tt-t-tt-ttt---",
       "slug": "denaben",
-      "tags": [
-        "denaben",
-        "lafe",
-        "dundun set",
-        "dundun",
-        "4/4"
-      ],
+      "tags": ["denaben", "lafe", "dundun set", "dundun", "4/4"],
       "published": true,
       "updatedAt": "2023-10-19T01:41:13.511Z"
     },
@@ -1116,11 +1014,7 @@
       "swing": ">>",
       "createdAt": "2021-12-31T23:00:00.980Z",
       "slug": "soko",
-      "tags": [
-        "soko",
-        "6/8",
-        "dundun set"
-      ],
+      "tags": ["soko", "6/8", "dundun set"],
       "published": true,
       "updatedAt": "2023-10-19T01:37:36.729Z"
     },
@@ -1133,13 +1027,7 @@
       "swing": "<<",
       "signal": "sstsss------",
       "slug": "kon",
-      "tags": [
-        "kon",
-        "dunungbe",
-        "dunumba",
-        "dundun set",
-        "6/8"
-      ],
+      "tags": ["kon", "dunungbe", "dunumba", "dundun set", "6/8"],
       "patterns": [
         {
           "__ref": "patterns/Qvu1szbalhlboMh1pRA7",
@@ -1214,12 +1102,7 @@
       "swing": "<<",
       "createdAt": "2021-12-31T23:00:00.885Z",
       "slug": "soli",
-      "tags": [
-        "soli",
-        "dundun set",
-        "6/8",
-        "rapide"
-      ],
+      "tags": ["soli", "dundun set", "6/8", "rapide"],
       "published": true,
       "updatedAt": "2023-10-19T01:37:37.833Z"
     },
@@ -1257,12 +1140,7 @@
       "swing": ">",
       "createdAt": "2021-12-31T23:00:00.422Z",
       "slug": "djagbe",
-      "tags": [
-        "djagbe",
-        "dundun set",
-        "madan",
-        "4/4"
-      ],
+      "tags": ["djagbe", "dundun set", "madan", "4/4"],
       "published": true,
       "updatedAt": "2023-10-19T01:41:07.617Z"
     },
@@ -1295,11 +1173,7 @@
       "title": "test-test",
       "signal": "tts-ttstt-------",
       "slug": "test-test",
-      "tags": [
-        "tag",
-        "tag2",
-        "4/4"
-      ],
+      "tags": ["tag", "tag2", "4/4"],
       "createdAt": "2024-03-11T21:14:37.930Z"
     },
     {
@@ -1331,12 +1205,7 @@
       "description": "",
       "tempo": 110,
       "signal": "",
-      "tags": [
-        "madan",
-        "djagbe",
-        "sangban",
-        "4/4"
-      ],
+      "tags": ["madan", "djagbe", "sangban", "4/4"],
       "updatedAt": "2024-06-18T18:49:51.446Z"
     },
     {
@@ -1366,11 +1235,7 @@
       "tempo": 140,
       "swing": "<<",
       "slug": "kawa",
-      "tags": [
-        "kawa",
-        "dundun set",
-        "6/8"
-      ],
+      "tags": ["kawa", "dundun set", "6/8"],
       "published": true,
       "updatedAt": "2023-10-19T01:37:41.254Z"
     },
@@ -1416,13 +1281,7 @@
       "signal": "",
       "slug": "dunumba-intro",
       "description": "A popular break for dunumba rhythms sequence. Usually played at the beginning. As always there are multiple variations and this is just one of them. I added the kenkeni phrase at the end just for reference.",
-      "tags": [
-        "6/8",
-        "dunumba",
-        "intro",
-        "break",
-        "dundun set"
-      ],
+      "tags": ["6/8", "dunumba", "intro", "break", "dundun set"],
       "published": true,
       "updatedAt": "2023-10-19T01:41:14.131Z"
     },
@@ -1465,11 +1324,7 @@
       ],
       "tempo": 110,
       "signal": "",
-      "tags": [
-        "djansa",
-        "sangban",
-        "4/4"
-      ],
+      "tags": ["djansa", "sangban", "4/4"],
       "updatedAt": "2024-06-18T18:49:26.158Z"
     },
     {
@@ -1478,12 +1333,7 @@
       "swing": ">>",
       "authorUid": "grCCh2yNtgUYGsqz15einNkNMUA2",
       "title": "Marakadon",
-      "tags": [
-        "6/8",
-        "dundun set",
-        "marakadon",
-        "fula fare"
-      ],
+      "tags": ["6/8", "dundun set", "marakadon", "fula fare"],
       "createdAt": "2023-09-26T00:08:45.005Z",
       "slug": "marakadon",
       "description": "",
@@ -1528,13 +1378,7 @@
       "tempo": 140,
       "createdAt": "2021-12-31T23:00:00.716Z",
       "slug": "maane",
-      "tags": [
-        "maane",
-        "dundun set",
-        "6/8",
-        "mane",
-        "susu"
-      ],
+      "tags": ["maane", "dundun set", "6/8", "mane", "susu"],
       "title": "Maane groove",
       "swing": "<<",
       "description": "",
@@ -1609,11 +1453,7 @@
       "description": "You can try flexing and playing the last bar as noted, but I recommend just ignoring the kenkeni part there.",
       "createdAt": "2021-12-31T23:00:00.645Z",
       "slug": "toro",
-      "tags": [
-        "toro",
-        "dundun set",
-        "4/4"
-      ],
+      "tags": ["toro", "dundun set", "4/4"],
       "published": true,
       "updatedAt": "2023-10-19T01:41:05.938Z"
     },
@@ -1644,12 +1484,7 @@
       "swing": ">",
       "title": "madan by Drissa Kone Quartett",
       "slug": "madan-drissa-kone",
-      "tags": [
-        "madan",
-        "4/4",
-        "drissa kone",
-        "kassonke"
-      ],
+      "tags": ["madan", "4/4", "drissa kone", "kassonke"],
       "published": true,
       "updatedAt": "2023-10-19T01:36:37.042Z"
     },
@@ -1721,11 +1556,7 @@
       "published": true,
       "description": "Learned from Thomas Guei.",
       "title": "Shemufoli",
-      "tags": [
-        "4/4",
-        "shemufoli",
-        "dundun set"
-      ],
+      "tags": ["4/4", "shemufoli", "dundun set"],
       "updatedAt": "2024-09-25T19:50:56.991Z"
     },
     {
@@ -1757,11 +1588,7 @@
       "slug": "soli-sangban",
       "published": true,
       "signal": "",
-      "tags": [
-        "soli",
-        "sangban",
-        "6/8"
-      ],
+      "tags": ["soli", "sangban", "6/8"],
       "updatedAt": "2024-06-18T18:49:10.483Z"
     }
   ],

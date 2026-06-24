@@ -101,7 +101,8 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-button, a {
+button,
+a {
   cursor: pointer;
   user-select: none;
 }

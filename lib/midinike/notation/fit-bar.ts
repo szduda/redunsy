@@ -15,7 +15,5 @@ export const validateBarsForGroove = (bars: string[], grooveLength: number) => {
 export const barsMatchGrooveLength = (bars: string[], grooveLength: number) =>
   bars.every((bar) => barCellCount(bar) === grooveLength)
 
-export const tracksMatchGrooveLength = (
-  tracks: Record<string, string[]>,
-  grooveLength: number,
-) => Object.values(tracks).every((bars) => barsMatchGrooveLength(bars, grooveLength))
+export const tracksMatchGrooveLength = (tracks: Record<string, string[]>, grooveLength: number) =>
+  Object.values(tracks).every((bars) => barsMatchGrooveLength(bars, grooveLength))

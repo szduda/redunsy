@@ -87,4 +87,3 @@ const validateReflowedBar = (bar: string, barSize: number) => {
     throw new Error(`Reflowed bar "${bar}" has ${count} cells, more than bar size ${barSize}`)
   }
 }
-

@@ -120,9 +120,7 @@
         "rhythms_slug_unique": {
           "name": "rhythms_slug_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "slug"
-          ]
+          "columns": ["slug"]
         }
       },
       "policies": {},

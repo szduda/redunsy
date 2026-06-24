@@ -8,12 +8,7 @@ const createToHit =
   (soundMap?: Record<string, number | null>) =>
   (sound: string): CellHit => ({
     sound,
-    sampleId:
-      sound === '-'
-        ? null
-        : soundMap
-          ? (soundMap[sound] ?? null)
-          : symbolToSampleId(sound),
+    sampleId: sound === '-' ? null : soundMap ? (soundMap[sound] ?? null) : symbolToSampleId(sound),
   })
 
 const emptyCell = (kind: ParsedCell['kind'] = 'eighth'): ParsedCell => ({
