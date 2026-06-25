@@ -247,7 +247,7 @@ export const GroovyPlayer = ({ rhythm }: GroovyPlayerProps = {}) => {
       <div className={cn('flex w-full flex-col gap-3', !fullBleed && 'lg:pt-4 xl:pt-6')}>
         {isPlayerDemo ? <PlayerDemoBanner onFork={onForkDemo} /> : null}
 
-        {!fullBleed ? (
+        {!fullBleed && !isPlayerDemo ? (
           <FixedSideActions>
             <Button
               className="!justify-start"
