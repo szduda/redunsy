@@ -13,12 +13,14 @@ const STEPS = [
 type CreatorStepMonitorProps = {
   currentStep: 1 | 2 | 3
   compact?: boolean
+  onStepSelect?: (step: 1 | 2 | 3) => void
 }
 
-const stepCircleClass = (active: boolean, completed: boolean, isCompact: boolean) =>
+const stepCircleClass = (active: boolean, completed: boolean, isCompact: boolean, clickable: boolean) =>
   cn(
     'flex shrink-0 items-center justify-center rounded-full border font-semibold transition-colors',
     isCompact ? 'size-6 text-[10px]' : 'size-7 text-xs',
+    clickable && 'cursor-pointer hover:border-zinc-500 dark:hover:border-zinc-400',
     completed
       ? 'border-zinc-900 bg-zinc-900 text-white dark:border-zinc-100 dark:bg-zinc-100 dark:text-zinc-900'
       : active
@@ -32,18 +34,35 @@ const stepArrowClass = (completed: boolean) =>
     completed ? 'text-zinc-900 dark:text-zinc-100' : 'text-zinc-300 dark:text-zinc-600',
   )
 
-export const CreatorStepMonitor = ({ currentStep, compact = false }: CreatorStepMonitorProps) => (
+export const CreatorStepMonitor = ({
+  currentStep,
+  compact = false,
+  onStepSelect,
+}: CreatorStepMonitorProps) => (
   <nav aria-label="Creator steps" className={cn(compact ? 'min-w-0' : 'w-full')}>
     <ol className={cn('flex items-center', compact ? 'gap-1' : 'gap-2')}>
       {STEPS.map(({ step, label }, index) => {
         const active = currentStep === step
         const completed = currentStep > step
         const isLast = index === STEPS.length - 1
+        const circleClass = stepCircleClass(active, completed, compact, Boolean(onStepSelect))
 
         return (
           <li key={step} className="flex items-center gap-1">
             <div className="flex min-w-0 items-center gap-1.5">
-              <span className={stepCircleClass(active, completed, compact)}>{step}</span>
+              {onStepSelect ? (
+                <button
+                  aria-current={active ? 'step' : undefined}
+                  aria-label={`Go to step ${step}: ${label}`}
+                  className={circleClass}
+                  onClick={() => onStepSelect(step)}
+                  type="button"
+                >
+                  {step}
+                </button>
+              ) : (
+                <span className={circleClass}>{step}</span>
+              )}
               {!compact ? (
                 <Text
                   className={cn(

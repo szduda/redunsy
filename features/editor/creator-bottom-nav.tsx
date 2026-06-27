@@ -8,6 +8,7 @@ type CreatorBottomNavProps = {
   continueDisabled?: boolean
   onBack: () => void
   onContinue: () => void
+  onStepSelect: (step: 1 | 2 | 3) => void
 }
 
 export const CreatorBottomNav = ({
@@ -15,9 +16,10 @@ export const CreatorBottomNav = ({
   continueDisabled = false,
   onBack,
   onContinue,
+  onStepSelect,
 }: CreatorBottomNavProps) => (
   <div className="mx-auto flex h-full w-full max-w-4xl items-center justify-between gap-3 px-4">
-    <CreatorStepMonitor compact currentStep={currentStep} />
+    <CreatorStepMonitor compact currentStep={currentStep} onStepSelect={onStepSelect} />
     <div className="flex shrink-0 items-center gap-2">
       <Button onClick={onBack} variant="outlined">
         Back

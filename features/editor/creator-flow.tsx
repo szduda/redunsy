@@ -93,24 +93,28 @@ export const CreatorFlow = () => {
 
           {draft.layers.includes('djembe') ? (
             <div className="flex flex-col gap-3 rounded-xl border border-zinc-200 bg-zinc-50/80 p-4 dark:border-zinc-800 dark:bg-zinc-900/40">
+              <div className="flex flex-col gap-2">
+                <Text className="!text-zinc-600 dark:!text-zinc-400">
+                  {draft.fillDjembe
+                    ? 'Each bar will use this starter pattern:'
+                    : 'Starter pattern if you opt in to prefill:'}
+                </Text>
+                <div className="flex flex-wrap items-center gap-3">
+                  <DemoBar
+                    active={draft.fillDjembe}
+                    meter={draft.meter}
+                    pattern={prefillPattern}
+                  />
+                  <Text className="!font-mono !text-zinc-500" variant="mono">
+                    {prefillPattern}
+                  </Text>
+                </div>
+              </div>
               <Switch
                 checked={draft.fillDjembe}
                 label="Prefill djembe with starter pattern (× 2 bars)"
                 onChange={(fillDjembe) => updateCreatorDraft({ fillDjembe })}
               />
-              {draft.fillDjembe ? (
-                <div className="flex flex-col gap-2">
-                  <Text className="!text-zinc-600 dark:!text-zinc-400">
-                    Each bar will use this pattern:
-                  </Text>
-                  <div className="flex flex-wrap items-center gap-3">
-                    <DemoBar meter={draft.meter} pattern={prefillPattern} />
-                    <Text className="!font-mono !text-zinc-500" variant="mono">
-                      {prefillPattern}
-                    </Text>
-                  </div>
-                </div>
-              ) : null}
             </div>
           ) : null}
         </CreatorFlowShell>
@@ -133,6 +137,7 @@ export const CreatorFlow = () => {
           currentStep={creatorStep}
           onBack={onBack}
           onContinue={onContinue}
+          onStepSelect={setCreatorStep}
         />
       </PageBottomNav>
     </>
