@@ -16,7 +16,12 @@ type CreatorStepMonitorProps = {
   onStepSelect?: (step: 1 | 2 | 3) => void
 }
 
-const stepCircleClass = (active: boolean, completed: boolean, isCompact: boolean, clickable: boolean) =>
+const stepCircleClass = (
+  active: boolean,
+  completed: boolean,
+  isCompact: boolean,
+  clickable: boolean,
+) =>
   cn(
     'flex shrink-0 items-center justify-center rounded-full border font-semibold transition-colors',
     isCompact ? 'size-6 text-[10px]' : 'size-7 text-xs',
