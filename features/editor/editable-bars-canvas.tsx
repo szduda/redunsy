@@ -21,6 +21,7 @@ import { setupCanvasDpi } from '@/features/groovy-player/canvas/canvas-dpi'
 import { darkCanvasColors, lightCanvasColors } from '@/features/groovy-player/canvas/canvas-colors'
 import { canvasHeightForBars, renderBars } from '@/features/groovy-player/canvas/renderers'
 import { useCanvasWidth } from '@/features/groovy-player/canvas/use-canvas-width'
+import { useIsMobile } from '@/features/shared/use-is-mobile'
 import { useIsDark } from '@/features/store/theme.store'
 import { cn } from '@/features/theme/cn'
 import type { CanvasElement } from '@/features/groovy-player/canvas/types'
@@ -59,7 +60,9 @@ const EditableBars = ({
   selectionMode,
   id,
 }: EditableBarsCanvasProps) => {
+  const isMobile = useIsMobile()
   const prefersDark = useIsDark()
+  const allowBarDrag = selectionMode === 'bar' && !isMobile
   const canvasId = `${instrument}-editor-canvas-${id}`
   const containerRef = useRef<HTMLDivElement>(null)
   const canvasElementsRef = useRef<CanvasElement[]>([])
@@ -202,6 +205,14 @@ const EditableBars = ({
     })
   }
 
+  const capturePointer = (event: React.PointerEvent<HTMLCanvasElement>) => {
+    if (!isMobile) event.currentTarget.setPointerCapture(event.pointerId)
+  }
+
+  const releasePointer = (event: React.PointerEvent<HTMLCanvasElement>) => {
+    if (!isMobile) event.currentTarget.releasePointerCapture(event.pointerId)
+  }
+
   const onPointerDown = (event: React.PointerEvent<HTMLCanvasElement>) => {
     if (canvasWidth <= 0 || canvasHeight <= 0) return
 
@@ -222,7 +233,7 @@ const EditableBars = ({
         startY: event.clientY,
         dragging: false,
       }
-      event.currentTarget.setPointerCapture(event.pointerId)
+      capturePointer(event)
       return
     }
 
@@ -236,12 +247,12 @@ const EditableBars = ({
       startY: event.clientY,
       dragging: false,
     }
-    event.currentTarget.setPointerCapture(event.pointerId)
+    capturePointer(event)
   }
 
   const onPointerMove = (event: React.PointerEvent<HTMLCanvasElement>) => {
     const state = pointerRef.current
-    if (!state || selectionMode !== 'bar') return
+    if (!state || !allowBarDrag) return
 
     const distance = Math.hypot(event.clientX - state.startX, event.clientY - state.startY)
     if (!state.dragging && distance > DRAG_THRESHOLD_PX) {
@@ -264,7 +275,19 @@ const EditableBars = ({
     const state = pointerRef.current
     pointerRef.current = null
 
-    if (selectionMode === 'bar' && state?.dragging) {
+    if (!state) {
+      releasePointer(event)
+      return
+    }
+
+    const movedDistance = Math.hypot(event.clientX - state.startX, event.clientY - state.startY)
+    if (isMobile && movedDistance > DRAG_THRESHOLD_PX) {
+      setDrag(null)
+      releasePointer(event)
+      return
+    }
+
+    if (allowBarDrag && state.dragging) {
       const canvas = document.getElementById(canvasId) as HTMLCanvasElement | null
       if (canvas) {
         const { x, y } = canvasPointFromPage(canvas, event, canvasWidth, canvasHeight)
@@ -283,26 +306,21 @@ const EditableBars = ({
         onReorderBar(state.barIndex, dropIndex)
       }
       setDrag(null)
-      event.currentTarget.releasePointerCapture(event.pointerId)
+      releasePointer(event)
       return
     }
 
     setDrag(null)
 
-    if (!state) {
-      event.currentTarget.releasePointerCapture(event.pointerId)
-      return
-    }
-
     if (selectionMode === 'bar') {
       onSelectBar(state.barIndex)
-      event.currentTarget.releasePointerCapture(event.pointerId)
+      releasePointer(event)
       return
     }
 
     if (state.noteIndex !== null) {
       onSelectNote(state.barIndex, state.noteIndex)
-      event.currentTarget.releasePointerCapture(event.pointerId)
+      releasePointer(event)
       return
     }
 
@@ -312,18 +330,18 @@ const EditableBars = ({
       target.element.barIndex === undefined ||
       target.element.noteIndex === undefined
     ) {
-      event.currentTarget.releasePointerCapture(event.pointerId)
+      releasePointer(event)
       return
     }
 
     onSelectNote(target.element.barIndex, target.element.noteIndex)
-    event.currentTarget.releasePointerCapture(event.pointerId)
+    releasePointer(event)
   }
 
   const onPointerCancel = (event: React.PointerEvent<HTMLCanvasElement>) => {
     pointerRef.current = null
     setDrag(null)
-    event.currentTarget.releasePointerCapture(event.pointerId)
+    releasePointer(event)
   }
 
   return (
@@ -331,8 +349,9 @@ const EditableBars = ({
       <canvas
         id={canvasId}
         className={cn(
-          'h-auto w-full bg-zinc-50 touch-none dark:bg-zinc-950',
-          drag ? 'cursor-grabbing' : selectionMode === 'bar' ? 'cursor-grab' : 'cursor-pointer',
+          'h-auto w-full bg-zinc-50 dark:bg-zinc-950',
+          !isMobile && 'touch-none',
+          drag ? 'cursor-grabbing' : allowBarDrag ? 'cursor-grab' : 'cursor-pointer',
           canvasWidth <= 0 && 'invisible',
         )}
         onContextMenu={(event) => event.preventDefault()}
