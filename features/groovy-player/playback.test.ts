@@ -10,6 +10,7 @@ import { describe, expect, it } from 'vitest'
 
 import { DEMO_TRACKS, demoTrackBars } from '@/features/groovy-player/demo-tracks'
 import {
+  DEFAULT_SWING_PATTERN,
   DEMO_SWING_PATTERN,
   fitSwingPattern,
   PLAYER_GROOVE_LENGTH,
@@ -44,8 +45,8 @@ const GROOVE4 = '--------' // 8 cells for 4/4
 const GROOVE3 = '------' // 6 cells for 3/4
 
 /** Swing grooves per meter derived from the default demo swing. */
-const SWING4 = DEMO_SWING_PATTERN // '-<(-<(--' — 8 cells
-const SWING3 = fitSwingPattern(DEMO_SWING_PATTERN, 6) // '-<(-<(' — 6 cells
+const SWING4 = fitSwingPattern(DEFAULT_SWING_PATTERN, 8) // '-<(-<(--' — 8 cells
+const SWING3 = DEMO_SWING_PATTERN // '-<(-<(' — 6 cells
 
 // ---------------------------------------------------------------------------
 // 1. Groove sizing invariants
@@ -63,14 +64,12 @@ describe('groove sizing — swingBarSizeForMeter', () => {
 
 describe('groove sizing — resolveGroovePattern always matches the target bar size', () => {
   it('produces an 8-char groove for meter=4 with swing enabled', () => {
-    const groove = resolveGroovePattern(DEMO_SWING_PATTERN, swingBarSizeForMeter(4), true)
-    expect(groove).toBe(DEMO_SWING_PATTERN)
+    const groove = resolveGroovePattern(SWING4, swingBarSizeForMeter(4), true)
+    expect(groove).toBe(SWING4)
     expect(groove.length).toBe(8)
   })
 
-  it('produces a 6-char groove for meter=3 even when the store carries an 8-char pattern', () => {
-    // The Zustand store always hydrates with an 8-char DEMO_SWING_PATTERN.
-    // resolveGroovePattern must still return the correct length for the rhythm's meter.
+  it('produces a 6-char groove for meter=3 from the demo swing pattern', () => {
     const groove = resolveGroovePattern(DEMO_SWING_PATTERN, swingBarSizeForMeter(3), true)
     expect(groove.length).toBe(6)
     expect(groove).toBe(SWING3)
@@ -83,24 +82,22 @@ describe('groove sizing — resolveGroovePattern always matches the target bar s
 })
 
 // ---------------------------------------------------------------------------
-// 2. Demo player (6-cell notation bars on an 8-cell groove)
+// 2. Demo player (3/4 — 6-cell bars with 6-cell groove)
 // ---------------------------------------------------------------------------
 
-describe('demo player — 6-cell bars with 8-cell groove', () => {
-  it('demo bars have at most 6 notation cells (some use 16th/triplet groups, but cell count ≤ groove length)', () => {
-    // String length may exceed 6 due to [xx] sixteenth and {xxx} triplet groups;
-    // what matters for playback is barCellCount which must not exceed PLAYER_GROOVE_LENGTH.
+describe('demo player — 6-cell bars with 6-cell groove', () => {
+  it('demo bars have exactly 6 notation cells', () => {
     DEMO_TRACKS[0].bars.forEach((bar) => {
-      expect(barCellCount(bar)).toBeLessThanOrEqual(PLAYER_GROOVE_LENGTH)
+      expect(barCellCount(bar)).toBe(6)
     })
   })
 
-  it('demo groove is 8 cells (PLAYER_GROOVE_LENGTH)', () => {
+  it('demo groove is 6 cells (PLAYER_GROOVE_LENGTH)', () => {
     expect(DEMO_SWING_PATTERN.length).toBe(PLAYER_GROOVE_LENGTH)
-    expect(PLAYER_GROOVE_LENGTH).toBe(8)
+    expect(PLAYER_GROOVE_LENGTH).toBe(6)
   })
 
-  it('compiles every demo track bar without errors using the 8-cell demo groove', () => {
+  it('compiles every demo track bar without errors using the 6-cell demo groove', () => {
     const groove = resolveGroovePattern(DEMO_SWING_PATTERN, PLAYER_GROOVE_LENGTH, true)
     expect(() => {
       for (const track of DEMO_TRACKS) {
@@ -109,14 +106,14 @@ describe('demo player — 6-cell bars with 8-cell groove', () => {
     }).not.toThrow()
   })
 
-  it('bar slot count equals 8-cell bar size (cellsPerBar follows groove, not notation)', () => {
+  it('bar slot count equals 6-cell bar size', () => {
     const groove = resolveGroovePattern(DEMO_SWING_PATTERN, PLAYER_GROOVE_LENGTH, true)
     const compiled = compileGroove({ bars: [DEMO_TRACKS[0].bars[0]], groove })
-    expect(compiled.cellsPerBar).toBe(8)
-    expect(compiled.beats.length).toBe(barSlotCount(8))
+    expect(compiled.cellsPerBar).toBe(6)
+    expect(compiled.beats.length).toBe(barSlotCount(6))
   })
 
-  it('produces 4/4 playback tempo from the demo groove', () => {
+  it('produces 3/4 playback tempo from the demo groove', () => {
     const groove = resolveGroovePattern(DEMO_SWING_PATTERN, PLAYER_GROOVE_LENGTH, true)
     const bpm = 110
     const compiled = compileGroove({ bars: [DEMO_TRACKS[0].bars[0]], groove })
@@ -127,8 +124,7 @@ describe('demo player — 6-cell bars with 8-cell groove', () => {
       compiled.beats.length,
       bpm,
     )
-    // beatSize = cellsPerBar / 2 = 4; tempo = (4/4) * bpm * TICKS_PER_EIGHTH
-    expect(playbackTempo).toBe((4 / 4) * bpm * TICKS_PER_EIGHTH)
+    expect(playbackTempo).toBeCloseTo((3 / 4) * bpm * TICKS_PER_EIGHTH)
   })
 
   it('compiles the full multi-track demoTrackBars record without errors', () => {
@@ -139,6 +135,10 @@ describe('demo player — 6-cell bars with 8-cell groove', () => {
         compileGroove({ bars, groove })
       }
     }).not.toThrow()
+  })
+
+  it('demo bars match the demo groove length', () => {
+    expect(tracksMatchGrooveLength(demoTrackBars(), PLAYER_GROOVE_LENGTH)).toBe(true)
   })
 })
 
@@ -258,32 +258,33 @@ describe('meter=3 playback — 6-cell bars with 6-cell groove', () => {
 // 5. Player initialization — persisted 8-char store pattern for a meter=3 rhythm
 // ---------------------------------------------------------------------------
 
-describe('player initialization — store carries 8-char pattern, rhythm needs 6', () => {
-  it('resolveGroovePattern always trims the store pattern to the correct groove length', () => {
-    // Simulates GroovyPlayer: store starts with DEMO_SWING_PATTERN (8 chars from
-    // localStorage), but the rhythm has meter=3, so grooveLength=6.
-    const storeSwingPattern = DEMO_SWING_PATTERN // 8 chars — from localStorage hydration
-    const grooveLength = swingBarSizeForMeter(3) // 6
+describe('player initialization — persisted pattern trimmed to rhythm groove length', () => {
+  it('resolveGroovePattern trims an 8-char store pattern to meter=3 groove length', () => {
+    const storeSwingPattern = fitSwingPattern(DEFAULT_SWING_PATTERN, 8)
+    const grooveLength = swingBarSizeForMeter(3)
 
     const groove = resolveGroovePattern(storeSwingPattern, grooveLength, true)
     expect(groove.length).toBe(6)
-    // The resulting groove must be valid for meter=3 bars
     expect(() => compileGroove({ bars: METER3_BARS, groove })).not.toThrow()
   })
 
   it('fitSwingPattern trims 8-char pattern to the target length without padding', () => {
-    expect(fitSwingPattern(DEMO_SWING_PATTERN, 6)).toBe(SWING3)
-    expect(fitSwingPattern(DEMO_SWING_PATTERN, 6).length).toBe(6)
+    expect(fitSwingPattern(fitSwingPattern(DEFAULT_SWING_PATTERN, 8), 6)).toBe(SWING3)
+    expect(fitSwingPattern(fitSwingPattern(DEFAULT_SWING_PATTERN, 8), 6).length).toBe(6)
   })
 
   it('groove computed from trimmed store pattern matches groove from native meter pattern', () => {
-    const fromStore = resolveGroovePattern(DEMO_SWING_PATTERN, 6, true)
+    const fromStore = resolveGroovePattern(fitSwingPattern(DEFAULT_SWING_PATTERN, 8), 6, true)
     const fromRhythm = resolveGroovePattern(SWING3, 6, true)
     expect(fromStore).toBe(fromRhythm)
   })
 
   it('the trimmed groove compiles consistently with multi-track meter=3 tracks', () => {
-    const groove = resolveGroovePattern(DEMO_SWING_PATTERN, swingBarSizeForMeter(3), true)
+    const groove = resolveGroovePattern(
+      fitSwingPattern(DEFAULT_SWING_PATTERN, 8),
+      swingBarSizeForMeter(3),
+      true,
+    )
     expect(() => {
       compileGroove({ bars: METER3_BARS, groove })
       compileGroove({ bars: METER3_DUNDUN_BARS, groove })
@@ -321,9 +322,9 @@ describe('playback tempo — 3/4 is slower than 4/4 at the same BPM', () => {
     expect(tempo34 / tempo44).toBeCloseTo(3 / 4)
   })
 
-  it('demo 4/4 tempo equals the meter=4 tempo (both use 8-cell groove)', () => {
+  it('demo 3/4 tempo equals the meter=3 tempo (both use 6-cell groove)', () => {
     const tempoDemo = tempoFor(DEMO_TRACKS[0].bars, DEMO_SWING_PATTERN)
-    const tempo44 = tempoFor(METER4_BARS, GROOVE4)
-    expect(tempoDemo).toBeCloseTo(tempo44)
+    const tempo34 = tempoFor(METER3_BARS, GROOVE3)
+    expect(tempoDemo).toBeCloseTo(tempo34)
   })
 })

@@ -17,7 +17,7 @@ import {
   DEFAULT_TEMPO,
   DEMO_SWING_PATTERN,
   isSwingPatternEmpty,
-  PLAYER_GROOVE_LENGTH,
+  PLAYER_DEMO_METER,
   resolveGroovePattern,
   swingBarSizeForMeter,
   usePlayerStore,
@@ -99,7 +99,7 @@ export const GroovyPlayer = ({ rhythm }: GroovyPlayerProps = {}) => {
   )
   const grooveLength = loadedRhythm
     ? swingBarSizeForMeter(loadedRhythm.meter)
-    : PLAYER_GROOVE_LENGTH
+    : swingBarSizeForMeter(PLAYER_DEMO_METER)
   const groovePattern = resolveGroovePattern(swingPattern, grooveLength, swingEnabled)
 
   useLayoutEffect(() => {
@@ -182,10 +182,9 @@ export const GroovyPlayer = ({ rhythm }: GroovyPlayerProps = {}) => {
 
   const validatePlaybackTracks = () => {
     displayTracks.forEach((track) => validateBarsForGroove(track.bars, grooveLength))
-    if (loadedRhythm && !tracksMatchGrooveLength(playbackTracks, grooveLength)) {
-      throw new Error(
-        `Each bar must fill ${grooveLength} cells for beat size ${loadedRhythm.meter}`,
-      )
+    if (!tracksMatchGrooveLength(playbackTracks, grooveLength)) {
+      const meter = loadedRhythm?.meter ?? PLAYER_DEMO_METER
+      throw new Error(`Each bar must fill ${grooveLength} cells for beat size ${meter}`)
     }
   }
 

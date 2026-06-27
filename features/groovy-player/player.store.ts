@@ -15,11 +15,21 @@ export const DEFAULT_TEMPO = 110
 
 export const DEFAULT_BAR_SIZE = 8
 
-/** Demo /player groove length — always eight cells (4/4), independent of bar notation width. */
-export const PLAYER_GROOVE_LENGTH = DEFAULT_BAR_SIZE
+/** Demo /player Soli rhythm is 3/4 — six cells per bar. */
+export const PLAYER_DEMO_METER: RhythmMeter = 3
 
-/** Demo player swing — eight-cell bars only; editor rhythms use {@link defaultSwingPatternForMeter}. */
+export const swingBarSizeForMeter = (meter: RhythmMeter) => meter * 2
+
+/** Demo /player groove length — matches {@link PLAYER_DEMO_METER}. */
+export const PLAYER_GROOVE_LENGTH = swingBarSizeForMeter(PLAYER_DEMO_METER)
+
+/** Soli-style swing source — trimmed to the active groove length via {@link fitSwingPattern}. */
 export const DEFAULT_SWING_PATTERN = '-<(-<('
+
+export const straightGroovePattern = (barSize: number) => '-'.repeat(barSize)
+
+export const defaultSwingPatternForMeter = (meter: RhythmMeter) =>
+  straightGroovePattern(swingBarSizeForMeter(meter))
 
 export const barSizeFromBars = (bars: string[]) => bars[0]?.length ?? DEFAULT_BAR_SIZE
 
@@ -27,13 +37,6 @@ export const barSizeFromTrackBars = (trackBars: Record<string, string[]>) => {
   const bars = Object.values(trackBars).find((trackBarsList) => trackBarsList.length > 0)
   return barSizeFromBars(bars ?? [])
 }
-
-export const swingBarSizeForMeter = (meter: RhythmMeter) => meter * 2
-
-export const straightGroovePattern = (barSize: number) => '-'.repeat(barSize)
-
-export const defaultSwingPatternForMeter = (meter: RhythmMeter) =>
-  straightGroovePattern(swingBarSizeForMeter(meter))
 
 export const isSwingPatternEmpty = (pattern: string) =>
   pattern.length === 0 || [...pattern].every((char) => char === '-')
@@ -52,7 +55,7 @@ const GROOVE_CHARS = new Set(['-', '<', '(', '>', ')'])
 export const sanitizeSwingPattern = (pattern: string, barSize: number) =>
   fitSwingPattern([...pattern].filter((char) => GROOVE_CHARS.has(char)).join(''), barSize)
 
-/** Eight-cell demo swing derived from {@link DEFAULT_SWING_PATTERN}. */
+/** Six-cell demo swing derived from {@link DEFAULT_SWING_PATTERN}. */
 export const DEMO_SWING_PATTERN = fitSwingPattern(DEFAULT_SWING_PATTERN, PLAYER_GROOVE_LENGTH)
 
 export const normalizeSwingPattern = (pattern: string, barSize: number) =>
