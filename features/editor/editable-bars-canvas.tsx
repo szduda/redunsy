@@ -9,10 +9,14 @@ import {
 } from '@/features/editor/canvas/canvas-pointer'
 import { canvasPointFromPage } from '@/features/editor/canvas/resolve-drop-index'
 import { resolveDropIndexFromDrag } from '@/features/editor/canvas/resolve-drop-index'
-import { drawSelectionBorder } from '@/features/editor/canvas/draw-selection-border'
+import {
+  drawBarSelectionBorder,
+  drawSelectionBorder,
+} from '@/features/editor/canvas/draw-selection-border'
 import { renderEditorBarSlots, renderGhostBar } from '@/features/editor/canvas/render-editor-bars'
 import { buildDragSlots } from '@/features/editor/notation/reorder-bars'
 import type { NoteSelection } from '@/features/editor/notation/bar-note-edits'
+import type { SelectionMode } from '@/features/editor/use-note-editor'
 import { setupCanvasDpi } from '@/features/groovy-player/canvas/canvas-dpi'
 import { darkCanvasColors, lightCanvasColors } from '@/features/groovy-player/canvas/canvas-colors'
 import { canvasHeightForBars, renderBars } from '@/features/groovy-player/canvas/renderers'
@@ -37,7 +41,9 @@ type EditableBarsCanvasProps = {
   instrument: string
   beatSize: number
   selection: NoteSelection | null
+  selectionMode: SelectionMode
   onSelectNote: (barIndex: number, glyphIndex: number) => void
+  onSelectBar: (barIndex: number) => void
   onReorderBar: (from: number, to: number) => void
 }
 
@@ -47,8 +53,10 @@ const EditableBars = ({
   instrument,
   beatSize,
   onSelectNote,
+  onSelectBar,
   onReorderBar,
   selection,
+  selectionMode,
   id,
 }: EditableBarsCanvasProps) => {
   const prefersDark = useIsDark()
@@ -103,13 +111,20 @@ const EditableBars = ({
     canvasElementsRef.current = elements
 
     if (!drag && selection) {
-      const selected = elements.find(
-        (element) =>
-          element.type === 'note' &&
-          element.barIndex === selection.barIndex &&
-          element.noteIndex === selection.glyphIndex,
-      )
-      if (selected) drawSelectionBorder(context, selected, prefersDark)
+      if (selectionMode === 'bar') {
+        const selectedBar = elements.find(
+          (element) => element.type === 'bar' && element.barIndex === selection.barIndex,
+        )
+        if (selectedBar) drawBarSelectionBorder(context, selectedBar, prefersDark)
+      } else {
+        const selected = elements.find(
+          (element) =>
+            element.type === 'note' &&
+            element.barIndex === selection.barIndex &&
+            element.noteIndex === selection.glyphIndex,
+        )
+        if (selected) drawSelectionBorder(context, selected, prefersDark)
+      }
     }
 
     if (drag) {
@@ -136,6 +151,7 @@ const EditableBars = ({
     prefersDark,
     beatSize,
     selection,
+    selectionMode,
     drag,
     bars,
   ])
@@ -189,13 +205,33 @@ const EditableBars = ({
   const onPointerDown = (event: React.PointerEvent<HTMLCanvasElement>) => {
     if (canvasWidth <= 0 || canvasHeight <= 0) return
 
-    const noteTarget = getNoteTarget(event)
-    const barIndex = noteTarget?.element?.barIndex ?? getBarIndexAt(event)
+    if (selectionMode === 'note') {
+      const noteTarget = getNoteTarget(event)
+      if (
+        !noteTarget?.element ||
+        noteTarget.element.barIndex === undefined ||
+        noteTarget.element.noteIndex === undefined
+      ) {
+        return
+      }
+
+      pointerRef.current = {
+        barIndex: noteTarget.element.barIndex,
+        noteIndex: noteTarget.element.noteIndex,
+        startX: event.clientX,
+        startY: event.clientY,
+        dragging: false,
+      }
+      event.currentTarget.setPointerCapture(event.pointerId)
+      return
+    }
+
+    const barIndex = getBarIndexAt(event)
     if (barIndex < 0) return
 
     pointerRef.current = {
       barIndex,
-      noteIndex: noteTarget?.element?.noteIndex ?? null,
+      noteIndex: null,
       startX: event.clientX,
       startY: event.clientY,
       dragging: false,
@@ -205,7 +241,7 @@ const EditableBars = ({
 
   const onPointerMove = (event: React.PointerEvent<HTMLCanvasElement>) => {
     const state = pointerRef.current
-    if (!state) return
+    if (!state || selectionMode !== 'bar') return
 
     const distance = Math.hypot(event.clientX - state.startX, event.clientY - state.startY)
     if (!state.dragging && distance > DRAG_THRESHOLD_PX) {
@@ -228,7 +264,7 @@ const EditableBars = ({
     const state = pointerRef.current
     pointerRef.current = null
 
-    if (state?.dragging) {
+    if (selectionMode === 'bar' && state?.dragging) {
       const canvas = document.getElementById(canvasId) as HTMLCanvasElement | null
       if (canvas) {
         const { x, y } = canvasPointFromPage(canvas, event, canvasWidth, canvasHeight)
@@ -254,6 +290,12 @@ const EditableBars = ({
     setDrag(null)
 
     if (!state) {
+      event.currentTarget.releasePointerCapture(event.pointerId)
+      return
+    }
+
+    if (selectionMode === 'bar') {
+      onSelectBar(state.barIndex)
       event.currentTarget.releasePointerCapture(event.pointerId)
       return
     }
@@ -287,18 +329,18 @@ const EditableBars = ({
   return (
     <div ref={containerRef} className="w-full min-w-0 flex-1">
       <canvas
-          id={canvasId}
-          className={cn(
-            'h-auto w-full bg-zinc-50 touch-none dark:bg-zinc-950',
-            drag ? 'cursor-grabbing' : 'cursor-pointer',
-            canvasWidth <= 0 && 'invisible',
-          )}
-          onContextMenu={(event) => event.preventDefault()}
-          onPointerCancel={onPointerCancel}
-          onPointerDown={onPointerDown}
-          onPointerMove={onPointerMove}
-          onPointerUp={onPointerUp}
-        />
+        id={canvasId}
+        className={cn(
+          'h-auto w-full bg-zinc-50 touch-none dark:bg-zinc-950',
+          drag ? 'cursor-grabbing' : selectionMode === 'bar' ? 'cursor-grab' : 'cursor-pointer',
+          canvasWidth <= 0 && 'invisible',
+        )}
+        onContextMenu={(event) => event.preventDefault()}
+        onPointerCancel={onPointerCancel}
+        onPointerDown={onPointerDown}
+        onPointerMove={onPointerMove}
+        onPointerUp={onPointerUp}
+      />
     </div>
   )
 }
@@ -311,5 +353,6 @@ export const EditableBarsCanvas = memo(
     prev.beatSize === next.beatSize &&
     prev.bars.join('') === next.bars.join('') &&
     prev.selection?.barIndex === next.selection?.barIndex &&
-    prev.selection?.glyphIndex === next.selection?.glyphIndex,
+    prev.selection?.glyphIndex === next.selection?.glyphIndex &&
+    prev.selectionMode === next.selectionMode,
 )

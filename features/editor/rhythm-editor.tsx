@@ -76,11 +76,13 @@ export const RhythmEditor = () => {
   const noteEditor = useNoteEditor(
     focusedTrack?.id ?? '',
     focusedTrack?.bars ?? [],
+    barSize,
     (bars) => focusedTrack && updateTrackBars(focusedTrack.id, bars),
   )
 
   useEditorKeyboard(focusedTrack?.instrument ?? 'djembe', {
     selection: noteEditor.selection,
+    selectionMode: noteEditor.selectionMode,
     navigate: noteEditor.navigate,
     setSound: noteEditor.setSound,
     convertToSixteenth: noteEditor.convertToSixteenth,
@@ -273,8 +275,10 @@ export const RhythmEditor = () => {
               id={focusedTrack.id}
               instrument={focusedTrack.instrument}
               onReorderBar={noteEditor.reorderBarAt}
+              onSelectBar={noteEditor.selectBar}
               onSelectNote={noteEditor.selectNote}
               selection={noteEditor.selection}
+              selectionMode={noteEditor.selectionMode}
             />
           </section>
 
@@ -287,16 +291,17 @@ export const RhythmEditor = () => {
       </div>
 
       <EditorKeyboard
-        barSize={barSize}
         bars={focusedTrack.bars}
         instrument={focusedTrack.instrument}
-        onBarsChange={(bars) => updateTrackBars(focusedTrack.id, bars)}
         onConvertToEighth={noteEditor.convertToEighth}
         onConvertToSixteenth={noteEditor.convertToSixteenth}
         onConvertToTriplet={noteEditor.convertToTriplet}
         onNavigate={noteEditor.navigate}
+        onRunBarModeAction={noteEditor.runBarModeAction}
+        onSelectionModeChange={noteEditor.setSelectionMode}
         onSelectSound={noteEditor.setSound}
         selection={noteEditor.selection}
+        selectionMode={noteEditor.selectionMode}
       />
 
       <PageBottomNav>

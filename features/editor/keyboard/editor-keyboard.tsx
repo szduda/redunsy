@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from 'react'
 
-import { applyBarPatternAction } from '@/features/editor/canvas/bar-pattern-actions'
 import {
   defaultFlamForNote,
   flamMainNote,
@@ -24,9 +23,13 @@ import {
 } from '@/features/editor/notation/bar-note-edits'
 import type { NoteSelection } from '@/features/editor/notation/bar-note-edits'
 import { NoteGlyphIcon } from '@/features/editor/note-glyph-icon'
+import type { SelectionMode } from '@/features/editor/use-note-editor'
+import { ClearBarIcon } from '@/features/icons/clear-bar-icon'
 import { FlamIcon } from '@/features/icons/flam-icon'
+import { MinusIcon } from '@/features/icons/minus-icon'
 import { Note16Icon } from '@/features/icons/note-16-icon'
 import { Note8Icon } from '@/features/icons/note-8-icon'
+import { PlusIcon } from '@/features/icons/plus-icon'
 import { TripletBracketIcon } from '@/features/icons/triplet-bracket-icon'
 import { BOTTOM_NAV_OFFSET_CLASS, PAGE_BODY_BG_CLASS } from '@/features/layout/constants'
 import { cn } from '@/features/theme/cn'
@@ -34,11 +37,12 @@ import { PRESSABLE_CLASS } from '@/features/theme/pressable'
 
 type EditorKeyboardProps = {
   bars: string[]
-  barSize: number
   instrument: string
   selection: NoteSelection | null
-  onBarsChange: (bars: string[]) => void
+  selectionMode: SelectionMode
+  onSelectionModeChange: (mode: SelectionMode) => void
   onNavigate: (direction: -1 | 1) => void
+  onRunBarModeAction: (action: 'add' | 'remove' | 'clear') => void
   onSelectSound: (sound: string) => void
   onConvertToSixteenth: () => void
   onConvertToTriplet: () => void
@@ -51,28 +55,43 @@ const keyButtonClass =
 const roundToggleClass =
   'flex size-11 items-center justify-center rounded-full border border-zinc-200/80 bg-zinc-50/90 dark:border-zinc-700/80 dark:bg-zinc-900/90'
 
+const modeToggleSegmentClass = (active: boolean) =>
+  cn(
+    'flex-1 px-2 py-2 text-sm font-medium transition-colors',
+    active
+      ? 'bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900'
+      : 'text-zinc-600 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800/80',
+  )
+
 const NO_SELECTION_HINT = 'Select a note on the canvas first'
+const NO_BAR_HINT = 'Select a bar on the canvas first'
 const PLAIN_ONLY_HINT = 'Only plain 8th notes can be split'
 const EIGHTH_ONLY_HINT = 'Select a 16th or triplet note to merge to 8th'
 const PAUSE_FLAM_HINT = 'Flam cannot apply to a rest'
+const BAR_DRAG_HINT = 'You can drag & drop bars to reposition'
 
 export const EditorKeyboard = ({
   bars,
-  barSize,
   instrument,
   selection,
-  onBarsChange,
+  selectionMode,
+  onSelectionModeChange,
   onNavigate,
+  onRunBarModeAction,
   onSelectSound,
   onConvertToSixteenth,
   onConvertToTriplet,
   onConvertToEighth,
 }: EditorKeyboardProps) => {
+  const isBarMode = selectionMode === 'bar'
   const hasSelection = selection !== null
-  const selected = hasSelection ? getSelectedFlatNote(bars, selection) : null
-  const editKind = hasSelection
-    ? getSelectionEditKind(bars[selection.barIndex] ?? '', selection.glyphIndex)
-    : null
+  const hasBarSelection =
+    hasSelection && selection.barIndex >= 0 && selection.barIndex < bars.length
+  const selected = hasSelection && !isBarMode ? getSelectedFlatNote(bars, selection) : null
+  const editKind =
+    hasSelection && !isBarMode
+      ? getSelectionEditKind(bars[selection.barIndex] ?? '', selection.glyphIndex)
+      : null
   const tone = toneFromEditKind(editKind)
 
   const [lengthMode, setLengthMode] = useState<NoteLengthTone>('8th')
@@ -95,12 +114,6 @@ export const EditorKeyboard = ({
 
   const navShadowStyle = noteKeyShadowStyle(tone)
   const soundShadowStyle = noteKeyShadowStyle(tone, flamMode)
-  const barCursor = selection?.barIndex ?? -1
-
-  const runBarAction = (action: 'add' | 'remove') => {
-    const result = applyBarPatternAction(bars, barSize, barCursor, action)
-    onBarsChange(result.bars)
-  }
 
   const onFlamToggle = () => {
     if (!hasSelection || !selected) return
@@ -140,129 +153,184 @@ export const EditorKeyboard = ({
       <div className="mx-auto flex w-full max-w-4xl flex-col gap-2 xl:max-w-5xl">
         <div className="grid grid-cols-3 gap-2">
           <div className="flex flex-col gap-2">
-            <div className="flex gap-2">
-              <DisabledHintButton
-                className={cn(PRESSABLE_CLASS, keyButtonClass, 'flex-1 text-sm font-medium')}
-                onClick={() => runBarAction('remove')}
+            <div
+              className="flex overflow-hidden rounded-lg border border-zinc-200/80 dark:border-zinc-700/80"
+              role="group"
+              aria-label="Selection mode"
+            >
+              <button
+                aria-pressed={isBarMode}
+                className={cn(PRESSABLE_CLASS, modeToggleSegmentClass(isBarMode))}
+                onClick={() => onSelectionModeChange('bar')}
+                type="button"
               >
-                − bar
-              </DisabledHintButton>
-              <DisabledHintButton
-                className={cn(PRESSABLE_CLASS, keyButtonClass, 'flex-1 text-sm font-medium')}
-                onClick={() => runBarAction('add')}
+                bar
+              </button>
+              <button
+                aria-pressed={!isBarMode}
+                className={cn(PRESSABLE_CLASS, modeToggleSegmentClass(!isBarMode))}
+                onClick={() => onSelectionModeChange('note')}
+                type="button"
               >
-                + bar
-              </DisabledHintButton>
+                note
+              </button>
             </div>
             <div className="flex gap-2">
               <DisabledHintButton
                 className={cn(PRESSABLE_CLASS, keyButtonClass, 'flex-1 text-lg font-mono')}
                 disabled={!hasSelection}
-                hint={NO_SELECTION_HINT}
+                hint={isBarMode ? NO_BAR_HINT : NO_SELECTION_HINT}
                 onClick={() => onNavigate(-1)}
-                style={hasSelection ? navShadowStyle : undefined}
+                style={hasSelection && !isBarMode ? navShadowStyle : undefined}
               >
                 &lt;
               </DisabledHintButton>
               <DisabledHintButton
                 className={cn(PRESSABLE_CLASS, keyButtonClass, 'flex-1 text-lg font-mono')}
                 disabled={!hasSelection}
-                hint={NO_SELECTION_HINT}
+                hint={isBarMode ? NO_BAR_HINT : NO_SELECTION_HINT}
                 onClick={() => onNavigate(1)}
-                style={hasSelection ? navShadowStyle : undefined}
+                style={hasSelection && !isBarMode ? navShadowStyle : undefined}
               >
                 &gt;
               </DisabledHintButton>
             </div>
           </div>
 
-          <div className="flex flex-col gap-2 col-span-2 items-end">
-            <div className="flex gap-2">
-              <DisabledHintButton
-                aria-pressed={lengthMode === '16th' || editKind === 'sixteenth'}
-                className={cn(
-                  roundToggleClass,
-                  lengthToggleActiveClass('16th', lengthMode === '16th' || editKind === 'sixteenth'),
-                )}
-                disabled={!canSixteenth}
-                hint={!hasSelection ? NO_SELECTION_HINT : PLAIN_ONLY_HINT}
-                onClick={() => onLengthSelect('16th')}
-              >
-                <Note16Icon className="size-5" />
-              </DisabledHintButton>
-              <DisabledHintButton
-                aria-pressed={lengthMode === 'triplet' || editKind === 'triplet'}
-                className={cn(
-                  roundToggleClass,
-                  lengthToggleActiveClass('triplet', lengthMode === 'triplet' || editKind === 'triplet'),
-                )}
-                disabled={!canTriplet}
-                hint={!hasSelection ? NO_SELECTION_HINT : PLAIN_ONLY_HINT}
-                onClick={() => onLengthSelect('triplet')}
-              >
-                <TripletBracketIcon className="size-5" />
-              </DisabledHintButton>
-              <DisabledHintButton
-                aria-pressed={lengthMode === '8th' && editKind === 'plain'}
-                className={cn(
-                  roundToggleClass,
-                  lengthToggleActiveClass(
-                    '8th',
-                    lengthMode === '8th' && (editKind === 'plain' || editKind === null),
-                  ),
-                )}
-                disabled={!canEighth}
-                hint={!hasSelection ? NO_SELECTION_HINT : EIGHTH_ONLY_HINT}
-                onClick={() => onLengthSelect('8th')}
-              >
-                <Note8Icon />
-              </DisabledHintButton>
-              <DisabledHintButton
-                aria-pressed={flamMode}
-                className={cn(roundToggleClass, flamMode && 'border-indigo-400/50')}
-                disabled={!hasSelection || selected?.note === '-'}
-                hint={
-                  !hasSelection ? NO_SELECTION_HINT : selected?.note === '-' ? PAUSE_FLAM_HINT : undefined
-                }
-                onClick={onFlamToggle}
-                style={flamToggleBackgroundStyle(tone, flamMode)}
-              >
-                <FlamIcon />
-              </DisabledHintButton>
-            </div>
-
-            <div className="flex flex-wrap gap-2 justify-end">
-              {visibleSounds.map((sound) => (
+          {isBarMode ? (
+            <div className="col-span-2 flex flex-col items-end justify-end gap-2">
+              <p className="text-right text-[11px] leading-snug text-zinc-500 dark:text-zinc-400">
+                {BAR_DRAG_HINT}
+              </p>
+              <div className="flex gap-2">
                 <DisabledHintButton
-                  key={sound}
-                  aria-label={`Set note to ${sound}`}
+                  aria-label="Remove selected bar"
+                  className={cn(PRESSABLE_CLASS, keyButtonClass)}
+                  disabled={!hasBarSelection}
+                  hint={NO_BAR_HINT}
+                  onClick={() => onRunBarModeAction('remove')}
+                >
+                  <MinusIcon />
+                </DisabledHintButton>
+                <DisabledHintButton
+                  aria-label="Add bar after selected bar"
+                  className={cn(PRESSABLE_CLASS, keyButtonClass)}
+                  disabled={!hasBarSelection}
+                  hint={NO_BAR_HINT}
+                  onClick={() => onRunBarModeAction('add')}
+                >
+                  <PlusIcon />
+                </DisabledHintButton>
+                <DisabledHintButton
+                  aria-label="Clear selected bar"
+                  className={cn(PRESSABLE_CLASS, keyButtonClass)}
+                  disabled={!hasBarSelection}
+                  hint={NO_BAR_HINT}
+                  onClick={() => onRunBarModeAction('clear')}
+                >
+                  <ClearBarIcon />
+                </DisabledHintButton>
+              </div>
+            </div>
+          ) : (
+            <div className="col-span-2 flex flex-col items-end gap-2">
+              <div className="flex gap-2">
+                <DisabledHintButton
+                  aria-pressed={lengthMode === '16th' || editKind === 'sixteenth'}
+                  className={cn(
+                    roundToggleClass,
+                    lengthToggleActiveClass(
+                      '16th',
+                      lengthMode === '16th' || editKind === 'sixteenth',
+                    ),
+                  )}
+                  disabled={!canSixteenth}
+                  hint={!hasSelection ? NO_SELECTION_HINT : PLAIN_ONLY_HINT}
+                  onClick={() => onLengthSelect('16th')}
+                >
+                  <Note16Icon className="size-5" />
+                </DisabledHintButton>
+                <DisabledHintButton
+                  aria-pressed={lengthMode === 'triplet' || editKind === 'triplet'}
+                  className={cn(
+                    roundToggleClass,
+                    lengthToggleActiveClass(
+                      'triplet',
+                      lengthMode === 'triplet' || editKind === 'triplet',
+                    ),
+                  )}
+                  disabled={!canTriplet}
+                  hint={!hasSelection ? NO_SELECTION_HINT : PLAIN_ONLY_HINT}
+                  onClick={() => onLengthSelect('triplet')}
+                >
+                  <TripletBracketIcon className="size-5" />
+                </DisabledHintButton>
+                <DisabledHintButton
+                  aria-pressed={lengthMode === '8th' && editKind === 'plain'}
+                  className={cn(
+                    roundToggleClass,
+                    lengthToggleActiveClass(
+                      '8th',
+                      lengthMode === '8th' && (editKind === 'plain' || editKind === null),
+                    ),
+                  )}
+                  disabled={!canEighth}
+                  hint={!hasSelection ? NO_SELECTION_HINT : EIGHTH_ONLY_HINT}
+                  onClick={() => onLengthSelect('8th')}
+                >
+                  <Note8Icon />
+                </DisabledHintButton>
+                <DisabledHintButton
+                  aria-pressed={flamMode}
+                  className={cn(roundToggleClass, flamMode && 'border-indigo-400/50')}
+                  disabled={!hasSelection || selected?.note === '-'}
+                  hint={
+                    !hasSelection
+                      ? NO_SELECTION_HINT
+                      : selected?.note === '-'
+                        ? PAUSE_FLAM_HINT
+                        : undefined
+                  }
+                  onClick={onFlamToggle}
+                  style={flamToggleBackgroundStyle(tone, flamMode)}
+                >
+                  <FlamIcon />
+                </DisabledHintButton>
+              </div>
+
+              <div className="flex flex-wrap justify-end gap-2">
+                {visibleSounds.map((sound) => (
+                  <DisabledHintButton
+                    key={sound}
+                    aria-label={`Set note to ${sound}`}
+                    className={cn(
+                      keyButtonClass,
+                      selected?.note === sound && 'border-zinc-400 ring-2 ring-zinc-400/30',
+                    )}
+                    disabled={!hasSelection}
+                    hint={NO_SELECTION_HINT}
+                    onClick={() => onSelectSound(sound)}
+                    style={hasSelection ? soundShadowStyle : undefined}
+                  >
+                    <NoteGlyphIcon instrument={instrument} note={sound} />
+                  </DisabledHintButton>
+                ))}
+                <DisabledHintButton
+                  aria-label="Set note to rest"
                   className={cn(
                     keyButtonClass,
-                    selected?.note === sound && 'border-zinc-400 ring-2 ring-zinc-400/30',
+                    selected?.note === '-' && 'border-zinc-400 ring-2 ring-zinc-400/30',
                   )}
                   disabled={!hasSelection}
                   hint={NO_SELECTION_HINT}
-                  onClick={() => onSelectSound(sound)}
+                  onClick={() => onSelectSound('-')}
                   style={hasSelection ? soundShadowStyle : undefined}
                 >
-                  <NoteGlyphIcon instrument={instrument} note={sound} />
+                  <NoteGlyphIcon instrument={instrument} note="-" />
                 </DisabledHintButton>
-              ))}
-              <DisabledHintButton
-                aria-label="Set note to rest"
-                className={cn(
-                  keyButtonClass,
-                  selected?.note === '-' && 'border-zinc-400 ring-2 ring-zinc-400/30',
-                )}
-                disabled={!hasSelection}
-                hint={NO_SELECTION_HINT}
-                onClick={() => onSelectSound('-')}
-                style={hasSelection ? soundShadowStyle : undefined}
-              >
-                <NoteGlyphIcon instrument={instrument} note="-" />
-              </DisabledHintButton>
+              </div>
             </div>
-          </div>
+          )}
         </div>
       </div>
     </div>
