@@ -32,6 +32,7 @@ import { Note8Icon } from '@/features/icons/note-8-icon'
 import { PlusIcon } from '@/features/icons/plus-icon'
 import { TripletBracketIcon } from '@/features/icons/triplet-bracket-icon'
 import { BOTTOM_NAV_OFFSET_CLASS, PAGE_BODY_BG_CLASS } from '@/features/layout/constants'
+import { useIsMobile } from '@/features/shared/use-is-mobile'
 import { cn } from '@/features/theme/cn'
 import { PRESSABLE_CLASS } from '@/features/theme/pressable'
 
@@ -83,6 +84,7 @@ export const EditorKeyboard = ({
   onConvertToTriplet,
   onConvertToEighth,
 }: EditorKeyboardProps) => {
+  const isMobile = useIsMobile()
   const isBarMode = selectionMode === 'bar'
   const hasSelection = selection !== null
   const hasBarSelection =
@@ -199,9 +201,11 @@ export const EditorKeyboard = ({
 
           {isBarMode ? (
             <div className="col-span-2 flex flex-col items-end justify-end gap-2">
-              <p className="text-right text-[11px] leading-snug text-zinc-500 dark:text-zinc-400">
-                {BAR_DRAG_HINT}
-              </p>
+              {!isMobile ? (
+                <p className="text-right text-[11px] leading-snug text-zinc-500 dark:text-zinc-400">
+                  {BAR_DRAG_HINT}
+                </p>
+              ) : null}
               <div className="flex gap-2">
                 <DisabledHintButton
                   aria-label="Remove selected bar"
