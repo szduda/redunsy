@@ -1,6 +1,6 @@
 import { font } from '@/features/groovy-player/canvas/drum-font'
 
-const SOUND_ORDER = ['b', 't', 's', 'a', 'c', 'd', 'e', 'f', 'r', 'g', 'h', 'j', 'o', 'x', '-']
+const SOUND_ORDER = ['b', 't', 's', 'c', 'd', 'f', 'r', 'g', 'j', 'o', 'x', '-']
 
 export const instrumentSounds = (instrument: string) => {
   const keys = Object.keys(font[instrument] ?? font.djembe)

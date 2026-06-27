@@ -9,16 +9,13 @@ import {
 } from '@/features/editor/flam-sounds'
 
 describe('flam-sounds', () => {
-  it('lists all nine b/t/s flam combinations for djembe', () => {
-    expect(flamSymbolsForInstrument('djembe')).toHaveLength(9)
+  it('lists djembe flam combinations without bass-main flams', () => {
+    expect(flamSymbolsForInstrument('djembe')).toHaveLength(6)
     expect(DJEMBE_FLAMS.map((flam) => `${flam.grace}${flam.main}`)).toEqual([
-      'bb',
       'bt',
       'bs',
-      'tb',
       'tt',
       'ts',
-      'sb',
       'st',
       'ss',
     ])
@@ -34,8 +31,8 @@ describe('flam-sounds', () => {
     expect(flamMainNote('g')).toBe('s')
   })
 
-  it('assigns default double flams for plain strokes', () => {
-    expect(defaultFlamForNote('b')).toBe('a')
+  it('assigns default double flams for tone and slap only', () => {
+    expect(defaultFlamForNote('b')).toBeNull()
     expect(defaultFlamForNote('t')).toBe('r')
     expect(defaultFlamForNote('s')).toBe('f')
   })

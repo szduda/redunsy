@@ -28,7 +28,7 @@ import { FlamIcon } from '@/features/icons/flam-icon'
 import { Note16Icon } from '@/features/icons/note-16-icon'
 import { Note8Icon } from '@/features/icons/note-8-icon'
 import { TripletBracketIcon } from '@/features/icons/triplet-bracket-icon'
-import { BOTTOM_NAV_OFFSET_CLASS } from '@/features/layout/constants'
+import { BOTTOM_NAV_OFFSET_CLASS, PAGE_BODY_BG_CLASS } from '@/features/layout/constants'
 import { cn } from '@/features/theme/cn'
 import { PRESSABLE_CLASS } from '@/features/theme/pressable'
 
@@ -93,7 +93,8 @@ export const EditorKeyboard = ({
     if (selected && isFlamSymbol(selected.note, instrument)) setFlamMode(true)
   }, [instrument, selected?.note])
 
-  const shadowStyle = noteKeyShadowStyle(tone, flamMode)
+  const navShadowStyle = noteKeyShadowStyle(tone)
+  const soundShadowStyle = noteKeyShadowStyle(tone, flamMode)
   const barCursor = selection?.barIndex ?? -1
 
   const runBarAction = (action: 'add' | 'remove') => {
@@ -131,12 +132,13 @@ export const EditorKeyboard = ({
   return (
     <div
       className={cn(
-        'pointer-events-auto fixed inset-x-0 z-40 px-2 pb-2',
+        'pointer-events-auto fixed inset-x-0 z-40 px-2 pt-2 pb-2',
         BOTTOM_NAV_OFFSET_CLASS,
+        PAGE_BODY_BG_CLASS,
       )}
     >
       <div className="mx-auto flex w-full max-w-4xl flex-col gap-2 xl:max-w-5xl">
-        <div className="grid grid-cols-2 gap-2">
+        <div className="grid grid-cols-3 gap-2">
           <div className="flex flex-col gap-2">
             <div className="flex gap-2">
               <DisabledHintButton
@@ -158,7 +160,7 @@ export const EditorKeyboard = ({
                 disabled={!hasSelection}
                 hint={NO_SELECTION_HINT}
                 onClick={() => onNavigate(-1)}
-                style={hasSelection ? shadowStyle : undefined}
+                style={hasSelection ? navShadowStyle : undefined}
               >
                 &lt;
               </DisabledHintButton>
@@ -167,14 +169,14 @@ export const EditorKeyboard = ({
                 disabled={!hasSelection}
                 hint={NO_SELECTION_HINT}
                 onClick={() => onNavigate(1)}
-                style={hasSelection ? shadowStyle : undefined}
+                style={hasSelection ? navShadowStyle : undefined}
               >
                 &gt;
               </DisabledHintButton>
             </div>
           </div>
 
-          <div className="flex flex-col gap-2">
+          <div className="flex flex-col gap-2 col-span-2 items-end">
             <div className="flex gap-2">
               <DisabledHintButton
                 aria-pressed={lengthMode === '16th' || editKind === 'sixteenth'}
@@ -229,7 +231,7 @@ export const EditorKeyboard = ({
               </DisabledHintButton>
             </div>
 
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2 justify-end">
               {visibleSounds.map((sound) => (
                 <DisabledHintButton
                   key={sound}
@@ -241,7 +243,7 @@ export const EditorKeyboard = ({
                   disabled={!hasSelection}
                   hint={NO_SELECTION_HINT}
                   onClick={() => onSelectSound(sound)}
-                  style={hasSelection ? shadowStyle : undefined}
+                  style={hasSelection ? soundShadowStyle : undefined}
                 >
                   <NoteGlyphIcon instrument={instrument} note={sound} />
                 </DisabledHintButton>
@@ -255,7 +257,7 @@ export const EditorKeyboard = ({
                 disabled={!hasSelection}
                 hint={NO_SELECTION_HINT}
                 onClick={() => onSelectSound('-')}
-                style={hasSelection ? shadowStyle : undefined}
+                style={hasSelection ? soundShadowStyle : undefined}
               >
                 <NoteGlyphIcon instrument={instrument} note="-" />
               </DisabledHintButton>
