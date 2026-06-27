@@ -6,6 +6,7 @@ import {
   convertToEighth,
   convertToSixteenth,
   convertToTriplet,
+  defaultNoteSelection,
   navigateSelection,
   setNoteAtGlyph,
   updateBarAtSelection,
@@ -18,10 +19,12 @@ export const useNoteEditor = (
   bars: string[],
   onBarsChange: (bars: string[]) => void,
 ) => {
-  const [selection, setSelection] = useState<NoteSelection | null>(null)
+  const [selection, setSelection] = useState<NoteSelection | null>(() =>
+    defaultNoteSelection(bars),
+  )
 
   useEffect(() => {
-    setSelection(null)
+    setSelection(defaultNoteSelection(bars))
   }, [trackId])
 
   const selectNote = useCallback((barIndex: number, glyphIndex: number) => {
