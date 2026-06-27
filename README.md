@@ -6,16 +6,16 @@ Live at [re.dunsy.app](https://re.dunsy.app).
 
 ## Tech stack
 
-| Layer | Choices |
-| --- | --- |
-| Framework | [Next.js 16](https://nextjs.org) (App Router), React 19, TypeScript |
-| Styling | Tailwind CSS 4, custom theme primitives in `features/theme/` |
+| Layer        | Choices                                                                                                        |
+| ------------ | -------------------------------------------------------------------------------------------------------------- |
+| Framework    | [Next.js 16](https://nextjs.org) (App Router), React 19, TypeScript                                            |
+| Styling      | Tailwind CSS 4, custom theme primitives in `features/theme/`                                                   |
 | Client state | [Zustand](https://zustand.docs.pmnd.rs) per feature; [TanStack Query](https://tanstack.com/query) for async UI |
-| Database | [PostgreSQL](https://www.postgresql.org) via [Drizzle ORM](https://orm.drizzle.team) + `postgres` driver |
-| Audio engine | Custom **midinike** library (`lib/midinike/`) — notation parsing, groove compilation, WebAudio playback |
-| Search | [Fuse.js](https://fusejs.io) over a build-time JSON index |
-| Testing | [Vitest](https://vitest.dev) (unit + playback invariants) |
-| Deployment | [Vercel](https://vercel.com) |
+| Database     | [PostgreSQL](https://www.postgresql.org) via [Drizzle ORM](https://orm.drizzle.team) + `postgres` driver       |
+| Audio engine | Custom **midinike** library (`lib/midinike/`) — notation parsing, groove compilation, WebAudio playback        |
+| Search       | [Fuse.js](https://fusejs.io) over a build-time JSON index                                                      |
+| Testing      | [Vitest](https://vitest.dev) (unit + playback invariants)                                                      |
+| Deployment   | [Vercel](https://vercel.com)                                                                                   |
 
 ## Architecture overview
 
@@ -61,12 +61,12 @@ The groovy player and editor both depend on midinike; playback timing invariants
 
 ### Feature modules
 
-| Feature | Route(s) | Responsibility |
-| --- | --- | --- |
-| **Groovy player** | `/rhythm/[slug]`, `/player` | Multi-track playback, tempo, swing, metronome, wake lock |
-| **Garage** | `/garage` | Fuse.js search, faceted filters, pagination over the static index |
-| **Editor** | `/editor`, `/editor/[slug]` | Visual bar editor, metadata, fork/save to localStorage |
-| **Help** | `/help` | Notation reference and interactive demos |
+| Feature           | Route(s)                    | Responsibility                                                    |
+| ----------------- | --------------------------- | ----------------------------------------------------------------- |
+| **Groovy player** | `/rhythm/[slug]`, `/player` | Multi-track playback, tempo, swing, metronome, wake lock          |
+| **Garage**        | `/garage`                   | Fuse.js search, faceted filters, pagination over the static index |
+| **Editor**        | `/editor`, `/editor/[slug]` | Visual bar editor, metadata, fork/save to localStorage            |
+| **Help**          | `/help`                     | Notation reference and interactive demos                          |
 
 ## Project layout
 
@@ -83,24 +83,24 @@ scripts/              Build-time index generation, DB seeding
 
 **Runtime**
 
-| Package | Role |
-| --- | --- |
-| `next`, `react`, `react-dom` | App framework and UI |
-| `drizzle-orm`, `postgres` | Database access |
-| `zustand` | Client state management |
-| `@tanstack/react-query` | Async data and query caching |
-| `fuse.js` | Fuzzy search over the rhythm index |
-| `tailwind-merge` | Conditional class merging |
+| Package                      | Role                               |
+| ---------------------------- | ---------------------------------- |
+| `next`, `react`, `react-dom` | App framework and UI               |
+| `drizzle-orm`, `postgres`    | Database access                    |
+| `zustand`                    | Client state management            |
+| `@tanstack/react-query`      | Async data and query caching       |
+| `fuse.js`                    | Fuzzy search over the rhythm index |
+| `tailwind-merge`             | Conditional class merging          |
 
 **Development**
 
-| Package | Role |
-| --- | --- |
-| `typescript`, `eslint`, `prettier` | Type-checking and linting |
-| `vitest` | Unit and playback tests |
-| `drizzle-kit` | Schema migrations |
-| `tsx` | Script runner (index generation, seeding) |
-| `tailwindcss`, `@tailwindcss/postcss` | CSS framework |
+| Package                               | Role                                      |
+| ------------------------------------- | ----------------------------------------- |
+| `typescript`, `eslint`, `prettier`    | Type-checking and linting                 |
+| `vitest`                              | Unit and playback tests                   |
+| `drizzle-kit`                         | Schema migrations                         |
+| `tsx`                                 | Script runner (index generation, seeding) |
+| `tailwindcss`, `@tailwindcss/postcss` | CSS framework                             |
 
 ## Getting started
 
@@ -122,8 +122,8 @@ Open [http://localhost:3000](http://localhost:3000). The dev server works withou
 
 Create `.env.local` (or pull from Vercel with `vercel env pull`):
 
-| Variable | Required for | Purpose |
-| --- | --- | --- |
+| Variable                         | Required for      | Purpose                    |
+| -------------------------------- | ----------------- | -------------------------- |
 | `POSTGRES_URL` or `DATABASE_URL` | Build, DB scripts | Postgres connection string |
 
 ### Database
@@ -139,15 +139,15 @@ npm run search-index   # Regenerate garage search JSON from Postgres
 
 ### Scripts
 
-| Command | Description |
-| --- | --- |
-| `npm run dev` | Start development server |
-| `npm run build` | Production build (regenerates search index first) |
-| `npm run start` | Serve production build |
-| `npm run lint` | ESLint |
-| `npm run test` | Run all Vitest suites |
-| `npm run test:playback` | Playback timing and groove-length invariants |
-| `npm run format` | Prettier write |
+| Command                 | Description                                       |
+| ----------------------- | ------------------------------------------------- |
+| `npm run dev`           | Start development server                          |
+| `npm run build`         | Production build (regenerates search index first) |
+| `npm run start`         | Serve production build                            |
+| `npm run lint`          | ESLint                                            |
+| `npm run test`          | Run all Vitest suites                             |
+| `npm run test:playback` | Playback timing and groove-length invariants      |
+| `npm run format`        | Prettier write                                    |
 
 ## Deployment
 

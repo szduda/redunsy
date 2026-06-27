@@ -100,11 +100,7 @@ export const CreatorFlow = () => {
                     : 'Starter pattern if you opt in to prefill:'}
                 </Text>
                 <div className="flex flex-wrap items-center gap-3">
-                  <DemoBar
-                    active={draft.fillDjembe}
-                    meter={draft.meter}
-                    pattern={prefillPattern}
-                  />
+                  <DemoBar active={draft.fillDjembe} meter={draft.meter} pattern={prefillPattern} />
                   <Text className="!font-mono !text-zinc-500" variant="mono">
                     {prefillPattern}
                   </Text>

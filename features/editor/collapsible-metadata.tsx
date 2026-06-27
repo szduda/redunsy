@@ -13,7 +13,11 @@ type CollapsibleMetadataProps = {
   onTitleBlur: (title: string) => void
 }
 
-export const CollapsibleMetadata = ({ rhythm, onChange, onTitleBlur }: CollapsibleMetadataProps) => {
+export const CollapsibleMetadata = ({
+  rhythm,
+  onChange,
+  onTitleBlur,
+}: CollapsibleMetadataProps) => {
   const [open, setOpen] = useState(false)
 
   return (
@@ -23,11 +27,7 @@ export const CollapsibleMetadata = ({ rhythm, onChange, onTitleBlur }: Collapsib
       </CollapseLabel>
       {open ? (
         <div className="mt-3">
-          <RhythmMetadataForm
-            onChange={onChange}
-            onTitleBlur={onTitleBlur}
-            values={rhythm}
-          />
+          <RhythmMetadataForm onChange={onChange} onTitleBlur={onTitleBlur} values={rhythm} />
         </div>
       ) : (
         <Text className="mt-1 opacity-70">{metadataSummary(rhythm)}</Text>
