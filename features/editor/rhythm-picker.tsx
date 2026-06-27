@@ -19,7 +19,7 @@ export const RhythmPicker = () => {
   }
 
   return (
-    <div className="flex w-full max-w-2xl flex-col gap-4">
+    <div className="flex w-full max-w-2xl flex-col gap-4 p-4 md:p-0">
       <div className="flex items-center justify-between gap-3">
         <h1 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">Your rhythms</h1>
         <Button onClick={startCreator} variant="outlined">
