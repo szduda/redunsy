@@ -4,6 +4,9 @@ import {
   normalizeSwingPatternForMeter,
 } from '@/features/groovy-player/player.store'
 
+import { reflowBarsToSize } from '@/lib/midinike/notation/reflow-bars'
+import { barCellCount } from '@/lib/midinike/notation/cell-duration'
+
 import type {
   Rhythm,
   RhythmCard,
@@ -13,6 +16,27 @@ import type {
 } from '@/features/rhythm/rhythm.types'
 
 export const barSizeForMeter = (meter: RhythmMeter) => meter * 2
+
+export const inferMeterFromTracks = (instruments: Record<string, Track>): RhythmMeter => {
+  const counts = Object.values(instruments).flatMap((track) =>
+    track.bars.map((bar) => barCellCount(bar)),
+  )
+  if (!counts.length) return 4
+  return Math.max(...counts) <= 6 ? 3 : 4
+}
+
+export const reflowTracksForMeter = (
+  instruments: Record<string, Track>,
+  meter: RhythmMeter,
+): Record<string, Track> => {
+  const barSize = barSizeForMeter(meter)
+  return Object.fromEntries(
+    Object.entries(instruments).map(([id, track]) => [
+      id,
+      { ...track, bars: reflowBarsToSize(track.bars, barSize) },
+    ]),
+  )
+}
 
 export const emptyBar = (meter: RhythmMeter) => '-'.repeat(barSizeForMeter(meter))
 

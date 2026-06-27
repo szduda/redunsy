@@ -18,6 +18,7 @@ import {
   DEMO_SWING_PATTERN,
   isSwingPatternEmpty,
   PLAYER_DEMO_METER,
+  PLAYER_GROOVE_LENGTH,
   resolveGroovePattern,
   swingBarSizeForMeter,
   usePlayerStore,
@@ -34,7 +35,7 @@ import { Text } from '@/features/theme/text'
 import { cn } from '@/features/theme/cn'
 import {
   metronomeBarForGrooveLength,
-  tracksMatchGrooveLength,
+  tracksFitGrooveLength,
   useMidinike,
   validateBarsForGroove,
 } from '@/lib/midinike'
@@ -99,7 +100,7 @@ export const GroovyPlayer = ({ rhythm }: GroovyPlayerProps = {}) => {
   )
   const grooveLength = loadedRhythm
     ? swingBarSizeForMeter(loadedRhythm.meter)
-    : swingBarSizeForMeter(PLAYER_DEMO_METER)
+    : PLAYER_GROOVE_LENGTH
   const groovePattern = resolveGroovePattern(swingPattern, grooveLength, swingEnabled)
 
   useLayoutEffect(() => {
@@ -182,9 +183,11 @@ export const GroovyPlayer = ({ rhythm }: GroovyPlayerProps = {}) => {
 
   const validatePlaybackTracks = () => {
     displayTracks.forEach((track) => validateBarsForGroove(track.bars, grooveLength))
-    if (!tracksMatchGrooveLength(playbackTracks, grooveLength)) {
+    if (!tracksFitGrooveLength(playbackTracks, grooveLength)) {
       const meter = loadedRhythm?.meter ?? PLAYER_DEMO_METER
-      throw new Error(`Each bar must fill ${grooveLength} cells for beat size ${meter}`)
+      throw new Error(
+        `Each bar must use at most ${grooveLength} cells for beat size ${meter}`,
+      )
     }
   }
 

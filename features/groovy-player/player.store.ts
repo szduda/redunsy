@@ -59,7 +59,7 @@ export const sanitizeSwingPattern = (pattern: string, barSize: number) =>
 export const DEMO_SWING_PATTERN = fitSwingPattern(DEFAULT_SWING_PATTERN, PLAYER_GROOVE_LENGTH)
 
 export const normalizeSwingPattern = (pattern: string, barSize: number) =>
-  pattern.length === barSize ? pattern : straightGroovePattern(barSize)
+  fitSwingPattern(pattern, barSize)
 
 export const normalizeSwingPatternForMeter = (pattern: string, meter: RhythmMeter) =>
   normalizeSwingPattern(pattern, swingBarSizeForMeter(meter))
@@ -200,6 +200,20 @@ export const usePlayerStore = create<PlayerState>()(
         fullBleed: state.fullBleed,
         preventScreenSleep: state.preventScreenSleep,
       }),
+      version: 2,
+      migrate: (persisted, version) => {
+        const saved = persisted as Partial<PersistedPlayerState>
+        if (version < 2) {
+          return {
+            ...saved,
+            swingPattern:
+              saved.swingPattern?.length === PLAYER_GROOVE_LENGTH
+                ? saved.swingPattern
+                : DEMO_SWING_PATTERN,
+          }
+        }
+        return saved
+      },
       merge: (persisted, current) => {
         const saved = persisted as Partial<PersistedPlayerState> & { markFirstBeat?: boolean }
         return {

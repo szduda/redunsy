@@ -6,7 +6,7 @@ import {
   normalizeSwingPatternForMeter,
 } from '@/features/groovy-player/player.store'
 import { deleteRhythm, readMyRhythms, saveRhythm } from '@/features/rhythm/my-rhythms-storage'
-import { createRhythm, slugFromTitle } from '@/features/rhythm/rhythm-helpers'
+import { createRhythm, reflowTracksForMeter, slugFromTitle } from '@/features/rhythm/rhythm-helpers'
 import type { Rhythm, RhythmInstrument, RhythmMeter } from '@/features/rhythm/rhythm.types'
 
 export type EditorView = 'picker' | 'creator' | 'editor'
@@ -185,11 +185,17 @@ export const useEditorStore = create<EditorState>((set, get) => ({
     if (!current) return
     const nextTitle = patch.title ?? current.title
     const nextSlug = patch.title ? slugFromTitle(nextTitle) : current.slug
+    const meterChanged = patch.meter !== undefined && patch.meter !== current.meter
+    const nextMeter = patch.meter ?? current.meter
     const next = {
       ...current,
       ...patch,
       title: nextTitle,
       slug: nextSlug,
+      meter: nextMeter,
+      instruments: meterChanged
+        ? reflowTracksForMeter(current.instruments, nextMeter)
+        : (patch.instruments ?? current.instruments),
       swingPattern: resolveSwingPattern(current, patch),
       updatedAt: Date.now(),
       userOwned: true,

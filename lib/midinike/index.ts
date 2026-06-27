@@ -7,7 +7,9 @@ export { barCellCount, TICKS_PER_EIGHTH } from './notation/cell-duration'
 export {
   validateBarForGroove,
   validateBarsForGroove,
+  barsFitGrooveLength,
   barsMatchGrooveLength,
+  tracksFitGrooveLength,
   tracksMatchGrooveLength,
 } from './notation/fit-bar'
 export type {

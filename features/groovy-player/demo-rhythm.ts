@@ -33,7 +33,7 @@ export const buildPlayerDemoRhythm = (tempo: number, swingPattern: string): Rhyt
     origin: ['Guinea'],
     tags: ['soli', 'demo'],
     rhythmGroup: [],
-    swingPattern: normalizedSwing,
+    swingPattern: normalizedSwing.length === grooveLength ? normalizedSwing : DEMO_SWING_PATTERN,
     tempo,
     signalPattern: '',
     createdAt: now,

@@ -31,9 +31,10 @@ describe('swing pattern helpers', () => {
     expect(isSwingPatternIncorrect('-<(-<(', PLAYER_GROOVE_LENGTH)).toBe(false)
   })
 
-  it('resets invalid editor patterns to the meter default', () => {
+  it('fits invalid editor patterns to the meter groove length', () => {
     expect(normalizeSwingPatternForMeter('--------', 3)).toBe('------')
     expect(normalizeSwingPatternForMeter('------', 4)).toBe('--------')
+    expect(normalizeSwingPatternForMeter('-<(-<(--', 3)).toBe('-<(-<(')
   })
 
   it('keeps demo groove length independent from bar character width', () => {

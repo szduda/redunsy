@@ -32,11 +32,12 @@ export const compileGroove = ({
 }: CompileGrooveInput): CompileGrooveResult => {
   if (!groove.length) throw new Error('Groove pattern cannot be empty')
 
-  const cellsPerBar = groove.length
   const compiledBars = bars.map((bar) => compileBar(bar, groove, soundMap))
   const beats = compiledBars.flatMap((bar) => bar.beats)
   const preGrooveSlots = compiledBars.reduce((sum, bar) => sum + bar.preGrooveSlots, 0)
   const swingModifier = swingModifierFromGroove(groove)
+  const cellsPerBar =
+    bars.reduce((max, bar) => Math.max(max, barCellCount(bar)), 0) || groove.length
   const cellCount = bars.length * cellsPerBar
 
   return {

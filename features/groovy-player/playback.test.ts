@@ -247,10 +247,18 @@ describe('meter=3 playback — 6-cell bars with 6-cell groove', () => {
     barLengths.forEach((len) => expect(len).toBe(barSlotCount(6)))
   })
 
-  it('rejects 8-cell groove for 6-cell bars (tracksMatchGrooveLength guard)', () => {
-    // If the store still holds an 8-char pattern when the player loads a meter=3 rhythm,
-    // tracksMatchGrooveLength must catch the inconsistency before playback starts.
-    expect(tracksMatchGrooveLength({ djembe: METER3_BARS }, 8)).toBe(false)
+  it('uses notation cell count for tempo when bars are shorter than the groove', () => {
+    const groove = resolveGroovePattern(GROOVE4, 8, false)
+    const compiled = compileGroove({ bars: [METER3_BARS[0]], groove })
+    expect(compiled.cellsPerBar).toBe(6)
+    const playbackTempo = calcPlaybackTempo(
+      compiled.cellsPerBar,
+      compiled.cellCount,
+      compiled.preGrooveSlots,
+      compiled.beats.length,
+      110,
+    )
+    expect(playbackTempo).toBeCloseTo((3 / 4) * 110 * TICKS_PER_EIGHTH)
   })
 })
 

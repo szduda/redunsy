@@ -30,7 +30,7 @@ import { Text } from '@/features/theme/text'
 import { cn } from '@/features/theme/cn'
 import {
   metronomeBarForGrooveLength,
-  tracksMatchGrooveLength,
+  tracksFitGrooveLength,
   useMidinike,
   validateBarsForGroove,
 } from '@/lib/midinike'
@@ -171,8 +171,10 @@ export const RhythmEditor = () => {
       Object.values(rhythm.instruments).forEach((track) =>
         validateBarsForGroove(track.bars, barSize),
       )
-      if (!tracksMatchGrooveLength(trackBars, barSize)) {
-        throw new Error(`Each bar must fill ${barSize} cells for beat size ${rhythm.meter}`)
+      if (!tracksFitGrooveLength(trackBars, barSize)) {
+        throw new Error(
+          `Each bar must use at most ${barSize} cells for beat size ${rhythm.meter}`,
+        )
       }
       setPlayError(null)
       play(trackBars, groovePattern)
@@ -187,8 +189,10 @@ export const RhythmEditor = () => {
       Object.values(rhythm.instruments).forEach((track) =>
         validateBarsForGroove(track.bars, barSize),
       )
-      if (!tracksMatchGrooveLength(trackBars, barSize)) {
-        throw new Error(`Each bar must fill ${barSize} cells for beat size ${rhythm.meter}`)
+      if (!tracksFitGrooveLength(trackBars, barSize)) {
+        throw new Error(
+          `Each bar must use at most ${barSize} cells for beat size ${rhythm.meter}`,
+        )
       }
       setPlayError(null)
       if (!restart()) play(trackBars, groovePattern)

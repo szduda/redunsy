@@ -8,13 +8,13 @@ import { compileGroove } from './groove/compile-groove'
 import { mergeBeatMatrices } from './groove/merge-beat-matrices'
 import { calcPlaybackTempo } from './groove/playback-tempo'
 import { swingModifierFromGroove } from './groove/groove-symbols'
-import { validateBarsForGroove, tracksMatchGrooveLength } from './notation/fit-bar'
+import { validateBarsForGroove, tracksFitGrooveLength } from './notation/fit-bar'
 
 import type { BeatMatrix, LayerConfig, MidinikeOptions, PlayTracks } from './types'
 
 const DENSITY = 1 / 16
 
-const DEFAULT_GROOVE_LENGTH = 8
+const DEFAULT_GROOVE_LENGTH = 6
 
 const isLayerConfig = (value: unknown): value is LayerConfig =>
   typeof value === 'object' && value !== null && 'instrument' in value && 'sounds' in value
@@ -230,7 +230,7 @@ export const useMidinike = (options: MidinikeOptions) => {
     (pattern: string, resumeBeat?: number) => {
       const tracks = lastTracksRef.current
       if (Object.keys(tracks).length) {
-        if (strictGrooveLength && !tracksMatchGrooveLength(tracks, pattern.length)) {
+        if (strictGrooveLength && !tracksFitGrooveLength(tracks, pattern.length)) {
           midiSounds.current?.stopPlayLoop()
           setPlaying(false)
           setPaused(false)
@@ -373,8 +373,7 @@ export const useMidinike = (options: MidinikeOptions) => {
       if (pattern === lastGroovePatternRef.current && pattern === groove) return
       lastGroovePatternRef.current = pattern
       setGrooveState(pattern)
-      if (!playingRef.current) return
-      recompileActivePattern(pattern, noteIndexRef.current)
+      recompileActivePattern(pattern, playingRef.current ? noteIndexRef.current : undefined)
     },
     [groove, recompileActivePattern],
   )
