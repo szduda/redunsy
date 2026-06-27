@@ -4,6 +4,7 @@ import {
   convertToEighth,
   convertToSixteenth,
   convertToTriplet,
+  defaultNoteSelection,
   flattenBarNotes,
   navigateSelection,
   setNoteAtGlyph,
@@ -16,6 +17,11 @@ describe('bar-note-edits', () => {
     expect(flat).toHaveLength(4)
     expect(flat[2]?.kind).toBe('eighth')
     expect(flat[3]?.kind).toBe('sixteenth')
+  })
+
+  it('defaults to the first note of the first bar', () => {
+    expect(defaultNoteSelection(['tsb', '---'])).toEqual({ barIndex: 0, glyphIndex: 0 })
+    expect(defaultNoteSelection([])).toBeNull()
   })
 
   it('navigates between notes', () => {
