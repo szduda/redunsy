@@ -3,10 +3,12 @@
 import { useEffect, useRef } from 'react'
 
 import { soundForDigit } from '@/features/editor/instrument-sounds'
+import type { SelectionMode } from '@/features/editor/use-note-editor'
 import type { NoteSelection } from '@/features/editor/notation/bar-note-edits'
 
 type EditorKeyboardActions = {
   selection: NoteSelection | null
+  selectionMode: SelectionMode
   navigate: (direction: -1 | 1) => void
   setSound: (sound: string) => void
   convertToSixteenth: () => void
@@ -47,7 +49,7 @@ export const useEditorKeyboard = (instrument: string, actions: EditorKeyboardAct
         return
       }
 
-      if (!current.selection) return
+      if (current.selectionMode !== 'note' || !current.selection) return
 
       if (event.key === 'r') {
         event.preventDefault()

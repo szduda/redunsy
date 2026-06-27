@@ -40,6 +40,23 @@ export const getSelectedFlatNote = (
   return { ...selection, kind: glyph.kind, note: glyph.note }
 }
 
+export const navigateBarSelection = (
+  bars: string[],
+  selection: NoteSelection | null,
+  direction: -1 | 1,
+): NoteSelection | null => {
+  if (!bars.length) return null
+
+  if (!selection) {
+    const barIndex = direction < 0 ? bars.length - 1 : 0
+    return { barIndex, glyphIndex: 0 }
+  }
+
+  const nextBarIndex = selection.barIndex + direction
+  if (nextBarIndex < 0 || nextBarIndex >= bars.length) return selection
+  return { barIndex: nextBarIndex, glyphIndex: 0 }
+}
+
 export const navigateSelection = (
   bars: string[],
   selection: NoteSelection | null,
