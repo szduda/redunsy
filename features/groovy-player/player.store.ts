@@ -67,14 +67,20 @@ export const resolveGroovePattern = (
   swingEnabled: boolean,
 ) => (swingEnabled ? fitSwingPattern(swingPattern, barSize) : straightGroovePattern(barSize))
 
-const stepForward = <const T extends readonly number[]>(steps: T, current: T[number]) => {
+const stepForward = <const T extends readonly number[]>(
+  steps: T,
+  current: T[number],
+): T[number] => {
   const index = steps.indexOf(current)
-  return steps[(index + 1) % steps.length]
+  return steps[(index + 1) % steps.length] as T[number]
 }
 
-const stepBackward = <const T extends readonly number[]>(steps: T, current: T[number]) => {
+const stepBackward = <const T extends readonly number[]>(
+  steps: T,
+  current: T[number],
+): T[number] => {
   const index = steps.indexOf(current)
-  return steps[(index - 1 + steps.length) % steps.length]
+  return steps[(index - 1 + steps.length) % steps.length] as T[number]
 }
 
 const isStepValue = <const T extends readonly number[]>(
