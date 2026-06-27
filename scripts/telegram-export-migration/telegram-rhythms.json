@@ -1,0 +1,2812 @@
+[
+  {
+    "id": "telegram-16775",
+    "slug": "untitled-2024-03-24",
+    "title": "Untitled 2024-03-24",
+    "meter": 3,
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni",
+      "bell",
+      "djembe"
+    ],
+    "description": "Imported from Telegram saved message (2024-03-24).",
+    "author": [],
+    "origin": [],
+    "tags": [
+      "telegram-import"
+    ],
+    "rhythmGroup": [],
+    "swingPattern": "->->->",
+    "tempo": 110,
+    "signalPattern": "ttttt-tt-t--",
+    "published": true,
+    "patterns": [
+      {
+        "id": "dundunba-0",
+        "name": "dundunba",
+        "instrument": "dundunba",
+        "title": "dundunba",
+        "pattern": "o------o-o-o",
+        "bars": [
+          "o-----",
+          "-o-o-o"
+        ]
+      },
+      {
+        "id": "sangban-1",
+        "name": "sangban",
+        "instrument": "sangban",
+        "title": "sangban",
+        "pattern": "--oo-o-o--o---------------oo-ooo--o---------------o--o--o-o---------------o-o--o-oo-------------",
+        "bars": [
+          "--oo-o",
+          "-o--o-",
+          "------",
+          "------",
+          "--oo-o",
+          "oo--o-",
+          "------",
+          "------",
+          "--o--o",
+          "--o-o-",
+          "------",
+          "------",
+          "--o-o-",
+          "-o-oo-",
+          "------",
+          "------"
+        ]
+      },
+      {
+        "id": "kenkeni-2",
+        "name": "kenkeni",
+        "instrument": "kenkeni",
+        "title": "kenkeni",
+        "pattern": "--o-o-",
+        "bars": [
+          "--o-o-"
+        ]
+      },
+      {
+        "id": "bell-3",
+        "name": "bell",
+        "instrument": "bell",
+        "title": "bell",
+        "pattern": "x-xx-x-x-xx-x-xx-xx-xx-xx-xx-xxx-xx-x-xx-xx-xx-xx-xx-xx-x-x-x-xx-xx-xx-xx-x-x-xx-xx-x-xx-xx-xx-x",
+        "bars": [
+          "x-xx-x",
+          "-x-xx-",
+          "x-xx-x",
+          "x-xx-x",
+          "x-xx-x",
+          "xx-xx-",
+          "x-xx-x",
+          "x-xx-x",
+          "x-xx-x",
+          "x-x-x-",
+          "x-xx-x",
+          "x-xx-x",
+          "x-x-x-",
+          "xx-xx-",
+          "x-xx-x",
+          "x-xx-x"
+        ]
+      },
+      {
+        "id": "djembe-4",
+        "name": "djembe",
+        "instrument": "djembe",
+        "title": "djembe",
+        "pattern": "s-ts--",
+        "bars": [
+          "s-ts--"
+        ]
+      }
+    ],
+    "createdAt": "2024-03-24T17:46:18.000Z",
+    "updatedAt": "2024-03-24T17:46:18.000Z"
+  },
+  {
+    "id": "telegram-17479",
+    "slug": "untitled-2024-05-19",
+    "title": "Untitled 2024-05-19",
+    "meter": 4,
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni"
+    ],
+    "description": "Imported from Telegram saved message (2024-05-19).",
+    "author": [],
+    "origin": [],
+    "tags": [
+      "telegram-import"
+    ],
+    "rhythmGroup": [],
+    "swingPattern": "--------",
+    "tempo": 110,
+    "signalPattern": "f-tt-t-tt-t-t---",
+    "published": true,
+    "patterns": [
+      {
+        "id": "dundunba-0",
+        "name": "dundunba",
+        "instrument": "dundunba",
+        "title": "dundunba",
+        "pattern": "------o-------o-------o--o-o--o-",
+        "bars": [
+          "------o-",
+          "------o-",
+          "------o-",
+          "-o-o--o-"
+        ]
+      },
+      {
+        "id": "sangban-1",
+        "name": "sangban",
+        "instrument": "sangban",
+        "title": "sangban",
+        "pattern": "----x--oo-----o-----oo-o-o----o-",
+        "bars": [
+          "----x--o",
+          "o-----o-",
+          "----oo-o",
+          "-o----o-"
+        ]
+      },
+      {
+        "id": "kenkeni-2",
+        "name": "kenkeni",
+        "instrument": "kenkeni",
+        "title": "kenkeni",
+        "pattern": "o--oo-o-",
+        "bars": [
+          "o--oo-o-"
+        ]
+      }
+    ],
+    "createdAt": "2024-05-19T19:16:17.000Z",
+    "updatedAt": "2024-05-19T19:16:17.000Z"
+  },
+  {
+    "id": "telegram-17486",
+    "slug": "untitled-2024-05-20",
+    "title": "Untitled 2024-05-20",
+    "meter": 3,
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni",
+      "bell",
+      "djembe"
+    ],
+    "description": "Imported from Telegram saved message (2024-05-20).",
+    "author": [],
+    "origin": [],
+    "tags": [
+      "telegram-import"
+    ],
+    "rhythmGroup": [],
+    "swingPattern": "-<-<-<",
+    "tempo": 110,
+    "signalPattern": "sstsss------------------------------------------------------------------",
+    "published": true,
+    "patterns": [
+      {
+        "id": "dundunba-0",
+        "name": "dundunba",
+        "instrument": "dundunba",
+        "title": "dundunba",
+        "pattern": "-o-o---------------oo-o-o-oo---------------oo-o-o-oo------oo-o-o-o-oo-oo",
+        "bars": [
+          "-o-o--",
+          "------",
+          "------",
+          "-oo-o-",
+          "o-oo--",
+          "------",
+          "------",
+          "-oo-o-",
+          "o-oo--",
+          "----oo",
+          "-o-o-o",
+          "-oo-oo"
+        ]
+      },
+      {
+        "id": "sangban-1",
+        "name": "sangban",
+        "instrument": "sangban",
+        "title": "sangban",
+        "pattern": "o-----x-x------x-x--o-o-o-----x-x------x-x--o-o-o-----x-x--oo-oo----oo--",
+        "bars": [
+          "o-----",
+          "x-x---",
+          "---x-x",
+          "--o-o-",
+          "o-----",
+          "x-x---",
+          "---x-x",
+          "--o-o-",
+          "o-----",
+          "x-x--o",
+          "o-oo--",
+          "--oo--"
+        ]
+      },
+      {
+        "id": "kenkeni-2",
+        "name": "kenkeni",
+        "instrument": "kenkeni",
+        "title": "kenkeni",
+        "pattern": "--o-oo",
+        "bars": [
+          "--o-oo"
+        ]
+      },
+      {
+        "id": "bell-3",
+        "name": "bell",
+        "instrument": "bell",
+        "title": "bell",
+        "pattern": "x-xx-xx-x-x-x-xx-x-xx-x-x-xx-xx-x-x-x-xx-x-xx-x-x-xx-xx-xx-xx-xx-xx-xx-x",
+        "bars": [
+          "x-xx-x",
+          "x-x-x-",
+          "x-xx-x",
+          "-xx-x-",
+          "x-xx-x",
+          "x-x-x-",
+          "x-xx-x",
+          "-xx-x-",
+          "x-xx-x",
+          "x-xx-x",
+          "x-xx-x",
+          "x-xx-x"
+        ]
+      },
+      {
+        "id": "djembe-4",
+        "name": "djembe",
+        "instrument": "djembe",
+        "title": "djembe",
+        "pattern": "s-ts--",
+        "bars": [
+          "s-ts--"
+        ]
+      }
+    ],
+    "createdAt": "2024-05-20T15:47:24.000Z",
+    "updatedAt": "2024-05-20T15:47:24.000Z"
+  },
+  {
+    "id": "telegram-17842",
+    "slug": "skankamba-krakarala-krowodkan-debnikon-wis-odon",
+    "title": "skankamba, krakarala, krowodkan, dębnikon, wisłodon",
+    "meter": 4,
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni"
+    ],
+    "description": "Imported from Telegram saved message (2024-06-13).",
+    "author": [],
+    "origin": [],
+    "tags": [
+      "telegram-import"
+    ],
+    "rhythmGroup": [],
+    "swingPattern": "->->->->",
+    "tempo": 110,
+    "signalPattern": "bttttttt",
+    "published": true,
+    "patterns": [
+      {
+        "id": "dundunba-0",
+        "name": "dundunba",
+        "instrument": "dundunba",
+        "title": "dundunba",
+        "pattern": "o-------o-------o-------oo--o-o-",
+        "bars": [
+          "o-------",
+          "o-------",
+          "o-------",
+          "oo--o-o-"
+        ]
+      },
+      {
+        "id": "sangban-1",
+        "name": "sangban",
+        "instrument": "sangban",
+        "title": "sangban",
+        "pattern": "x-x-oo--x-x-o---x-x-oo-oo-oo-o--",
+        "bars": [
+          "x-x-oo--",
+          "x-x-o---",
+          "x-x-oo-o",
+          "o-oo-o--"
+        ]
+      },
+      {
+        "id": "kenkeni-2",
+        "name": "kenkeni",
+        "instrument": "kenkeni",
+        "title": "kenkeni",
+        "pattern": "--oo--oo",
+        "bars": [
+          "--oo--oo"
+        ]
+      }
+    ],
+    "createdAt": "2024-06-12T22:34:32.000Z",
+    "updatedAt": "2024-06-12T22:34:32.000Z"
+  },
+  {
+    "id": "telegram-17990",
+    "slug": "wolosodon",
+    "title": "wolosodon",
+    "meter": 3,
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni",
+      "bell",
+      "djembe"
+    ],
+    "description": "Imported from Telegram saved message (2024-06-22).",
+    "author": [],
+    "origin": [],
+    "tags": [
+      "telegram-import"
+    ],
+    "rhythmGroup": [],
+    "swingPattern": "------",
+    "tempo": 140,
+    "signalPattern": "",
+    "published": true,
+    "patterns": [
+      {
+        "id": "dundunba-0",
+        "name": "dundunba",
+        "instrument": "dundunba",
+        "title": "dundunba",
+        "pattern": "o-o--------oo-----o----o",
+        "bars": [
+          "o-o---",
+          "-----o",
+          "o-----",
+          "o----o"
+        ]
+      },
+      {
+        "id": "sangban-1",
+        "name": "sangban",
+        "instrument": "sangban",
+        "title": "sangban",
+        "pattern": "-----o--o---------o--o--",
+        "bars": [
+          "-----o",
+          "--o---",
+          "------",
+          "o--o--"
+        ]
+      },
+      {
+        "id": "kenkeni-2",
+        "name": "kenkeni",
+        "instrument": "kenkeni",
+        "title": "kenkeni",
+        "pattern": "---o--",
+        "bars": [
+          "---o--"
+        ]
+      },
+      {
+        "id": "bell-3",
+        "name": "bell",
+        "instrument": "bell",
+        "title": "bell",
+        "pattern": "x-xx-x",
+        "bars": [
+          "x-xx-x"
+        ]
+      },
+      {
+        "id": "djembe-4",
+        "name": "djembe",
+        "instrument": "djembe",
+        "title": "djembe",
+        "pattern": "t-t--sb-sb-st-tt-sb-sb-s",
+        "bars": [
+          "t-t--s",
+          "b-sb-s",
+          "t-tt-s",
+          "b-sb-s"
+        ]
+      }
+    ],
+    "createdAt": "2024-06-22T19:25:36.000Z",
+    "updatedAt": "2024-06-22T19:25:36.000Z"
+  },
+  {
+    "id": "telegram-18442",
+    "slug": "thomas-segefoli",
+    "title": "thomas segefoli",
+    "meter": 4,
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni",
+      "bell",
+      "djembe"
+    ],
+    "description": "Imported from Telegram saved message (2024-08-12).",
+    "author": [],
+    "origin": [],
+    "tags": [
+      "telegram-import"
+    ],
+    "rhythmGroup": [],
+    "swingPattern": "--------",
+    "tempo": 110,
+    "signalPattern": "ss--f--btttbtttbtttbtttb",
+    "published": true,
+    "patterns": [
+      {
+        "id": "dundunba-0",
+        "name": "dundunba",
+        "instrument": "dundunba",
+        "title": "dundunba",
+        "pattern": "o--------------oo----------oo-o-o--------------oo-o-oo-oo-o-oo-o",
+        "bars": [
+          "o-------",
+          "-------o",
+          "o-------",
+          "---oo-o-",
+          "o-------",
+          "-------o",
+          "o-o-oo-o",
+          "o-o-oo-o"
+        ]
+      },
+      {
+        "id": "sangban-1",
+        "name": "sangban",
+        "instrument": "sangban",
+        "title": "sangban",
+        "pattern": "x--o-o--",
+        "bars": [
+          "x--o-o--"
+        ]
+      },
+      {
+        "id": "kenkeni-2",
+        "name": "kenkeni",
+        "instrument": "kenkeni",
+        "title": "kenkeni",
+        "pattern": "o---o---",
+        "bars": [
+          "o---o---"
+        ]
+      },
+      {
+        "id": "kenkeni2-3",
+        "name": "kenkeni2",
+        "instrument": "kenkeni2",
+        "title": "kenkeni2",
+        "pattern": "o--o-o-o--o-o-o-",
+        "bars": [
+          "o--o-o-o",
+          "--o-o-o-"
+        ]
+      },
+      {
+        "id": "bell-4",
+        "name": "bell",
+        "instrument": "bell",
+        "title": "bell",
+        "pattern": "x-xx-x-xx-x-x-x",
+        "bars": [
+          "x-xx-x-x",
+          "x-x-x-x-"
+        ]
+      },
+      {
+        "id": "djembe-5",
+        "name": "djembe",
+        "instrument": "djembe",
+        "title": "djembe",
+        "pattern": "s-ttb-ttb-s-s-s-",
+        "bars": [
+          "s-ttb-tt",
+          "b-s-s-s-"
+        ]
+      }
+    ],
+    "createdAt": "2024-08-12T17:01:11.000Z",
+    "updatedAt": "2024-08-12T17:01:11.000Z"
+  },
+  {
+    "id": "telegram-18676",
+    "slug": "untitled-2024-09-02",
+    "title": "Untitled 2024-09-02",
+    "meter": 3,
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni",
+      "djembe"
+    ],
+    "description": "Imported from Telegram saved message (2024-09-02).",
+    "author": [],
+    "origin": [],
+    "tags": [
+      "telegram-import"
+    ],
+    "rhythmGroup": [],
+    "swingPattern": "-<-<-<",
+    "tempo": 118,
+    "signalPattern": "",
+    "published": true,
+    "patterns": [
+      {
+        "id": "dundunba-0",
+        "name": "dundunba",
+        "instrument": "dundunba",
+        "title": "dundunba",
+        "pattern": "o-oo---------------oo-o-o-oo---------------oo-o-o-oo------oo-oo-oo-oo-oo-o-o---------------oo-oo-o-o---------------oo-oo-o-o------oo-o-o-o-oo-o-o-oo------oo-oo-oo-oo-oo-oo-oo-oo-oo-oo-oo-oo-oo-oo-oo-oo-oo-oo-oo-o--o------------o-o-o-o-o--o---o--o-o---oo-o-oo-o-o-oo-o-oo-o---o-o-o-o-oo-oo-o-o-o-o---o-o-o-o-oo-oo-oo-oo-oo-oo-o-o-o-oo-oo-oo-oo-oo-oo-oo-oo-oo-o-",
+        "bars": [
+          "o-oo--",
+          "------",
+          "------",
+          "-oo-o-",
+          "o-oo--",
+          "------",
+          "------",
+          "-oo-o-",
+          "o-oo--",
+          "----oo",
+          "-oo-oo",
+          "-oo-oo",
+          "-o-o--",
+          "------",
+          "------",
+          "-oo-oo",
+          "-o-o--",
+          "------",
+          "------",
+          "-oo-oo",
+          "-o-o--",
+          "----oo",
+          "-o-o-o",
+          "-oo-o-",
+          "o-oo--",
+          "----oo",
+          "-oo-oo",
+          "-oo-oo",
+          "-oo-oo",
+          "-oo-oo",
+          "-oo-oo",
+          "-oo-oo",
+          "-oo-oo",
+          "-oo-oo",
+          "-oo-oo",
+          "-o--o-",
+          "------",
+          "-----o",
+          "-o-o-o",
+          "-o--o-",
+          "--o--o",
+          "-o---o",
+          "o-o-oo",
+          "-o-o-o",
+          "o-o-oo",
+          "-o---o",
+          "-o-o-o",
+          "-oo-oo",
+          "-o-o-o",
+          "-o---o",
+          "-o-o-o",
+          "-oo-oo",
+          "-oo-oo",
+          "-oo-oo",
+          "-o-o-o",
+          "-oo-oo",
+          "-oo-oo",
+          "-oo-oo",
+          "-oo-oo",
+          "-oo-o-"
+        ]
+      },
+      {
+        "id": "sangban-1",
+        "name": "sangban",
+        "instrument": "sangban",
+        "title": "sangban",
+        "pattern": "o-----x-x------x-x--o-o-o-----x-x------x-x--o-o-o-----x-x--oo-oo----oo--o-----x-x------x-x--oo--o-----x-x------x-x--oo--o----oo-x--oo-oo----o-o-o-----x-x--o--o--o--o-o-o-----x-x--o--o--o--o-o-o----oo-x--o-o-o-o--oo--x-------o--o-o-o-o--o---o---o---o---o---o---o---o---o---o---o---o---o---o---o---o---o---o---o-o-o---o---o-o-o---o---o-o-oo--oo--oo-o-o-o-o--o-o-",
+        "bars": [
+          "o-----",
+          "x-x---",
+          "---x-x",
+          "--o-o-",
+          "o-----",
+          "x-x---",
+          "---x-x",
+          "--o-o-",
+          "o-----",
+          "x-x--o",
+          "o-oo--",
+          "--oo--",
+          "o-----",
+          "x-x---",
+          "---x-x",
+          "--oo--",
+          "o-----",
+          "x-x---",
+          "---x-x",
+          "--oo--",
+          "o----o",
+          "o-x--o",
+          "o-oo--",
+          "--o-o-",
+          "o-----",
+          "x-x--o",
+          "--o--o",
+          "--o-o-",
+          "o-----",
+          "x-x--o",
+          "--o--o",
+          "--o-o-",
+          "o----o",
+          "o-x--o",
+          "-o-o-o",
+          "--oo--",
+          "x-----",
+          "--o--o",
+          "-o-o-o",
+          "--o---",
+          "o---o-",
+          "--o---",
+          "o---o-",
+          "--o---",
+          "o---o-",
+          "--o---",
+          "o---o-",
+          "--o---",
+          "o---o-",
+          "--o---",
+          "o---o-",
+          "--o-o-",
+          "o---o-",
+          "--o-o-",
+          "o---o-",
+          "--o-o-",
+          "oo--oo",
+          "--oo-o",
+          "-o-o-o",
+          "--o-o-"
+        ]
+      },
+      {
+        "id": "kenkeni-2",
+        "name": "kenkeni",
+        "instrument": "kenkeni",
+        "title": "kenkeni",
+        "pattern": "--o-oo",
+        "bars": [
+          "--o-oo"
+        ]
+      },
+      {
+        "id": "djembe-3",
+        "name": "djembe",
+        "instrument": "djembe",
+        "title": "djembe",
+        "pattern": "s-ts--",
+        "bars": [
+          "s-ts--"
+        ]
+      }
+    ],
+    "createdAt": "2024-09-02T21:28:48.000Z",
+    "updatedAt": "2024-09-02T21:28:48.000Z"
+  },
+  {
+    "id": "telegram-18731",
+    "slug": "bada",
+    "title": "bada",
+    "meter": 3,
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni",
+      "djembe"
+    ],
+    "description": "Imported from Telegram saved message (2024-09-13).",
+    "author": [],
+    "origin": [],
+    "tags": [
+      "telegram-import"
+    ],
+    "rhythmGroup": [],
+    "swingPattern": "-<-<-<",
+    "tempo": 130,
+    "signalPattern": "",
+    "published": true,
+    "patterns": [
+      {
+        "id": "dundunba-0",
+        "name": "dundunba",
+        "instrument": "dundunba",
+        "title": "dundunba",
+        "pattern": "o-oo---------------oo-o------------o-o-o-o-o--o---o--o-o---oo-o-oo-o-o-oo-o-oo-o---o-o-o-o-oo-oo-o-o-o-o---o-o-o-o-oo-oo-oo-oo-oo-oo-o-o-o-oo-oo-oo-oo-oo-oo-oo-oo-oo-o-",
+        "bars": [
+          "o-oo--",
+          "------",
+          "------",
+          "-oo-o-",
+          "------",
+          "-----o",
+          "-o-o-o",
+          "-o--o-",
+          "--o--o",
+          "-o---o",
+          "o-o-oo",
+          "-o-o-o",
+          "o-o-oo",
+          "-o---o",
+          "-o-o-o",
+          "-oo-oo",
+          "-o-o-o",
+          "-o---o",
+          "-o-o-o",
+          "-oo-oo",
+          "-oo-oo",
+          "-oo-oo",
+          "-o-o-o",
+          "-oo-oo",
+          "-oo-oo",
+          "-oo-oo",
+          "-oo-oo",
+          "-oo-o-"
+        ]
+      },
+      {
+        "id": "sangban-1",
+        "name": "sangban",
+        "instrument": "sangban",
+        "title": "sangban",
+        "pattern": "o-----x-x------x-x--o---x-------o--o-o-o-o--o---o---o---o---o---o---o---o---o---o---o---o---o---o---o---o---o---o---o-o-o---o---o-o-o---o---o-o-oo--oo--oo-o-o-o-o--o-o-",
+        "bars": [
+          "o-----",
+          "x-x---",
+          "---x-x",
+          "--o---",
+          "x-----",
+          "--o--o",
+          "-o-o-o",
+          "--o---",
+          "o---o-",
+          "--o---",
+          "o---o-",
+          "--o---",
+          "o---o-",
+          "--o---",
+          "o---o-",
+          "--o---",
+          "o---o-",
+          "--o---",
+          "o---o-",
+          "--o-o-",
+          "o---o-",
+          "--o-o-",
+          "o---o-",
+          "--o-o-",
+          "oo--oo",
+          "--oo-o",
+          "-o-o-o",
+          "--o-o-"
+        ]
+      },
+      {
+        "id": "kenkeni-2",
+        "name": "kenkeni",
+        "instrument": "kenkeni",
+        "title": "kenkeni",
+        "pattern": "--o-oo",
+        "bars": [
+          "--o-oo"
+        ]
+      },
+      {
+        "id": "djembe-3",
+        "name": "djembe",
+        "instrument": "djembe",
+        "title": "djembe",
+        "pattern": "s-ts--",
+        "bars": [
+          "s-ts--"
+        ]
+      }
+    ],
+    "createdAt": "2024-09-13T11:50:03.000Z",
+    "updatedAt": "2024-09-13T11:50:03.000Z"
+  },
+  {
+    "id": "telegram-18785",
+    "slug": "demosoni-bada",
+    "title": "demosoni + bada",
+    "meter": 3,
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni",
+      "djembe"
+    ],
+    "description": "Imported from Telegram saved message (2024-09-22).",
+    "author": [],
+    "origin": [],
+    "tags": [
+      "telegram-import"
+    ],
+    "rhythmGroup": [],
+    "swingPattern": "-<-<-<",
+    "tempo": 120,
+    "signalPattern": "",
+    "published": true,
+    "patterns": [
+      {
+        "id": "dundunba-0",
+        "name": "dundunba",
+        "instrument": "dundunba",
+        "title": "dundunba",
+        "pattern": "o-oo---------------oo-o-o-oo---------------oo-o-o-oo------oo-oo-oo-oo-oo-o-o---------------oo-oo-o-o---------------oo-oo-o-o------oo-o-o-o-oo-o-o-oo------oo-oo-oo-oo-oo-oo-oo-oo-oo-oo-oo-oo-oo-oo-oo-oo-oo-oo-oo-oo-oo-oo-oo-oo-oo-oo-oo-oo-oo-oo-oo-oo-oo-oo-oo-oo-oo----------oo-oo-oo-o--o---o--o-o---oo-o-oo-o-o-oo-o-oo-o---o-o-o-o-oo-oo-o-o-o-o---o-o-o-o-oo-oo-o-o-o-o---o-o-o-o-oo-oo-oo-oo-oo-oo-o-o-o-oo-oo-oo-oo-oo-oo-oo-oo-oo-o-",
+        "bars": [
+          "o-oo--",
+          "------",
+          "------",
+          "-oo-o-",
+          "o-oo--",
+          "------",
+          "------",
+          "-oo-o-",
+          "o-oo--",
+          "----oo",
+          "-oo-oo",
+          "-oo-oo",
+          "-o-o--",
+          "------",
+          "------",
+          "-oo-oo",
+          "-o-o--",
+          "------",
+          "------",
+          "-oo-oo",
+          "-o-o--",
+          "----oo",
+          "-o-o-o",
+          "-oo-o-",
+          "o-oo--",
+          "----oo",
+          "-oo-oo",
+          "-oo-oo",
+          "-oo-oo",
+          "-oo-oo",
+          "-oo-oo",
+          "-oo-oo",
+          "-oo-oo",
+          "-oo-oo",
+          "-oo-oo",
+          "-oo-oo",
+          "-oo-oo",
+          "-oo-oo",
+          "-oo-oo",
+          "-oo-oo",
+          "-oo-oo",
+          "-oo-oo",
+          "-oo-oo",
+          "-oo-oo",
+          "------",
+          "----oo",
+          "-oo-oo",
+          "-o--o-",
+          "--o--o",
+          "-o---o",
+          "o-o-oo",
+          "-o-o-o",
+          "o-o-oo",
+          "-o---o",
+          "-o-o-o",
+          "-oo-oo",
+          "-o-o-o",
+          "-o---o",
+          "-o-o-o",
+          "-oo-oo",
+          "-o-o-o",
+          "-o---o",
+          "-o-o-o",
+          "-oo-oo",
+          "-oo-oo",
+          "-oo-oo",
+          "-o-o-o",
+          "-oo-oo",
+          "-oo-oo",
+          "-oo-oo",
+          "-oo-oo",
+          "-oo-o-"
+        ]
+      },
+      {
+        "id": "sangban-1",
+        "name": "sangban",
+        "instrument": "sangban",
+        "title": "sangban",
+        "pattern": "o-----x-x------x-x--o-o-o-----x-x------x-x--o-o-o-----x-x--oo-oo----oo--o-----x-x------x-x--oo--o-----x-x------x-x--oo--o----oo-x--oo-oo----o-o-o-----x-x--o--o--o--o-o-o-----x-x--o--o--o--o-o-o-----x-x--o--o--o--o-o-o----oo-x--o--o--o--o-o-o----oo-x--oo-x--oo-o-o-x-------o--o-o-o-o--o---o---o---o---o---o---o---o---o---o---o---o---o---o---o---o---o---o---o---o---o---o---o---o---o-o-o---o---o-o-o---o---o-o-oo--oo--oo-o-o-o-o--o-o-",
+        "bars": [
+          "o-----",
+          "x-x---",
+          "---x-x",
+          "--o-o-",
+          "o-----",
+          "x-x---",
+          "---x-x",
+          "--o-o-",
+          "o-----",
+          "x-x--o",
+          "o-oo--",
+          "--oo--",
+          "o-----",
+          "x-x---",
+          "---x-x",
+          "--oo--",
+          "o-----",
+          "x-x---",
+          "---x-x",
+          "--oo--",
+          "o----o",
+          "o-x--o",
+          "o-oo--",
+          "--o-o-",
+          "o-----",
+          "x-x--o",
+          "--o--o",
+          "--o-o-",
+          "o-----",
+          "x-x--o",
+          "--o--o",
+          "--o-o-",
+          "o-----",
+          "x-x--o",
+          "--o--o",
+          "--o-o-",
+          "o----o",
+          "o-x--o",
+          "--o--o",
+          "--o-o-",
+          "o----o",
+          "o-x--o",
+          "o-x--o",
+          "o-o-o-",
+          "x-----",
+          "--o--o",
+          "-o-o-o",
+          "--o---",
+          "o---o-",
+          "--o---",
+          "o---o-",
+          "--o---",
+          "o---o-",
+          "--o---",
+          "o---o-",
+          "--o---",
+          "o---o-",
+          "--o---",
+          "o---o-",
+          "--o---",
+          "o---o-",
+          "--o---",
+          "o---o-",
+          "--o-o-",
+          "o---o-",
+          "--o-o-",
+          "o---o-",
+          "--o-o-",
+          "oo--oo",
+          "--oo-o",
+          "-o-o-o",
+          "--o-o-"
+        ]
+      },
+      {
+        "id": "kenkeni-2",
+        "name": "kenkeni",
+        "instrument": "kenkeni",
+        "title": "kenkeni",
+        "pattern": "--o-oo",
+        "bars": [
+          "--o-oo"
+        ]
+      },
+      {
+        "id": "djembe-3",
+        "name": "djembe",
+        "instrument": "djembe",
+        "title": "djembe",
+        "pattern": "s-ts--",
+        "bars": [
+          "s-ts--"
+        ]
+      }
+    ],
+    "createdAt": "2024-09-22T16:20:34.000Z",
+    "updatedAt": "2024-09-22T16:20:34.000Z"
+  },
+  {
+    "id": "telegram-18955",
+    "slug": "sorsornet",
+    "title": "sorsornet",
+    "meter": 3,
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni",
+      "djembe"
+    ],
+    "description": "Imported from Telegram saved message (2024-10-10).",
+    "author": [],
+    "origin": [],
+    "tags": [
+      "telegram-import"
+    ],
+    "rhythmGroup": [],
+    "swingPattern": "------",
+    "tempo": 130,
+    "signalPattern": "",
+    "published": true,
+    "patterns": [
+      {
+        "id": "dundunba-0",
+        "name": "dundunba",
+        "instrument": "dundunba",
+        "title": "dundunba",
+        "pattern": "ooo-ooo-ooo-ooo---------ooo---------ooo---------ooo-----------------ooo-ooo---------ooo---------ooo---------------------ooo---------ooo-----ooo-ooo---------------------ooo---------ooo-o-o-o-o-",
+        "bars": [
+          "ooo-oo",
+          "o-ooo-",
+          "ooo---",
+          "------",
+          "ooo---",
+          "------",
+          "ooo---",
+          "------",
+          "ooo---",
+          "------",
+          "------",
+          "--ooo-",
+          "ooo---",
+          "------",
+          "ooo---",
+          "------",
+          "ooo---",
+          "------",
+          "------",
+          "------",
+          "ooo---",
+          "------",
+          "ooo---",
+          "--ooo-",
+          "ooo---",
+          "------",
+          "------",
+          "------",
+          "ooo---",
+          "------",
+          "ooo-o-",
+          "o-o-o-"
+        ]
+      },
+      {
+        "id": "sangban-1",
+        "name": "sangban",
+        "instrument": "sangban",
+        "title": "sangban",
+        "pattern": "ooo-ooo-ooo-ooo-x-x-x-x-ooo-------o-x---o-x---o-x---o-x---o-x---o-x---o-x---o-x---o-x---o-x---o-x---o-x---o-x---o-x---o-x---o-x---o-x---o-x---o-x---o-x---o-x---o-x---o-x---o-x---o-x---o-x---o-",
+        "bars": [
+          "ooo-oo",
+          "o-ooo-",
+          "ooo-x-",
+          "x-x-x-",
+          "ooo---",
+          "----o-",
+          "x---o-",
+          "x---o-",
+          "x---o-",
+          "x---o-",
+          "x---o-",
+          "x---o-",
+          "x---o-",
+          "x---o-",
+          "x---o-",
+          "x---o-",
+          "x---o-",
+          "x---o-",
+          "x---o-",
+          "x---o-",
+          "x---o-",
+          "x---o-",
+          "x---o-",
+          "x---o-",
+          "x---o-",
+          "x---o-",
+          "x---o-",
+          "x---o-",
+          "x---o-",
+          "x---o-",
+          "x---o-",
+          "x---o-"
+        ]
+      },
+      {
+        "id": "kenkeni-2",
+        "name": "kenkeni",
+        "instrument": "kenkeni",
+        "title": "kenkeni",
+        "pattern": "ooo-ooo-ooo-ooo-x-x-x-x-ooo-----------o--o--o--o--o--o--o--o--o--o--o--o--o--o--o--o--o--o--o--o--o--o--o--o--o--o--o--o--o--o--o--o--o--o--o--o--o--o--o--o--o--o--o--o--o--o--o--o--o--o--o--o",
+        "bars": [
+          "ooo-oo",
+          "o-ooo-",
+          "ooo-x-",
+          "x-x-x-",
+          "ooo---",
+          "------",
+          "--o--o",
+          "--o--o",
+          "--o--o",
+          "--o--o",
+          "--o--o",
+          "--o--o",
+          "--o--o",
+          "--o--o",
+          "--o--o",
+          "--o--o",
+          "--o--o",
+          "--o--o",
+          "--o--o",
+          "--o--o",
+          "--o--o",
+          "--o--o",
+          "--o--o",
+          "--o--o",
+          "--o--o",
+          "--o--o",
+          "--o--o",
+          "--o--o",
+          "--o--o",
+          "--o--o",
+          "--o--o",
+          "--o--o"
+        ]
+      },
+      {
+        "id": "djembe-3",
+        "name": "djembe",
+        "instrument": "djembe",
+        "title": "djembe",
+        "pattern": "sss-sss-sss-sss---------ssssttssssttssssttssssttssssttssssttssssttssssttssssttssssttssssttssssttssssttssssttssssttssssttssssttssssttssssttssssttssssttssssttssssttssssttssssttssssttsssstts-----",
+        "bars": [
+          "sss-ss",
+          "s-sss-",
+          "sss---",
+          "------",
+          "sssstt",
+          "sssstt",
+          "sssstt",
+          "sssstt",
+          "sssstt",
+          "sssstt",
+          "sssstt",
+          "sssstt",
+          "sssstt",
+          "sssstt",
+          "sssstt",
+          "sssstt",
+          "sssstt",
+          "sssstt",
+          "sssstt",
+          "sssstt",
+          "sssstt",
+          "sssstt",
+          "sssstt",
+          "sssstt",
+          "sssstt",
+          "sssstt",
+          "sssstt",
+          "sssstt",
+          "sssstt",
+          "sssstt",
+          "sssstt",
+          "s-----"
+        ]
+      }
+    ],
+    "createdAt": "2024-10-10T17:09:18.000Z",
+    "updatedAt": "2024-10-10T17:09:18.000Z"
+  },
+  {
+    "id": "telegram-19153",
+    "slug": "soli-chauffe",
+    "title": "soli chauffe",
+    "meter": 3,
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni"
+    ],
+    "description": "Imported from Telegram saved message (2024-10-28).",
+    "author": [],
+    "origin": [],
+    "tags": [
+      "telegram-import"
+    ],
+    "rhythmGroup": [],
+    "swingPattern": "------",
+    "tempo": 150,
+    "signalPattern": "",
+    "published": true,
+    "patterns": [
+      {
+        "id": "dundunba-0",
+        "name": "dundunba",
+        "instrument": "dundunba",
+        "title": "dundunba",
+        "pattern": "o-oo-oo-oo-oo-oo-oo-oo-oo-oo-oo-oo-oo-oo-oo-oo-oo-o-----oo-oo-o-----oo-oo-o-----oo-oo-oo----oo-oo-o-----oo-oo-oo----oo-o",
+        "bars": [
+          "o-oo-o",
+          "o-oo-o",
+          "o-oo-o",
+          "o-oo-o",
+          "o-oo-o",
+          "o-oo-o",
+          "o-oo-o",
+          "o-oo-o",
+          "o-o---",
+          "--oo-o",
+          "o-o---",
+          "--oo-o",
+          "o-o---",
+          "--oo-o",
+          "o-oo--",
+          "--oo-o",
+          "o-o---",
+          "--oo-o",
+          "o-oo--",
+          "--oo-o"
+        ]
+      },
+      {
+        "id": "sangban-1",
+        "name": "sangban",
+        "instrument": "sangban",
+        "title": "sangban",
+        "pattern": "o---o-o---o-o---o-o---o-o---o-o---o-o-o-o-o--oo-o---x-x--o--o---x-x--o--o---x-x--oo-o---x-x--o--o---x-x--o--o---x-oo--o-",
+        "bars": [
+          "o---o-",
+          "o---o-",
+          "o---o-",
+          "o---o-",
+          "o---o-",
+          "o---o-",
+          "o-o-o-",
+          "o--oo-",
+          "o---x-",
+          "x--o--",
+          "o---x-",
+          "x--o--",
+          "o---x-",
+          "x--oo-",
+          "o---x-",
+          "x--o--",
+          "o---x-",
+          "x--o--",
+          "o---x-",
+          "oo--o-"
+        ]
+      },
+      {
+        "id": "kenkeni-2",
+        "name": "kenkeni",
+        "instrument": "kenkeni",
+        "title": "kenkeni",
+        "pattern": "----oo",
+        "bars": [
+          "----oo"
+        ]
+      }
+    ],
+    "createdAt": "2024-10-28T21:54:21.000Z",
+    "updatedAt": "2024-10-28T21:54:21.000Z"
+  },
+  {
+    "id": "telegram-19189",
+    "slug": "konowoulen",
+    "title": "konowoulen",
+    "meter": 3,
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni",
+      "bell",
+      "djembe"
+    ],
+    "description": "Imported from Telegram saved message (2024-11-04).",
+    "author": [],
+    "origin": [],
+    "tags": [
+      "telegram-import"
+    ],
+    "rhythmGroup": [],
+    "swingPattern": "------",
+    "tempo": 130,
+    "signalPattern": "sstsss------------------sstsss------------------",
+    "published": true,
+    "patterns": [
+      {
+        "id": "dundunba-0",
+        "name": "dundunba",
+        "instrument": "dundunba",
+        "title": "dundunba",
+        "pattern": "----------oo-oo----oo-oo----------oo-o-o---oo-o-----------oo-oo----oo-oo----------oo-o-o---oo-o-----------oo-oo----oo-oo----------oo-oo-oo-oo-oo-oo-oo-oo-oo-o-o---oo-oo-oo-oo-oo-oo-o-o-o-oo-o-",
+        "bars": [
+          "------",
+          "----oo",
+          "-oo---",
+          "-oo-oo",
+          "------",
+          "----oo",
+          "-o-o--",
+          "-oo-o-",
+          "------",
+          "----oo",
+          "-oo---",
+          "-oo-oo",
+          "------",
+          "----oo",
+          "-o-o--",
+          "-oo-o-",
+          "------",
+          "----oo",
+          "-oo---",
+          "-oo-oo",
+          "------",
+          "----oo",
+          "-oo-oo",
+          "-oo-oo",
+          "-oo-oo",
+          "-oo-oo",
+          "-o-o--",
+          "-oo-oo",
+          "-oo-oo",
+          "-oo-oo",
+          "-o-o-o",
+          "-oo-o-"
+        ]
+      },
+      {
+        "id": "sangban-1",
+        "name": "sangban",
+        "instrument": "sangban",
+        "title": "sangban",
+        "pattern": "x-----x-----o-----o-oo--x-----x----o--o--o--oo--x-----x----oo-----o-oo--x-----x-----o--o--o-oo--x-----x-----o-----o-oo----oo----oo----oo----oo----oo----oo--o--o--o-oo----oo----oo--o-o-o-o-oo--",
+        "bars": [
+          "x-----",
+          "x-----",
+          "o-----",
+          "o-oo--",
+          "x-----",
+          "x----o",
+          "--o--o",
+          "--oo--",
+          "x-----",
+          "x----o",
+          "o-----",
+          "o-oo--",
+          "x-----",
+          "x-----",
+          "o--o--",
+          "o-oo--",
+          "x-----",
+          "x-----",
+          "o-----",
+          "o-oo--",
+          "--oo--",
+          "--oo--",
+          "--oo--",
+          "--oo--",
+          "--oo--",
+          "--oo--",
+          "o--o--",
+          "o-oo--",
+          "--oo--",
+          "--oo--",
+          "o-o-o-",
+          "o-oo--"
+        ]
+      },
+      {
+        "id": "kenkeni-2",
+        "name": "kenkeni",
+        "instrument": "kenkeni",
+        "title": "kenkeni",
+        "pattern": "--o-oo",
+        "bars": [
+          "--o-oo"
+        ]
+      },
+      {
+        "id": "bell-3",
+        "name": "bell",
+        "instrument": "bell",
+        "title": "bell",
+        "pattern": "x-xx-x",
+        "bars": [
+          "x-xx-x"
+        ]
+      },
+      {
+        "id": "djembe-4",
+        "name": "djembe",
+        "instrument": "djembe",
+        "title": "djembe",
+        "pattern": "s-ts--",
+        "bars": [
+          "s-ts--"
+        ]
+      }
+    ],
+    "createdAt": "2024-11-03T23:36:29.000Z",
+    "updatedAt": "2024-11-03T23:36:29.000Z"
+  },
+  {
+    "id": "telegram-20278",
+    "slug": "dunungbe-kon-wariacje",
+    "title": "dunungbe kon wariacje",
+    "meter": 3,
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni",
+      "bell",
+      "djembe"
+    ],
+    "description": "Imported from Telegram saved message (2025-02-14).",
+    "author": [],
+    "origin": [],
+    "tags": [
+      "telegram-import"
+    ],
+    "rhythmGroup": [],
+    "swingPattern": "-<-<-<",
+    "tempo": 120,
+    "signalPattern": "",
+    "published": true,
+    "patterns": [
+      {
+        "id": "dundunba-0",
+        "name": "dundunba",
+        "instrument": "dundunba",
+        "title": "dundunba",
+        "pattern": "-------o--o--------o--o--------o--o--------o--o--------o--o--o-o-o-oo-o--------oo-o--------oo-o--------oo-o--------oo-o--------oo-o--o-o-o-o--oo-------o--oo-------o--oo-------o--oo-------o--oo-------o--oo-o-o-o-oo-oo-------oo-oo-------oo-oo----oo-oo-oo-o--o--o--o--o-o-o-oo-oo-o-o-o-oo-oo",
+        "bars": [
+          "------",
+          "-o--o-",
+          "------",
+          "-o--o-",
+          "------",
+          "-o--o-",
+          "------",
+          "-o--o-",
+          "------",
+          "-o--o-",
+          "-o-o-o",
+          "-oo-o-",
+          "------",
+          "-oo-o-",
+          "------",
+          "-oo-o-",
+          "------",
+          "-oo-o-",
+          "------",
+          "-oo-o-",
+          "------",
+          "-oo-o-",
+          "-o-o-o",
+          "-o--oo",
+          "------",
+          "-o--oo",
+          "------",
+          "-o--oo",
+          "------",
+          "-o--oo",
+          "------",
+          "-o--oo",
+          "------",
+          "-o--oo",
+          "-o-o-o",
+          "-oo-oo",
+          "------",
+          "-oo-oo",
+          "------",
+          "-oo-oo",
+          "----oo",
+          "-oo-oo",
+          "-o--o-",
+          "-o--o-",
+          "-o-o-o",
+          "-oo-oo",
+          "-o-o-o",
+          "-oo-oo"
+        ]
+      },
+      {
+        "id": "sangban-1",
+        "name": "sangban",
+        "instrument": "sangban",
+        "title": "sangban",
+        "pattern": "x-------o---x-------oo--x----oo-oo--x-o-----o-----o-----o--o-o-o-o--o---",
+        "bars": [
+          "x-----",
+          "--o---",
+          "x-----",
+          "--oo--",
+          "x----o",
+          "o-oo--",
+          "x-o---",
+          "--o---",
+          "--o---",
+          "--o--o",
+          "-o-o-o",
+          "--o---"
+        ]
+      },
+      {
+        "id": "kenkeni-2",
+        "name": "kenkeni",
+        "instrument": "kenkeni",
+        "title": "kenkeni",
+        "pattern": "--o-oo",
+        "bars": [
+          "--o-oo"
+        ]
+      },
+      {
+        "id": "kenkeni2-3",
+        "name": "kenkeni2",
+        "instrument": "kenkeni2",
+        "title": "kenkeni2",
+        "pattern": "-xx-xx",
+        "bars": [
+          "-xx-xx"
+        ]
+      },
+      {
+        "id": "bell-4",
+        "name": "bell",
+        "instrument": "bell",
+        "title": "bell",
+        "pattern": "x-xx-x",
+        "bars": [
+          "x-xx-x"
+        ]
+      },
+      {
+        "id": "djembe-5",
+        "name": "djembe",
+        "instrument": "djembe",
+        "title": "djembe",
+        "pattern": "s-ts--",
+        "bars": [
+          "s-ts--"
+        ]
+      }
+    ],
+    "createdAt": "2025-02-14T11:21:20.000Z",
+    "updatedAt": "2025-02-14T11:21:20.000Z"
+  },
+  {
+    "id": "telegram-20280",
+    "slug": "balakulandjan-sangban-solo",
+    "title": "balakulandjan sangban solo",
+    "meter": 4,
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni",
+      "djembe"
+    ],
+    "description": "Imported from Telegram saved message (2025-02-14).",
+    "author": [],
+    "origin": [],
+    "tags": [
+      "telegram-import"
+    ],
+    "rhythmGroup": [],
+    "swingPattern": "->->->->",
+    "tempo": 90,
+    "signalPattern": "f-tt-t-tt-t-t---",
+    "published": true,
+    "patterns": [
+      {
+        "id": "dundunba-0",
+        "name": "dundunba",
+        "instrument": "dundunba",
+        "title": "dundunba",
+        "pattern": "o-----o-",
+        "bars": [
+          "o-----o-"
+        ]
+      },
+      {
+        "id": "sangban-1",
+        "name": "sangban",
+        "instrument": "sangban",
+        "title": "sangban",
+        "pattern": "x---x---x-o-o---x---x--o--o-o---x-oo-o--x-o-o----o-oo--oo-o-oo--x-o-x-o-x-o-oo-oo-o--o-o--o-o----o-oo----o-oo----oo-oo--x-o-o----o-oo----o-ooo-o-oo-oo-oo-o-oo-o",
+        "bars": [
+          "x---x---",
+          "x-o-o---",
+          "x---x--o",
+          "--o-o---",
+          "x-oo-o--",
+          "x-o-o---",
+          "-o-oo--o",
+          "o-o-oo--",
+          "x-o-x-o-",
+          "x-o-oo-o",
+          "o-o--o-o",
+          "--o-o---",
+          "-o-oo---",
+          "-o-oo---",
+          "-oo-oo--",
+          "x-o-o---",
+          "-o-oo---",
+          "-o-ooo-o",
+          "-oo-oo-o",
+          "o-o-oo-o"
+        ]
+      },
+      {
+        "id": "kenkeni-2",
+        "name": "kenkeni",
+        "instrument": "kenkeni",
+        "title": "kenkeni",
+        "pattern": "o---o---",
+        "bars": [
+          "o---o---"
+        ]
+      },
+      {
+        "id": "djembe-3",
+        "name": "djembe",
+        "instrument": "djembe",
+        "title": "djembe",
+        "pattern": "b-tt--s-",
+        "bars": [
+          "b-tt--s-"
+        ]
+      }
+    ],
+    "createdAt": "2025-02-14T22:40:53.000Z",
+    "updatedAt": "2025-02-14T22:40:53.000Z"
+  },
+  {
+    "id": "telegram-20281",
+    "slug": "untitled-2025-02-15",
+    "title": "Untitled 2025-02-15",
+    "meter": 4,
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni",
+      "bell",
+      "djembe"
+    ],
+    "description": "Imported from Telegram saved message (2025-02-15).",
+    "author": [],
+    "origin": [],
+    "tags": [
+      "telegram-import"
+    ],
+    "rhythmGroup": [],
+    "swingPattern": "->->->->",
+    "tempo": 100,
+    "signalPattern": "f-tt-t-tt-t-t---",
+    "published": true,
+    "patterns": [
+      {
+        "id": "dundunba-0",
+        "name": "dundunba",
+        "instrument": "dundunba",
+        "title": "dundunba",
+        "pattern": "o-----o-",
+        "bars": [
+          "o-----o-"
+        ]
+      },
+      {
+        "id": "sangban-1",
+        "name": "sangban",
+        "instrument": "sangban",
+        "title": "sangban",
+        "pattern": "x---x---x-o-o---x---x--o--o-o---x---x---x-o-o---x---x-oo-------o------o----oo----o---o--o-o-o---x-oo-o--x-o-o----o-oo--oo-o-oo--x-o-x-o-x-o-oo-oo-o--o-o--o-o----o-oo----o-oo----oo-oo--x-o-o----o-oo--o-o-o-o-o-oo-oo-oo-o-oo-o",
+        "bars": [
+          "x---x---",
+          "x-o-o---",
+          "x---x--o",
+          "--o-o---",
+          "x---x---",
+          "x-o-o---",
+          "x---x-oo",
+          "-------o",
+          "------o-",
+          "---oo---",
+          "-o---o--",
+          "o-o-o---",
+          "x-oo-o--",
+          "x-o-o---",
+          "-o-oo--o",
+          "o-o-oo--",
+          "x-o-x-o-",
+          "x-o-oo-o",
+          "o-o--o-o",
+          "--o-o---",
+          "-o-oo---",
+          "-o-oo---",
+          "-oo-oo--",
+          "x-o-o---",
+          "-o-oo--o",
+          "-o-o-o-o",
+          "-oo-oo-o",
+          "o-o-oo-o"
+        ]
+      },
+      {
+        "id": "kenkeni-2",
+        "name": "kenkeni",
+        "instrument": "kenkeni",
+        "title": "kenkeni",
+        "pattern": "o---o---",
+        "bars": [
+          "o---o---"
+        ]
+      },
+      {
+        "id": "bell-3",
+        "name": "bell",
+        "instrument": "bell",
+        "title": "bell",
+        "pattern": "x-x-x-x-x-x-x-x-x-x-x-xx-xx-x-x-x-x-x-x-x-x-x-x-x-x-x-xx-xx-xx-xx-xx-xx-xx-xx-xx-xx-xx-xx-x-x-x-x-xx-x-xx-x-x-x-xx-xx--xx-x-xx-xx-x-x-x-x-x-xx-xx-x-xx-xx-x-x-x-xx-xx-x-xx-xx-xx-xx-xx-xx-x-x-x-xx-xx-xx-x-x-x-x-xx-xx-xx-x-xx-x",
+        "bars": [
+          "x-x-x-x-",
+          "x-x-x-x-",
+          "x-x-x-xx",
+          "-xx-x-x-",
+          "x-x-x-x-",
+          "x-x-x-x-",
+          "x-x-x-xx",
+          "-xx-xx-x",
+          "x-xx-xx-",
+          "xx-xx-xx",
+          "-xx-xx-x",
+          "x-x-x-x-",
+          "x-xx-x-x",
+          "x-x-x-x-",
+          "xx-xx--x",
+          "x-x-xx-x",
+          "x-x-x-x-",
+          "x-x-xx-x",
+          "x-x-xx-x",
+          "x-x-x-x-",
+          "xx-xx-x-",
+          "xx-xx-xx",
+          "-xx-xx-x",
+          "x-x-x-x-",
+          "xx-xx-xx",
+          "-x-x-x-x",
+          "-xx-xx-x",
+          "x-x-xx-x"
+        ]
+      },
+      {
+        "id": "djembe-4",
+        "name": "djembe",
+        "instrument": "djembe",
+        "title": "djembe",
+        "pattern": "b-tt--s-b-t-t-s-",
+        "bars": [
+          "b-tt--s-",
+          "b-t-t-s-"
+        ]
+      }
+    ],
+    "createdAt": "2025-02-14T23:36:50.000Z",
+    "updatedAt": "2025-02-14T23:36:50.000Z"
+  },
+  {
+    "id": "telegram-21161",
+    "slug": "konkoba-2-solo",
+    "title": "konkoba 2 solo",
+    "meter": 3,
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni",
+      "djembe"
+    ],
+    "description": "Imported from Telegram saved message (2025-05-22).",
+    "author": [],
+    "origin": [],
+    "tags": [
+      "telegram-import"
+    ],
+    "rhythmGroup": [],
+    "swingPattern": "-<-<-<",
+    "tempo": 135,
+    "signalPattern": "",
+    "published": true,
+    "patterns": [
+      {
+        "id": "dundunba-0",
+        "name": "dundunba",
+        "instrument": "dundunba",
+        "title": "dundunba",
+        "pattern": "----------o---o-------------o---o---",
+        "bars": [
+          "------",
+          "----o-",
+          "--o---",
+          "------",
+          "----o-",
+          "--o---"
+        ]
+      },
+      {
+        "id": "sangban-1",
+        "name": "sangban",
+        "instrument": "sangban",
+        "title": "sangban",
+        "pattern": "------------o----------------oo-----",
+        "bars": [
+          "------",
+          "------",
+          "o-----",
+          "------",
+          "-----o",
+          "o-----"
+        ]
+      },
+      {
+        "id": "kenkeni-2",
+        "name": "kenkeni",
+        "instrument": "kenkeni",
+        "title": "kenkeni",
+        "pattern": "o--o--",
+        "bars": [
+          "o--o--"
+        ]
+      },
+      {
+        "id": "djembe-3",
+        "name": "djembe",
+        "instrument": "djembe",
+        "title": "djembe",
+        "pattern": "ssssssssssssttssssssssssssss------ssss-s-stts--------------t-fss-ss----------------t-fss-ss-ttsss-ss----t-fss-ss-ttsss-ss----t-fss-ss-ttsss-ss----t-fss-ss-ttsss-ss----t-fss-ss-ttsss-ss----ttsss-ss----ttsss-ss----ttsss-ttsss-ttsss-ss----------ttsss-ttsss-ttsss----sf-----------------ttssssssssssssssssttssssssssssssssssttssss",
+        "bars": [
+          "ssssss",
+          "ssssss",
+          "ttssss",
+          "ssssss",
+          "ssss--",
+          "----ss",
+          "ss-s-s",
+          "tts---",
+          "------",
+          "-----t",
+          "-fss-s",
+          "s-----",
+          "------",
+          "-----t",
+          "-fss-s",
+          "s-ttss",
+          "s-ss--",
+          "--t-fs",
+          "s-ss-t",
+          "tsss-s",
+          "s----t",
+          "-fss-s",
+          "s-ttss",
+          "s-ss--",
+          "--t-fs",
+          "s-ss-t",
+          "tsss-s",
+          "s----t",
+          "-fss-s",
+          "s-ttss",
+          "s-ss--",
+          "--ttss",
+          "s-ss--",
+          "--ttss",
+          "s-ss--",
+          "--ttss",
+          "s-ttss",
+          "s-ttss",
+          "s-ss--",
+          "------",
+          "--ttss",
+          "s-ttss",
+          "s-ttss",
+          "s----s",
+          "f-----",
+          "------",
+          "------",
+          "ttssss",
+          "ssssss",
+          "ssssss",
+          "ttssss",
+          "ssssss",
+          "ssssss",
+          "ttssss"
+        ]
+      }
+    ],
+    "createdAt": "2025-05-22T21:04:39.000Z",
+    "updatedAt": "2025-05-22T21:04:39.000Z"
+  },
+  {
+    "id": "telegram-21189",
+    "slug": "kononari",
+    "title": "kononari",
+    "meter": 4,
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni",
+      "bell"
+    ],
+    "description": "Imported from Telegram saved message (2025-05-25).",
+    "author": [],
+    "origin": [],
+    "tags": [
+      "telegram-import"
+    ],
+    "rhythmGroup": [],
+    "swingPattern": "--------",
+    "tempo": 97,
+    "signalPattern": "",
+    "published": true,
+    "patterns": [
+      {
+        "id": "dundunba-0",
+        "name": "dundunba",
+        "instrument": "dundunba",
+        "title": "dundunba",
+        "pattern": "--o---o-------o-",
+        "bars": [
+          "--o---o-",
+          "------o-"
+        ]
+      },
+      {
+        "id": "sangban-1",
+        "name": "sangban",
+        "instrument": "sangban",
+        "title": "sangban",
+        "pattern": "o---o---x---x---",
+        "bars": [
+          "o---o---",
+          "x---x---"
+        ]
+      },
+      {
+        "id": "kenkeni-2",
+        "name": "kenkeni",
+        "instrument": "kenkeni",
+        "title": "kenkeni",
+        "pattern": "--oo-x--",
+        "bars": [
+          "--oo-x--"
+        ]
+      },
+      {
+        "id": "bell-3",
+        "name": "bell",
+        "instrument": "bell",
+        "title": "bell",
+        "pattern": "x-x-x-x-",
+        "bars": [
+          "x-x-x-x-"
+        ]
+      }
+    ],
+    "createdAt": "2025-05-25T15:20:33.000Z",
+    "updatedAt": "2025-05-25T15:20:33.000Z"
+  },
+  {
+    "id": "telegram-21852",
+    "slug": "sorsornet-2",
+    "title": "sorsornet",
+    "meter": 3,
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni",
+      "djembe"
+    ],
+    "description": "Imported from Telegram saved message (2025-06-28).",
+    "author": [],
+    "origin": [],
+    "tags": [
+      "telegram-import"
+    ],
+    "rhythmGroup": [],
+    "swingPattern": "------",
+    "tempo": 130,
+    "signalPattern": "",
+    "published": true,
+    "patterns": [
+      {
+        "id": "dundunba-0",
+        "name": "dundunba",
+        "instrument": "dundunba",
+        "title": "dundunba",
+        "pattern": "ooo---------ooo-----ooo-",
+        "bars": [
+          "ooo---",
+          "------",
+          "ooo---",
+          "--ooo-"
+        ]
+      },
+      {
+        "id": "sangban-1",
+        "name": "sangban",
+        "instrument": "sangban",
+        "title": "sangban",
+        "pattern": "o---o-----o-",
+        "bars": [
+          "o---o-",
+          "----o-"
+        ]
+      },
+      {
+        "id": "kenkeni-2",
+        "name": "kenkeni",
+        "instrument": "kenkeni",
+        "title": "kenkeni",
+        "pattern": "--o--o",
+        "bars": [
+          "--o--o"
+        ]
+      },
+      {
+        "id": "djembe-3",
+        "name": "djembe",
+        "instrument": "djembe",
+        "title": "djembe",
+        "pattern": "sssstt",
+        "bars": [
+          "sssstt"
+        ]
+      }
+    ],
+    "createdAt": "2025-06-28T00:03:52.000Z",
+    "updatedAt": "2025-06-28T00:03:52.000Z"
+  },
+  {
+    "id": "telegram-21986",
+    "slug": "bada-dundunba-variations",
+    "title": "bada dundunba variations",
+    "meter": 3,
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni",
+      "bell",
+      "djembe"
+    ],
+    "description": "Imported from Telegram saved message (2025-07-01).",
+    "author": [],
+    "origin": [],
+    "tags": [
+      "telegram-import"
+    ],
+    "rhythmGroup": [],
+    "swingPattern": "------",
+    "tempo": 120,
+    "signalPattern": "",
+    "published": true,
+    "patterns": [
+      {
+        "id": "dundunba-0",
+        "name": "dundunba",
+        "instrument": "dundunba",
+        "title": "dundunba",
+        "pattern": "--o--o--------o--o-----o--o--o-----o--o--o-----o--o--o--o--o--o--o--o--o---o-o-o---o-o-o---o-o-o-o-o-o-o---o-o-o---o-o-o-o-o-o-o-o-o-o-o-o-o-o-o---o-o-o--o----o-o-o--o----o-o-o--o----o-o-o--o----o-o-o--o---oo-o-o--o--o-o-o-o-o-o-oo-oo-oo-oo-o-o-o-o-o-o-oo-oo-oo-oo-oo-oo-oo-oo-o-o-o-oo-oo",
+        "bars": [
+          "--o--o",
+          "------",
+          "--o--o",
+          "-----o",
+          "--o--o",
+          "-----o",
+          "--o--o",
+          "-----o",
+          "--o--o",
+          "--o--o",
+          "--o--o",
+          "--o--o",
+          "---o-o",
+          "-o---o",
+          "-o-o--",
+          "-o-o-o",
+          "-o-o-o",
+          "-o---o",
+          "-o-o--",
+          "-o-o-o",
+          "-o-o-o",
+          "-o-o-o",
+          "-o-o-o",
+          "-o-o-o",
+          "---o-o",
+          "-o--o-",
+          "---o-o",
+          "-o--o-",
+          "---o-o",
+          "-o--o-",
+          "---o-o",
+          "-o--o-",
+          "---o-o",
+          "-o--o-",
+          "--oo-o",
+          "-o--o-",
+          "-o-o-o",
+          "-o-o-o",
+          "-oo-oo",
+          "-oo-oo",
+          "-o-o-o",
+          "-o-o-o",
+          "-oo-oo",
+          "-oo-oo",
+          "-oo-oo",
+          "-oo-oo",
+          "-o-o-o",
+          "-oo-oo"
+        ]
+      },
+      {
+        "id": "sangban-1",
+        "name": "sangban",
+        "instrument": "sangban",
+        "title": "sangban",
+        "pattern": "o---o---o---",
+        "bars": [
+          "o---o-",
+          "--o---"
+        ]
+      },
+      {
+        "id": "kenkeni-2",
+        "name": "kenkeni",
+        "instrument": "kenkeni",
+        "title": "kenkeni",
+        "pattern": "--o-oo",
+        "bars": [
+          "--o-oo"
+        ]
+      },
+      {
+        "id": "bell-3",
+        "name": "bell",
+        "instrument": "bell",
+        "title": "bell",
+        "pattern": "x-x-x-",
+        "bars": [
+          "x-x-x-"
+        ]
+      },
+      {
+        "id": "djembe-4",
+        "name": "djembe",
+        "instrument": "djembe",
+        "title": "djembe",
+        "pattern": "s-ts--",
+        "bars": [
+          "s-ts--"
+        ]
+      }
+    ],
+    "createdAt": "2025-07-01T12:48:13.000Z",
+    "updatedAt": "2025-07-01T12:48:13.000Z"
+  },
+  {
+    "id": "telegram-22487",
+    "slug": "soko-part-3-fadouba-oulare",
+    "title": "soko part 3 fadouba oulare",
+    "meter": 3,
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni",
+      "bell",
+      "djembe"
+    ],
+    "description": "Imported from Telegram saved message (2025-09-04).",
+    "author": [],
+    "origin": [],
+    "tags": [
+      "telegram-import"
+    ],
+    "rhythmGroup": [],
+    "swingPattern": "------",
+    "tempo": 160,
+    "signalPattern": "",
+    "published": true,
+    "patterns": [
+      {
+        "id": "dundunba-0",
+        "name": "dundunba",
+        "instrument": "dundunba",
+        "title": "dundunba",
+        "pattern": "o-o--------o",
+        "bars": [
+          "o-o---",
+          "-----o"
+        ]
+      },
+      {
+        "id": "sangban-1",
+        "name": "sangban",
+        "instrument": "sangban",
+        "title": "sangban",
+        "pattern": "-----o-o----",
+        "bars": [
+          "-----o",
+          "-o----"
+        ]
+      },
+      {
+        "id": "kenkeni-2",
+        "name": "kenkeni",
+        "instrument": "kenkeni",
+        "title": "kenkeni",
+        "pattern": "---oo----oo-",
+        "bars": [
+          "---oo-",
+          "---oo-"
+        ]
+      },
+      {
+        "id": "kenkeni2-3",
+        "name": "kenkeni2",
+        "instrument": "kenkeni2",
+        "title": "kenkeni2",
+        "pattern": "--------",
+        "bars": [
+          "------",
+          "------"
+        ]
+      },
+      {
+        "id": "bell-4",
+        "name": "bell",
+        "instrument": "bell",
+        "title": "bell",
+        "pattern": "--------",
+        "bars": [
+          "------",
+          "------"
+        ]
+      },
+      {
+        "id": "djembe-5",
+        "name": "djembe",
+        "instrument": "djembe",
+        "title": "djembe",
+        "pattern": "s-sstt",
+        "bars": [
+          "s-sstt"
+        ]
+      }
+    ],
+    "createdAt": "2025-09-04T16:41:41.000Z",
+    "updatedAt": "2025-09-04T16:41:41.000Z"
+  },
+  {
+    "id": "telegram-23602",
+    "slug": "marakadon-sangban-variations-koza-gada",
+    "title": "marakadon sangban variations koza gada",
+    "meter": 3,
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni",
+      "bell",
+      "djembe"
+    ],
+    "description": "Imported from Telegram saved message (2026-03-07).",
+    "author": [],
+    "origin": [],
+    "tags": [
+      "telegram-import"
+    ],
+    "rhythmGroup": [],
+    "swingPattern": "->->->",
+    "tempo": 140,
+    "signalPattern": "",
+    "published": true,
+    "patterns": [
+      {
+        "id": "dundunba-0",
+        "name": "dundunba",
+        "instrument": "dundunba",
+        "title": "dundunba",
+        "pattern": "o------o-o-o",
+        "bars": [
+          "o-----",
+          "-o-o-o"
+        ]
+      },
+      {
+        "id": "sangban-1",
+        "name": "sangban",
+        "instrument": "sangban",
+        "title": "sangban",
+        "pattern": "--------------oo-o-o--o-oo-o-----oo---oo-o-o--o---------------oo-o-o--o----oo-oo-o-o--o--o--o-o-oo-o-oo-o-o---oo-o-o--o----oo---------oo-o-o--o---o--o--o--o--oo-ooo--o---------------oo-o-o--o---o---o---o---oo-o-o--o-",
+        "bars": [
+          "------",
+          "------",
+          "--oo-o",
+          "-o--o-",
+          "oo-o--",
+          "---oo-",
+          "--oo-o",
+          "-o--o-",
+          "------",
+          "------",
+          "--oo-o",
+          "-o--o-",
+          "---oo-",
+          "oo-o-o",
+          "--o--o",
+          "--o-o-",
+          "oo-o-o",
+          "o-o-o-",
+          "--oo-o",
+          "-o--o-",
+          "---oo-",
+          "------",
+          "--oo-o",
+          "-o--o-",
+          "--o--o",
+          "--o--o",
+          "--oo-o",
+          "oo--o-",
+          "------",
+          "------",
+          "--oo-o",
+          "-o--o-",
+          "--o---",
+          "o---o-",
+          "--oo-o",
+          "-o--o-"
+        ]
+      },
+      {
+        "id": "kenkeni-2",
+        "name": "kenkeni",
+        "instrument": "kenkeni",
+        "title": "kenkeni",
+        "pattern": "---oo-",
+        "bars": [
+          "---oo-"
+        ]
+      },
+      {
+        "id": "kenkeni2-3",
+        "name": "kenkeni2",
+        "instrument": "kenkeni2",
+        "title": "kenkeni2",
+        "pattern": "--o-o-------",
+        "bars": [
+          "--o-o-",
+          "------"
+        ]
+      },
+      {
+        "id": "bell-4",
+        "name": "bell",
+        "instrument": "bell",
+        "title": "bell",
+        "pattern": "x-x-x-x-x-x-x-xx-x-x-xx-xx-x-x-x-xx-x-xx-x-x-xx-x-x-x-x-x-x-x-xx-x-x-xx-xx-xx-xx-x-xx-xx-x-x-xx-xx-x-xx-x-x-x-xx-x-x-xx-xx-xx-x-x-x-x-xx-x-x-xx-x-xx-xx-xx-xx-xx-xxx-xx-x-x-x-x-x-x-x-xx-x-x-xx-x-x-x-x-x-x-x-xx-x-x-xx-",
+        "bars": [
+          "x-x-x-",
+          "x-x-x-",
+          "x-xx-x",
+          "-x-xx-",
+          "xx-x-x",
+          "-x-xx-",
+          "x-xx-x",
+          "-x-xx-",
+          "x-x-x-",
+          "x-x-x-",
+          "x-xx-x",
+          "-x-xx-",
+          "xx-xx-",
+          "xx-x-x",
+          "x-xx-x",
+          "-x-xx-",
+          "xx-x-x",
+          "x-x-x-",
+          "x-xx-x",
+          "-x-xx-",
+          "xx-xx-",
+          "x-x-x-",
+          "x-xx-x",
+          "-x-xx-",
+          "x-xx-x",
+          "x-xx-x",
+          "x-xx-x",
+          "xx-xx-",
+          "x-x-x-",
+          "x-x-x-",
+          "x-xx-x",
+          "-x-xx-",
+          "x-x-x-",
+          "x-x-x-",
+          "x-xx-x",
+          "-x-xx-"
+        ]
+      },
+      {
+        "id": "djembe-5",
+        "name": "djembe",
+        "instrument": "djembe",
+        "title": "djembe",
+        "pattern": "bstbss",
+        "bars": [
+          "bstbss"
+        ]
+      }
+    ],
+    "createdAt": "2026-03-07T22:08:39.000Z",
+    "updatedAt": "2026-03-07T22:08:39.000Z"
+  },
+  {
+    "id": "telegram-23603",
+    "slug": "demosoni-kelen-djembe-solo-ttsss",
+    "title": "demosoni kelen djembe solo |-ttsss|",
+    "meter": 3,
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni",
+      "bell",
+      "djembe"
+    ],
+    "description": "Imported from Telegram saved message (2026-03-08).",
+    "author": [],
+    "origin": [],
+    "tags": [
+      "telegram-import"
+    ],
+    "rhythmGroup": [],
+    "swingPattern": "-<-<-<",
+    "tempo": 120,
+    "signalPattern": "",
+    "published": true,
+    "patterns": [
+      {
+        "id": "dundunba-0",
+        "name": "dundunba",
+        "instrument": "dundunba",
+        "title": "dundunba",
+        "pattern": "o-oo---------------oo-o-",
+        "bars": [
+          "o-oo--",
+          "------",
+          "------",
+          "-oo-o-"
+        ]
+      },
+      {
+        "id": "sangban-1",
+        "name": "sangban",
+        "instrument": "sangban",
+        "title": "sangban",
+        "pattern": "o-----x-x------x-x--o-o-",
+        "bars": [
+          "o-----",
+          "x-x---",
+          "---x-x",
+          "--o-o-"
+        ]
+      },
+      {
+        "id": "kenkeni-2",
+        "name": "kenkeni",
+        "instrument": "kenkeni",
+        "title": "kenkeni",
+        "pattern": "--o-oo",
+        "bars": [
+          "--o-oo"
+        ]
+      },
+      {
+        "id": "kenkeni2-3",
+        "name": "kenkeni2",
+        "instrument": "kenkeni2",
+        "title": "kenkeni2",
+        "pattern": "--------",
+        "bars": [
+          "------",
+          "------"
+        ]
+      },
+      {
+        "id": "bell-4",
+        "name": "bell",
+        "instrument": "bell",
+        "title": "bell",
+        "pattern": "x-xx-xx-x-x-x-xx-x-xx-x-",
+        "bars": [
+          "x-xx-x",
+          "x-x-x-",
+          "x-xx-x",
+          "-xx-x-"
+        ]
+      },
+      {
+        "id": "djembe-5",
+        "name": "djembe",
+        "instrument": "djembe",
+        "title": "djembe",
+        "pattern": "-------------ttsss----------ttss-----ttsss------",
+        "bars": [
+          "------",
+          "------",
+          "-ttsss",
+          "------",
+          "----tt",
+          "ss----",
+          "-ttsss",
+          "------"
+        ]
+      }
+    ],
+    "createdAt": "2026-03-08T20:46:11.000Z",
+    "updatedAt": "2026-03-08T20:46:11.000Z"
+  },
+  {
+    "id": "telegram-24137",
+    "slug": "demosoni-kelen-davide-torti-solo",
+    "title": "demosoni kelen davide torti solo",
+    "meter": 3,
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni",
+      "bell",
+      "djembe"
+    ],
+    "description": "Imported from Telegram saved message (2026-04-23).",
+    "author": [],
+    "origin": [],
+    "tags": [
+      "telegram-import"
+    ],
+    "rhythmGroup": [],
+    "swingPattern": "-<-<-<",
+    "tempo": 130,
+    "signalPattern": "",
+    "published": true,
+    "patterns": [
+      {
+        "id": "dundunba-0",
+        "name": "dundunba",
+        "instrument": "dundunba",
+        "title": "dundunba",
+        "pattern": "o-oo---------------oo-o-",
+        "bars": [
+          "o-oo--",
+          "------",
+          "------",
+          "-oo-o-"
+        ]
+      },
+      {
+        "id": "sangban-1",
+        "name": "sangban",
+        "instrument": "sangban",
+        "title": "sangban",
+        "pattern": "o-----x-x------x-x--o-o-",
+        "bars": [
+          "o-----",
+          "x-x---",
+          "---x-x",
+          "--o-o-"
+        ]
+      },
+      {
+        "id": "kenkeni-2",
+        "name": "kenkeni",
+        "instrument": "kenkeni",
+        "title": "kenkeni",
+        "pattern": "--o-oo",
+        "bars": [
+          "--o-oo"
+        ]
+      },
+      {
+        "id": "kenkeni2-3",
+        "name": "kenkeni2",
+        "instrument": "kenkeni2",
+        "title": "kenkeni2",
+        "pattern": "--------",
+        "bars": [
+          "------",
+          "------"
+        ]
+      },
+      {
+        "id": "bell-4",
+        "name": "bell",
+        "instrument": "bell",
+        "title": "bell",
+        "pattern": "x-xx-xx-x-x-x-xx-x-xx-x-",
+        "bars": [
+          "x-xx-x",
+          "x-x-x-",
+          "x-xx-x",
+          "-xx-x-"
+        ]
+      },
+      {
+        "id": "djembe-5",
+        "name": "djembe",
+        "instrument": "djembe",
+        "title": "djembe",
+        "pattern": "-----------sttsttsttss---------------ttsss----------ttss-----ttsss-----bsbst-t-ss-ss--ss-tt-s-f-s----sssss--------------",
+        "bars": [
+          "------",
+          "-----s",
+          "ttstts",
+          "ttss--",
+          "------",
+          "------",
+          "-ttsss",
+          "------",
+          "----tt",
+          "ss----",
+          "-ttsss",
+          "-----b",
+          "sbst-t",
+          "-ss-ss",
+          "--ss-t",
+          "t-s-f-",
+          "s----s",
+          "ssss--",
+          "------",
+          "------"
+        ]
+      }
+    ],
+    "createdAt": "2026-04-23T20:26:27.000Z",
+    "updatedAt": "2026-04-23T20:26:27.000Z"
+  },
+  {
+    "id": "telegram-24590",
+    "slug": "kon-solo",
+    "title": "Kon solo",
+    "meter": 3,
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni",
+      "bell",
+      "djembe"
+    ],
+    "description": "Imported from Telegram saved message (2026-06-03).",
+    "author": [],
+    "origin": [],
+    "tags": [
+      "telegram-import"
+    ],
+    "rhythmGroup": [],
+    "swingPattern": "------",
+    "tempo": 110,
+    "signalPattern": "",
+    "published": true,
+    "patterns": [
+      {
+        "id": "dundunba-0",
+        "name": "dundunba",
+        "instrument": "dundunba",
+        "title": "dundunba",
+        "pattern": "-------oo-oo",
+        "bars": [
+          "------",
+          "-oo-oo"
+        ]
+      },
+      {
+        "id": "sangban-1",
+        "name": "sangban",
+        "instrument": "sangban",
+        "title": "sangban",
+        "pattern": "x-------o---",
+        "bars": [
+          "x-----",
+          "--o---"
+        ]
+      },
+      {
+        "id": "kenkeni-2",
+        "name": "kenkeni",
+        "instrument": "kenkeni",
+        "title": "kenkeni",
+        "pattern": "--o-oo",
+        "bars": [
+          "--o-oo"
+        ]
+      },
+      {
+        "id": "kenkeni2-3",
+        "name": "kenkeni2",
+        "instrument": "kenkeni2",
+        "title": "kenkeni2",
+        "pattern": "--------",
+        "bars": [
+          "------",
+          "------"
+        ]
+      },
+      {
+        "id": "bell-4",
+        "name": "bell",
+        "instrument": "bell",
+        "title": "bell",
+        "pattern": "--------",
+        "bars": [
+          "------",
+          "------"
+        ]
+      },
+      {
+        "id": "djembe-5",
+        "name": "djembe",
+        "instrument": "djembe",
+        "title": "djembe",
+        "pattern": "tts-s-s-ststs-s-ststs-s-tts-s-s-tt-sttss-sttss-sttsttsttss-stts-s-s-s--sssssts------",
+        "bars": [
+          "tts-s-",
+          "s-stst",
+          "s-s-st",
+          "sts-s-",
+          "tts-s-",
+          "s-tt-s",
+          "ttss-s",
+          "ttss-s",
+          "ttstts",
+          "ttss-s",
+          "tts-s-",
+          "s-s--s",
+          "ssssts",
+          "------"
+        ]
+      }
+    ],
+    "createdAt": "2026-06-02T22:02:16.000Z",
+    "updatedAt": "2026-06-02T22:02:16.000Z"
+  }
+]

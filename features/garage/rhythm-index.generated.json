@@ -1,15 +1,332 @@
 [
   {
+    "slug": "kon-solo",
+    "title": "Kon solo",
+    "description": "Imported from Telegram saved message (2026-06-03).",
+    "meter": 3,
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni",
+      "bell",
+      "djembe"
+    ],
+    "longestTrack": 14,
+    "author": [],
+    "origin": [],
+    "tags": [
+      "telegram-import"
+    ],
+    "rhythmGroup": [],
+    "swingPattern": "------",
+    "tempo": 110,
+    "signalPattern": "",
+    "createdAt": 1780437736000,
+    "updatedAt": 1780437736000,
+    "userOwned": false
+  },
+  {
+    "slug": "demosoni-kelen-davide-torti-solo",
+    "title": "demosoni kelen davide torti solo",
+    "description": "Imported from Telegram saved message (2026-04-23).",
+    "meter": 3,
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni",
+      "bell",
+      "djembe"
+    ],
+    "longestTrack": 20,
+    "author": [],
+    "origin": [],
+    "tags": [
+      "telegram-import"
+    ],
+    "rhythmGroup": [],
+    "swingPattern": "-<-<-<",
+    "tempo": 130,
+    "signalPattern": "",
+    "createdAt": 1776975987000,
+    "updatedAt": 1776975987000,
+    "userOwned": false
+  },
+  {
+    "slug": "demosoni-kelen-djembe-solo-ttsss",
+    "title": "demosoni kelen djembe solo |-ttsss|",
+    "description": "Imported from Telegram saved message (2026-03-08).",
+    "meter": 3,
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni",
+      "bell",
+      "djembe"
+    ],
+    "longestTrack": 8,
+    "author": [],
+    "origin": [],
+    "tags": [
+      "telegram-import"
+    ],
+    "rhythmGroup": [],
+    "swingPattern": "-<-<-<",
+    "tempo": 120,
+    "signalPattern": "",
+    "createdAt": 1773002771000,
+    "updatedAt": 1773002771000,
+    "userOwned": false
+  },
+  {
+    "slug": "marakadon-sangban-variations-koza-gada",
+    "title": "marakadon sangban variations koza gada",
+    "description": "Imported from Telegram saved message (2026-03-07).",
+    "meter": 3,
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni",
+      "bell",
+      "djembe"
+    ],
+    "longestTrack": 36,
+    "author": [],
+    "origin": [],
+    "tags": [
+      "telegram-import"
+    ],
+    "rhythmGroup": [],
+    "swingPattern": "->->->",
+    "tempo": 140,
+    "signalPattern": "",
+    "createdAt": 1772921319000,
+    "updatedAt": 1772921319000,
+    "userOwned": false
+  },
+  {
+    "slug": "soko-part-3-fadouba-oulare",
+    "title": "soko part 3 fadouba oulare",
+    "description": "Imported from Telegram saved message (2025-09-04).",
+    "meter": 3,
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni",
+      "bell",
+      "djembe"
+    ],
+    "longestTrack": 2,
+    "author": [],
+    "origin": [],
+    "tags": [
+      "telegram-import"
+    ],
+    "rhythmGroup": [],
+    "swingPattern": "------",
+    "tempo": 160,
+    "signalPattern": "",
+    "createdAt": 1757004101000,
+    "updatedAt": 1757004101000,
+    "userOwned": false
+  },
+  {
+    "slug": "bada-dundunba-variations",
+    "title": "bada dundunba variations",
+    "description": "Imported from Telegram saved message (2025-07-01).",
+    "meter": 3,
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni",
+      "bell",
+      "djembe"
+    ],
+    "longestTrack": 48,
+    "author": [],
+    "origin": [],
+    "tags": [
+      "telegram-import"
+    ],
+    "rhythmGroup": [],
+    "swingPattern": "------",
+    "tempo": 120,
+    "signalPattern": "",
+    "createdAt": 1751374093000,
+    "updatedAt": 1751374093000,
+    "userOwned": false
+  },
+  {
+    "slug": "sorsornet-2",
+    "title": "sorsornet",
+    "description": "Imported from Telegram saved message (2025-06-28).",
+    "meter": 3,
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni",
+      "djembe"
+    ],
+    "longestTrack": 4,
+    "author": [],
+    "origin": [],
+    "tags": [
+      "telegram-import"
+    ],
+    "rhythmGroup": [],
+    "swingPattern": "------",
+    "tempo": 130,
+    "signalPattern": "",
+    "createdAt": 1751069032000,
+    "updatedAt": 1751069032000,
+    "userOwned": false
+  },
+  {
+    "slug": "kononari",
+    "title": "kononari",
+    "description": "Imported from Telegram saved message (2025-05-25).",
+    "meter": 4,
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni",
+      "bell"
+    ],
+    "longestTrack": 2,
+    "author": [],
+    "origin": [],
+    "tags": [
+      "telegram-import"
+    ],
+    "rhythmGroup": [],
+    "swingPattern": "--------",
+    "tempo": 97,
+    "signalPattern": "",
+    "createdAt": 1748186433000,
+    "updatedAt": 1748186433000,
+    "userOwned": false
+  },
+  {
+    "slug": "konkoba-2-solo",
+    "title": "konkoba 2 solo",
+    "description": "Imported from Telegram saved message (2025-05-22).",
+    "meter": 3,
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni",
+      "djembe"
+    ],
+    "longestTrack": 54,
+    "author": [],
+    "origin": [],
+    "tags": [
+      "telegram-import"
+    ],
+    "rhythmGroup": [],
+    "swingPattern": "-<-<-<",
+    "tempo": 135,
+    "signalPattern": "",
+    "createdAt": 1747947879000,
+    "updatedAt": 1747947879000,
+    "userOwned": false
+  },
+  {
+    "slug": "untitled-2025-02-15",
+    "title": "Untitled 2025-02-15",
+    "description": "Imported from Telegram saved message (2025-02-15).",
+    "meter": 4,
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni",
+      "bell",
+      "djembe"
+    ],
+    "longestTrack": 28,
+    "author": [],
+    "origin": [],
+    "tags": [
+      "telegram-import"
+    ],
+    "rhythmGroup": [],
+    "swingPattern": "->->->->",
+    "tempo": 100,
+    "signalPattern": "f-tt-t-tt-t-t---",
+    "createdAt": 1739576210000,
+    "updatedAt": 1739576210000,
+    "userOwned": false
+  },
+  {
+    "slug": "balakulandjan-sangban-solo",
+    "title": "balakulandjan sangban solo",
+    "description": "Imported from Telegram saved message (2025-02-14).",
+    "meter": 4,
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni",
+      "djembe"
+    ],
+    "longestTrack": 20,
+    "author": [],
+    "origin": [],
+    "tags": [
+      "telegram-import"
+    ],
+    "rhythmGroup": [],
+    "swingPattern": "->->->->",
+    "tempo": 90,
+    "signalPattern": "f-tt-t-tt-t-t---",
+    "createdAt": 1739572853000,
+    "updatedAt": 1739572853000,
+    "userOwned": false
+  },
+  {
+    "slug": "dunungbe-kon-wariacje",
+    "title": "dunungbe kon wariacje",
+    "description": "Imported from Telegram saved message (2025-02-14).",
+    "meter": 3,
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni",
+      "bell",
+      "djembe"
+    ],
+    "longestTrack": 48,
+    "author": [],
+    "origin": [],
+    "tags": [
+      "telegram-import"
+    ],
+    "rhythmGroup": [],
+    "swingPattern": "-<-<-<",
+    "tempo": 120,
+    "signalPattern": "",
+    "createdAt": 1739532080000,
+    "updatedAt": 1739532080000,
+    "userOwned": false
+  },
+  {
     "slug": "wassolon-soboninkun-variation",
     "title": "Wassolon Soboninkun Variation",
     "description": "",
     "meter": 4,
-    "instruments": ["sangban", "kenkeni", "bell"],
+    "instruments": [
+      "sangban",
+      "kenkeni",
+      "bell"
+    ],
     "longestTrack": 8,
     "author": [],
-    "origin": ["wassolon", "kassonke"],
+    "origin": [
+      "wassolon",
+      "kassonke"
+    ],
     "tags": [],
-    "rhythmGroup": ["soboninkun"],
+    "rhythmGroup": [
+      "soboninkun"
+    ],
     "swingPattern": "--------",
     "tempo": 125,
     "signalPattern": "",
@@ -18,16 +335,99 @@
     "userOwned": false
   },
   {
+    "slug": "konowoulen",
+    "title": "konowoulen",
+    "description": "Imported from Telegram saved message (2024-11-04).",
+    "meter": 3,
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni",
+      "bell",
+      "djembe"
+    ],
+    "longestTrack": 32,
+    "author": [],
+    "origin": [],
+    "tags": [
+      "telegram-import"
+    ],
+    "rhythmGroup": [],
+    "swingPattern": "------",
+    "tempo": 130,
+    "signalPattern": "sstsss------------------sstsss------------------",
+    "createdAt": 1730676989000,
+    "updatedAt": 1730676989000,
+    "userOwned": false
+  },
+  {
+    "slug": "soli-chauffe",
+    "title": "soli chauffe",
+    "description": "Imported from Telegram saved message (2024-10-28).",
+    "meter": 3,
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni"
+    ],
+    "longestTrack": 20,
+    "author": [],
+    "origin": [],
+    "tags": [
+      "telegram-import"
+    ],
+    "rhythmGroup": [],
+    "swingPattern": "------",
+    "tempo": 150,
+    "signalPattern": "",
+    "createdAt": 1730152461000,
+    "updatedAt": 1730152461000,
+    "userOwned": false
+  },
+  {
+    "slug": "sorsornet",
+    "title": "sorsornet",
+    "description": "Imported from Telegram saved message (2024-10-10).",
+    "meter": 3,
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni",
+      "djembe"
+    ],
+    "longestTrack": 32,
+    "author": [],
+    "origin": [],
+    "tags": [
+      "telegram-import"
+    ],
+    "rhythmGroup": [],
+    "swingPattern": "------",
+    "tempo": 130,
+    "signalPattern": "",
+    "createdAt": 1728580158000,
+    "updatedAt": 1728580158000,
+    "userOwned": false
+  },
+  {
     "slug": "let-s-call-it-segefoli",
     "title": "Shemufoli",
     "description": "Learned from Thomas Guei.",
     "meter": 4,
-    "instruments": ["dundunba", "sangban", "kenkeni", "bell", "djembe"],
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni",
+      "bell",
+      "djembe"
+    ],
     "longestTrack": 8,
     "author": [],
     "origin": [],
     "tags": [],
-    "rhythmGroup": ["shemufoli"],
+    "rhythmGroup": [
+      "shemufoli"
+    ],
     "swingPattern": "--------",
     "tempo": 115,
     "signalPattern": "ttsttstts-tsttsbttsttstts-bstts-f-tt-f-tt-f-f--btttbtttbtttbtttb",
@@ -36,16 +436,100 @@
     "userOwned": false
   },
   {
+    "slug": "demosoni-bada",
+    "title": "demosoni + bada",
+    "description": "Imported from Telegram saved message (2024-09-22).",
+    "meter": 3,
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni",
+      "djembe"
+    ],
+    "longestTrack": 72,
+    "author": [],
+    "origin": [],
+    "tags": [
+      "telegram-import"
+    ],
+    "rhythmGroup": [],
+    "swingPattern": "-<-<-<",
+    "tempo": 120,
+    "signalPattern": "",
+    "createdAt": 1727022034000,
+    "updatedAt": 1727022034000,
+    "userOwned": false
+  },
+  {
+    "slug": "bada",
+    "title": "bada",
+    "description": "Imported from Telegram saved message (2024-09-13).",
+    "meter": 3,
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni",
+      "djembe"
+    ],
+    "longestTrack": 28,
+    "author": [],
+    "origin": [],
+    "tags": [
+      "telegram-import"
+    ],
+    "rhythmGroup": [],
+    "swingPattern": "-<-<-<",
+    "tempo": 130,
+    "signalPattern": "",
+    "createdAt": 1726228203000,
+    "updatedAt": 1726228203000,
+    "userOwned": false
+  },
+  {
+    "slug": "untitled-2024-09-02",
+    "title": "Untitled 2024-09-02",
+    "description": "Imported from Telegram saved message (2024-09-02).",
+    "meter": 3,
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni",
+      "djembe"
+    ],
+    "longestTrack": 60,
+    "author": [],
+    "origin": [],
+    "tags": [
+      "telegram-import"
+    ],
+    "rhythmGroup": [],
+    "swingPattern": "-<-<-<",
+    "tempo": 118,
+    "signalPattern": "",
+    "createdAt": 1725312528000,
+    "updatedAt": 1725312528000,
+    "userOwned": false
+  },
+  {
     "slug": "sinte",
     "title": "Sinte",
     "description": "A non-traditional sinte arrangement.",
     "meter": 4,
-    "instruments": ["dundunba", "sangban", "kenkeni", "djembe"],
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni",
+      "djembe"
+    ],
     "longestTrack": 8,
     "author": [],
     "origin": [],
-    "tags": ["variations"],
-    "rhythmGroup": ["sinte"],
+    "tags": [
+      "variations"
+    ],
+    "rhythmGroup": [
+      "sinte"
+    ],
     "swingPattern": "--------",
     "tempo": 110,
     "signalPattern": "s---f--tss-ss-f-tt-tt---",
@@ -58,12 +542,25 @@
     "title": "Lamban",
     "description": "Transcription of lamban by Drissa Kone (Mali). Originally played on 2 khassonke dunduns.\n\nPay attention to the djembe accompaniment - it's a shifted passport accompaniment: |s--ss-tt| -> |tts--ss-|.",
     "meter": 4,
-    "instruments": ["dundunba", "sangban", "bell", "djembe"],
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "bell",
+      "djembe"
+    ],
     "longestTrack": 4,
-    "author": ["Drissa Kone"],
-    "origin": ["kassonke"],
+    "author": [
+      "Drissa Kone"
+    ],
+    "origin": [
+      "kassonke"
+    ],
     "tags": [],
-    "rhythmGroup": ["lamban", "sandia", "djelidon"],
+    "rhythmGroup": [
+      "lamban",
+      "sandia",
+      "djelidon"
+    ],
     "swingPattern": "--------",
     "tempo": 110,
     "signalPattern": "--f-t-t-t-ttss--",
@@ -72,16 +569,74 @@
     "userOwned": false
   },
   {
+    "slug": "thomas-segefoli",
+    "title": "thomas segefoli",
+    "description": "Imported from Telegram saved message (2024-08-12).",
+    "meter": 4,
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni",
+      "bell",
+      "djembe"
+    ],
+    "longestTrack": 8,
+    "author": [],
+    "origin": [],
+    "tags": [
+      "telegram-import"
+    ],
+    "rhythmGroup": [],
+    "swingPattern": "--------",
+    "tempo": 110,
+    "signalPattern": "ss--f--btttbtttbtttbtttb",
+    "createdAt": 1723482071000,
+    "updatedAt": 1723482071000,
+    "userOwned": false
+  },
+  {
+    "slug": "wolosodon",
+    "title": "wolosodon",
+    "description": "Imported from Telegram saved message (2024-06-22).",
+    "meter": 3,
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni",
+      "bell",
+      "djembe"
+    ],
+    "longestTrack": 4,
+    "author": [],
+    "origin": [],
+    "tags": [
+      "telegram-import"
+    ],
+    "rhythmGroup": [],
+    "swingPattern": "------",
+    "tempo": 140,
+    "signalPattern": "",
+    "createdAt": 1719084336000,
+    "updatedAt": 1719084336000,
+    "userOwned": false
+  },
+  {
     "slug": "madan-sangban",
     "title": "Madan sangban",
     "description": "",
     "meter": 4,
-    "instruments": ["sangban", "bell"],
+    "instruments": [
+      "sangban",
+      "bell"
+    ],
     "longestTrack": 2,
     "author": [],
     "origin": [],
     "tags": [],
-    "rhythmGroup": ["madan", "djagbe"],
+    "rhythmGroup": [
+      "madan",
+      "djagbe"
+    ],
     "swingPattern": "->->->->",
     "tempo": 110,
     "signalPattern": "",
@@ -94,12 +649,18 @@
     "title": "djansa sangban",
     "description": "Sangban pattern for djansa",
     "meter": 4,
-    "instruments": ["sangban", "kenkeni", "bell"],
+    "instruments": [
+      "sangban",
+      "kenkeni",
+      "bell"
+    ],
     "longestTrack": 2,
     "author": [],
     "origin": [],
     "tags": [],
-    "rhythmGroup": ["djansa"],
+    "rhythmGroup": [
+      "djansa"
+    ],
     "swingPattern": "->->->->",
     "tempo": 110,
     "signalPattern": "",
@@ -112,12 +673,17 @@
     "title": "soli sangban",
     "description": "",
     "meter": 3,
-    "instruments": ["sangban", "bell"],
+    "instruments": [
+      "sangban",
+      "bell"
+    ],
     "longestTrack": 2,
     "author": [],
     "origin": [],
     "tags": [],
-    "rhythmGroup": ["soli"],
+    "rhythmGroup": [
+      "soli"
+    ],
     "swingPattern": "-<-<-<",
     "tempo": 130,
     "signalPattern": "",
@@ -130,12 +696,18 @@
     "title": "Sangban for madan (variation)",
     "description": "The last sound of the 2nd bar (muted stroke) is played slightly faster in this variation. Bell pattern has been adjusted to avoid triple strokes.",
     "meter": 4,
-    "instruments": ["sangban", "bell"],
+    "instruments": [
+      "sangban",
+      "bell"
+    ],
     "longestTrack": 2,
     "author": [],
     "origin": [],
     "tags": [],
-    "rhythmGroup": ["madan", "djagbe"],
+    "rhythmGroup": [
+      "madan",
+      "djagbe"
+    ],
     "swingPattern": "->->->->",
     "tempo": 110,
     "signalPattern": "",
@@ -148,12 +720,21 @@
     "title": "Didadi - short groove for dundun set",
     "description": "",
     "meter": 4,
-    "instruments": ["dundunba", "sangban", "kenkeni", "djembe"],
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni",
+      "djembe"
+    ],
     "longestTrack": 2,
     "author": [],
     "origin": [],
-    "tags": ["short loop"],
-    "rhythmGroup": ["didadi"],
+    "tags": [
+      "short loop"
+    ],
+    "rhythmGroup": [
+      "didadi"
+    ],
     "swingPattern": "->->->->",
     "tempo": 110,
     "signalPattern": "",
@@ -162,16 +743,125 @@
     "userOwned": false
   },
   {
+    "slug": "skankamba-krakarala-krowodkan-debnikon-wis-odon",
+    "title": "skankamba, krakarala, krowodkan, dębnikon, wisłodon",
+    "description": "Imported from Telegram saved message (2024-06-13).",
+    "meter": 4,
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni"
+    ],
+    "longestTrack": 4,
+    "author": [],
+    "origin": [],
+    "tags": [
+      "telegram-import"
+    ],
+    "rhythmGroup": [],
+    "swingPattern": "->->->->",
+    "tempo": 110,
+    "signalPattern": "bttttttt",
+    "createdAt": 1718231672000,
+    "updatedAt": 1718231672000,
+    "userOwned": false
+  },
+  {
+    "slug": "untitled-2024-05-20",
+    "title": "Untitled 2024-05-20",
+    "description": "Imported from Telegram saved message (2024-05-20).",
+    "meter": 3,
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni",
+      "bell",
+      "djembe"
+    ],
+    "longestTrack": 12,
+    "author": [],
+    "origin": [],
+    "tags": [
+      "telegram-import"
+    ],
+    "rhythmGroup": [],
+    "swingPattern": "-<-<-<",
+    "tempo": 110,
+    "signalPattern": "sstsss------------------------------------------------------------------",
+    "createdAt": 1716220044000,
+    "updatedAt": 1716220044000,
+    "userOwned": false
+  },
+  {
+    "slug": "untitled-2024-05-19",
+    "title": "Untitled 2024-05-19",
+    "description": "Imported from Telegram saved message (2024-05-19).",
+    "meter": 4,
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni"
+    ],
+    "longestTrack": 4,
+    "author": [],
+    "origin": [],
+    "tags": [
+      "telegram-import"
+    ],
+    "rhythmGroup": [],
+    "swingPattern": "--------",
+    "tempo": 110,
+    "signalPattern": "f-tt-t-tt-t-t---",
+    "createdAt": 1716146177000,
+    "updatedAt": 1716146177000,
+    "userOwned": false
+  },
+  {
+    "slug": "untitled-2024-03-24",
+    "title": "Untitled 2024-03-24",
+    "description": "Imported from Telegram saved message (2024-03-24).",
+    "meter": 3,
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni",
+      "bell",
+      "djembe"
+    ],
+    "longestTrack": 16,
+    "author": [],
+    "origin": [],
+    "tags": [
+      "telegram-import"
+    ],
+    "rhythmGroup": [],
+    "swingPattern": "->->->",
+    "tempo": 110,
+    "signalPattern": "ttttt-tt-t--",
+    "createdAt": 1711302378000,
+    "updatedAt": 1711302378000,
+    "userOwned": false
+  },
+  {
     "slug": "gine-fare-intro-from-moribaya",
     "title": "Gine Fare Intro from Moribaya",
     "description": "",
     "meter": 3,
-    "instruments": ["dundunba", "kenkeni", "djembe"],
+    "instruments": [
+      "dundunba",
+      "kenkeni",
+      "djembe"
+    ],
     "longestTrack": 20,
     "author": [],
     "origin": [],
-    "tags": ["intro", "break"],
-    "rhythmGroup": ["gine fare"],
+    "tags": [
+      "intro",
+      "break"
+    ],
+    "rhythmGroup": [
+      "gine fare"
+    ],
     "swingPattern": "-<-<-<",
     "tempo": 140,
     "signalPattern": "",
@@ -184,12 +874,19 @@
     "title": "N'goron",
     "description": "",
     "meter": 4,
-    "instruments": ["dundunba", "sangban", "kenkeni", "djembe"],
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni",
+      "djembe"
+    ],
     "longestTrack": 4,
     "author": [],
     "origin": [],
     "tags": [],
-    "rhythmGroup": ["ngoron"],
+    "rhythmGroup": [
+      "ngoron"
+    ],
     "swingPattern": "--------",
     "tempo": 110,
     "signalPattern": "",
@@ -202,12 +899,18 @@
     "title": "Konkoba dundun set",
     "description": "An interesting 9/8 polirhythm. Sangban phrase has length of 3 beats, dundunba - 6 beats and kenkeni only 2 beats (kenkeni is 6/8 here). That means the rhythm loop consists of 1 dundunba phrase, 2 sangban phrases and 3 kenkeni phrases.",
     "meter": 3,
-    "instruments": ["dundunba", "sangban", "kenkeni"],
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni"
+    ],
     "longestTrack": 3,
     "author": [],
     "origin": [],
     "tags": [],
-    "rhythmGroup": ["konkoba"],
+    "rhythmGroup": [
+      "konkoba"
+    ],
     "swingPattern": "-<-<-<",
     "tempo": 160,
     "signalPattern": "",
@@ -220,12 +923,21 @@
     "title": "Kon (dunungbe)",
     "description": "Traditionally played as first in a dununba sequence.",
     "meter": 3,
-    "instruments": ["dundunba", "sangban", "kenkeni", "djembe"],
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni",
+      "djembe"
+    ],
     "longestTrack": 4,
     "author": [],
     "origin": [],
     "tags": [],
-    "rhythmGroup": ["kon", "dunungbe", "dunumba"],
+    "rhythmGroup": [
+      "kon",
+      "dunungbe",
+      "dunumba"
+    ],
     "swingPattern": "-<-<-<",
     "tempo": 110,
     "signalPattern": "sstsss------",
@@ -238,12 +950,20 @@
     "title": "Djaa",
     "description": "Sometimes spelled as dja.",
     "meter": 3,
-    "instruments": ["dundunba", "sangban", "kenkeni", "bell", "djembe"],
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni",
+      "bell",
+      "djembe"
+    ],
     "longestTrack": 16,
     "author": [],
     "origin": [],
     "tags": [],
-    "rhythmGroup": ["djaa"],
+    "rhythmGroup": [
+      "djaa"
+    ],
     "swingPattern": "->->->",
     "tempo": 130,
     "signalPattern": "ttttt-tt-t--",
@@ -256,12 +976,23 @@
     "title": "Maane groove",
     "description": "",
     "meter": 3,
-    "instruments": ["dundunba", "sangban", "kenkeni", "djembe"],
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni",
+      "djembe"
+    ],
     "longestTrack": 4,
     "author": [],
-    "origin": ["susu"],
-    "tags": ["maane"],
-    "rhythmGroup": ["mane"],
+    "origin": [
+      "susu"
+    ],
+    "tags": [
+      "maane"
+    ],
+    "rhythmGroup": [
+      "mane"
+    ],
     "swingPattern": "-<-<-<",
     "tempo": 140,
     "signalPattern": "--fsss-tts--",
@@ -274,12 +1005,22 @@
     "title": "Gine Fare Groove",
     "description": "",
     "meter": 3,
-    "instruments": ["dundunba", "sangban", "kenkeni", "djembe"],
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni",
+      "djembe"
+    ],
     "longestTrack": 16,
     "author": [],
-    "origin": ["susu"],
+    "origin": [
+      "susu"
+    ],
     "tags": [],
-    "rhythmGroup": ["gine fare", "yogui"],
+    "rhythmGroup": [
+      "gine fare",
+      "yogui"
+    ],
     "swingPattern": "-<-<-<",
     "tempo": 180,
     "signalPattern": "ttt-sss--tttt-t-t-t-tt--",
@@ -292,12 +1033,19 @@
     "title": "djansa dundun set",
     "description": "Dun dun set arrangement",
     "meter": 4,
-    "instruments": ["dundunba", "sangban", "kenkeni", "djembe"],
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni",
+      "djembe"
+    ],
     "longestTrack": 4,
     "author": [],
     "origin": [],
     "tags": [],
-    "rhythmGroup": ["djansa"],
+    "rhythmGroup": [
+      "djansa"
+    ],
     "swingPattern": "->->->->",
     "tempo": 125,
     "signalPattern": "",
@@ -310,12 +1058,20 @@
     "title": "Balkulandjan sangban jam",
     "description": "Example sangban variations.",
     "meter": 4,
-    "instruments": ["dundunba", "sangban", "bell"],
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "bell"
+    ],
     "longestTrack": 8,
     "author": [],
     "origin": [],
-    "tags": ["jam"],
-    "rhythmGroup": ["balakulandjan"],
+    "tags": [
+      "jam"
+    ],
+    "rhythmGroup": [
+      "balakulandjan"
+    ],
     "swingPattern": "--------",
     "tempo": 110,
     "signalPattern": "",
@@ -328,11 +1084,18 @@
     "title": "The Last Break",
     "description": "A common thank-you phrase.",
     "meter": 4,
-    "instruments": ["sangban", "kenkeni"],
+    "instruments": [
+      "sangban",
+      "kenkeni"
+    ],
     "longestTrack": 4,
     "author": [],
     "origin": [],
-    "tags": ["break", "outro", "popular"],
+    "tags": [
+      "break",
+      "outro",
+      "popular"
+    ],
     "rhythmGroup": [],
     "swingPattern": "->->->->",
     "tempo": 80,
@@ -346,12 +1109,19 @@
     "title": "Marakadon",
     "description": "",
     "meter": 3,
-    "instruments": ["dundunba", "sangban", "kenkeni"],
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni"
+    ],
     "longestTrack": 2,
     "author": [],
     "origin": [],
     "tags": [],
-    "rhythmGroup": ["marakadon", "fula fare"],
+    "rhythmGroup": [
+      "marakadon",
+      "fula fare"
+    ],
     "swingPattern": "->->->",
     "tempo": 120,
     "signalPattern": "",
@@ -364,12 +1134,21 @@
     "title": "Dunumba intro",
     "description": "A popular break for dunumba rhythms sequence. Usually played at the beginning. As always there are multiple variations and this is just one of them. I added the kenkeni phrase at the end just for reference.",
     "meter": 3,
-    "instruments": ["dundunba", "sangban", "kenkeni"],
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni"
+    ],
     "longestTrack": 16,
     "author": [],
     "origin": [],
-    "tags": ["intro", "break"],
-    "rhythmGroup": ["dunumba"],
+    "tags": [
+      "intro",
+      "break"
+    ],
+    "rhythmGroup": [
+      "dunumba"
+    ],
     "swingPattern": "-<-<-<",
     "tempo": 110,
     "signalPattern": "",
@@ -382,12 +1161,19 @@
     "title": "Denaben Dundun or Lafe",
     "description": "",
     "meter": 4,
-    "instruments": ["dundunba", "sangban", "kenkeni"],
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni"
+    ],
     "longestTrack": 8,
     "author": [],
     "origin": [],
     "tags": [],
-    "rhythmGroup": ["denaben", "lafe"],
+    "rhythmGroup": [
+      "denaben",
+      "lafe"
+    ],
     "swingPattern": "->->->->",
     "tempo": 110,
     "signalPattern": "f-tt-t-tt-ttt---",
@@ -400,12 +1186,19 @@
     "title": "djagbe dundun set",
     "description": "",
     "meter": 4,
-    "instruments": ["dundunba", "sangban", "kenkeni"],
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni"
+    ],
     "longestTrack": 2,
     "author": [],
     "origin": [],
     "tags": [],
-    "rhythmGroup": ["djagbe", "madan"],
+    "rhythmGroup": [
+      "djagbe",
+      "madan"
+    ],
     "swingPattern": "->->->->",
     "tempo": 100,
     "signalPattern": "",
@@ -418,12 +1211,18 @@
     "title": "Toro dundun set",
     "description": "You can try flexing and playing the last bar as noted, but I recommend just ignoring the kenkeni part there.",
     "meter": 4,
-    "instruments": ["dundunba", "sangban", "kenkeni"],
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni"
+    ],
     "longestTrack": 4,
     "author": [],
     "origin": [],
     "tags": [],
-    "rhythmGroup": ["toro"],
+    "rhythmGroup": [
+      "toro"
+    ],
     "swingPattern": "--------",
     "tempo": 110,
     "signalPattern": "",
@@ -436,12 +1235,18 @@
     "title": "Zaouli",
     "description": "",
     "meter": 4,
-    "instruments": ["dundunba", "sangban", "kenkeni"],
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni"
+    ],
     "longestTrack": 2,
     "author": [],
     "origin": [],
     "tags": [],
-    "rhythmGroup": ["zaouli"],
+    "rhythmGroup": [
+      "zaouli"
+    ],
     "swingPattern": "--------",
     "tempo": 135,
     "signalPattern": "t--t---t--t--t--",
@@ -454,12 +1259,17 @@
     "title": "Kawa",
     "description": "Crazy one, really.",
     "meter": 3,
-    "instruments": ["sangban", "kenkeni"],
+    "instruments": [
+      "sangban",
+      "kenkeni"
+    ],
     "longestTrack": 4,
     "author": [],
     "origin": [],
     "tags": [],
-    "rhythmGroup": ["kawa"],
+    "rhythmGroup": [
+      "kawa"
+    ],
     "swingPattern": "-<-<-<",
     "tempo": 140,
     "signalPattern": "",
@@ -472,12 +1282,19 @@
     "title": "kassa dibon dundun set",
     "description": "",
     "meter": 4,
-    "instruments": ["kenkeni", "sangban", "dundunba"],
+    "instruments": [
+      "kenkeni",
+      "sangban",
+      "dundunba"
+    ],
     "longestTrack": 4,
     "author": [],
     "origin": [],
     "tags": [],
-    "rhythmGroup": ["kassa", "dibon"],
+    "rhythmGroup": [
+      "kassa",
+      "dibon"
+    ],
     "swingPattern": "->->->->",
     "tempo": 110,
     "signalPattern": "",
@@ -490,12 +1307,20 @@
     "title": "Soli dundun set",
     "description": "Soli is quite dense rhythm. And quite fast (that's why it's called \"soli rapide\"). When played on dundun set we simplify the melody to make it easier for dundunfola to play. With increasing tempo you may need to simplify it even more - I do that by removing double strokes in dundunba and kenkeni parts.",
     "meter": 3,
-    "instruments": ["sangban", "dundunba", "kenkeni"],
+    "instruments": [
+      "sangban",
+      "dundunba",
+      "kenkeni"
+    ],
     "longestTrack": 2,
     "author": [],
     "origin": [],
-    "tags": ["rapide"],
-    "rhythmGroup": ["soli"],
+    "tags": [
+      "rapide"
+    ],
+    "rhythmGroup": [
+      "soli"
+    ],
     "swingPattern": "-<-<-<",
     "tempo": 130,
     "signalPattern": "",
@@ -508,12 +1333,18 @@
     "title": "Soko dundun set",
     "description": "",
     "meter": 3,
-    "instruments": ["dundunba", "sangban", "kenkeni"],
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni"
+    ],
     "longestTrack": 4,
     "author": [],
     "origin": [],
     "tags": [],
-    "rhythmGroup": ["soko"],
+    "rhythmGroup": [
+      "soko"
+    ],
     "swingPattern": "->->->",
     "tempo": 140,
     "signalPattern": "",
@@ -526,12 +1357,19 @@
     "title": "soko (fast)",
     "description": "A pattern that you can play at the very fast tempo.",
     "meter": 3,
-    "instruments": ["dundunba", "sangban"],
+    "instruments": [
+      "dundunba",
+      "sangban"
+    ],
     "longestTrack": 2,
     "author": [],
     "origin": [],
-    "tags": ["rapide"],
-    "rhythmGroup": ["soko"],
+    "tags": [
+      "rapide"
+    ],
+    "rhythmGroup": [
+      "soko"
+    ],
     "swingPattern": "------",
     "tempo": 180,
     "signalPattern": "ttttt-tt-t--",
@@ -544,12 +1382,21 @@
     "title": "madan by Drissa Kone Quartett",
     "description": "Transcription of madan by Drissa Kone team. (source: https://www.youtube.com/watch?v=I3_IqLLV70k)",
     "meter": 4,
-    "instruments": ["kenkeni", "sangban"],
+    "instruments": [
+      "kenkeni",
+      "sangban"
+    ],
     "longestTrack": 2,
-    "author": ["Drissa Kone"],
-    "origin": ["kassonke"],
+    "author": [
+      "Drissa Kone"
+    ],
+    "origin": [
+      "kassonke"
+    ],
     "tags": [],
-    "rhythmGroup": ["madan"],
+    "rhythmGroup": [
+      "madan"
+    ],
     "swingPattern": "->->->->",
     "tempo": 105,
     "signalPattern": "",
@@ -562,12 +1409,20 @@
     "title": "Kudani",
     "description": "A modern rhythm composed by Mamady Keita",
     "meter": 4,
-    "instruments": ["dundunba", "sangban", "kenkeni"],
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni"
+    ],
     "longestTrack": 2,
-    "author": ["Mamady Keita"],
+    "author": [
+      "Mamady Keita"
+    ],
     "origin": [],
     "tags": [],
-    "rhythmGroup": ["kudani"],
+    "rhythmGroup": [
+      "kudani"
+    ],
     "swingPattern": "->->->->",
     "tempo": 110,
     "signalPattern": "",
@@ -580,12 +1435,19 @@
     "title": "Mendiani for set",
     "description": "",
     "meter": 3,
-    "instruments": ["dundunba", "sangban", "kenkeni", "bell"],
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni",
+      "bell"
+    ],
     "longestTrack": 2,
     "author": [],
     "origin": [],
     "tags": [],
-    "rhythmGroup": ["mendiani"],
+    "rhythmGroup": [
+      "mendiani"
+    ],
     "swingPattern": "-<-<-<",
     "tempo": 110,
     "signalPattern": "f-ss-tsstss-",
@@ -598,12 +1460,21 @@
     "title": "Soboninkun",
     "description": "Other names: sobonikun, sogonikun, sogoninkun.",
     "meter": 4,
-    "instruments": ["dundunba", "sangban", "kenkeni", "djembe"],
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni",
+      "djembe"
+    ],
     "longestTrack": 2,
     "author": [],
-    "origin": ["wassolon"],
+    "origin": [
+      "wassolon"
+    ],
     "tags": [],
-    "rhythmGroup": ["soboninkun"],
+    "rhythmGroup": [
+      "soboninkun"
+    ],
     "swingPattern": "-<-<-<-<",
     "tempo": 135,
     "signalPattern": "f-tt-t-tt-sss---",
@@ -616,12 +1487,23 @@
     "title": "Bolokonondo Groove",
     "description": "",
     "meter": 3,
-    "instruments": ["dundunba", "sangban", "kenkeni", "bell", "djembe"],
+    "instruments": [
+      "dundunba",
+      "sangban",
+      "kenkeni",
+      "bell",
+      "djembe"
+    ],
     "longestTrack": 14,
     "author": [],
     "origin": [],
-    "tags": ["sequential"],
-    "rhythmGroup": ["bolokonondo", "dunumba"],
+    "tags": [
+      "sequential"
+    ],
+    "rhythmGroup": [
+      "bolokonondo",
+      "dunumba"
+    ],
     "swingPattern": "-<-<-<",
     "tempo": 150,
     "signalPattern": "sstsss------------------sstsss------tttssssssssstttssstttssstttsssttss-ssss-tttt-s--",
