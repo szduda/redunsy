@@ -64,6 +64,9 @@ export const navigateSelection = (
   return { barIndex: next.barIndex, glyphIndex: next.glyphIndex }
 }
 
+export const defaultNoteSelection = (bars: string[]): NoteSelection | null =>
+  navigateSelection(bars, null, 1)
+
 const replaceCharAt = (bar: string, charIndex: number, note: string) =>
   `${bar.slice(0, charIndex)}${note}${bar.slice(charIndex + 1)}`
 
