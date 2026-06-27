@@ -19,9 +19,9 @@ export const toneFromEditKind = (editKind: GlyphLocation['kind'] | null): NoteLe
 export const noteKeyShadowStyle = (tone: NoteLengthTone, flamAccent = false): CSSProperties => {
   const rgb = TONE_RGB[tone]
   const shadow = [
-    `0 0 6px 1px rgba(${rgb}, 0.22)`,
-    `0 0 10px 3px rgba(${rgb}, 0.16)`,
-    `0 0 14px 5px rgba(${rgb}, 0.1)`,
+    `0 0 4px 1px rgba(${rgb}, 0.12)`,
+    `0 0 16px 3px rgba(${rgb}, 0.06)`,
+    `0 0 24px 5px rgba(${rgb}, 0.02)`,
   ].join(', ')
   return flamAccent
     ? {

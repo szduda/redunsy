@@ -14,12 +14,9 @@ export const DRUMS = {
   djembeOpenSlap: { sampleId: 3320, symbol: 's', instrument: 'djembe', volume: 3.4 },
   djembeFlamTone: { sampleId: 3319, symbol: 'r', instrument: 'djembe', volume: 5 },
   djembeFlamSlap: { sampleId: 3319, symbol: 'f', instrument: 'djembe', volume: 5 },
-  djembeFlamBb: { sampleId: 3319, symbol: 'a', instrument: 'djembe', volume: 5 },
   djembeFlamBt: { sampleId: 3319, symbol: 'c', instrument: 'djembe', volume: 5 },
   djembeFlamBs: { sampleId: 3319, symbol: 'd', instrument: 'djembe', volume: 5 },
-  djembeFlamTb: { sampleId: 3319, symbol: 'e', instrument: 'djembe', volume: 5 },
   djembeFlamTs: { sampleId: 3319, symbol: 'g', instrument: 'djembe', volume: 5 },
-  djembeFlamSb: { sampleId: 3319, symbol: 'h', instrument: 'djembe', volume: 5 },
   djembeFlamSt: { sampleId: 3319, symbol: 'j', instrument: 'djembe', volume: 5 },
 } as const
 

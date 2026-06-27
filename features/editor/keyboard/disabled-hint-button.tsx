@@ -47,7 +47,7 @@ export const DisabledHintButton = ({
     <div className="group/hint relative">
       <button
         aria-disabled={disabled}
-        className={cn(PRESSABLE_CLASS, className, disabled && 'cursor-not-allowed opacity-30 saturate-0')}
+        className={cn(PRESSABLE_CLASS, className, disabled && 'cursor-default')}
         disabled={disabled && !isMobile}
         onClick={handleClick}
         style={style}

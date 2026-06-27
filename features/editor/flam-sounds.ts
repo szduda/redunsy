@@ -6,17 +6,14 @@ export type FlamDef = {
   main: DjembeStroke
 }
 
-/** All b/t/s flam combinations for djembe — extra symbols reuse the flam slap sample. */
+/** b/t/s flam combinations for djembe — extra symbols reuse the flam slap sample. */
 export const DJEMBE_FLAMS: FlamDef[] = [
-  { symbol: 'a', grace: 'b', main: 'b' },
-  { symbol: 'c', grace: 'b', main: 't' },
-  { symbol: 'd', grace: 'b', main: 's' },
-  { symbol: 'e', grace: 't', main: 'b' },
+  { symbol: 'f', grace: 's', main: 's' },
   { symbol: 'r', grace: 't', main: 't' },
   { symbol: 'g', grace: 't', main: 's' },
-  { symbol: 'h', grace: 's', main: 'b' },
   { symbol: 'j', grace: 's', main: 't' },
-  { symbol: 'f', grace: 's', main: 's' },
+  { symbol: 'c', grace: 'b', main: 't' },
+  { symbol: 'd', grace: 'b', main: 's' },
 ]
 
 const flamBySymbol = Object.fromEntries(DJEMBE_FLAMS.map((flam) => [flam.symbol, flam]))
@@ -36,7 +33,6 @@ export const flamMainNote = (symbol: string) => flamBySymbol[symbol]?.main ?? nu
 
 /** Default double-stroke flam when enabling flam on a plain note. */
 export const defaultFlamForNote = (note: string): string | null => {
-  if (note === 'b') return 'a'
   if (note === 't') return 'r'
   if (note === 's') return 'f'
   return null
