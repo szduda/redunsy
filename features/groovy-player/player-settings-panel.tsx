@@ -37,44 +37,50 @@ const SettingRow = ({ icon, children }: SettingRowProps) => (
   </>
 )
 
-type BarsPerRowControlProps = {
-  label: string
-  value: number
-  onPrev: () => void
-  onNext: () => void
-}
+const BarsPerRowControl = () => {
+  const isMobile = useIsMobile()
+  const barsPerRow = usePlayerStore((state) =>
+    isMobile ? state.mobileBarsPerRow : state.desktopBarsPerRow,
+  )
+  const nextBarsPerRow = usePlayerStore((state) =>
+    isMobile ? state.nextMobileBarsPerRow : state.nextDesktopBarsPerRow,
+  )
+  const prevBarsPerRow = usePlayerStore((state) =>
+    isMobile ? state.prevMobileBarsPerRow : state.prevDesktopBarsPerRow,
+  )
 
-const BarsPerRowControl = ({ label, value, onPrev, onNext }: BarsPerRowControlProps) => (
-  <SettingRow icon={<ColumnsIcon />}>
-    <div className="flex items-center justify-between gap-3">
-      <Text className="text-sm">{label}</Text>
-      <div className="flex items-center gap-2">
-        <IconButton
-          aria-label={`Fewer columns for ${label.toLowerCase()}`}
-          circle
-          className="!min-w-0 !px-2 !py-1 bg-zinc-200/40 dark:bg-zinc-800/40"
-          onClick={onPrev}
-        >
-          <span className="font-mono font-bold text-lg leading-none">−</span>
-        </IconButton>
-        <Text
-          variant="mono"
-          className="min-w-12 text-center text-sm font-bold !text-black dark:!text-white"
-        >
-          {value} col{value === 1 ? '' : 's'}
-        </Text>
-        <IconButton
-          aria-label={`More columns for ${label.toLowerCase()}`}
-          circle
-          className="!min-w-0 !px-2 !py-1 bg-zinc-200/40 dark:bg-zinc-800/40"
-          onClick={onNext}
-        >
-          <span className="font-mono font-bold text-lg leading-none">+</span>
-        </IconButton>
+  return (
+    <SettingRow icon={<ColumnsIcon />}>
+      <div className="flex items-center justify-between gap-3">
+        <Text className="text-sm">Bars per row</Text>
+        <div className="flex items-center gap-2">
+          <IconButton
+            aria-label="Fewer columns"
+            circle
+            className="!min-w-0 !px-2 !py-1 bg-zinc-200/40 dark:bg-zinc-800/40"
+            onClick={prevBarsPerRow}
+          >
+            <span className="font-mono font-bold text-lg leading-none">−</span>
+          </IconButton>
+          <Text
+            variant="mono"
+            className="min-w-12 text-center text-sm font-bold !text-black dark:!text-white"
+          >
+            {barsPerRow} col{barsPerRow === 1 ? '' : 's'}
+          </Text>
+          <IconButton
+            aria-label="More columns"
+            circle
+            className="!min-w-0 !px-2 !py-1 bg-zinc-200/40 dark:bg-zinc-800/40"
+            onClick={nextBarsPerRow}
+          >
+            <span className="font-mono font-bold text-lg leading-none">+</span>
+          </IconButton>
+        </div>
       </div>
-    </div>
-  </SettingRow>
-)
+    </SettingRow>
+  )
+}
 
 const SwingPatternSection = () => {
   const swingPattern = usePlayerStore((state) => state.swingPattern)
@@ -107,12 +113,6 @@ const SwingPatternSection = () => {
 
 export const PlayerSettingsPanel = ({ open, onClose }: PlayerSettingsPanelProps) => {
   const isMobile = useIsMobile()
-  const desktopBarsPerRow = usePlayerStore((state) => state.desktopBarsPerRow)
-  const mobileBarsPerRow = usePlayerStore((state) => state.mobileBarsPerRow)
-  const nextDesktopBarsPerRow = usePlayerStore((state) => state.nextDesktopBarsPerRow)
-  const prevDesktopBarsPerRow = usePlayerStore((state) => state.prevDesktopBarsPerRow)
-  const nextMobileBarsPerRow = usePlayerStore((state) => state.nextMobileBarsPerRow)
-  const prevMobileBarsPerRow = usePlayerStore((state) => state.prevMobileBarsPerRow)
   const showBarIndex = usePlayerStore((state) => state.showBarIndex)
   const markTriplets = usePlayerStore((state) => state.markTriplets)
   const fullBleed = usePlayerStore((state) => state.fullBleed)
@@ -138,18 +138,7 @@ export const PlayerSettingsPanel = ({ open, onClose }: PlayerSettingsPanelProps)
       <Text className="col-span-2 text-xs font-semibold tracking-widest uppercase opacity-40">
         Player settings
       </Text>
-      <BarsPerRowControl
-        label="Desktop bars per row"
-        value={desktopBarsPerRow}
-        onPrev={prevDesktopBarsPerRow}
-        onNext={nextDesktopBarsPerRow}
-      />
-      <BarsPerRowControl
-        label="Mobile bars per row"
-        value={mobileBarsPerRow}
-        onPrev={prevMobileBarsPerRow}
-        onNext={nextMobileBarsPerRow}
-      />
+      <BarsPerRowControl />
       <SwingPatternSection />
       <SettingRow icon={<BarIndexIcon />}>
         <Switch checked={showBarIndex} label="Show bar index" onChange={setShowBarIndex} />
