@@ -7,8 +7,8 @@ import { CollapsibleMetadata } from '@/features/editor/collapsible-metadata'
 import { BackIcon } from '@/features/icons/back-icon'
 import { Note16Icon } from '@/features/icons/note-16-icon'
 import { EditableBarsCanvas } from '@/features/editor/editable-bars-canvas'
+import { EditorKeyboard } from '@/features/editor/keyboard/editor-keyboard'
 import { useEditorStore } from '@/features/editor/editor.store'
-import { NoteKeyboard } from '@/features/editor/note-keyboard'
 import { useEditorKeyboard } from '@/features/editor/use-editor-keyboard'
 import { useNoteEditor } from '@/features/editor/use-note-editor'
 import { PlayerBottomNav } from '@/features/groovy-player/player-bottom-nav'
@@ -214,7 +214,7 @@ export const RhythmEditor = () => {
 
   return (
     <>
-      <div className="flex w-full max-w-4xl flex-col gap-3">
+      <div className="flex w-full max-w-4xl flex-col gap-3 xl:max-w-5xl">
         <FixedSideActions>
           <Button onClick={onBackToPicker} variant="subtle" className="!justify-start">
             <BackIcon className="size-4 mr-1" /> Back to My Rhythms
@@ -253,7 +253,7 @@ export const RhythmEditor = () => {
             ))}
           </div>
 
-          <section className="flex flex-col gap-2 px-1 py-2 md:px-4">
+          <section className="flex flex-col gap-2 px-1 py-2 pb-36 md:px-4">
             <div className="flex items-center justify-between gap-2">
               <Text className="font-semibold">{focusedTrack.name}</Text>
               <TrackVolume
@@ -271,20 +271,8 @@ export const RhythmEditor = () => {
               beatSize={rhythm.meter}
               id={focusedTrack.id}
               instrument={focusedTrack.instrument}
-              onBarsChange={(bars) => updateTrackBars(focusedTrack.id, bars)}
-              onNavigate={noteEditor.navigate}
               onReorderBar={noteEditor.reorderBarAt}
               onSelectNote={noteEditor.selectNote}
-              selection={noteEditor.selection}
-            />
-
-            <NoteKeyboard
-              bars={focusedTrack.bars}
-              instrument={focusedTrack.instrument}
-              onConvertToEighth={noteEditor.convertToEighth}
-              onConvertToSixteenth={noteEditor.convertToSixteenth}
-              onConvertToTriplet={noteEditor.convertToTriplet}
-              onSelectSound={noteEditor.setSound}
               selection={noteEditor.selection}
             />
           </section>
@@ -296,6 +284,19 @@ export const RhythmEditor = () => {
           ) : null}
         </section>
       </div>
+
+      <EditorKeyboard
+        barSize={barSize}
+        bars={focusedTrack.bars}
+        instrument={focusedTrack.instrument}
+        onBarsChange={(bars) => updateTrackBars(focusedTrack.id, bars)}
+        onConvertToEighth={noteEditor.convertToEighth}
+        onConvertToSixteenth={noteEditor.convertToSixteenth}
+        onConvertToTriplet={noteEditor.convertToTriplet}
+        onNavigate={noteEditor.navigate}
+        onSelectSound={noteEditor.setSound}
+        selection={noteEditor.selection}
+      />
 
       <PageBottomNav>
         <PlayerBottomNav

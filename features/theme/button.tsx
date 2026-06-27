@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { type ComponentPropsWithoutRef } from 'react'
 
 import { cn } from './cn'
+import { PRESSABLE_CLASS } from './pressable'
 
 type ButtonVariant = 'filled' | 'outlined' | 'subtle' | 'dimmed' | 'link'
 
@@ -12,8 +13,10 @@ type ButtonProps = Omit<ComponentPropsWithoutRef<'button'>, 'href'> & {
   targetBlank?: boolean
 }
 
-const base =
-  'inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors duration-150 active:scale-[0.98] disabled:pointer-events-none disabled:opacity-50'
+const base = cn(
+  'inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors duration-150 disabled:pointer-events-none disabled:opacity-50',
+  PRESSABLE_CLASS,
+)
 
 const linkBase =
   'inline font-semibold text-yellowy underline underline-offset-4 transition-colors duration-150 hover:text-yellowy-light hover:underline-offset-2'

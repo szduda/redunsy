@@ -57,8 +57,17 @@ const flamRenderer: FlamRenderer =
     rightRenderer(ctx, { ...el, top: el.top + 1, left: el.left + 1 }, bgColor)
   }
 
-const ttFlamRenderer: NoteRenderer = flamRenderer([soundMidRenderer, soundMidRenderer])
-const ssFlamRenderer: NoteRenderer = flamRenderer([soundHighRenderer, soundHighRenderer])
+const strokeRenderer = (stroke: string): NoteRenderer => {
+  if (stroke === 'b') return soundLowRenderer
+  if (stroke === 't') return soundMidRenderer
+  return soundHighRenderer
+}
+
+const flamForStrokes = (grace: string, main: string): NoteRenderer =>
+  flamRenderer([strokeRenderer(grace), strokeRenderer(main)])
+
+const ttFlamRenderer: NoteRenderer = flamForStrokes('t', 't')
+const ssFlamRenderer: NoteRenderer = flamForStrokes('s', 's')
 
 const pauseSymbol: CharsRenderer = {
   '-': (ctx, el) => drawCircle(ctx, el, el.height / 30),
@@ -80,7 +89,14 @@ export const font: FontRenderer = {
     b: soundLowRenderer,
     t: soundMidRenderer,
     s: soundHighRenderer,
+    a: flamForStrokes('b', 'b'),
+    c: flamForStrokes('b', 't'),
+    d: flamForStrokes('b', 's'),
+    e: flamForStrokes('t', 'b'),
     r: ttFlamRenderer,
+    g: flamForStrokes('t', 's'),
+    h: flamForStrokes('s', 'b'),
+    j: flamForStrokes('s', 't'),
     f: ssFlamRenderer,
   },
   bell: {

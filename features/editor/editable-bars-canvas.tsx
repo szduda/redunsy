@@ -2,7 +2,6 @@
 
 import { memo, useLayoutEffect, useRef, useState } from 'react'
 
-import { applyBarPatternAction } from '@/features/editor/canvas/bar-pattern-actions'
 import {
   canvasLogicalPoint,
   detectBarAtPoint,
@@ -19,7 +18,6 @@ import { darkCanvasColors, lightCanvasColors } from '@/features/groovy-player/ca
 import { canvasHeightForBars, renderBars } from '@/features/groovy-player/canvas/renderers'
 import { useCanvasWidth } from '@/features/groovy-player/canvas/use-canvas-width'
 import { useIsDark } from '@/features/store/theme.store'
-import { Button } from '@/features/theme/button'
 import { cn } from '@/features/theme/cn'
 import type { CanvasElement } from '@/features/groovy-player/canvas/types'
 
@@ -39,9 +37,7 @@ type EditableBarsCanvasProps = {
   instrument: string
   beatSize: number
   selection: NoteSelection | null
-  onBarsChange: (bars: string[]) => void
   onSelectNote: (barIndex: number, glyphIndex: number) => void
-  onNavigate: (direction: -1 | 1) => void
   onReorderBar: (from: number, to: number) => void
 }
 
@@ -50,15 +46,12 @@ const EditableBars = ({
   barsPerRow,
   instrument,
   beatSize,
-  onBarsChange,
   onSelectNote,
-  onNavigate,
   onReorderBar,
   selection,
   id,
 }: EditableBarsCanvasProps) => {
   const prefersDark = useIsDark()
-  const barSize = beatSize * 2
   const canvasId = `${instrument}-editor-canvas-${id}`
   const containerRef = useRef<HTMLDivElement>(null)
   const canvasElementsRef = useRef<CanvasElement[]>([])
@@ -291,15 +284,9 @@ const EditableBars = ({
     event.currentTarget.releasePointerCapture(event.pointerId)
   }
 
-  const runBarAction = (action: 'add' | 'remove') => {
-    const result = applyBarPatternAction(bars, barSize, barCursor, action)
-    onBarsChange(result.bars)
-  }
-
   return (
-    <div className="flex w-full min-w-0 flex-1 flex-col gap-3">
-      <div ref={containerRef} className="w-full min-w-0 flex-1">
-        <canvas
+    <div ref={containerRef} className="w-full min-w-0 flex-1">
+      <canvas
           id={canvasId}
           className={cn(
             'h-auto w-full bg-zinc-50 touch-none dark:bg-zinc-950',
@@ -312,35 +299,6 @@ const EditableBars = ({
           onPointerMove={onPointerMove}
           onPointerUp={onPointerUp}
         />
-      </div>
-
-      <div className="flex flex-wrap items-center justify-end gap-2 px-1">
-        {selection ? (
-          <span className="font-mono text-xs text-zinc-500">Bar {selection.barIndex + 1}</span>
-        ) : null}
-        <Button
-          className={cn(!selection && 'opacity-30 saturate-0')}
-          disabled={!selection}
-          onClick={() => onNavigate(-1)}
-          variant="outlined"
-        >
-          &lt;
-        </Button>
-        <Button
-          className={cn(!selection && 'opacity-30 saturate-0')}
-          disabled={!selection}
-          onClick={() => onNavigate(1)}
-          variant="outlined"
-        >
-          &gt;
-        </Button>
-        <Button onClick={() => runBarAction('remove')} variant="outlined">
-          − bar
-        </Button>
-        <Button onClick={() => runBarAction('add')} variant="outlined">
-          + bar
-        </Button>
-      </div>
     </div>
   )
 }
