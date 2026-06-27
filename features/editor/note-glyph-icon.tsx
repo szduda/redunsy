@@ -1,5 +1,6 @@
 'use client'
 
+import { flamDefForSymbol } from '@/features/editor/flam-sounds'
 import { cn } from '@/features/theme/cn'
 
 type NoteGlyphIconProps = {
@@ -9,6 +10,38 @@ type NoteGlyphIconProps = {
 }
 
 const holeClass = 'fill-zinc-50 dark:fill-zinc-900'
+
+const strokeGlyph = (stroke: string, cx: number, cy: number, radius: number) => {
+  if (stroke === 'b') return <circle className="fill-current" cx={cx} cy={cy} r={radius} />
+  if (stroke === 't') {
+    return (
+      <>
+        <circle className="fill-current" cx={cx} cy={cy} r={radius} />
+        <circle className={holeClass} cx={cx} cy={cy} r={radius * 0.55} />
+      </>
+    )
+  }
+  return (
+    <>
+      <circle className="fill-current" cx={cx} cy={cy} r={radius} />
+      <circle className={holeClass} cx={cx} cy={cy} r={radius * 0.55} />
+      <path
+        className="stroke-current"
+        d={`M${cx - radius * 0.55} ${cy - radius * 0.55} L${cx + radius * 0.55} ${cy + radius * 0.55} M${cx + radius * 0.55} ${cy - radius * 0.55} L${cx - radius * 0.55} ${cy + radius * 0.55}`}
+        fill="none"
+        strokeLinecap="round"
+        strokeWidth="1.5"
+      />
+    </>
+  )
+}
+
+const renderFlamGlyph = (grace: string, main: string) => (
+  <>
+    {strokeGlyph(grace, 10, 10, 5)}
+    {strokeGlyph(main, 14, 14, 5)}
+  </>
+)
 
 const renderNoteGlyph = (note: string, instrument: string) => {
   switch (note) {
@@ -80,41 +113,16 @@ const renderNoteGlyph = (note: string, instrument: string) => {
       )
 
     case 'f':
-      return (
-        <>
-          <circle className="fill-current" cx="10" cy="10" r="5" />
-          <circle className={holeClass} cx="10" cy="10" r="3" />
-          <path
-            className="stroke-current"
-            d="M7 7 L13 13 M13 7 L7 13"
-            fill="none"
-            strokeLinecap="round"
-            strokeWidth="1.5"
-          />
-          <circle className="fill-current" cx="14" cy="14" r="5" />
-          <circle className={holeClass} cx="14" cy="14" r="3" />
-          <path
-            className="stroke-current"
-            d="M11 11 L17 17 M17 11 L11 17"
-            fill="none"
-            strokeLinecap="round"
-            strokeWidth="1.5"
-          />
-        </>
-      )
+    case 'r': {
+      const flam = flamDefForSymbol(note)
+      return flam ? renderFlamGlyph(flam.grace, flam.main) : null
+    }
 
-    case 'r':
-      return (
-        <>
-          <circle className="fill-current" cx="10" cy="10" r="5" />
-          <circle className={holeClass} cx="10" cy="10" r="2.5" />
-          <circle className="fill-current" cx="14" cy="14" r="5" />
-          <circle className={holeClass} cx="14" cy="14" r="2.5" />
-        </>
-      )
-
-    default:
+    default: {
+      const flam = flamDefForSymbol(note)
+      if (flam) return renderFlamGlyph(flam.grace, flam.main)
       return <circle className="fill-current" cx="12" cy="12" r="2" />
+    }
   }
 }
 
