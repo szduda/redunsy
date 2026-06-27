@@ -38,9 +38,16 @@ const SettingRow = ({ icon, children }: SettingRowProps) => (
 )
 
 const BarsPerRowControl = () => {
-  const barsPerRow = usePlayerStore((state) => state.barsPerRow)
-  const nextZoom = usePlayerStore((state) => state.nextZoom)
-  const prevZoom = usePlayerStore((state) => state.prevZoom)
+  const isMobile = useIsMobile()
+  const barsPerRow = usePlayerStore((state) =>
+    isMobile ? state.mobileBarsPerRow : state.desktopBarsPerRow,
+  )
+  const nextBarsPerRow = usePlayerStore((state) =>
+    isMobile ? state.nextMobileBarsPerRow : state.nextDesktopBarsPerRow,
+  )
+  const prevBarsPerRow = usePlayerStore((state) =>
+    isMobile ? state.prevMobileBarsPerRow : state.prevDesktopBarsPerRow,
+  )
 
   return (
     <SettingRow icon={<ColumnsIcon />}>
@@ -51,7 +58,7 @@ const BarsPerRowControl = () => {
             aria-label="Fewer columns"
             circle
             className="!min-w-0 !px-2 !py-1 bg-zinc-200/40 dark:bg-zinc-800/40"
-            onClick={prevZoom}
+            onClick={prevBarsPerRow}
           >
             <span className="font-mono font-bold text-lg leading-none">−</span>
           </IconButton>
@@ -65,7 +72,7 @@ const BarsPerRowControl = () => {
             aria-label="More columns"
             circle
             className="!min-w-0 !px-2 !py-1 bg-zinc-200/40 dark:bg-zinc-800/40"
-            onClick={nextZoom}
+            onClick={nextBarsPerRow}
           >
             <span className="font-mono font-bold text-lg leading-none">+</span>
           </IconButton>

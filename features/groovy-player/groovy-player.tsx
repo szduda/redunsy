@@ -22,6 +22,7 @@ import {
   swingBarSizeForMeter,
   usePlayerStore,
 } from '@/features/groovy-player/player.store'
+import { useBarsPerRow } from '@/features/groovy-player/use-bars-per-row'
 import { Track } from '@/features/groovy-player/track/track'
 import { useSpaceTogglePlay } from '@/features/groovy-player/use-space-toggle-play'
 import { PageBottomNav } from '@/features/layout/page-bottom-nav'
@@ -74,7 +75,7 @@ export const GroovyPlayer = ({ rhythm }: GroovyPlayerProps = {}) => {
   const loadedRhythm = rhythm ?? clientState.rhythm
   const isPlayerDemo = !rhythm && !rhythmSlug && !loadedRhythm
 
-  const barsPerRow = usePlayerStore((state) => state.barsPerRow)
+  const barsPerRow = useBarsPerRow()
   const tempo = usePlayerStore((state) => state.tempo)
   const isPlaying = usePlayerStore((state) => state.isPlaying)
   const storeBeatIndex = usePlayerStore((state) => state.beatIndex)

@@ -3,9 +3,13 @@ import { createJSONStorage, persist } from 'zustand/middleware'
 
 import type { RhythmMeter } from '@/features/rhythm/rhythm.types'
 
-export const ZOOM_STEPS = [1, 2, 3, 4, 6, 8] as const
+export const DESKTOP_BARS_PER_ROW_STEPS = [1, 2, 3, 4, 6, 8] as const
 
-export type ZoomBarsPerRow = (typeof ZOOM_STEPS)[number]
+export const MOBILE_BARS_PER_ROW_STEPS = [1, 2, 3] as const
+
+export type DesktopBarsPerRow = (typeof DESKTOP_BARS_PER_ROW_STEPS)[number]
+
+export type MobileBarsPerRow = (typeof MOBILE_BARS_PER_ROW_STEPS)[number]
 
 export const DEFAULT_TEMPO = 110
 
@@ -63,20 +67,34 @@ export const resolveGroovePattern = (
   swingEnabled: boolean,
 ) => (swingEnabled ? fitSwingPattern(swingPattern, barSize) : straightGroovePattern(barSize))
 
-const stepZoomForward = (current: ZoomBarsPerRow) => {
-  const index = ZOOM_STEPS.indexOf(current)
-  return ZOOM_STEPS[(index + 1) % ZOOM_STEPS.length]
+const stepForward = <const T extends readonly number[]>(
+  steps: T,
+  current: T[number],
+): T[number] => {
+  const index = steps.indexOf(current)
+  return steps[(index + 1) % steps.length] as T[number]
 }
 
-const stepZoomBackward = (current: ZoomBarsPerRow) => {
-  const index = ZOOM_STEPS.indexOf(current)
-  return ZOOM_STEPS[(index - 1 + ZOOM_STEPS.length) % ZOOM_STEPS.length]
+const stepBackward = <const T extends readonly number[]>(
+  steps: T,
+  current: T[number],
+): T[number] => {
+  const index = steps.indexOf(current)
+  return steps[(index - 1 + steps.length) % steps.length] as T[number]
 }
+
+const isStepValue = <const T extends readonly number[]>(
+  steps: T,
+  value: unknown,
+): value is T[number] => typeof value === 'number' && (steps as readonly number[]).includes(value)
 
 type PlayerState = {
-  barsPerRow: ZoomBarsPerRow
-  nextZoom: () => void
-  prevZoom: () => void
+  desktopBarsPerRow: DesktopBarsPerRow
+  mobileBarsPerRow: MobileBarsPerRow
+  nextDesktopBarsPerRow: () => void
+  prevDesktopBarsPerRow: () => void
+  nextMobileBarsPerRow: () => void
+  prevMobileBarsPerRow: () => void
   tempo: number
   setTempo: (tempo: number) => void
   isPlaying: boolean
@@ -104,7 +122,8 @@ type PlayerState = {
 
 type PersistedPlayerState = Pick<
   PlayerState,
-  | 'barsPerRow'
+  | 'desktopBarsPerRow'
+  | 'mobileBarsPerRow'
   | 'tempo'
   | 'swingPattern'
   | 'swingEnabled'
@@ -115,15 +134,23 @@ type PersistedPlayerState = Pick<
   | 'preventScreenSleep'
 >
 
-const isZoomBarsPerRow = (value: unknown): value is ZoomBarsPerRow =>
-  typeof value === 'number' && (ZOOM_STEPS as readonly number[]).includes(value)
-
 export const usePlayerStore = create<PlayerState>()(
   persist(
     (set, get) => ({
-      barsPerRow: 4,
-      nextZoom: () => set({ barsPerRow: stepZoomForward(get().barsPerRow) }),
-      prevZoom: () => set({ barsPerRow: stepZoomBackward(get().barsPerRow) }),
+      desktopBarsPerRow: 4,
+      mobileBarsPerRow: 2,
+      nextDesktopBarsPerRow: () =>
+        set({
+          desktopBarsPerRow: stepForward(DESKTOP_BARS_PER_ROW_STEPS, get().desktopBarsPerRow),
+        }),
+      prevDesktopBarsPerRow: () =>
+        set({
+          desktopBarsPerRow: stepBackward(DESKTOP_BARS_PER_ROW_STEPS, get().desktopBarsPerRow),
+        }),
+      nextMobileBarsPerRow: () =>
+        set({ mobileBarsPerRow: stepForward(MOBILE_BARS_PER_ROW_STEPS, get().mobileBarsPerRow) }),
+      prevMobileBarsPerRow: () =>
+        set({ mobileBarsPerRow: stepBackward(MOBILE_BARS_PER_ROW_STEPS, get().mobileBarsPerRow) }),
       tempo: DEFAULT_TEMPO,
       setTempo: (tempo) => set({ tempo }),
       isPlaying: false,
@@ -159,7 +186,8 @@ export const usePlayerStore = create<PlayerState>()(
       name: 'redunsy-player',
       storage: createJSONStorage(() => localStorage),
       partialize: (state): PersistedPlayerState => ({
-        barsPerRow: state.barsPerRow,
+        desktopBarsPerRow: state.desktopBarsPerRow,
+        mobileBarsPerRow: state.mobileBarsPerRow,
         tempo: state.tempo,
         swingPattern: state.swingPattern,
         swingEnabled: state.swingEnabled,
@@ -174,7 +202,12 @@ export const usePlayerStore = create<PlayerState>()(
         return {
           ...current,
           ...saved,
-          barsPerRow: isZoomBarsPerRow(saved.barsPerRow) ? saved.barsPerRow : current.barsPerRow,
+          desktopBarsPerRow: isStepValue(DESKTOP_BARS_PER_ROW_STEPS, saved.desktopBarsPerRow)
+            ? saved.desktopBarsPerRow
+            : current.desktopBarsPerRow,
+          mobileBarsPerRow: isStepValue(MOBILE_BARS_PER_ROW_STEPS, saved.mobileBarsPerRow)
+            ? saved.mobileBarsPerRow
+            : current.mobileBarsPerRow,
           tempo: typeof saved.tempo === 'number' ? saved.tempo : current.tempo,
           swingPattern:
             typeof saved.swingPattern === 'string'
