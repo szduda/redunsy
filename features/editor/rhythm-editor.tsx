@@ -11,6 +11,7 @@ import { useEditorStore } from '@/features/editor/editor.store'
 import { NoteKeyboard } from '@/features/editor/note-keyboard'
 import { useEditorKeyboard } from '@/features/editor/use-editor-keyboard'
 import { useNoteEditor } from '@/features/editor/use-note-editor'
+import { useBarsPerRow } from '@/features/groovy-player/use-bars-per-row'
 import { PlayerBottomNav } from '@/features/groovy-player/player-bottom-nav'
 import {
   defaultSwingPatternForMeter,
@@ -52,7 +53,7 @@ export const RhythmEditor = () => {
   const updateTrackBars = useEditorStore((state) => state.updateTrackBars)
   const backToPicker = useEditorStore((state) => state.backToPicker)
 
-  const barsPerRow = usePlayerStore((state) => state.barsPerRow)
+  const barsPerRow = useBarsPerRow()
   const tempo = usePlayerStore((state) => state.tempo)
   const isPlaying = usePlayerStore((state) => state.isPlaying)
   const storeBeatIndex = usePlayerStore((state) => state.beatIndex)
