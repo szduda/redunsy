@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
 
 import { CollapsibleMetadata } from '@/features/editor/collapsible-metadata'
@@ -20,6 +20,7 @@ import {
   resolveGroovePattern,
   usePlayerStore,
 } from '@/features/groovy-player/player.store'
+import { useMetronomeShakerVolume } from '@/features/groovy-player/use-metronome-shaker-volume'
 import { TrackVolume } from '@/features/groovy-player/track/track-volume'
 import { useSpaceTogglePlay } from '@/features/groovy-player/use-space-toggle-play'
 import { PageBottomNav } from '@/features/layout/page-bottom-nav'
@@ -30,10 +31,10 @@ import { Button } from '@/features/theme/button'
 import { Text } from '@/features/theme/text'
 import { cn } from '@/features/theme/cn'
 import {
-  metronomeBarForGrooveLength,
   tracksMatchGrooveLength,
   useMidinike,
   validateBarsForGroove,
+  withMetronomeShakerTrack,
 } from '@/lib/midinike'
 
 const LAYER_CONFIG = {
@@ -62,7 +63,6 @@ export const RhythmEditor = () => {
   const swingEnabled = usePlayerStore((state) => state.swingEnabled)
   const setSwingPattern = usePlayerStore((state) => state.setSwingPattern)
   const setSwingEnabled = usePlayerStore((state) => state.setSwingEnabled)
-  const hasMetronome = usePlayerStore((state) => state.hasMetronome)
   const setIsPlaying = usePlayerStore((state) => state.setIsPlaying)
   const setBeatIndex = usePlayerStore((state) => state.setBeatIndex)
   const setTempo = usePlayerStore((state) => state.setTempo)
@@ -71,7 +71,11 @@ export const RhythmEditor = () => {
   const barSize = rhythm ? rhythm.meter * 2 : 8
   const playbackGrooveLength = rhythm ? playbackGrooveLengthForMeter(rhythm.meter) : 8
   const groovePattern = resolveGroovePattern(swingPattern, playbackGrooveLength, swingEnabled)
-  const trackBars = rhythm ? trackBarsRecord(rhythm) : {}
+  const trackBars = useMemo(() => (rhythm ? trackBarsRecord(rhythm) : {}), [rhythm])
+  const playbackTrackBars = useMemo(
+    () => (rhythm ? withMetronomeShakerTrack(trackBars, playbackGrooveLength) : {}),
+    [playbackGrooveLength, rhythm, trackBars],
+  )
   const tracks = rhythm ? Object.values(rhythm.instruments) : []
   const focusedTrack = tracks.find((track) => track.id === focusedTrackId) ?? tracks[0]
 
@@ -90,14 +94,6 @@ export const RhythmEditor = () => {
     convertToEighth: noteEditor.convertToEighth,
   })
 
-  const getOverlayBars = useCallback(
-    (patternBars: string[]) => {
-      if (!hasMetronome) return null
-      return patternBars.map(() => metronomeBarForGrooveLength(playbackGrooveLength))
-    },
-    [playbackGrooveLength, hasMetronome],
-  )
-
   const {
     play,
     pause,
@@ -114,12 +110,13 @@ export const RhythmEditor = () => {
     sangban: { ...LAYER_CONFIG, instrument: 'sangban', sounds: ['o', 'x'], lengths: ['8th'] },
     kenkeni: { ...LAYER_CONFIG, instrument: 'kenkeni', sounds: ['o', 'x'], lengths: ['8th'] },
     shaker: { instrument: 'shaker', sounds: ['x'], lengths: ['8th'] },
-    getOverlayBars,
     initialGroove: groovePattern,
     strictGrooveLength: true,
     loop: true,
     tempo: rhythm?.tempo ?? 110,
   })
+
+  useMetronomeShakerVolume(setInstrumentVolume)
 
   useEffect(() => {
     stop()
@@ -175,7 +172,7 @@ export const RhythmEditor = () => {
         throw new Error(`Each bar must fill ${barSize} cells for beat size ${rhythm.meter}`)
       }
       setPlayError(null)
-      play(trackBars, groovePattern)
+      play(playbackTrackBars, groovePattern)
     } catch (error) {
       setPlayError(error instanceof Error ? error.message : 'Could not play pattern')
     }
@@ -191,7 +188,7 @@ export const RhythmEditor = () => {
         throw new Error(`Each bar must fill ${barSize} cells for beat size ${rhythm.meter}`)
       }
       setPlayError(null)
-      if (!restart()) play(trackBars, groovePattern)
+      if (!restart()) play(playbackTrackBars, groovePattern)
     } catch (error) {
       setPlayError(error instanceof Error ? error.message : 'Could not restart pattern')
     }
