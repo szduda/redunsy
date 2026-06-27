@@ -381,6 +381,11 @@ export const useMidinike = (options: MidinikeOptions) => {
 
   useEffect(() => {
     if (!playingRef.current) return
+    recompileActivePattern(lastGroovePatternRef.current, noteIndexRef.current)
+  }, [getOverlayBars, recompileActivePattern])
+
+  useEffect(() => {
+    if (!playingRef.current) return
     startLoopRef.current(noteIndexRef.current)
   }, [tempo])
 

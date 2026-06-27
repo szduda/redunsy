@@ -110,6 +110,12 @@ export const GroovyPlayer = ({ rhythm }: GroovyPlayerProps = {}) => {
   }, [notationGrooveLength, setSwingPattern, swingPattern])
 
   useEffect(() => {
+    if (!isPlayerDemo) return
+    setSwingPattern(DEMO_SWING_PATTERN, PLAYER_GROOVE_LENGTH)
+    setSwingEnabled(true)
+  }, [isPlayerDemo, setSwingEnabled, setSwingPattern])
+
+  useEffect(() => {
     if (!loadedRhythm) return
     setSwingPattern(loadedRhythm.swingPattern, notationGrooveLength)
     setSwingEnabled(!isSwingPatternEmpty(loadedRhythm.swingPattern))
