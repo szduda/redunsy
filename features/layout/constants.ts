@@ -17,6 +17,6 @@ export const GARAGE_MOBILE_TOOLBAR_STICKY_CLASS =
   'sticky top-10 z-10 -mx-3 flex flex-col gap-3 border-b border-zinc-200 bg-white px-3 pt-6 pb-3 dark:border-zinc-800 dark:bg-zinc-950 md:-mx-4 md:px-4 lg:hidden'
 
 /** Reserved height for the fixed bottom nav — keep layout padding and overlays aligned. */
-export const BOTTOM_NAV_HEIGHT_CLASS = 'h-20'
-export const BOTTOM_NAV_OFFSET_CLASS = 'bottom-20'
-export const BOTTOM_NAV_PADDING_CLASS = 'pb-20'
+export const BOTTOM_NAV_HEIGHT_CLASS = 'h-16 lg:h-20'
+export const BOTTOM_NAV_OFFSET_CLASS = 'bottom-16 lg:bottom-20'
+export const BOTTOM_NAV_PADDING_CLASS = 'pb-16 lg:pb-20'

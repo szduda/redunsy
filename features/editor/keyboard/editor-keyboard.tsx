@@ -195,7 +195,7 @@ export const EditorKeyboard = ({
   return (
     <div
       className={cn(
-        'pointer-events-auto fixed inset-x-0 z-40 px-2 pt-2 pb-2',
+        'pointer-events-auto fixed inset-x-0 z-10 px-2 pt-2 pb-2 border-t border-zinc-300/70 dark:border-zinc-700/70',
         BOTTOM_NAV_OFFSET_CLASS,
         PAGE_BODY_BG_CLASS,
       )}
