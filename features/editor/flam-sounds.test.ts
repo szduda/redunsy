@@ -12,12 +12,12 @@ describe('flam-sounds', () => {
   it('lists djembe flam combinations without bass-main flams', () => {
     expect(flamSymbolsForInstrument('djembe')).toHaveLength(6)
     expect(DJEMBE_FLAMS.map((flam) => `${flam.grace}${flam.main}`)).toEqual([
-      'bt',
-      'bs',
+      'ss',
       'tt',
       'ts',
       'st',
-      'ss',
+      'bt',
+      'bs',
     ])
   })
 

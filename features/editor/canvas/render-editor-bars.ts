@@ -40,7 +40,6 @@ export const drawYellowyOverlay = (
 }
 
 const renderBarSlot = ({
-  bar,
   slotIndex,
   barsForLayout,
   instrument,
@@ -51,7 +50,6 @@ const renderBarSlot = ({
   overlayOpacity,
   dark,
 }: {
-  bar: string
   slotIndex: number
   barsForLayout: string[]
   instrument: string
@@ -101,10 +99,8 @@ export const renderEditorBarSlots = ({
   const elements: CanvasElement[] = []
 
   slots.forEach((slot, slotIndex) => {
-    const bar = slot.bar ?? draggedBar
     const overlayOpacity = slot.bar === null ? DRAG_PREVIEW_OVERLAY_OPACITY : undefined
     const slotElements = renderBarSlot({
-      bar,
       slotIndex,
       barsForLayout,
       instrument,
@@ -158,7 +154,6 @@ export const drawBarOverlayAtIndex = ({
 }
 
 export const renderDraggedBarAtSource = ({
-  bar,
   sourceIndex,
   bars,
   instrument,
@@ -167,7 +162,6 @@ export const renderDraggedBarAtSource = ({
   barsPerRow,
   dark = true,
 }: {
-  bar: string
   sourceIndex: number
   bars: string[]
   instrument: string

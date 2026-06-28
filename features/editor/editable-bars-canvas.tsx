@@ -161,7 +161,6 @@ const EditableBars = ({
     if (drag && draggedBar) {
       if (isDragPreview) {
         renderDraggedBarAtSource({
-          bar: draggedBar,
           sourceIndex: drag.sourceIndex,
           bars,
           instrument,

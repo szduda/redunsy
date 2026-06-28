@@ -1,6 +1,9 @@
 import { describe, expect, it } from 'vitest'
 
-import { applyBarModeAction, applyBarPatternAction } from '@/features/editor/canvas/bar-pattern-actions'
+import {
+  applyBarModeAction,
+  applyBarPatternAction,
+} from '@/features/editor/canvas/bar-pattern-actions'
 
 describe('applyBarPatternAction', () => {
   it('appends an empty bar when cursor is unset', () => {
@@ -43,7 +46,7 @@ describe('applyBarModeAction', () => {
     const bars = ['aaaa', 'bbbb', 'cccc']
     const result = applyBarModeAction(bars, 8, 1, 'remove')
     expect(result.bars).toEqual(['aaaa', 'cccc'])
-    expect(result.barIndex).toBe(1)
+    expect(result.barIndex).toBe(0)
   })
 
   it('clears the selected bar to rests', () => {

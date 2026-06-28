@@ -112,7 +112,7 @@ export const EditorKeyboard = ({
 
   useEffect(() => {
     if (selected && isFlamSymbol(selected.note, instrument)) setFlamMode(true)
-  }, [instrument, selected?.note])
+  }, [instrument, selected])
 
   const navShadowStyle = noteKeyShadowStyle(tone)
   const soundShadowStyle = noteKeyShadowStyle(tone, flamMode)
@@ -144,6 +144,54 @@ export const EditorKeyboard = ({
   const canTriplet = hasSelection && editKind === 'plain'
   const canEighth = hasSelection && (editKind === 'sixteenth' || editKind === 'triplet')
 
+  const navButtons = (
+    <div className="flex gap-2">
+      <DisabledHintButton
+        className={cn(PRESSABLE_CLASS, keyButtonClass, 'flex-1 text-lg font-mono')}
+        disabled={!hasSelection}
+        hint={isBarMode ? NO_BAR_HINT : NO_SELECTION_HINT}
+        onClick={() => onNavigate(-1)}
+        style={hasSelection && !isBarMode ? navShadowStyle : undefined}
+      >
+        &lt;
+      </DisabledHintButton>
+      <DisabledHintButton
+        className={cn(PRESSABLE_CLASS, keyButtonClass, 'flex-1 text-lg font-mono')}
+        disabled={!hasSelection}
+        hint={isBarMode ? NO_BAR_HINT : NO_SELECTION_HINT}
+        onClick={() => onNavigate(1)}
+        style={hasSelection && !isBarMode ? navShadowStyle : undefined}
+      >
+        &gt;
+      </DisabledHintButton>
+    </div>
+  )
+
+  const modeToggle = (
+    <div
+      className="flex overflow-hidden rounded-lg border border-zinc-200/80 dark:border-zinc-700/80"
+      role="group"
+      aria-label="Selection mode"
+    >
+      <button
+        aria-pressed={isBarMode}
+        className={cn(PRESSABLE_CLASS, modeToggleSegmentClass(isBarMode))}
+        onClick={() => onSelectionModeChange('bar')}
+        type="button"
+      >
+        bar
+      </button>
+      <button
+        aria-pressed={!isBarMode}
+        className={cn(PRESSABLE_CLASS, modeToggleSegmentClass(!isBarMode))}
+        onClick={() => onSelectionModeChange('note')}
+        type="button"
+      >
+        note
+      </button>
+    </div>
+  )
+
   return (
     <div
       className={cn(
@@ -152,51 +200,20 @@ export const EditorKeyboard = ({
         PAGE_BODY_BG_CLASS,
       )}
     >
-      <div className="mx-auto flex w-full max-w-4xl flex-col gap-2 xl:max-w-5xl">
+      <div className="mx-auto flex w-full max-w-3xl flex-col gap-2">
         <div className="grid grid-cols-3 gap-2">
-          <div className="flex flex-col gap-2">
-            <div
-              className="flex overflow-hidden rounded-lg border border-zinc-200/80 dark:border-zinc-700/80"
-              role="group"
-              aria-label="Selection mode"
-            >
-              <button
-                aria-pressed={isBarMode}
-                className={cn(PRESSABLE_CLASS, modeToggleSegmentClass(isBarMode))}
-                onClick={() => onSelectionModeChange('bar')}
-                type="button"
-              >
-                bar
-              </button>
-              <button
-                aria-pressed={!isBarMode}
-                className={cn(PRESSABLE_CLASS, modeToggleSegmentClass(!isBarMode))}
-                onClick={() => onSelectionModeChange('note')}
-                type="button"
-              >
-                note
-              </button>
-            </div>
-            <div className="flex gap-2">
-              <DisabledHintButton
-                className={cn(PRESSABLE_CLASS, keyButtonClass, 'flex-1 text-lg font-mono')}
-                disabled={!hasSelection}
-                hint={isBarMode ? NO_BAR_HINT : NO_SELECTION_HINT}
-                onClick={() => onNavigate(-1)}
-                style={hasSelection && !isBarMode ? navShadowStyle : undefined}
-              >
-                &lt;
-              </DisabledHintButton>
-              <DisabledHintButton
-                className={cn(PRESSABLE_CLASS, keyButtonClass, 'flex-1 text-lg font-mono')}
-                disabled={!hasSelection}
-                hint={isBarMode ? NO_BAR_HINT : NO_SELECTION_HINT}
-                onClick={() => onNavigate(1)}
-                style={hasSelection && !isBarMode ? navShadowStyle : undefined}
-              >
-                &gt;
-              </DisabledHintButton>
-            </div>
+          <div className="flex flex-col items-end justify-end gap-2">
+            {isBarMode ? (
+              <>
+                {modeToggle}
+                {navButtons}
+              </>
+            ) : (
+              <>
+                {navButtons}
+                {modeToggle}
+              </>
+            )}
           </div>
 
           {isBarMode ? (
@@ -237,7 +254,39 @@ export const EditorKeyboard = ({
               </div>
             </div>
           ) : (
-            <div className="col-span-2 flex flex-col items-end gap-2">
+            <div className="col-span-2 flex flex-col items-end justify-end gap-2">
+              <div className="flex flex-wrap justify-end gap-2">
+                {visibleSounds.map((sound) => (
+                  <DisabledHintButton
+                    key={sound}
+                    aria-label={`Set note to ${sound}`}
+                    className={cn(
+                      keyButtonClass,
+                      selected?.note === sound && 'border-zinc-400 ring-2 ring-zinc-400/30',
+                    )}
+                    disabled={!hasSelection}
+                    hint={NO_SELECTION_HINT}
+                    onClick={() => onSelectSound(sound)}
+                    style={hasSelection ? soundShadowStyle : undefined}
+                  >
+                    <NoteGlyphIcon instrument={instrument} note={sound} />
+                  </DisabledHintButton>
+                ))}
+                <DisabledHintButton
+                  aria-label="Set note to rest"
+                  className={cn(
+                    keyButtonClass,
+                    selected?.note === '-' && 'border-zinc-400 ring-2 ring-zinc-400/30',
+                  )}
+                  disabled={!hasSelection}
+                  hint={NO_SELECTION_HINT}
+                  onClick={() => onSelectSound('-')}
+                  style={hasSelection ? soundShadowStyle : undefined}
+                >
+                  <NoteGlyphIcon instrument={instrument} note="-" />
+                </DisabledHintButton>
+              </div>
+
               <div className="flex gap-2">
                 <DisabledHintButton
                   aria-pressed={lengthMode === '16th' || editKind === 'sixteenth'}
@@ -299,38 +348,6 @@ export const EditorKeyboard = ({
                   style={flamToggleBackgroundStyle(tone, flamMode)}
                 >
                   <FlamIcon />
-                </DisabledHintButton>
-              </div>
-
-              <div className="flex flex-wrap justify-end gap-2">
-                {visibleSounds.map((sound) => (
-                  <DisabledHintButton
-                    key={sound}
-                    aria-label={`Set note to ${sound}`}
-                    className={cn(
-                      keyButtonClass,
-                      selected?.note === sound && 'border-zinc-400 ring-2 ring-zinc-400/30',
-                    )}
-                    disabled={!hasSelection}
-                    hint={NO_SELECTION_HINT}
-                    onClick={() => onSelectSound(sound)}
-                    style={hasSelection ? soundShadowStyle : undefined}
-                  >
-                    <NoteGlyphIcon instrument={instrument} note={sound} />
-                  </DisabledHintButton>
-                ))}
-                <DisabledHintButton
-                  aria-label="Set note to rest"
-                  className={cn(
-                    keyButtonClass,
-                    selected?.note === '-' && 'border-zinc-400 ring-2 ring-zinc-400/30',
-                  )}
-                  disabled={!hasSelection}
-                  hint={NO_SELECTION_HINT}
-                  onClick={() => onSelectSound('-')}
-                  style={hasSelection ? soundShadowStyle : undefined}
-                >
-                  <NoteGlyphIcon instrument={instrument} note="-" />
                 </DisabledHintButton>
               </div>
             </div>

@@ -60,6 +60,6 @@ export const applyBarModeAction = (
   }
 
   const nextBars = bars.filter((_, index) => index !== barIndex)
-  const nextBarIndex = Math.min(barIndex, nextBars.length - 1)
+  const nextBarIndex = Math.max(0, barIndex - 1)
   return { bars: nextBars, barIndex: nextBarIndex }
 }

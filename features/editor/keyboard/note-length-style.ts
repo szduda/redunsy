@@ -44,7 +44,10 @@ const FLAM_TOP_RGB: Record<NoteLengthTone, string> = {
   '16th': '237, 60, 25',
 }
 
-export const flamToggleBackgroundStyle = (tone: NoteLengthTone, active: boolean): CSSProperties => ({
+export const flamToggleBackgroundStyle = (
+  tone: NoteLengthTone,
+  active: boolean,
+): CSSProperties => ({
   backgroundImage: active
     ? `linear-gradient(to top, rgba(99, 102, 241, 0.55), rgba(139, 92, 246, 0.2) 40%, rgba(${FLAM_TOP_RGB[tone]}, 0.35) 72%, transparent 100%)`
     : 'linear-gradient(to top, rgba(99, 102, 241, 0.45), rgba(139, 92, 246, 0.12) 55%, transparent 100%)',

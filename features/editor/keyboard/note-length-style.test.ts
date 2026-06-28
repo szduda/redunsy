@@ -1,9 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import {
-  noteKeyShadowStyle,
-  toneFromEditKind,
-} from '@/features/editor/keyboard/note-length-style'
+import { noteKeyShadowStyle, toneFromEditKind } from '@/features/editor/keyboard/note-length-style'
 
 describe('note-length-style', () => {
   it('maps edit kinds to length tones', () => {
