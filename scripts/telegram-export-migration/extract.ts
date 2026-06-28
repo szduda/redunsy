@@ -10,7 +10,10 @@ const DEFAULT_EXPORT = resolve(
   'scripts/telegram-export-migration/telegram-export.json',
 )
 
-const OUTPUT_PATH = resolve(process.cwd(), 'scripts/telegram-export-migration/telegram-rhythms.json')
+const OUTPUT_PATH = resolve(
+  process.cwd(),
+  'scripts/telegram-export-migration/telegram-rhythms.json',
+)
 
 const exportPath = process.argv[2] ? resolve(process.argv[2]) : DEFAULT_EXPORT
 
@@ -22,7 +25,9 @@ const decoded = parsed.flatMap((entry) => {
     const snippet = decodePlaygroundQuery(entry.query)
     return [{ entry, snippet }]
   } catch (error) {
-    console.warn(`Skipping message ${entry.messageId}: ${error instanceof Error ? error.message : error}`)
+    console.warn(
+      `Skipping message ${entry.messageId}: ${error instanceof Error ? error.message : error}`,
+    )
     return []
   }
 })

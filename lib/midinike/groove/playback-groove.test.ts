@@ -26,12 +26,14 @@ describe('demo playback groove length', () => {
     expect(hits).toEqual([0, 14, 31, 46, 80])
   })
 
-  it('six-cell grooves compress demo bar spacing', () => {
+  it('six-cell grooves on six-cell bars stay straight (full grid)', () => {
     const bar = DEMO_TRACKS[0].bars[0]
     const groove = '-<(-<('
+    const straight = compileGroove({ bars: [bar], groove: '------' })
     const compiled = compileGroove({ bars: [bar], groove })
 
     const hits = compiled.beats.flatMap((slot, index) => (slot[0].length ? [index] : []))
-    expect(hits).toEqual([0, 10, 23, 36, 59])
+    const straightHits = straight.beats.flatMap((slot, index) => (slot[0].length ? [index] : []))
+    expect(hits).toEqual(straightHits)
   })
 })

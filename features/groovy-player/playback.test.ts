@@ -13,18 +13,23 @@ import {
   DEMO_SWING_PATTERN,
   fitSwingPattern,
   PLAYER_GROOVE_LENGTH,
+  playbackGrooveLengthForMeter,
   resolveGroovePattern,
   swingBarSizeForMeter,
 } from '@/features/groovy-player/player.store'
 import { compileGroove } from '@/lib/midinike/groove/compile-groove'
 import { barSlotCount } from '@/lib/midinike/groove/compile-groove.test-helpers'
-import { calcPlaybackTempo } from '@/lib/midinike/groove/playback-tempo'
+import {
+  calcPlaybackTempo,
+  compiledPatternDurationSeconds,
+} from '@/lib/midinike/groove/playback-tempo'
+import { TICKS_PER_EIGHTH } from '@/lib/midinike/notation/cell-duration'
 import {
   barsMatchGrooveLength,
   tracksMatchGrooveLength,
   validateBarsForGroove,
 } from '@/lib/midinike/notation/fit-bar'
-import { barCellCount, TICKS_PER_EIGHTH } from '@/lib/midinike/notation/cell-duration'
+import { barCellCount } from '@/lib/midinike/notation/cell-duration'
 
 // ---------------------------------------------------------------------------
 // Representative test fixtures
@@ -116,7 +121,7 @@ describe('demo player — 6-cell bars with 8-cell groove', () => {
     expect(compiled.beats.length).toBe(barSlotCount(8))
   })
 
-  it('produces 4/4 playback tempo from the demo groove', () => {
+  it('produces legacy playback tempo from the demo groove', () => {
     const groove = resolveGroovePattern(DEMO_SWING_PATTERN, PLAYER_GROOVE_LENGTH, true)
     const bpm = 110
     const compiled = compileGroove({ bars: [DEMO_TRACKS[0].bars[0]], groove })
@@ -127,8 +132,9 @@ describe('demo player — 6-cell bars with 8-cell groove', () => {
       compiled.beats.length,
       bpm,
     )
-    // beatSize = cellsPerBar / 2 = 4; tempo = (4/4) * bpm * TICKS_PER_EIGHTH
     expect(playbackTempo).toBe((4 / 4) * bpm * TICKS_PER_EIGHTH)
+    const slotInterval = (1 / 16) * ((4 * 60) / playbackTempo)
+    expect(compiled.beats.length * slotInterval).toBeCloseTo((4 * 60) / bpm / 2)
   })
 
   it('compiles the full multi-track demoTrackBars record without errors', () => {
@@ -166,7 +172,7 @@ describe('meter=4 playback — 8-cell bars with 8-cell groove', () => {
     expect(() => compileGroove({ bars: METER4_BARS, groove })).not.toThrow()
   })
 
-  it('produces 4/4 playback tempo', () => {
+  it('produces legacy 4/4 bar duration at the user BPM', () => {
     const groove = resolveGroovePattern(GROOVE4, 8, false)
     const bpm = 110
     const compiled = compileGroove({ bars: [METER4_BARS[0]], groove })
@@ -177,7 +183,8 @@ describe('meter=4 playback — 8-cell bars with 8-cell groove', () => {
       compiled.beats.length,
       bpm,
     )
-    expect(playbackTempo).toBeCloseTo((4 / 4) * bpm * TICKS_PER_EIGHTH)
+    expect(playbackTempo).toBe((4 / 4) * bpm * TICKS_PER_EIGHTH)
+    expect(compiledPatternDurationSeconds(compiled, bpm)).toBeCloseTo((4 * 60) / bpm / 2)
   })
 
   it('each bar produces exactly 8 cell-slots', () => {
@@ -220,21 +227,45 @@ describe('meter=3 playback — 6-cell bars with 6-cell groove', () => {
     expect(() => compileGroove({ bars: METER3_BARS, groove })).not.toThrow()
   })
 
-  it('produces 3/4 playback tempo (75% of 4/4)', () => {
-    const groove = resolveGroovePattern(GROOVE3, 6, false)
+  it('migrated full-grid swing keeps even hit spacing (matches canvas)', () => {
+    const maaneSwing = '-<-<-<'
+    const maaneBar = 'b-stts'
+    const groove = resolveGroovePattern(maaneSwing, 6, true)
+    const beatHits = (beats: ReturnType<typeof compileGroove>['beats']) =>
+      beats.flatMap((slot, index) => (slot[0].length ? [index] : []))
+    const straight = compileGroove({ bars: [maaneBar], groove: GROOVE3 })
+    const swung = compileGroove({ bars: [maaneBar], groove })
+    expect(beatHits(swung.beats)).toEqual(beatHits(straight.beats))
+    expect(beatHits(swung.beats)).toEqual([0, 24, 36, 48, 60])
+  })
+
+  it('meter=3 playback stretches six-cell bars on an eight-cell groove', () => {
+    const maaneBar = 'b-stts'
+    const playbackGroove = resolveGroovePattern('-<-<-<', playbackGrooveLengthForMeter(3), true)
+    expect(playbackGroove.length).toBe(8)
+    const compiled = compileGroove({ bars: [maaneBar], groove: playbackGroove })
+    expect(compiled.cellsPerBar).toBe(8)
+    expect(compiled.beats.length).toBe(barSlotCount(8))
+    const beatHits = compiled.beats.flatMap((slot, index) => (slot[0].length ? [index] : []))
+    expect(beatHits).not.toEqual([0, 24, 36, 48, 60])
+    expect(beatHits[0]).toBe(0)
+  })
+
+  it('produces the same bar duration as 4/4 when compiled on the eight-cell playback groove', () => {
     const bpm = 110
-    const compiled = compileGroove({ bars: [METER3_BARS[0]], groove })
-    const playbackTempo = calcPlaybackTempo(
-      compiled.cellsPerBar,
-      compiled.cellCount,
-      compiled.preGrooveSlots,
-      compiled.beats.length,
+    const duration34 = compiledPatternDurationSeconds(
+      compileGroove({
+        bars: [METER3_BARS[0]],
+        groove: resolveGroovePattern(GROOVE3, playbackGrooveLengthForMeter(3), false),
+      }),
       bpm,
     )
-    // beatSize = cellsPerBar / 2 = 3; tempo = (3/4) * bpm * TICKS_PER_EIGHTH
-    expect(playbackTempo).toBeCloseTo((3 / 4) * bpm * TICKS_PER_EIGHTH)
-    // Sanity: 3/4 is slower than 4/4 at the same BPM
-    expect(playbackTempo).toBeLessThan(bpm * TICKS_PER_EIGHTH)
+    const duration44 = compiledPatternDurationSeconds(
+      compileGroove({ bars: [METER4_BARS[0]], groove: GROOVE4 }),
+      bpm,
+    )
+    expect(duration34).toBeCloseTo(duration44)
+    expect(duration44).toBeCloseTo((4 * 60) / bpm / 2)
   })
 
   it('each bar produces exactly 6 cell-slots', () => {
@@ -295,35 +326,22 @@ describe('player initialization — store carries 8-char pattern, rhythm needs 6
 // 6. Meter tempo comparison
 // ---------------------------------------------------------------------------
 
-describe('playback tempo — 3/4 is slower than 4/4 at the same BPM', () => {
+describe('playback tempo — meter=3 playback stretch matches 4/4 bar duration', () => {
   const bpm = 120
+  const playbackGroove3 = resolveGroovePattern(GROOVE3, playbackGrooveLengthForMeter(3), false)
 
-  const tempoFor = (bars: string[], groove: string) => {
-    const compiled = compileGroove({ bars: [bars[0]], groove })
-    return calcPlaybackTempo(
-      compiled.cellsPerBar,
-      compiled.cellCount,
-      compiled.preGrooveSlots,
-      compiled.beats.length,
-      bpm,
-    )
-  }
+  const durationFor = (bars: string[], groove: string) =>
+    compiledPatternDurationSeconds(compileGroove({ bars: [bars[0]], groove }), bpm)
 
-  it('produces lower tempo value for 3/4 than 4/4', () => {
-    const tempo34 = tempoFor(METER3_BARS, GROOVE3)
-    const tempo44 = tempoFor(METER4_BARS, GROOVE4)
-    expect(tempo34).toBeLessThan(tempo44)
+  it('matches 4/4 wall-clock bar duration at the same BPM', () => {
+    const duration34 = durationFor(METER3_BARS, playbackGroove3)
+    const duration44 = durationFor(METER4_BARS, GROOVE4)
+    expect(duration34).toBeCloseTo(duration44)
   })
 
-  it('tempo ratio matches the beat-size ratio (3:4)', () => {
-    const tempo34 = tempoFor(METER3_BARS, GROOVE3)
-    const tempo44 = tempoFor(METER4_BARS, GROOVE4)
-    expect(tempo34 / tempo44).toBeCloseTo(3 / 4)
-  })
-
-  it('demo 4/4 tempo equals the meter=4 tempo (both use 8-cell groove)', () => {
-    const tempoDemo = tempoFor(DEMO_TRACKS[0].bars, DEMO_SWING_PATTERN)
-    const tempo44 = tempoFor(METER4_BARS, GROOVE4)
+  it('demo 4/4 bar duration equals the meter=4 reference bar', () => {
+    const tempoDemo = durationFor(DEMO_TRACKS[0].bars, DEMO_SWING_PATTERN)
+    const tempo44 = durationFor(METER4_BARS, GROOVE4)
     expect(tempoDemo).toBeCloseTo(tempo44)
   })
 })

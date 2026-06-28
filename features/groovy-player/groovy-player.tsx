@@ -18,6 +18,7 @@ import {
   DEMO_SWING_PATTERN,
   isSwingPatternEmpty,
   PLAYER_GROOVE_LENGTH,
+  playbackGrooveLengthForMeter,
   resolveGroovePattern,
   swingBarSizeForMeter,
   usePlayerStore,
@@ -56,24 +57,22 @@ export const GroovyPlayer = ({ rhythm }: GroovyPlayerProps = {}) => {
   const router = useRouter()
 
   const searchParams = useSearchParams()
-  // Both `useSearchParams()` (returns null during static build) and
-  // `findRhythmBySlug` (reads localStorage) are client-only. Read them
-  // together after mount so server and client render the same initial tree.
+  // Slug and localStorage rhythm resolve only after mount so SSR and hydration match.
   const [clientState, setClientState] = useState<{
     slug: string | null
     rhythm: Rhythm | null
-  }>(() => {
-    const slug = searchParams.get('rhythm')
-    return { slug, rhythm: slug ? findRhythmBySlug(slug) : null }
-  })
+  }>({ slug: null, rhythm: null })
+  const [clientResolved, setClientResolved] = useState(Boolean(rhythm))
+
   useEffect(() => {
     const slug = searchParams.get('rhythm')
     setClientState({ slug, rhythm: slug ? findRhythmBySlug(slug) : null })
+    setClientResolved(true)
   }, [searchParams])
 
   const rhythmSlug = clientState.slug
   const loadedRhythm = rhythm ?? clientState.rhythm
-  const isPlayerDemo = !rhythm && !rhythmSlug && !loadedRhythm
+  const isPlayerDemo = clientResolved && !rhythm && !rhythmSlug && !loadedRhythm
 
   const barsPerRow = useBarsPerRow()
   const tempo = usePlayerStore((state) => state.tempo)
@@ -97,30 +96,33 @@ export const GroovyPlayer = ({ rhythm }: GroovyPlayerProps = {}) => {
     () => (loadedRhythm ? trackBarsRecord(loadedRhythm) : demoTrackBars()),
     [loadedRhythm],
   )
-  const grooveLength = loadedRhythm
+  const notationGrooveLength = loadedRhythm
     ? swingBarSizeForMeter(loadedRhythm.meter)
     : PLAYER_GROOVE_LENGTH
-  const groovePattern = resolveGroovePattern(swingPattern, grooveLength, swingEnabled)
+  const playbackGrooveLength = loadedRhythm
+    ? playbackGrooveLengthForMeter(loadedRhythm.meter)
+    : PLAYER_GROOVE_LENGTH
+  const groovePattern = resolveGroovePattern(swingPattern, playbackGrooveLength, swingEnabled)
 
   useLayoutEffect(() => {
-    if (swingPattern.length === grooveLength) return
-    setSwingPattern(swingPattern, grooveLength)
-  }, [grooveLength, setSwingPattern, swingPattern])
+    if (swingPattern.length === notationGrooveLength) return
+    setSwingPattern(swingPattern, notationGrooveLength)
+  }, [notationGrooveLength, setSwingPattern, swingPattern])
 
   useEffect(() => {
     if (!loadedRhythm) return
-    setSwingPattern(loadedRhythm.swingPattern, grooveLength)
+    setSwingPattern(loadedRhythm.swingPattern, notationGrooveLength)
     setSwingEnabled(!isSwingPatternEmpty(loadedRhythm.swingPattern))
     setTempo(loadedRhythm.tempo)
-  }, [grooveLength, loadedRhythm, setSwingEnabled, setSwingPattern, setTempo])
+  }, [notationGrooveLength, loadedRhythm, setSwingEnabled, setSwingPattern, setTempo])
 
   const getOverlayBars = useCallback(
     (patternBars: string[]) => {
       if (!hasMetronome) return null
-      const metronomeBar = metronomeBarForGrooveLength(grooveLength)
+      const metronomeBar = metronomeBarForGrooveLength(playbackGrooveLength)
       return patternBars.map(() => metronomeBar)
     },
-    [grooveLength, hasMetronome],
+    [playbackGrooveLength, hasMetronome],
   )
 
   const {
@@ -167,8 +169,8 @@ export const GroovyPlayer = ({ rhythm }: GroovyPlayerProps = {}) => {
   useEffect(() => () => stop(), [stop])
 
   useEffect(() => {
-    setSwingBarSize(grooveLength)
-  }, [grooveLength, setSwingBarSize])
+    setSwingBarSize(notationGrooveLength)
+  }, [notationGrooveLength, setSwingBarSize])
 
   useScreenWakeLock({ active: playing, enabled: preventScreenSleep })
 
@@ -181,10 +183,10 @@ export const GroovyPlayer = ({ rhythm }: GroovyPlayerProps = {}) => {
   }, [setMidinikeTempo, tempo])
 
   const validatePlaybackTracks = () => {
-    displayTracks.forEach((track) => validateBarsForGroove(track.bars, grooveLength))
-    if (loadedRhythm && !tracksMatchGrooveLength(playbackTracks, grooveLength)) {
+    displayTracks.forEach((track) => validateBarsForGroove(track.bars, notationGrooveLength))
+    if (loadedRhythm && !tracksMatchGrooveLength(playbackTracks, notationGrooveLength)) {
       throw new Error(
-        `Each bar must fill ${grooveLength} cells for beat size ${loadedRhythm.meter}`,
+        `Each bar must fill ${notationGrooveLength} cells for beat size ${loadedRhythm.meter}`,
       )
     }
   }
@@ -232,7 +234,11 @@ export const GroovyPlayer = ({ rhythm }: GroovyPlayerProps = {}) => {
     router.push(`/editor/${forked.slug}`)
   }
 
-  if (rhythmSlug && !loadedRhythm) {
+  if (!clientResolved && !rhythm) {
+    return <div className="flex w-full flex-col gap-3 lg:pt-4 xl:pt-6" aria-busy />
+  }
+
+  if (clientResolved && rhythmSlug && !loadedRhythm) {
     return (
       <div className="flex flex-col items-center gap-4 py-16">
         <Text>Rhythm not found.</Text>

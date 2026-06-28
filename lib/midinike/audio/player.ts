@@ -115,16 +115,17 @@ export const createMidiPlayer = (drums: number[]): MidiPlayer => {
       stopPlayLoop(state)
       state.loopStarted = true
       const wholeNoteDuration = (4 * 60) / bpm
+      const stepSec = density * wholeNoteDuration
       state.beatIndex = fromBeat < beats.length ? fromBeat : 0
       playBeatAt(state, contextTime(state), beats[state.beatIndex])
-      let nextLoopTime = contextTime(state) + density * wholeNoteDuration
+      let nextLoopTime = contextTime(state) + stepSec
 
       state.loopIntervalId = setInterval(() => {
-        if (contextTime(state) <= nextLoopTime - density * wholeNoteDuration) return
+        if (contextTime(state) <= nextLoopTime - stepSec) return
         state.beatIndex += 1
         if (state.beatIndex >= beats.length) state.beatIndex = 0
         playBeatAt(state, nextLoopTime, beats[state.beatIndex])
-        nextLoopTime += density * wholeNoteDuration
+        nextLoopTime += stepSec
         onBeat?.(state.beatIndex)
       }, MAX_LAG_MS)
     },
