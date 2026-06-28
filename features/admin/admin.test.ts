@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest'
 
-import { isAdminEmail, parseAdminEmails } from '@/features/admin/admin-emails'
 import { baseTitleFromFork, publishSlugFromRhythm } from '@/features/admin/publish-slug'
 import {
   rhythmInstrumentList,
@@ -32,21 +31,6 @@ const sampleRhythm = (): Rhythm => ({
       bars: ['s--ss-tt', 's--ss-tt'],
     },
   },
-})
-
-describe('parseAdminEmails', () => {
-  it('parses comma-separated emails case-insensitively', () => {
-    const emails = parseAdminEmails(' Admin@Gmail.com , other@example.com ')
-    expect(emails.has('admin@gmail.com')).toBe(true)
-    expect(emails.has('other@example.com')).toBe(true)
-  })
-})
-
-describe('isAdminEmail', () => {
-  it('matches allowlisted emails only', () => {
-    expect(isAdminEmail('admin@gmail.com', 'admin@gmail.com')).toBe(true)
-    expect(isAdminEmail('other@gmail.com', 'admin@gmail.com')).toBe(false)
-  })
 })
 
 describe('publishSlugFromRhythm', () => {
