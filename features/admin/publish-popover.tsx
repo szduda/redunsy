@@ -4,6 +4,7 @@ import { useState } from 'react'
 
 import { publishSlugFromRhythm } from '@/features/admin/publish-slug'
 import { PublishSlugInput } from '@/features/admin/publish-slug-input'
+import { usePublishRhythm } from '@/features/admin/use-publish-rhythm'
 import { useToast } from '@/features/admin/toasts'
 import { Popover } from '@/features/groovy-player/popover'
 import { DeployIcon } from '@/features/icons/deploy-icon'
@@ -11,7 +12,7 @@ import { slugFromTitle } from '@/features/rhythm/rhythm-helpers'
 import type { Rhythm } from '@/features/rhythm/rhythm.types'
 import { Button } from '@/features/theme/button'
 import { Text } from '@/features/theme/text'
-import { cn } from '../theme/cn'
+import { cn } from '@/features/theme/cn'
 
 type PublishPopoverProps = {
   rhythm: Rhythm
@@ -20,46 +21,38 @@ type PublishPopoverProps = {
 export const PublishPopover = ({ rhythm }: PublishPopoverProps) => {
   const { pushToast } = useToast()
   const [slug, setSlug] = useState(() => publishSlugFromRhythm(rhythm))
-  const [submitting, setSubmitting] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const { mutate, isPending } = usePublishRhythm()
 
-  const onSubmit = async (close: () => void) => {
+  const onSubmit = (close: () => void) => {
     const nextSlug = slugFromTitle(slug)
     if (!nextSlug) {
       setError('Enter a valid slug')
       return
     }
 
-    setSubmitting(true)
     setError(null)
     pushToast('Saving to database…')
 
-    try {
-      const response = await fetch('/api/admin/rhythms', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ slug: nextSlug, rhythm }),
-      })
-      const payload = (await response.json()) as { error?: string; url?: string; created?: boolean }
-
-      if (!response.ok) {
-        throw new Error(payload.error ?? 'Publish failed')
-      }
-
-      pushToast(
-        payload.created ? 'Created new published rhythm' : 'Updated published rhythm',
-        'success',
-      )
-      pushToast('Page revalidated and warmed', 'success')
-      pushToast(`Live at ${payload.url ?? `/rhythm/${nextSlug}`}`, 'success')
-      close()
-    } catch (publishError) {
-      const message = publishError instanceof Error ? publishError.message : 'Publish failed'
-      setError(message)
-      pushToast(message, 'error')
-    } finally {
-      setSubmitting(false)
-    }
+    mutate(
+      { slug: nextSlug, rhythm },
+      {
+        onSuccess: (payload) => {
+          pushToast(
+            payload.created ? 'Created new published rhythm' : 'Updated published rhythm',
+            'success',
+          )
+          pushToast('Page revalidated and warmed', 'success')
+          pushToast(`Live at ${payload.url}`, 'success')
+          close()
+        },
+        onError: (publishError) => {
+          const message = publishError instanceof Error ? publishError.message : 'Publish failed'
+          setError(message)
+          pushToast(message, 'error')
+        },
+      },
+    )
   }
 
   return (
@@ -73,8 +66,8 @@ export const PublishPopover = ({ rhythm }: PublishPopoverProps) => {
               {error}
             </Text>
           ) : null}
-          <Button disabled={submitting} onClick={() => onSubmit(close)} variant="filled">
-            {submitting ? 'Publishing…' : 'Publish'}
+          <Button disabled={isPending} onClick={() => onSubmit(close)} variant="filled">
+            {isPending ? 'Publishing…' : 'Publish'}
           </Button>
         </div>
       )}
@@ -82,7 +75,15 @@ export const PublishPopover = ({ rhythm }: PublishPopoverProps) => {
       preferredDirection="bottom"
     >
       {({ toggle, open }) => (
-        <Button className={cn("!justify-start w-full", open && '!text-[#af8545] dark:!text-yellowy-light bg-zinc-200 bg-zinc-200/70 dark:bg-zinc-800/50')} onClick={toggle} variant="subtle">
+        <Button
+          className={cn(
+            '!justify-start w-full',
+            open &&
+              '!text-[#af8545] dark:!text-yellowy-light bg-zinc-200 bg-zinc-200/70 dark:bg-zinc-800/50',
+          )}
+          onClick={toggle}
+          variant="subtle"
+        >
           <DeployIcon className="mr-1 size-4" /> Publish as…
         </Button>
       )}

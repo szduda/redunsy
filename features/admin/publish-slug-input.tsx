@@ -1,8 +1,7 @@
 'use client'
 
-import { useCallback, useState } from 'react'
-
 import { FetchUrlButton, type FetchUrlButtonState } from '@/features/admin/fetch-url-button'
+import { useRhythmPageStatus } from '@/features/admin/use-rhythm-page-status'
 import { slugFromTitle } from '@/features/rhythm/rhythm-helpers'
 import { Input } from '@/features/theme/input'
 import { cn } from '@/features/theme/cn'
@@ -12,42 +11,26 @@ type PublishSlugInputProps = {
   onChange: (value: string) => void
 }
 
-const rhythmPageUrl = (slug: string) => {
-  const normalized = slugFromTitle(slug.trim())
-  if (!normalized) return null
-  return `${window.location.origin}/rhythm/${normalized}`
-}
-
 export const PublishSlugInput = ({ value, onChange }: PublishSlugInputProps) => {
-  const [state, setState] = useState<FetchUrlButtonState>('idle')
-  const [status, setStatus] = useState<number | null>(null)
+  const { mutate, isPending, data: status, reset } = useRhythmPageStatus()
 
-  const resetCheck = useCallback(() => {
-    setState('idle')
-    setStatus(null)
-  }, [])
+  const buttonState: FetchUrlButtonState = isPending
+    ? 'loading'
+    : status !== undefined
+      ? 'result'
+      : 'idle'
 
-  const checkUrl = useCallback(async () => {
-    const url = rhythmPageUrl(value)
-    if (!url) {
-      resetCheck()
+  const checkUrl = () => {
+    if (!slugFromTitle(value.trim())) {
+      reset()
       return
     }
-
-    setState('loading')
-    try {
-      const response = await fetch(url, { method: 'HEAD', cache: 'no-store' })
-      setStatus(response.status)
-      setState('result')
-    } catch {
-      setStatus(0)
-      setState('result')
-    }
-  }, [resetCheck, value])
+    mutate(value)
+  }
 
   const onValueChange = (next: string) => {
     onChange(next)
-    resetCheck()
+    reset()
   }
 
   return (
@@ -55,12 +38,12 @@ export const PublishSlugInput = ({ value, onChange }: PublishSlugInputProps) => 
       <Input
         autoComplete="off"
         className={cn('pr-10')}
-        onBlur={() => void checkUrl()}
+        onBlur={checkUrl}
         onChange={(event) => onValueChange(event.target.value)}
         placeholder="slug"
         value={value}
       />
-      <FetchUrlButton onClick={() => void checkUrl()} state={state} status={status} />
+      <FetchUrlButton onClick={checkUrl} state={buttonState} status={status ?? null} />
     </div>
   )
 }

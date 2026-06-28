@@ -1,9 +1,10 @@
 'use client'
 
 import dynamic from 'next/dynamic'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 import { hasAdminHintCookie } from '@/features/admin/admin-cookies'
+import { useAdminSession } from '@/features/admin/use-admin-session'
 import type { Rhythm } from '@/features/rhythm/rhythm.types'
 
 const PublishRhythmButton = dynamic(
@@ -17,19 +18,9 @@ type PublishGateProps = {
 }
 
 export const PublishGate = ({ rhythm }: PublishGateProps) => {
-  const [authenticated, setAuthenticated] = useState(false)
+  const [hasHint] = useState(hasAdminHintCookie)
+  const { data } = useAdminSession(hasHint)
 
-  useEffect(() => {
-    if (!hasAdminHintCookie()) return
-
-    fetch('/api/admin/session')
-      .then((response) => response.json())
-      .then((payload: { authenticated?: boolean }) =>
-        setAuthenticated(payload.authenticated === true),
-      )
-      .catch(() => setAuthenticated(false))
-  }, [])
-
-  if (!authenticated) return null
+  if (!data?.authenticated) return null
   return <PublishRhythmButton rhythm={rhythm} />
 }
