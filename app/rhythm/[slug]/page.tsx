@@ -6,7 +6,7 @@ import { getPublishedSlugs, getRhythmDetail } from '@/db/rhythms'
 import { GroovyPlayer } from '@/features/groovy-player/groovy-player'
 
 export const dynamic = 'force-static'
-export const dynamicParams = false
+export const dynamicParams = true
 
 export const generateStaticParams = async () => {
   const slugs = await getPublishedSlugs()

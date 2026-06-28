@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
 
+import { PublishGate } from '@/features/admin/publish-gate'
 import { CollapsibleMetadata } from '@/features/editor/collapsible-metadata'
 import { BackIcon } from '@/features/icons/back-icon'
 import { Note16Icon } from '@/features/icons/note-16-icon'
@@ -228,6 +229,7 @@ export const RhythmEditor = () => {
           >
             <Note16Icon className="mr-1 size-4" /> Show in Player
           </Button>
+          <PublishGate rhythm={rhythm} />
         </FixedSideActions>
 
         <section className="flex w-full flex-col gap-2 bg-white md:rounded-xl md:border md:border-zinc-100 dark:bg-zinc-900/60 dark:border-transparent">
