@@ -18,7 +18,22 @@ export const authOptions: NextAuthOptions = {
     updateAge: 0,
   },
   callbacks: {
-    signIn: ({ user }) => isAdminEmail(user.email, process.env.ADMIN_EMAILS),
+    signIn: ({ user }) => {
+      const email = user.email?.toLowerCase() ?? 'unknown'
+
+      if (!user.email) {
+        console.warn('[auth] sign-in failed: missing email from Google profile')
+        return false
+      }
+
+      if (!isAdminEmail(user.email, process.env.ADMIN_EMAILS)) {
+        console.warn(`[auth] sign-in rejected: ${email} is not in ADMIN_EMAILS`)
+        return false
+      }
+
+      console.info(`[auth] sign-in success: ${email}`)
+      return true
+    },
     jwt: ({ token, user }) => {
       if (user?.email) token.email = user.email
       return token

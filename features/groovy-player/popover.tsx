@@ -11,19 +11,14 @@ import {
 } from 'react'
 import { createPortal } from 'react-dom'
 
+import {
+  POPOVER_GAP_PX,
+  resolvePopoverStyle,
+  type PopoverDirection,
+} from '@/features/groovy-player/popover-position'
 import { cn } from '@/features/theme/cn'
 
-export type PopoverDirection = 'top' | 'bottom' | 'left' | 'right'
-
-const POPOVER_GAP_PX = 4
-const POPOVER_MARGIN_PX = 8
-
-const OPPOSITE_DIRECTION: Record<PopoverDirection, PopoverDirection> = {
-  top: 'bottom',
-  bottom: 'top',
-  left: 'right',
-  right: 'left',
-}
+export type { PopoverDirection } from '@/features/groovy-player/popover-position'
 
 export const popoverPanelBaseClass =
   'fixed z-30 touch-none overscroll-contain flex flex-col gap-1 rounded-md bg-white p-3 shadow-lg dark:bg-black border border-zinc-200 dark:border-zinc-500/50'
@@ -35,70 +30,6 @@ export const popoverTriggerOpenClass =
   'bg-zinc-200/60 !text-yellowy dark:bg-zinc-700/50 !dark:text-yellowy'
 
 export const popoverPanelClass = cn(popoverPanelBaseClass, 'w-32')
-
-type PanelPosition = {
-  top: number
-  left: number
-  transform: string
-}
-
-const getPanelPosition = (direction: PopoverDirection, trigger: DOMRect): PanelPosition => {
-  switch (direction) {
-    case 'bottom':
-      return {
-        top: trigger.bottom + POPOVER_GAP_PX,
-        left: trigger.left + trigger.width / 2,
-        transform: 'translateX(-50%)',
-      }
-    case 'top':
-      return {
-        top: trigger.top - POPOVER_GAP_PX,
-        left: trigger.left + trigger.width / 2,
-        transform: 'translate(-50%, -100%)',
-      }
-    case 'left':
-      return {
-        top: trigger.top + trigger.height / 2,
-        left: trigger.left - POPOVER_GAP_PX,
-        transform: 'translate(-100%, -50%)',
-      }
-    case 'right':
-      return {
-        top: trigger.top + trigger.height / 2,
-        left: trigger.right + POPOVER_GAP_PX,
-        transform: 'translateY(-50%)',
-      }
-  }
-}
-
-const resolveDirection = (
-  preferred: PopoverDirection,
-  trigger: DOMRect,
-  panel: { width: number; height: number },
-): PopoverDirection => {
-  const space = {
-    top: trigger.top - POPOVER_MARGIN_PX,
-    bottom: window.innerHeight - trigger.bottom - POPOVER_MARGIN_PX,
-    left: trigger.left - POPOVER_MARGIN_PX,
-    right: window.innerWidth - trigger.right - POPOVER_MARGIN_PX,
-  }
-
-  const size = {
-    top: panel.height,
-    bottom: panel.height,
-    left: panel.width,
-    right: panel.width,
-  }
-
-  const fits = (direction: PopoverDirection) => space[direction] >= size[direction]
-
-  if (fits(preferred)) return preferred
-
-  const opposite = OPPOSITE_DIRECTION[preferred]
-  if (fits(opposite)) return opposite
-
-  return space[preferred] >= space[opposite] ? preferred : opposite
-}
 
 const getFullPanelTop = (root: HTMLElement, anchor: 'header' | 'trigger'): number =>
   anchor === 'trigger'
@@ -175,11 +106,12 @@ export const Popover = ({
     setBackdropStyle(undefined)
 
     const triggerRect = trigger.getBoundingClientRect()
-    const direction = resolveDirection(preferredDirection, triggerRect, {
-      width: panelEl.offsetWidth,
-      height: panelEl.offsetHeight,
-    })
-    const position = getPanelPosition(direction, triggerRect)
+    const position = resolvePopoverStyle(
+      triggerRect,
+      { width: panelEl.offsetWidth, height: panelEl.offsetHeight },
+      preferredDirection,
+      { width: window.innerWidth, height: window.innerHeight },
+    )
 
     setPanelStyle({
       top: position.top,

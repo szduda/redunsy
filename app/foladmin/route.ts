@@ -9,8 +9,11 @@ const sevenDays = 7 * 24 * 60 * 60
 export const GET = async () => {
   const session = await requireAdminSession()
   if (!session) {
+    console.info('[auth] /foladmin: no active admin session, redirecting to Google sign-in')
     redirect('/api/auth/signin/google?callbackUrl=/foladmin')
   }
+
+  console.info(`[auth] /foladmin: admin session active for ${session.user?.email ?? 'unknown'}`)
 
   const cookieStore = await cookies()
   cookieStore.set(ADMIN_HINT_COOKIE, '1', {
