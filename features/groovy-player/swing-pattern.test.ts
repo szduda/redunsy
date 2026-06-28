@@ -3,6 +3,7 @@ import { describe, expect, it } from 'vitest'
 import {
   barSizeFromTrackBars,
   DEFAULT_SWING_PATTERN,
+  DEMO_NOTATION_SWING_PATTERN,
   DEMO_SWING_PATTERN,
   defaultSwingPatternForMeter,
   fitSwingPattern,
@@ -20,6 +21,7 @@ describe('swing pattern helpers', () => {
   })
 
   it('pads demo swing patterns to the player groove length', () => {
+    expect(DEMO_NOTATION_SWING_PATTERN).toBe('-<(-<(')
     expect(fitSwingPattern('-<(-<(', PLAYER_GROOVE_LENGTH)).toBe('-<(-<(--')
     expect(resolveGroovePattern('-<(-<(', PLAYER_GROOVE_LENGTH, true)).toBe('-<(-<(--')
     expect(resolveGroovePattern('-<(-<(', PLAYER_GROOVE_LENGTH, false)).toBe('--------')

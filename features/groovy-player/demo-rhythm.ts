@@ -1,13 +1,13 @@
 import {
-  DEMO_SWING_PATTERN,
+  DEMO_NOTATION_SWING_PATTERN,
   normalizeSwingPatternForMeter,
-  PLAYER_GROOVE_LENGTH,
+  swingBarSizeForMeter,
 } from '@/features/groovy-player/player.store'
 import { DEMO_TRACKS } from '@/features/groovy-player/demo-tracks'
 import { forkRhythmToMyRhythms } from '@/features/rhythm/rhythm-catalog'
 import type { Rhythm, Track } from '@/features/rhythm/rhythm.types'
 
-export const PLAYER_DEMO_METER = 4
+export const PLAYER_DEMO_METER = 3
 
 export const PLAYER_DEMO_TITLE = 'Soli (Player Demo)'
 
@@ -18,7 +18,9 @@ export const buildPlayerDemoRhythm = (tempo: number, swingPattern: string): Rhyt
   const now = Date.now()
   const meter = PLAYER_DEMO_METER
   const normalizedSwing = normalizeSwingPatternForMeter(
-    swingPattern.length === PLAYER_GROOVE_LENGTH ? swingPattern : DEMO_SWING_PATTERN,
+    swingPattern.length === swingBarSizeForMeter(meter)
+      ? swingPattern
+      : DEMO_NOTATION_SWING_PATTERN,
     meter,
   )
 

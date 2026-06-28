@@ -4,7 +4,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react'
 
 import { DEMO_TRACKS, demoTrackBars } from '@/features/groovy-player/demo-tracks'
-import { forkPlayerDemoToMyRhythms } from '@/features/groovy-player/demo-rhythm'
+import { forkPlayerDemoToMyRhythms, PLAYER_DEMO_METER } from '@/features/groovy-player/demo-rhythm'
 import { PlayerBottomNav } from '@/features/groovy-player/player-bottom-nav'
 import { PlayerDemoBanner } from '@/features/groovy-player/player-demo-banner'
 import { useScreenWakeLock } from '@/features/groovy-player/use-screen-wake-lock'
@@ -15,9 +15,9 @@ import { FixedSideActions } from '@/features/layout/fixed-side-actions'
 import { useTopNavSticky } from '@/features/layout/use-top-nav-sticky'
 import {
   DEFAULT_TEMPO,
+  DEMO_NOTATION_SWING_PATTERN,
   DEMO_SWING_PATTERN,
   isSwingPatternEmpty,
-  PLAYER_GROOVE_LENGTH,
   playbackGrooveLengthForMeter,
   resolveGroovePattern,
   swingBarSizeForMeter,
@@ -98,10 +98,10 @@ export const GroovyPlayer = ({ rhythm }: GroovyPlayerProps = {}) => {
   )
   const notationGrooveLength = loadedRhythm
     ? swingBarSizeForMeter(loadedRhythm.meter)
-    : PLAYER_GROOVE_LENGTH
+    : swingBarSizeForMeter(PLAYER_DEMO_METER)
   const playbackGrooveLength = loadedRhythm
     ? playbackGrooveLengthForMeter(loadedRhythm.meter)
-    : PLAYER_GROOVE_LENGTH
+    : playbackGrooveLengthForMeter(PLAYER_DEMO_METER)
   const playbackTracksWithShaker = useMemo(
     () => withMetronomeShakerTrack(playbackTracks, playbackGrooveLength),
     [playbackGrooveLength, playbackTracks],
@@ -115,7 +115,7 @@ export const GroovyPlayer = ({ rhythm }: GroovyPlayerProps = {}) => {
 
   useEffect(() => {
     if (!isPlayerDemo) return
-    setSwingPattern(DEMO_SWING_PATTERN, PLAYER_GROOVE_LENGTH)
+    setSwingPattern(DEMO_NOTATION_SWING_PATTERN, swingBarSizeForMeter(PLAYER_DEMO_METER))
     setSwingEnabled(true)
   }, [isPlayerDemo, setSwingEnabled, setSwingPattern])
 

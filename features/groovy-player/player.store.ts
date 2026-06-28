@@ -59,8 +59,14 @@ const GROOVE_CHARS = new Set(['-', '<', '(', '>', ')'])
 export const sanitizeSwingPattern = (pattern: string, barSize: number) =>
   fitSwingPattern([...pattern].filter((char) => GROOVE_CHARS.has(char)).join(''), barSize)
 
-/** Eight-cell demo swing derived from {@link DEFAULT_SWING_PATTERN}. */
+/** Eight-cell playback swing derived from {@link DEFAULT_SWING_PATTERN}. */
 export const DEMO_SWING_PATTERN = fitSwingPattern(DEFAULT_SWING_PATTERN, PLAYER_GROOVE_LENGTH)
+
+/** Six-cell swing shown in demo player settings (3/4 notation). */
+export const DEMO_NOTATION_SWING_PATTERN = fitSwingPattern(
+  DEFAULT_SWING_PATTERN,
+  swingBarSizeForMeter(3),
+)
 
 export const normalizeSwingPattern = (pattern: string, barSize: number) =>
   pattern.length === barSize ? pattern : straightGroovePattern(barSize)
@@ -133,6 +139,7 @@ type PersistedPlayerState = Pick<
   | 'mobileBarsPerRow'
   | 'tempo'
   | 'swingPattern'
+  | 'swingBarSize'
   | 'swingEnabled'
   | 'hasMetronome'
   | 'showBarIndex'
@@ -164,8 +171,8 @@ export const usePlayerStore = create<PlayerState>()(
       setIsPlaying: (isPlaying) => set({ isPlaying }),
       beatIndex: -1,
       setBeatIndex: (beatIndex) => set({ beatIndex }),
-      swingPattern: DEMO_SWING_PATTERN,
-      swingBarSize: PLAYER_GROOVE_LENGTH,
+      swingPattern: DEMO_NOTATION_SWING_PATTERN,
+      swingBarSize: swingBarSizeForMeter(3),
       setSwingPattern: (swingPattern, barSize) => {
         const size = barSize ?? get().swingBarSize
         set({ swingPattern: fitSwingPattern(swingPattern, size), swingBarSize: size })
@@ -197,6 +204,7 @@ export const usePlayerStore = create<PlayerState>()(
         mobileBarsPerRow: state.mobileBarsPerRow,
         tempo: state.tempo,
         swingPattern: state.swingPattern,
+        swingBarSize: state.swingBarSize,
         swingEnabled: state.swingEnabled,
         hasMetronome: state.hasMetronome,
         showBarIndex: state.showBarIndex,
@@ -216,9 +224,16 @@ export const usePlayerStore = create<PlayerState>()(
             ? saved.mobileBarsPerRow
             : current.mobileBarsPerRow,
           tempo: typeof saved.tempo === 'number' ? saved.tempo : current.tempo,
+          swingBarSize:
+            typeof saved.swingBarSize === 'number' ? saved.swingBarSize : current.swingBarSize,
           swingPattern:
             typeof saved.swingPattern === 'string'
-              ? fitSwingPattern(saved.swingPattern, PLAYER_GROOVE_LENGTH)
+              ? fitSwingPattern(
+                  saved.swingPattern,
+                  typeof saved.swingBarSize === 'number'
+                    ? saved.swingBarSize
+                    : current.swingBarSize,
+                )
               : current.swingPattern,
           showBarIndex:
             typeof saved.showBarIndex === 'boolean'
