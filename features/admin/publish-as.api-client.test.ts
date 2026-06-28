@@ -66,10 +66,7 @@ describe('fetchRhythmPageStatus', () => {
   })
 
   it('HEAD-checks the public rhythm page for an existing slug', async () => {
-    vi.stubGlobal(
-      'fetch',
-      vi.fn().mockResolvedValue({ status: 200, ok: true }),
-    )
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ status: 200, ok: true }))
 
     const status = await fetchRhythmPageStatus('existing-slug')
 
@@ -81,10 +78,7 @@ describe('fetchRhythmPageStatus', () => {
   })
 
   it('returns 404 status for a missing slug page', async () => {
-    vi.stubGlobal(
-      'fetch',
-      vi.fn().mockResolvedValue({ status: 404, ok: false }),
-    )
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ status: 404, ok: false }))
 
     expect(await fetchRhythmPageStatus('missing-slug')).toBe(404)
   })
@@ -96,10 +90,7 @@ describe('fetchRhythmPageStatus', () => {
   })
 
   it('normalizes punctuation-only slug input before checking the page', async () => {
-    vi.stubGlobal(
-      'fetch',
-      vi.fn().mockResolvedValue({ status: 404, ok: false }),
-    )
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ status: 404, ok: false }))
 
     const status = await fetchRhythmPageStatus('!!!')
 
