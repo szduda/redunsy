@@ -50,11 +50,7 @@ export const renderWithPublishProviders = (
   const client = createTestQueryClient()
 
   const Wrapper = ({ children }: ProviderProps) =>
-    createElement(
-      QueryClientProvider,
-      { client },
-      createElement(ToastProvider, null, children),
-    )
+    createElement(QueryClientProvider, { client }, createElement(ToastProvider, null, children))
 
   return render(ui, { wrapper: Wrapper, ...options })
 }

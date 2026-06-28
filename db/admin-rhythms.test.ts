@@ -91,9 +91,7 @@ describe('upsertPublishedRhythm', () => {
       expect.objectContaining({
         title: 'Updated Title',
         published: true,
-        patterns: expect.arrayContaining([
-          expect.objectContaining({ instrument: 'djembe' }),
-        ]),
+        patterns: expect.arrayContaining([expect.objectContaining({ instrument: 'djembe' })]),
       }),
     )
     expect(dbMocks.mockUpdateWhere).toHaveBeenCalledOnce()
