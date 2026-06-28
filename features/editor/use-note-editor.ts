@@ -30,7 +30,7 @@ export const useNoteEditor = (
   useEffect(() => {
     setSelection(defaultNoteSelection(bars))
     setSelectionMode('note')
-  }, [trackId])
+  }, [trackId, bars])
 
   const selectNote = useCallback((barIndex: number, glyphIndex: number) => {
     setSelection({ barIndex, glyphIndex })
