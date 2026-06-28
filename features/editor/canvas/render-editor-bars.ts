@@ -1,8 +1,13 @@
-import { yellowyBorderColor, yellowyGapFill } from '@/lib/theme/yellowy'
+import {
+  DRAG_PREVIEW_OVERLAY_OPACITY,
+  DRAG_SOURCE_OVERLAY_OPACITY,
+  yellowyOverlay,
+} from '@/lib/theme/yellowy'
 import type { DragSlot } from '@/features/editor/notation/reorder-bars'
 import { darkCanvasColors, type CanvasColors } from '@/features/groovy-player/canvas/canvas-colors'
 import {
   BAR_GAP_PX,
+  barHeightForBar,
   barTopForIndex,
   barWidthForCanvas,
   layoutBar,
@@ -13,6 +18,7 @@ import type { CanvasElement } from '@/features/groovy-player/canvas/types'
 
 type RenderEditorBarSlotsArgs = {
   slots: DragSlot[]
+  draggedBar: string
   instrument: string
   context: CanvasRenderingContext2D
   canvasWidth: number
@@ -20,56 +26,94 @@ type RenderEditorBarSlotsArgs = {
   dark?: boolean
 }
 
-const drawGapSlot = (
+export const drawYellowyOverlay = (
   context: CanvasRenderingContext2D,
-  slotIndex: number,
-  canvasWidth: number,
-  barsPerRow: number,
-  rowHeights: number[],
+  left: number,
+  top: number,
+  width: number,
+  height: number,
   dark: boolean,
+  opacity: number,
 ) => {
-  const barWidth = barWidthForCanvas(canvasWidth, barsPerRow)
-  const row = Math.trunc(slotIndex / barsPerRow)
-  const barHeight = rowHeights[row] ?? 0
-  const top = barTopForIndex(slotIndex, barsPerRow, rowHeights)
-  const left = (slotIndex % barsPerRow) * (barWidth + BAR_GAP_PX)
+  context.fillStyle = yellowyOverlay(dark, opacity)
+  context.fillRect(left, top, width, height)
+}
 
-  context.fillStyle = yellowyGapFill(dark)
-  context.fillRect(left, top, barWidth, barHeight)
-  context.strokeStyle = yellowyBorderColor(dark)
-  context.lineWidth = 2
-  context.setLineDash([5, 4])
-  context.strokeRect(left + 1, top + 1, barWidth - 2, barHeight - 2)
-  context.setLineDash([])
+const renderBarSlot = ({
+  bar,
+  slotIndex,
+  barsForLayout,
+  instrument,
+  context,
+  canvasWidth,
+  barsPerRow,
+  rowHeights,
+  overlayOpacity,
+  dark,
+}: {
+  bar: string
+  slotIndex: number
+  barsForLayout: string[]
+  instrument: string
+  context: CanvasRenderingContext2D
+  canvasWidth: number
+  barsPerRow: number
+  rowHeights: number[]
+  overlayOpacity?: number
+  dark: boolean
+}) => {
+  const elements = renderBar({
+    bars: barsForLayout,
+    instrument,
+    canvas: context.canvas,
+    context,
+    canvasWidth,
+    barIndex: slotIndex,
+    barsPerRow,
+    rowHeights,
+  })
+  const barEl = elements.find((element) => element.type === 'bar')
+  if (barEl && overlayOpacity !== undefined) {
+    drawYellowyOverlay(
+      context,
+      barEl.left,
+      barEl.top,
+      barEl.width,
+      barEl.height,
+      dark,
+      overlayOpacity,
+    )
+  }
+  return elements
 }
 
 export const renderEditorBarSlots = ({
   slots,
+  draggedBar,
   instrument,
   context,
   canvasWidth,
   barsPerRow,
   dark = true,
 }: RenderEditorBarSlotsArgs) => {
-  const barsForLayout = slots.map((slot) => slot.bar ?? '-'.repeat(8))
+  const barsForLayout = slots.map((slot) => slot.bar ?? draggedBar)
   const rowHeights = rowHeightsForBars(canvasWidth, barsPerRow, barsForLayout)
   const elements: CanvasElement[] = []
 
   slots.forEach((slot, slotIndex) => {
-    if (slot.bar === null) {
-      drawGapSlot(context, slotIndex, canvasWidth, barsPerRow, rowHeights, dark)
-      return
-    }
-
-    const slotElements = renderBar({
-      bars: barsForLayout,
+    const bar = slot.bar ?? draggedBar
+    const overlayOpacity = slot.bar === null ? DRAG_PREVIEW_OVERLAY_OPACITY : undefined
+    const slotElements = renderBarSlot({
+      bar,
+      slotIndex,
+      barsForLayout,
       instrument,
-      canvas: context.canvas,
       context,
       canvasWidth,
-      barIndex: slotIndex,
       barsPerRow,
       rowHeights,
+      overlayOpacity,
+      dark,
     })
     elements.push(...slotElements)
   })
@@ -77,38 +121,122 @@ export const renderEditorBarSlots = ({
   return elements
 }
 
+export const drawBarOverlayAtIndex = ({
+  barIndex,
+  bars,
+  canvasWidth,
+  barsPerRow,
+  context,
+  dark,
+  opacity,
+}: {
+  barIndex: number
+  bars: string[]
+  canvasWidth: number
+  barsPerRow: number
+  context: CanvasRenderingContext2D
+  dark: boolean
+  opacity: number
+}) => {
+  const rowHeights = rowHeightsForBars(canvasWidth, barsPerRow, bars)
+  const layout = layoutBar({
+    bars,
+    canvasWidth,
+    barIndex,
+    barsPerRow,
+    rowHeights,
+  })
+  drawYellowyOverlay(
+    context,
+    layout.barEl.left,
+    layout.barEl.top,
+    layout.barEl.width,
+    layout.barEl.height,
+    dark,
+    opacity,
+  )
+}
+
+export const renderDraggedBarAtSource = ({
+  bar,
+  sourceIndex,
+  bars,
+  instrument,
+  context,
+  canvasWidth,
+  barsPerRow,
+  dark = true,
+}: {
+  bar: string
+  sourceIndex: number
+  bars: string[]
+  instrument: string
+  context: CanvasRenderingContext2D
+  canvasWidth: number
+  barsPerRow: number
+  dark?: boolean
+}) => {
+  const rowHeights = rowHeightsForBars(canvasWidth, barsPerRow, bars)
+  renderBar({
+    bars,
+    instrument,
+    canvas: context.canvas,
+    context,
+    canvasWidth,
+    barIndex: sourceIndex,
+    barsPerRow,
+    rowHeights,
+  })
+  drawBarOverlayAtIndex({
+    barIndex: sourceIndex,
+    bars,
+    canvasWidth,
+    barsPerRow,
+    context,
+    dark,
+    opacity: DRAG_SOURCE_OVERLAY_OPACITY,
+  })
+}
+
 export const renderGhostBar = ({
   bar,
   instrument,
   context,
   canvasWidth,
+  barsPerRow,
   pointerX,
   pointerY,
+  grabOffsetX,
+  grabOffsetY,
   palette = darkCanvasColors,
 }: {
   bar: string
   instrument: string
   context: CanvasRenderingContext2D
   canvasWidth: number
+  barsPerRow: number
   pointerX: number
   pointerY: number
+  grabOffsetX: number
+  grabOffsetY: number
   palette?: CanvasColors
 }) => {
+  const rowHeights = [barHeightForBar(canvasWidth, barsPerRow, bar)]
   const layout = layoutBar({
     bars: [bar],
     canvasWidth,
     barIndex: 0,
-    barsPerRow: 1,
+    barsPerRow,
     palette,
+    rowHeights,
   })
 
-  const centerX = layout.barEl.left + layout.barEl.width / 2
-  const centerY = layout.barEl.top + layout.barEl.height / 2
-  const dx = pointerX - centerX
-  const dy = pointerY - centerY
+  const left = pointerX - grabOffsetX
+  const top = pointerY - grabOffsetY
+  const dx = left - layout.barEl.left
+  const dy = top - layout.barEl.top
 
   context.save()
-  context.globalAlpha = 0.8
   context.translate(dx, dy)
   renderBar({
     bars: [bar],
@@ -117,7 +245,38 @@ export const renderGhostBar = ({
     context,
     canvasWidth,
     barIndex: 0,
-    barsPerRow: 1,
+    barsPerRow,
+    rowHeights,
   })
   context.restore()
+}
+
+export const grabOffsetForBar = (
+  barIndex: number,
+  bars: string[],
+  canvasWidth: number,
+  barsPerRow: number,
+  pointerX: number,
+  pointerY: number,
+) => {
+  const bounds = barBoundsAtIndex(bars, barIndex, canvasWidth, barsPerRow)
+  return {
+    grabOffsetX: pointerX - bounds.left,
+    grabOffsetY: pointerY - bounds.top,
+  }
+}
+
+export const barBoundsAtIndex = (
+  bars: string[],
+  barIndex: number,
+  canvasWidth: number,
+  barsPerRow: number,
+) => {
+  const rowHeights = rowHeightsForBars(canvasWidth, barsPerRow, bars)
+  const barWidth = barWidthForCanvas(canvasWidth, barsPerRow)
+  const bar = bars[barIndex] ?? ''
+  const height = barHeightForBar(canvasWidth, barsPerRow, bar)
+  const top = barTopForIndex(barIndex, barsPerRow, rowHeights)
+  const left = (barIndex % barsPerRow) * (barWidth + BAR_GAP_PX)
+  return { left, top, width: barWidth, height }
 }
