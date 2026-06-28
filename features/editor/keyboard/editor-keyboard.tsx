@@ -1,16 +1,17 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 
 import {
-  defaultFlamForNote,
-  flamMainNote,
+  flamDisableTarget,
+  flamEnableTarget,
   flamSymbolsForInstrument,
   isFlamSymbol,
 } from '@/features/editor/flam-sounds'
 import { instrumentSounds } from '@/features/editor/instrument-sounds'
 import { DisabledHintButton } from '@/features/editor/keyboard/disabled-hint-button'
 import {
+  flamToggleActiveClass,
   flamToggleBackgroundStyle,
   lengthToggleActiveClass,
   noteKeyShadowStyle,
@@ -68,7 +69,6 @@ const NO_SELECTION_HINT = 'Select a note on the canvas first'
 const NO_BAR_HINT = 'Select a bar on the canvas first'
 const PLAIN_ONLY_HINT = 'Only plain 8th notes can be split'
 const EIGHTH_ONLY_HINT = 'Select a 16th or triplet note to merge to 8th'
-const PAUSE_FLAM_HINT = 'Flam cannot apply to a rest'
 const BAR_DRAG_HINT = 'You can drag & drop bars to reposition'
 
 export const EditorKeyboard = ({
@@ -98,6 +98,8 @@ export const EditorKeyboard = ({
 
   const [lengthMode, setLengthMode] = useState<NoteLengthTone>('8th')
   const [flamMode, setFlamMode] = useState(false)
+  const flamBaseNoteRef = useRef<string | null>(null)
+  const flamSelectionKeyRef = useRef<string | null>(null)
 
   const flamSymbols = flamSymbolsForInstrument(instrument)
   const allSounds = instrumentSounds(instrument)
@@ -111,27 +113,55 @@ export const EditorKeyboard = ({
   }, [editKind, selection?.barIndex, selection?.glyphIndex])
 
   useEffect(() => {
-    if (selected && isFlamSymbol(selected.note, instrument)) setFlamMode(true)
-  }, [instrument, selected])
+    const selectionKey =
+      selected == null ? null : `${selected.barIndex}:${selected.glyphIndex}`
+
+    if (selectionKey !== flamSelectionKeyRef.current) {
+      flamBaseNoteRef.current = null
+      flamSelectionKeyRef.current = selectionKey
+    }
+
+    if (!selected) {
+      setFlamMode(false)
+      return
+    }
+    if (isFlamSymbol(selected.note, instrument)) {
+      setFlamMode(true)
+      return
+    }
+    if (selected.note === '-') return
+    setFlamMode(false)
+    flamBaseNoteRef.current = null
+  }, [instrument, selected?.barIndex, selected?.glyphIndex, selected?.note])
 
   const navShadowStyle = noteKeyShadowStyle(tone)
   const soundShadowStyle = noteKeyShadowStyle(tone, flamMode)
 
   const onFlamToggle = () => {
-    if (!hasSelection || !selected) return
+    if (!hasSelection || !selected || !flamSymbols.length) return
     const next = !flamMode
     setFlamMode(next)
     if (next) {
+      flamBaseNoteRef.current = selected.note
       if (selected.note === '-') return
-      const flam = isFlamSymbol(selected.note, instrument)
-        ? selected.note
-        : defaultFlamForNote(selected.note)
+      const flam = flamEnableTarget(selected.note, instrument)
       if (flam) onSelectSound(flam)
       return
     }
-    const main = flamMainNote(selected.note)
-    if (main) onSelectSound(main)
+    if (selected.note === '-') {
+      flamBaseNoteRef.current = null
+      return
+    }
+    if (!isFlamSymbol(selected.note, instrument)) {
+      flamBaseNoteRef.current = null
+      return
+    }
+    const restore = flamDisableTarget(flamBaseNoteRef.current ?? selected.note, selected.note)
+    if (restore) onSelectSound(restore)
+    flamBaseNoteRef.current = null
   }
+
+  const canFlam = hasSelection && flamSymbols.length > 0
 
   const onLengthSelect = (mode: NoteLengthTone) => {
     setLengthMode(mode)
@@ -169,7 +199,7 @@ export const EditorKeyboard = ({
 
   const modeToggle = (
     <div
-      className="flex overflow-hidden rounded-lg border border-zinc-200/80 dark:border-zinc-700/80"
+      className="flex overflow-hidden rounded-lg border border-zinc-200/80 dark:border-zinc-700/80 h-11 md:h-full"
       role="group"
       aria-label="Selection mode"
     >
@@ -200,29 +230,15 @@ export const EditorKeyboard = ({
         PAGE_BODY_BG_CLASS,
       )}
     >
-      <div className="mx-auto flex w-full max-w-3xl flex-col gap-2">
+      <div className="mx-auto flex w-full max-w-5xl flex-col gap-2">
         <div className="grid grid-cols-3 gap-2">
-          <div className="flex flex-col items-end justify-end gap-2">
-            {isBarMode ? (
-              <>
-                {modeToggle}
-                {navButtons}
-              </>
-            ) : (
-              <>
-                {navButtons}
-                {modeToggle}
-              </>
-            )}
+          <div className="flex flex-col md:flex-row items-start justify-end md:justify-end flex-1 gap-2 md:gap-6">
+            {navButtons}
+            {modeToggle}
           </div>
 
           {isBarMode ? (
-            <div className="col-span-2 flex flex-col items-end justify-end gap-2">
-              {!isMobile ? (
-                <p className="text-right text-[11px] leading-snug text-zinc-500 dark:text-zinc-400">
-                  {BAR_DRAG_HINT}
-                </p>
-              ) : null}
+            <div className="col-span-2 flex flex-col items-end justify-end gap-2 md:order-first md:flex-row md:justify-center">
               <div className="flex gap-2">
                 <DisabledHintButton
                   aria-label="Remove selected bar"
@@ -244,7 +260,7 @@ export const EditorKeyboard = ({
                 </DisabledHintButton>
                 <DisabledHintButton
                   aria-label="Clear selected bar"
-                  className={cn(PRESSABLE_CLASS, keyButtonClass)}
+                  className={cn(PRESSABLE_CLASS, keyButtonClass, 'ml-3 md:ml-6')}
                   disabled={!hasBarSelection}
                   hint={NO_BAR_HINT}
                   onClick={() => onRunBarModeAction('clear')}
@@ -254,7 +270,7 @@ export const EditorKeyboard = ({
               </div>
             </div>
           ) : (
-            <div className="col-span-2 flex flex-col items-end justify-end gap-2">
+            <div className="col-span-2 flex flex-col md:flex-row items-end justify-end md:justify-between gap-2 md:gap-8 xl:gap-12 md:order-first flex-1">
               <div className="flex flex-wrap justify-end gap-2">
                 {visibleSounds.map((sound) => (
                   <DisabledHintButton
@@ -287,7 +303,7 @@ export const EditorKeyboard = ({
                 </DisabledHintButton>
               </div>
 
-              <div className="flex gap-2">
+              <div className="flex gap-2 md:order-last">
                 <DisabledHintButton
                   aria-pressed={lengthMode === '16th' || editKind === 'sixteenth'}
                   className={cn(
@@ -335,15 +351,9 @@ export const EditorKeyboard = ({
                 </DisabledHintButton>
                 <DisabledHintButton
                   aria-pressed={flamMode}
-                  className={cn(roundToggleClass, flamMode && 'border-indigo-400/50')}
-                  disabled={!hasSelection || selected?.note === '-'}
-                  hint={
-                    !hasSelection
-                      ? NO_SELECTION_HINT
-                      : selected?.note === '-'
-                        ? PAUSE_FLAM_HINT
-                        : undefined
-                  }
+                  className={cn(roundToggleClass, flamToggleActiveClass(flamMode))}
+                  disabled={!canFlam}
+                  hint={!hasSelection ? NO_SELECTION_HINT : undefined}
                   onClick={onFlamToggle}
                   style={flamToggleBackgroundStyle(tone, flamMode)}
                 >

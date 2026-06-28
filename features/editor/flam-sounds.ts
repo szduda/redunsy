@@ -31,9 +31,23 @@ export const flamDefForSymbol = (symbol: string) => flamBySymbol[symbol] ?? null
 
 export const flamMainNote = (symbol: string) => flamBySymbol[symbol]?.main ?? null
 
-/** Default double-stroke flam when enabling flam on a plain note. */
 export const defaultFlamForNote = (note: string): string | null => {
+  if (note === '-') return null
   if (note === 't') return 'r'
   if (note === 's') return 'f'
   return null
+}
+
+/** Symbol to restore when flam mode is turned off for the given base note. */
+export const flamDisableTarget = (baseNote: string, flamSymbol: string): string | null => {
+  if (baseNote === '-') return '-'
+  return flamMainNote(flamSymbol)
+}
+
+/** Flam symbol to apply when flam mode is turned on. */
+export const flamEnableTarget = (note: string, instrument: string): string | null => {
+  if (!flamsForInstrument(instrument).length) return null
+  if (note === '-') return null
+  if (isFlamSymbol(note, instrument)) return note
+  return defaultFlamForNote(note)
 }

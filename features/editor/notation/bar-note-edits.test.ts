@@ -47,6 +47,10 @@ describe('bar-note-edits', () => {
     expect(navigateBarSelection(bars, first, -1)).toEqual(first)
   })
 
+  it('updates a sixteenth rest inside a group', () => {
+    expect(setNoteAtGlyph('[t-]sb', 1, 'r')).toBe('[tr]sb')
+  })
+
   it('updates a plain note', () => {
     expect(setNoteAtGlyph('tsb', 1, 't')).toBe('ttb')
   })
