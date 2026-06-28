@@ -16,6 +16,7 @@ import { PlayerBottomNav } from '@/features/groovy-player/player-bottom-nav'
 import {
   defaultSwingPatternForMeter,
   isSwingPatternEmpty,
+  playbackGrooveLengthForMeter,
   resolveGroovePattern,
   usePlayerStore,
 } from '@/features/groovy-player/player.store'
@@ -68,7 +69,8 @@ export const RhythmEditor = () => {
   const [playError, setPlayError] = useState<string | null>(null)
 
   const barSize = rhythm ? rhythm.meter * 2 : 8
-  const groovePattern = resolveGroovePattern(swingPattern, barSize, swingEnabled)
+  const playbackGrooveLength = rhythm ? playbackGrooveLengthForMeter(rhythm.meter) : 8
+  const groovePattern = resolveGroovePattern(swingPattern, playbackGrooveLength, swingEnabled)
   const trackBars = rhythm ? trackBarsRecord(rhythm) : {}
   const tracks = rhythm ? Object.values(rhythm.instruments) : []
   const focusedTrack = tracks.find((track) => track.id === focusedTrackId) ?? tracks[0]
@@ -91,9 +93,9 @@ export const RhythmEditor = () => {
   const getOverlayBars = useCallback(
     (patternBars: string[]) => {
       if (!hasMetronome) return null
-      return patternBars.map(() => metronomeBarForGrooveLength(barSize))
+      return patternBars.map(() => metronomeBarForGrooveLength(playbackGrooveLength))
     },
-    [barSize, hasMetronome],
+    [playbackGrooveLength, hasMetronome],
   )
 
   const {

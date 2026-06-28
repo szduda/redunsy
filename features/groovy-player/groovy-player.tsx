@@ -18,6 +18,7 @@ import {
   DEMO_SWING_PATTERN,
   isSwingPatternEmpty,
   PLAYER_GROOVE_LENGTH,
+  playbackGrooveLengthForMeter,
   resolveGroovePattern,
   swingBarSizeForMeter,
   usePlayerStore,
@@ -97,30 +98,33 @@ export const GroovyPlayer = ({ rhythm }: GroovyPlayerProps = {}) => {
     () => (loadedRhythm ? trackBarsRecord(loadedRhythm) : demoTrackBars()),
     [loadedRhythm],
   )
-  const grooveLength = loadedRhythm
+  const notationGrooveLength = loadedRhythm
     ? swingBarSizeForMeter(loadedRhythm.meter)
     : PLAYER_GROOVE_LENGTH
-  const groovePattern = resolveGroovePattern(swingPattern, grooveLength, swingEnabled)
+  const playbackGrooveLength = loadedRhythm
+    ? playbackGrooveLengthForMeter(loadedRhythm.meter)
+    : PLAYER_GROOVE_LENGTH
+  const groovePattern = resolveGroovePattern(swingPattern, playbackGrooveLength, swingEnabled)
 
   useLayoutEffect(() => {
-    if (swingPattern.length === grooveLength) return
-    setSwingPattern(swingPattern, grooveLength)
-  }, [grooveLength, setSwingPattern, swingPattern])
+    if (swingPattern.length === notationGrooveLength) return
+    setSwingPattern(swingPattern, notationGrooveLength)
+  }, [notationGrooveLength, setSwingPattern, swingPattern])
 
   useEffect(() => {
     if (!loadedRhythm) return
-    setSwingPattern(loadedRhythm.swingPattern, grooveLength)
+    setSwingPattern(loadedRhythm.swingPattern, notationGrooveLength)
     setSwingEnabled(!isSwingPatternEmpty(loadedRhythm.swingPattern))
     setTempo(loadedRhythm.tempo)
-  }, [grooveLength, loadedRhythm, setSwingEnabled, setSwingPattern, setTempo])
+  }, [notationGrooveLength, loadedRhythm, setSwingEnabled, setSwingPattern, setTempo])
 
   const getOverlayBars = useCallback(
     (patternBars: string[]) => {
       if (!hasMetronome) return null
-      const metronomeBar = metronomeBarForGrooveLength(grooveLength)
+      const metronomeBar = metronomeBarForGrooveLength(playbackGrooveLength)
       return patternBars.map(() => metronomeBar)
     },
-    [grooveLength, hasMetronome],
+    [playbackGrooveLength, hasMetronome],
   )
 
   const {
@@ -167,8 +171,8 @@ export const GroovyPlayer = ({ rhythm }: GroovyPlayerProps = {}) => {
   useEffect(() => () => stop(), [stop])
 
   useEffect(() => {
-    setSwingBarSize(grooveLength)
-  }, [grooveLength, setSwingBarSize])
+    setSwingBarSize(notationGrooveLength)
+  }, [notationGrooveLength, setSwingBarSize])
 
   useScreenWakeLock({ active: playing, enabled: preventScreenSleep })
 
@@ -181,10 +185,10 @@ export const GroovyPlayer = ({ rhythm }: GroovyPlayerProps = {}) => {
   }, [setMidinikeTempo, tempo])
 
   const validatePlaybackTracks = () => {
-    displayTracks.forEach((track) => validateBarsForGroove(track.bars, grooveLength))
-    if (loadedRhythm && !tracksMatchGrooveLength(playbackTracks, grooveLength)) {
+    displayTracks.forEach((track) => validateBarsForGroove(track.bars, notationGrooveLength))
+    if (loadedRhythm && !tracksMatchGrooveLength(playbackTracks, notationGrooveLength)) {
       throw new Error(
-        `Each bar must fill ${grooveLength} cells for beat size ${loadedRhythm.meter}`,
+        `Each bar must fill ${notationGrooveLength} cells for beat size ${loadedRhythm.meter}`,
       )
     }
   }

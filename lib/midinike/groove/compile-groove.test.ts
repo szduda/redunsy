@@ -183,8 +183,9 @@ describe('compileGroove — groove on rests is inaudible', () => {
 
 describe('compileGroove — groove modifier strength and direction', () => {
   const bar = '-t----'
+  const partialGroove = (pattern: string) => pattern.padEnd(8, '-').slice(0, 8)
 
-  const hitOnCell = (groove: string) => compileHits([bar], groove)[0]
+  const hitOnCell = (groove: string) => compileHits([bar], partialGroove(groove))[0]
 
   it('maps symbols to symmetric tick offsets on the 12-tick grid', () => {
     expect(grooveOffset('<')).toBe(-2)
@@ -210,7 +211,7 @@ describe('compileGroove — groove modifier strength and direction', () => {
 
   it('applies expected tick shifts on cell 1', () => {
     const straight = hitOnCell('------')
-    expect(straight).toBe(TICKS_PER_EIGHTH)
+    expect(straight).toBe((8 / 6) * TICKS_PER_EIGHTH)
 
     expect(hitOnCell('-<----')).toBe(straight - 2)
     expect(hitOnCell('-(----')).toBe(straight - 1)
@@ -241,15 +242,15 @@ describe('compileGroove — groove modifier strength and direction', () => {
   })
 
   it('forces the first notation cell straight even with a swing symbol', () => {
-    const hits = compileHits(['t-----'], '-<----')
+    const hits = compileHits(['t-----'], partialGroove('-<----'))
     expect(hits[0]).toBe(0)
   })
 
   it('swings only cells with matching groove symbols in ttstts', () => {
-    const straight = compileHits(['ttstts'], GROOVE_6)
-    const swung = compileHits(['ttstts'], '-<--<-')
+    const straight = compileHits(['ttstts'], GROOVE_8)
+    const swung = compileHits(['ttstts'], '-<-<-<--')
 
-    expect(swung).toEqual([0, 10, 24, 36, 46, 60])
+    expect(swung).toEqual([0, 14, 32, 48, 62, 80])
     expect(swung[0]).toBe(straight[0])
     expect(swung[2]).toBe(straight[2])
     expect(swung[3]).toBe(straight[3])
@@ -259,8 +260,8 @@ describe('compileGroove — groove modifier strength and direction', () => {
   })
 
   it('does not expand total slot count when groove is applied', () => {
-    const straight = compileResult(['ttstts'], GROOVE_6)
-    const swung = compileResult(['ttstts'], '-<--<-')
+    const straight = compileResult(['ttstts'], GROOVE_8)
+    const swung = compileResult(['ttstts'], '-<-<-<--')
     expect(swung.beats.length).toBe(straight.beats.length)
     expect(swung.preGrooveSlots).toBe(straight.preGrooveSlots)
   })

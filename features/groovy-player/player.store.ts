@@ -30,6 +30,13 @@ export const barSizeFromTrackBars = (trackBars: Record<string, string[]>) => {
 
 export const swingBarSizeForMeter = (meter: RhythmMeter) => meter * 2
 
+/**
+ * Scheduler groove width for playback. 6/8 bars (meter=3) compile on an eight-cell
+ * timeline so cell timing matches the demo player stretch; notation stays six cells.
+ */
+export const playbackGrooveLengthForMeter = (meter: RhythmMeter) =>
+  meter === 3 ? PLAYER_GROOVE_LENGTH : swingBarSizeForMeter(meter)
+
 export const straightGroovePattern = (barSize: number) => '-'.repeat(barSize)
 
 export const defaultSwingPatternForMeter = (meter: RhythmMeter) =>
