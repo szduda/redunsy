@@ -113,8 +113,7 @@ export const EditorKeyboard = ({
   }, [editKind, selection?.barIndex, selection?.glyphIndex])
 
   useEffect(() => {
-    const selectionKey =
-      selected == null ? null : `${selected.barIndex}:${selected.glyphIndex}`
+    const selectionKey = selected == null ? null : `${selected.barIndex}:${selected.glyphIndex}`
 
     if (selectionKey !== flamSelectionKeyRef.current) {
       flamBaseNoteRef.current = null
