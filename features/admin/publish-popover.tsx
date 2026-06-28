@@ -3,13 +3,15 @@
 import { useState } from 'react'
 
 import { publishSlugFromRhythm } from '@/features/admin/publish-slug'
+import { PublishSlugInput } from '@/features/admin/publish-slug-input'
 import { useToast } from '@/features/admin/toasts'
 import { Popover } from '@/features/groovy-player/popover'
+import { DeployIcon } from '@/features/icons/deploy-icon'
 import { slugFromTitle } from '@/features/rhythm/rhythm-helpers'
 import type { Rhythm } from '@/features/rhythm/rhythm.types'
 import { Button } from '@/features/theme/button'
-import { Input } from '@/features/theme/input'
 import { Text } from '@/features/theme/text'
+import { cn } from '../theme/cn'
 
 type PublishPopoverProps = {
   rhythm: Rhythm
@@ -65,12 +67,7 @@ export const PublishPopover = ({ rhythm }: PublishPopoverProps) => {
       panel={({ close }) => (
         <div className="flex w-64 flex-col gap-2 p-2">
           <Text className="font-semibold text-zinc-900 dark:text-zinc-100">Publish as…</Text>
-          <Input
-            autoComplete="off"
-            onChange={(event) => setSlug(event.target.value)}
-            placeholder="slug"
-            value={slug}
-          />
+          <PublishSlugInput onChange={setSlug} value={slug} />
           {error ? (
             <Text className="text-red-600 dark:text-red-400" variant="mono">
               {error}
@@ -84,9 +81,9 @@ export const PublishPopover = ({ rhythm }: PublishPopoverProps) => {
       panelClassName="w-auto"
       preferredDirection="bottom"
     >
-      {({ toggle }) => (
-        <Button className="!justify-start" onClick={toggle} variant="subtle">
-          Publish as…
+      {({ toggle, open }) => (
+        <Button className={cn("!justify-start w-full", open && '!text-[#af8545] dark:!text-yellowy-light bg-zinc-200 bg-zinc-200/70 dark:bg-zinc-800/50')} onClick={toggle} variant="subtle">
+          <DeployIcon className="mr-1 size-4" /> Publish as…
         </Button>
       )}
     </Popover>
