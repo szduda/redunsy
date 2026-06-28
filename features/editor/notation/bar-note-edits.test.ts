@@ -4,7 +4,9 @@ import {
   convertToEighth,
   convertToSixteenth,
   convertToTriplet,
+  defaultNoteSelection,
   flattenBarNotes,
+  navigateBarSelection,
   navigateSelection,
   setNoteAtGlyph,
 } from '@/features/editor/notation/bar-note-edits'
@@ -18,6 +20,11 @@ describe('bar-note-edits', () => {
     expect(flat[3]?.kind).toBe('sixteenth')
   })
 
+  it('defaults to the first note of the first bar', () => {
+    expect(defaultNoteSelection(['tsb', '---'])).toEqual({ barIndex: 0, glyphIndex: 0 })
+    expect(defaultNoteSelection([])).toBeNull()
+  })
+
   it('navigates between notes', () => {
     const bars = ['tt', 'ss']
     const first = navigateSelection(bars, null, 1)
@@ -26,6 +33,22 @@ describe('bar-note-edits', () => {
     expect(second).toEqual({ barIndex: 0, glyphIndex: 1 })
     const third = navigateSelection(bars, second, 1)
     expect(third).toEqual({ barIndex: 1, glyphIndex: 0 })
+  })
+
+  it('navigates between bars', () => {
+    const bars = ['tt', 'ss', 'bb']
+    const first = navigateBarSelection(bars, null, 1)
+    expect(first).toEqual({ barIndex: 0, glyphIndex: 0 })
+    const second = navigateBarSelection(bars, first, 1)
+    expect(second).toEqual({ barIndex: 1, glyphIndex: 0 })
+    const third = navigateBarSelection(bars, second, 1)
+    expect(third).toEqual({ barIndex: 2, glyphIndex: 0 })
+    expect(navigateBarSelection(bars, third, 1)).toEqual(third)
+    expect(navigateBarSelection(bars, first, -1)).toEqual(first)
+  })
+
+  it('updates a sixteenth rest inside a group', () => {
+    expect(setNoteAtGlyph('[t-]sb', 1, 'r')).toBe('[tr]sb')
   })
 
   it('updates a plain note', () => {

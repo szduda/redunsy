@@ -14,6 +14,10 @@ export const DRUMS = {
   djembeOpenSlap: { sampleId: 3320, symbol: 's', instrument: 'djembe', volume: 3.4 },
   djembeFlamTone: { sampleId: 3319, symbol: 'r', instrument: 'djembe', volume: 5 },
   djembeFlamSlap: { sampleId: 3319, symbol: 'f', instrument: 'djembe', volume: 5 },
+  djembeFlamBt: { sampleId: 3319, symbol: 'c', instrument: 'djembe', volume: 5 },
+  djembeFlamBs: { sampleId: 3319, symbol: 'd', instrument: 'djembe', volume: 5 },
+  djembeFlamTs: { sampleId: 3319, symbol: 'g', instrument: 'djembe', volume: 5 },
+  djembeFlamSt: { sampleId: 3319, symbol: 'j', instrument: 'djembe', volume: 5 },
 } as const
 
 export const DJEMBE_SOUNDS = Object.values(DRUMS)

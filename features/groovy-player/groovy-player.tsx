@@ -253,7 +253,7 @@ export const GroovyPlayer = ({ rhythm }: GroovyPlayerProps = {}) => {
 
   return (
     <>
-      <div className={cn('flex w-full flex-col gap-3', !fullBleed && 'lg:pt-4 xl:pt-6')}>
+      <div className={cn('flex w-full flex-col gap-3', !fullBleed && 'lg:pt-4 xl:px-4 xl:pt-6')}>
         {isPlayerDemo ? <PlayerDemoBanner onFork={onForkDemo} /> : null}
 
         {!fullBleed && !isPlayerDemo ? (
