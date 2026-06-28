@@ -69,7 +69,7 @@ const NO_SELECTION_HINT = 'Select a note on the canvas first'
 const NO_BAR_HINT = 'Select a bar on the canvas first'
 const PLAIN_ONLY_HINT = 'Only plain 8th notes can be split'
 const EIGHTH_ONLY_HINT = 'Select a 16th or triplet note to merge to 8th'
-const BAR_DRAG_HINT = 'You can drag & drop bars to reposition'
+const BAR_DRAG_HINT = 'Drag & drop bars to reposition'
 
 export const EditorKeyboard = ({
   bars,
@@ -131,6 +131,7 @@ export const EditorKeyboard = ({
     if (selected.note === '-') return
     setFlamMode(false)
     flamBaseNoteRef.current = null
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [instrument, selected?.barIndex, selected?.glyphIndex, selected?.note])
 
   const navShadowStyle = noteKeyShadowStyle(tone)
@@ -224,7 +225,7 @@ export const EditorKeyboard = ({
   return (
     <div
       className={cn(
-        'pointer-events-auto fixed inset-x-0 z-10 px-2 pt-2 pb-2 border-t border-zinc-300/70 dark:border-zinc-700/70',
+        'relative pointer-events-auto fixed inset-x-0 z-10 px-2 pt-2 pb-2 border-t border-zinc-300/70 dark:border-zinc-700/70',
         BOTTOM_NAV_OFFSET_CLASS,
         PAGE_BODY_BG_CLASS,
       )}
@@ -363,6 +364,11 @@ export const EditorKeyboard = ({
           )}
         </div>
       </div>
+      {!isMobile && isBarMode && (
+        <p className="hidden md:block pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 m-1 text-sm text-zinc-500 dark:text-zinc-400 px-2 py-1.5 rounded-md bg-yellowy-light/10">
+          {BAR_DRAG_HINT}
+        </p>
+      )}
     </div>
   )
 }
