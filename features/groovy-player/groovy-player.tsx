@@ -4,7 +4,7 @@ import { useRouter, useSearchParams } from 'next/navigation'
 import { useCallback, useEffect, useLayoutEffect, useMemo, useState } from 'react'
 
 import { DEMO_TRACKS, demoTrackBars } from '@/features/groovy-player/demo-tracks'
-import { forkPlayerDemoToMyRhythms } from '@/features/groovy-player/demo-rhythm'
+import { forkPlayerDemoToMyRhythms, PLAYER_DEMO_METER } from '@/features/groovy-player/demo-rhythm'
 import { PlayerBottomNav } from '@/features/groovy-player/player-bottom-nav'
 import { PlayerDemoBanner } from '@/features/groovy-player/player-demo-banner'
 import { useScreenWakeLock } from '@/features/groovy-player/use-screen-wake-lock'
@@ -15,15 +15,16 @@ import { FixedSideActions } from '@/features/layout/fixed-side-actions'
 import { useTopNavSticky } from '@/features/layout/use-top-nav-sticky'
 import {
   DEFAULT_TEMPO,
+  DEMO_NOTATION_SWING_PATTERN,
   DEMO_SWING_PATTERN,
   isSwingPatternEmpty,
-  PLAYER_GROOVE_LENGTH,
   playbackGrooveLengthForMeter,
   resolveGroovePattern,
   swingBarSizeForMeter,
   usePlayerStore,
 } from '@/features/groovy-player/player.store'
 import { useBarsPerRow } from '@/features/groovy-player/use-bars-per-row'
+import { useMetronomeShakerVolume } from '@/features/groovy-player/use-metronome-shaker-volume'
 import { Track } from '@/features/groovy-player/track/track'
 import { useSpaceTogglePlay } from '@/features/groovy-player/use-space-toggle-play'
 import { PageBottomNav } from '@/features/layout/page-bottom-nav'
@@ -34,10 +35,10 @@ import { Button } from '@/features/theme/button'
 import { Text } from '@/features/theme/text'
 import { cn } from '@/features/theme/cn'
 import {
-  metronomeBarForGrooveLength,
   tracksMatchGrooveLength,
   useMidinike,
   validateBarsForGroove,
+  withMetronomeShakerTrack,
 } from '@/lib/midinike'
 
 const LAYER_CONFIG = {
@@ -83,7 +84,6 @@ export const GroovyPlayer = ({ rhythm }: GroovyPlayerProps = {}) => {
   const setSwingPattern = usePlayerStore((state) => state.setSwingPattern)
   const setSwingEnabled = usePlayerStore((state) => state.setSwingEnabled)
   const setTempo = usePlayerStore((state) => state.setTempo)
-  const hasMetronome = usePlayerStore((state) => state.hasMetronome)
   const fullBleed = usePlayerStore((state) => state.fullBleed)
   const preventScreenSleep = usePlayerStore((state) => state.preventScreenSleep)
   const setIsPlaying = usePlayerStore((state) => state.setIsPlaying)
@@ -98,10 +98,14 @@ export const GroovyPlayer = ({ rhythm }: GroovyPlayerProps = {}) => {
   )
   const notationGrooveLength = loadedRhythm
     ? swingBarSizeForMeter(loadedRhythm.meter)
-    : PLAYER_GROOVE_LENGTH
+    : swingBarSizeForMeter(PLAYER_DEMO_METER)
   const playbackGrooveLength = loadedRhythm
     ? playbackGrooveLengthForMeter(loadedRhythm.meter)
-    : PLAYER_GROOVE_LENGTH
+    : playbackGrooveLengthForMeter(PLAYER_DEMO_METER)
+  const playbackTracksWithShaker = useMemo(
+    () => withMetronomeShakerTrack(playbackTracks, playbackGrooveLength),
+    [playbackGrooveLength, playbackTracks],
+  )
   const groovePattern = resolveGroovePattern(swingPattern, playbackGrooveLength, swingEnabled)
 
   useLayoutEffect(() => {
@@ -110,20 +114,17 @@ export const GroovyPlayer = ({ rhythm }: GroovyPlayerProps = {}) => {
   }, [notationGrooveLength, setSwingPattern, swingPattern])
 
   useEffect(() => {
+    if (!isPlayerDemo) return
+    setSwingPattern(DEMO_NOTATION_SWING_PATTERN, swingBarSizeForMeter(PLAYER_DEMO_METER))
+    setSwingEnabled(true)
+  }, [isPlayerDemo, setSwingEnabled, setSwingPattern])
+
+  useEffect(() => {
     if (!loadedRhythm) return
     setSwingPattern(loadedRhythm.swingPattern, notationGrooveLength)
     setSwingEnabled(!isSwingPatternEmpty(loadedRhythm.swingPattern))
     setTempo(loadedRhythm.tempo)
   }, [notationGrooveLength, loadedRhythm, setSwingEnabled, setSwingPattern, setTempo])
-
-  const getOverlayBars = useCallback(
-    (patternBars: string[]) => {
-      if (!hasMetronome) return null
-      const metronomeBar = metronomeBarForGrooveLength(playbackGrooveLength)
-      return patternBars.map(() => metronomeBar)
-    },
-    [playbackGrooveLength, hasMetronome],
-  )
 
   const {
     play,
@@ -148,11 +149,12 @@ export const GroovyPlayer = ({ rhythm }: GroovyPlayerProps = {}) => {
       lengths: ['8th'],
       grooves: [DEMO_SWING_PATTERN],
     },
-    getOverlayBars,
     initialGroove: groovePattern,
     loop: true,
     tempo: loadedRhythm?.tempo ?? DEFAULT_TEMPO,
   })
+
+  useMetronomeShakerVolume(setInstrumentVolume)
 
   useEffect(() => {
     stop()
@@ -199,7 +201,7 @@ export const GroovyPlayer = ({ rhythm }: GroovyPlayerProps = {}) => {
     try {
       validatePlaybackTracks()
       setPlayError(null)
-      play(playbackTracks, groovePattern)
+      play(playbackTracksWithShaker, groovePattern)
     } catch (error) {
       setPlayError(error instanceof Error ? error.message : 'Could not play pattern')
     }
@@ -209,7 +211,7 @@ export const GroovyPlayer = ({ rhythm }: GroovyPlayerProps = {}) => {
     try {
       validatePlaybackTracks()
       setPlayError(null)
-      if (!restart()) play(playbackTracks, groovePattern)
+      if (!restart()) play(playbackTracksWithShaker, groovePattern)
     } catch (error) {
       setPlayError(error instanceof Error ? error.message : 'Could not restart pattern')
     }

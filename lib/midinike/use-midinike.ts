@@ -42,7 +42,6 @@ export const useMidinike = (options: MidinikeOptions) => {
   const {
     loop = true,
     tempo: initialTempo = 110,
-    getOverlayBars,
     initialGroove,
     strictGrooveLength = false,
     ...rest
@@ -155,18 +154,9 @@ export const useMidinike = (options: MidinikeOptions) => {
   }, [startLoop])
 
   const buildBeats = useCallback(
-    (bars: string[], groovePattern: string, soundMap?: Record<string, number | null>) => {
-      const compiled = compileGroove({ bars, groove: groovePattern, soundMap })
-      const overlayBars = getOverlayBars?.(bars, groovePattern)
-      if (!overlayBars?.length) return compiled
-      const overlay = compileGroove({
-        bars: overlayBars,
-        groove: groovePattern,
-        soundMap: soundMapForInstrument('shaker'),
-      })
-      return { ...compiled, beats: mergeBeatMatrices(compiled.beats, overlay.beats) }
-    },
-    [getOverlayBars],
+    (bars: string[], groovePattern: string, soundMap?: Record<string, number | null>) =>
+      compileGroove({ bars, groove: groovePattern, soundMap }),
+    [],
   )
 
   const buildMergedBeats = useCallback(
@@ -191,16 +181,6 @@ export const useMidinike = (options: MidinikeOptions) => {
         merged = merged.length ? mergeBeatMatrices(merged, compiled.beats) : compiled.beats
       })
 
-      const overlayBars = getOverlayBars?.(primaryBars, groovePattern)
-      if (overlayBars?.length) {
-        const overlay = compileGroove({
-          bars: overlayBars,
-          groove: groovePattern,
-          soundMap: soundMapForInstrument('shaker'),
-        })
-        merged = mergeBeatMatrices(merged, overlay.beats)
-      }
-
       const primaryCompiled = compileGroove({
         bars: primaryBars,
         groove: groovePattern,
@@ -214,7 +194,7 @@ export const useMidinike = (options: MidinikeOptions) => {
         compiled: { ...primaryCompiled, beats: merged },
       }
     },
-    [getOverlayBars, layerEntries],
+    [layerEntries],
   )
 
   const storeCompiled = useCallback(
