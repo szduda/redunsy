@@ -62,7 +62,7 @@ const modeToggleSegmentClass = (active: boolean) =>
     'flex-1 px-2 py-2 text-sm font-medium transition-colors',
     active
       ? 'bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900'
-      : 'text-zinc-600 hover:bg-zinc-100 dark:text-zinc-300 dark:hover:bg-zinc-800/80',
+      : 'text-zinc-600 hover:bg-zinc-200/70 dark:text-zinc-300 dark:hover:bg-zinc-800/80',
   )
 
 const NO_SELECTION_HINT = 'Select a note on the canvas first'

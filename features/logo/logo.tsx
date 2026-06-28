@@ -112,6 +112,7 @@ export const Logo = ({
                 ),
           )}
         />
+
         <LogoIcon
           height={iconSize}
           innerClass2="animate-dundun origin-center"
@@ -123,6 +124,7 @@ export const Logo = ({
           )}
           onStickClick={onStickClick}
         />
+
         <div
           className={cn(
             'absolute font-bold text-yellowy-logo transition ease-in-out',
@@ -148,10 +150,11 @@ export const Logo = ({
           {hint}
         </div>
       </div>
+
       <h1
         className={cn(
           'font-black tracking-wide transition duration-500 ease-in-out',
-          onPage ? 'text-zinc-900 dark:text-zinc-300' : 'text-zinc-300',
+          onPage ? 'text-zinc-900 dark:text-zinc-300' : 'text-zinc-800 dark:text-zinc-300',
           compact ? 'text-xl' : 'text-5xl',
           stableLayout
             ? 'translate-y-12 -translate-x-1'

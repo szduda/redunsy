@@ -32,7 +32,7 @@ const MenuButton = ({ open, onClick }: MenuButtonProps) => (
   <button
     aria-expanded={open}
     aria-label={open ? 'Close menu' : 'Open menu'}
-    className={cn(topNavItemClass, open && 'text-zinc-100')}
+    className={cn(topNavItemClass, open && 'text-zinc-700 dark:text-zinc-100')}
     onClick={onClick}
     type="button"
   >

@@ -20,7 +20,7 @@ export const TopNav = () => {
   return (
     <header
       className={cn(
-        'dark z-20 border-b border-zinc-800 text-zinc-100 backdrop-blur',
+        'z-20 border-b border-zinc-300/60 dark:border-zinc-800 text-zinc-100 backdrop-blur',
         TOP_NAV_BG_CLASS,
         TOP_NAV_HEIGHT_CLASS,
         topNavSticky ? 'fixed inset-x-0 top-0' : 'relative',

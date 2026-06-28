@@ -3,8 +3,8 @@ export const PAGE_BODY_BG_CLASS = 'bg-white dark:bg-zinc-950'
 /** Reserved height for the fixed top nav — keep layout padding aligned when sticky. */
 export const TOP_NAV_HEIGHT_CLASS = 'h-10'
 export const TOP_NAV_PADDING_CLASS = 'pt-10'
-export const TOP_NAV_BG_CLASS = 'bg-black/95'
-export const TOP_NAV_HALO_STROKE_CLASS = 'stroke-zinc-900/95'
+export const TOP_NAV_BG_CLASS = 'bg-white/95 dark:bg-black/95'
+export const TOP_NAV_HALO_STROKE_CLASS = 'stroke-zinc-100/95 dark:stroke-zinc-900/95'
 
 /** Sticky offset and viewport height below the fixed top nav (2.5rem = h-10). */
 export const TOP_NAV_STICKY_TOP_CLASS = 'top-10'
