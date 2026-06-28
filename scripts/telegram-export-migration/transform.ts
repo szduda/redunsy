@@ -78,10 +78,7 @@ const swingPatternFromSwing = (swing: string | undefined, barSize: number): stri
   return Array.from({ length: barSize }, (_, index) => (index % 2 === 1 ? symbol : '-')).join('')
 }
 
-const toRhythmPatterns = (
-  patterns: Record<string, string>,
-  barSize: number,
-): RhythmPattern[] =>
+const toRhythmPatterns = (patterns: Record<string, string>, barSize: number): RhythmPattern[] =>
   Object.entries(patterns)
     .filter(([, notation]) => Boolean(notation))
     .map(([instrument, notation], index) => ({

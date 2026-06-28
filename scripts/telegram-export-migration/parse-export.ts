@@ -21,15 +21,12 @@ export type ParsedTelegramRhythm = {
   query: string
 }
 
-const DUNSY_HOST =
-  /(?:^|\/\/)(?:[\w-]+\.)?(dunsy(?:-git-[\w-]+-szd)?\.vercel\.app|dunsy\.app)/i
+const DUNSY_HOST = /(?:^|\/\/)(?:[\w-]+\.)?(dunsy(?:-git-[\w-]+-szd)?\.vercel\.app|dunsy\.app)/i
 
 const flattenText = (text: TelegramMessage['text']): string => {
   if (!text) return ''
   if (typeof text === 'string') return text
-  return text
-    .map((part) => (typeof part === 'string' ? part : part.text))
-    .join('')
+  return text.map((part) => (typeof part === 'string' ? part : part.text)).join('')
 }
 
 const isDunsyPlaygroundUrl = (url: string) =>
@@ -53,9 +50,11 @@ export const parseTelegramExport = (data: TelegramExport): ParsedTelegramRhythm[
 
   for (const message of data.messages) {
     const parts = flattenText(message.text)
-    const urls = [...parts.matchAll(/(?:https?:\/\/)?(?:[\w-]+\.)?(?:dunsy(?:-git-[\w-]+-szd)?\.vercel\.app|dunsy\.app)\/playground\?[^\s]+/gi)].map(
-      (match) => match[0],
-    )
+    const urls = [
+      ...parts.matchAll(
+        /(?:https?:\/\/)?(?:[\w-]+\.)?(?:dunsy(?:-git-[\w-]+-szd)?\.vercel\.app|dunsy\.app)\/playground\?[^\s]+/gi,
+      ),
+    ].map((match) => match[0])
 
     for (const url of urls) {
       if (!isDunsyPlaygroundUrl(url)) continue

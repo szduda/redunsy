@@ -61,8 +61,7 @@ export const applyGrooveToBar = (
   const segments = barSlotSegments(cells, notationCells, grooveLength)
   const slots = segments.flatMap((segment) => segment.slots)
   const skipSwingShift =
-    !isPartialGridGroove(notationCells, grooveLength) ||
-    groove === '-'.repeat(grooveLength)
+    !isPartialGridGroove(notationCells, grooveLength) || groove === '-'.repeat(grooveLength)
   const shifted = skipSwingShift
     ? slots
     : shiftBarGroove(slots, segments, groove, notationCells, grooveLength)

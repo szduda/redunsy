@@ -57,24 +57,22 @@ export const GroovyPlayer = ({ rhythm }: GroovyPlayerProps = {}) => {
   const router = useRouter()
 
   const searchParams = useSearchParams()
-  // Both `useSearchParams()` (returns null during static build) and
-  // `findRhythmBySlug` (reads localStorage) are client-only. Read them
-  // together after mount so server and client render the same initial tree.
+  // Slug and localStorage rhythm resolve only after mount so SSR and hydration match.
   const [clientState, setClientState] = useState<{
     slug: string | null
     rhythm: Rhythm | null
-  }>(() => {
-    const slug = searchParams.get('rhythm')
-    return { slug, rhythm: slug ? findRhythmBySlug(slug) : null }
-  })
+  }>({ slug: null, rhythm: null })
+  const [clientResolved, setClientResolved] = useState(Boolean(rhythm))
+
   useEffect(() => {
     const slug = searchParams.get('rhythm')
     setClientState({ slug, rhythm: slug ? findRhythmBySlug(slug) : null })
+    setClientResolved(true)
   }, [searchParams])
 
   const rhythmSlug = clientState.slug
   const loadedRhythm = rhythm ?? clientState.rhythm
-  const isPlayerDemo = !rhythm && !rhythmSlug && !loadedRhythm
+  const isPlayerDemo = clientResolved && !rhythm && !rhythmSlug && !loadedRhythm
 
   const barsPerRow = useBarsPerRow()
   const tempo = usePlayerStore((state) => state.tempo)
@@ -236,7 +234,11 @@ export const GroovyPlayer = ({ rhythm }: GroovyPlayerProps = {}) => {
     router.push(`/editor/${forked.slug}`)
   }
 
-  if (rhythmSlug && !loadedRhythm) {
+  if (!clientResolved && !rhythm) {
+    return <div className="flex w-full flex-col gap-3 lg:pt-4 xl:pt-6" aria-busy />
+  }
+
+  if (clientResolved && rhythmSlug && !loadedRhythm) {
     return (
       <div className="flex flex-col items-center gap-4 py-16">
         <Text>Rhythm not found.</Text>

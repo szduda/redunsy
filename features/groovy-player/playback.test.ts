@@ -19,7 +19,10 @@ import {
 } from '@/features/groovy-player/player.store'
 import { compileGroove } from '@/lib/midinike/groove/compile-groove'
 import { barSlotCount } from '@/lib/midinike/groove/compile-groove.test-helpers'
-import { calcPlaybackTempo, compiledPatternDurationSeconds } from '@/lib/midinike/groove/playback-tempo'
+import {
+  calcPlaybackTempo,
+  compiledPatternDurationSeconds,
+} from '@/lib/midinike/groove/playback-tempo'
 import { TICKS_PER_EIGHTH } from '@/lib/midinike/notation/cell-duration'
 import {
   barsMatchGrooveLength,
