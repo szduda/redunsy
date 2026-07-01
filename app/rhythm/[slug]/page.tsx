@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation'
 import { detailToRhythm } from '@/db/mappers'
 import { getPublishedSlugs, getRhythmDetail } from '@/db/rhythms'
 import { GroovyPlayer } from '@/features/groovy-player/groovy-player'
+import { RhythmMetadataView } from '@/features/rhythm/rhythm-metadata-view'
 
 export const dynamic = 'force-static'
 export const dynamicParams = true
@@ -35,9 +36,12 @@ const RhythmPage = async ({ params }: RhythmPageProps) => {
   const rhythm = detailToRhythm(detail)
 
   return (
-    <main className="flex flex-1 justify-center lg:pb-4 xl:pb-6">
+    <main className="flex flex-1 flex-col lg:pb-4 xl:pb-6">
+      <div className="mx-auto mb-3 w-full max-w-4xl px-4 lg:pt-4 xl:px-4 xl:pt-6">
+        <RhythmMetadataView card={detail} showDescription />
+      </div>
       <Suspense>
-        <GroovyPlayer rhythm={rhythm} />
+        <GroovyPlayer hideHeader rhythm={rhythm} />
       </Suspense>
     </main>
   )

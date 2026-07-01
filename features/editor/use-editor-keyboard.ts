@@ -10,7 +10,9 @@ type EditorKeyboardActions = {
   selection: NoteSelection | null
   selectionMode: SelectionMode
   navigate: (direction: -1 | 1) => void
+  setSelectionMode: (mode: SelectionMode) => void
   setSound: (sound: string) => void
+  toggleFlam: () => void
   convertToSixteenth: () => void
   convertToTriplet: () => void
   convertToEighth: () => void
@@ -49,7 +51,19 @@ export const useEditorKeyboard = (instrument: string, actions: EditorKeyboardAct
         return
       }
 
+      if (event.key === '`' || event.code === 'Backquote') {
+        event.preventDefault()
+        current.setSelectionMode(current.selectionMode === 'bar' ? 'note' : 'bar')
+        return
+      }
+
       if (current.selectionMode !== 'note' || !current.selection) return
+
+      if (event.key === 'Backspace') {
+        event.preventDefault()
+        current.setSound('-')
+        return
+      }
 
       if (event.key === 'r') {
         event.preventDefault()
@@ -63,14 +77,20 @@ export const useEditorKeyboard = (instrument: string, actions: EditorKeyboardAct
         return
       }
 
-      if (event.key === 'u') {
+      if (event.key === 'y') {
         event.preventDefault()
         current.convertToEighth()
         return
       }
 
+      if (event.key === 'u') {
+        event.preventDefault()
+        current.toggleFlam()
+        return
+      }
+
       const digit = Number(event.key)
-      if (!Number.isInteger(digit) || digit < 0 || digit > 9) return
+      if (!Number.isInteger(digit) || digit < 1 || digit > 9) return
 
       const sound = soundForDigit(instrument, digit)
       if (!sound) return

@@ -2,6 +2,7 @@
 
 import { type ReactNode, useEffect } from 'react'
 
+import { HelpIcon } from '@/features/icons/help-icon'
 import { ScreenAwakeIcon } from '@/features/icons/screen-awake-icon'
 import { FullBleedIcon } from '@/features/icons/full-bleed-icon'
 import { ColumnsIcon } from '@/features/icons/columns-icon'
@@ -121,6 +122,8 @@ export const PlayerSettingsPanel = ({ open, onClose }: PlayerSettingsPanelProps)
   const setMarkTriplets = usePlayerStore((state) => state.setMarkTriplets)
   const setFullBleed = usePlayerStore((state) => state.setFullBleed)
   const setPreventScreenSleep = usePlayerStore((state) => state.setPreventScreenSleep)
+  const showKeyboardHints = usePlayerStore((state) => state.showKeyboardHints)
+  const setShowKeyboardHints = usePlayerStore((state) => state.setShowKeyboardHints)
 
   useEffect(() => {
     if (!open) return
@@ -153,6 +156,15 @@ export const PlayerSettingsPanel = ({ open, onClose }: PlayerSettingsPanelProps)
           onChange={setPreventScreenSleep}
         />
       </SettingRow>
+      {!isMobile ? (
+        <SettingRow icon={<HelpIcon />}>
+          <Switch
+            checked={showKeyboardHints}
+            label="Show hints"
+            onChange={setShowKeyboardHints}
+          />
+        </SettingRow>
+      ) : null}
       {!isMobile ? (
         <SettingRow icon={<FullBleedIcon />}>
           <Switch checked={fullBleed} label="Full bleed" onChange={setFullBleed} />

@@ -141,7 +141,7 @@ describe('PublishPopover', () => {
 
     await user.click(screen.getByRole('button', { name: /^Publish$/ }))
 
-    const panel = screen.getByText('Publish as…', { selector: 'p' }).closest('.flex.w-64')
+    const panel = screen.getByText('Publish as…', { selector: 'p' }).closest('.flex.md\\:w-96')
     expect(within(panel as HTMLElement).getByText('Database unavailable')).toBeInTheDocument()
     expect(screen.getByPlaceholderText('slug')).toBeInTheDocument()
   })
