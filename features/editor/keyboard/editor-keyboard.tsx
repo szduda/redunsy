@@ -160,22 +160,22 @@ export const EditorKeyboard = ({
         role="group"
         aria-label="Selection mode"
       >
-      <button
-        aria-pressed={isBarMode}
-        className={cn(PRESSABLE_CLASS, modeToggleSegmentClass(isBarMode))}
-        onClick={() => onSelectionModeChange('bar')}
-        type="button"
-      >
-        bar
-      </button>
-      <button
-        aria-pressed={!isBarMode}
-        className={cn(PRESSABLE_CLASS, modeToggleSegmentClass(!isBarMode))}
-        onClick={() => onSelectionModeChange('note')}
-        type="button"
-      >
-        note
-      </button>
+        <button
+          aria-pressed={isBarMode}
+          className={cn(PRESSABLE_CLASS, modeToggleSegmentClass(isBarMode))}
+          onClick={() => onSelectionModeChange('bar')}
+          type="button"
+        >
+          bar
+        </button>
+        <button
+          aria-pressed={!isBarMode}
+          className={cn(PRESSABLE_CLASS, modeToggleSegmentClass(!isBarMode))}
+          onClick={() => onSelectionModeChange('note')}
+          type="button"
+        >
+          note
+        </button>
       </div>
     </KeyboardHintWrap>
   )
