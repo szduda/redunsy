@@ -30,7 +30,8 @@ export const useNoteEditor = (
   useEffect(() => {
     setSelection(defaultNoteSelection(bars))
     setSelectionMode('note')
-  }, [trackId, bars])
+    // bars intentionally omitted — preserve selection across edits; reset only when switching tracks
+  }, [trackId])
 
   const selectNote = useCallback((barIndex: number, glyphIndex: number) => {
     setSelection({ barIndex, glyphIndex })

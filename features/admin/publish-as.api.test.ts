@@ -4,11 +4,15 @@ vi.mock('server-only', () => ({}))
 
 const apiMocks = vi.hoisted(() => ({
   revalidatePath: vi.fn(),
+  revalidateTag: vi.fn(),
   upsertPublishedRhythm: vi.fn(),
   requireAdminSession: vi.fn(),
 }))
 
-vi.mock('next/cache', () => ({ revalidatePath: apiMocks.revalidatePath }))
+vi.mock('next/cache', () => ({
+  revalidatePath: apiMocks.revalidatePath,
+  revalidateTag: apiMocks.revalidateTag,
+}))
 vi.mock('@/db/admin-rhythms', () => ({ upsertPublishedRhythm: apiMocks.upsertPublishedRhythm }))
 vi.mock('@/lib/auth-session', () => ({ requireAdminSession: apiMocks.requireAdminSession }))
 
@@ -60,7 +64,12 @@ describe('POST /api/admin/rhythms', () => {
     })
     expect(apiMocks.upsertPublishedRhythm).toHaveBeenCalledWith('brand-new-slug', rhythm)
     expect(apiMocks.revalidatePath).toHaveBeenCalledWith('/rhythm/brand-new-slug')
+    expect(apiMocks.revalidatePath).toHaveBeenCalledWith('/garage')
+    expect(apiMocks.revalidateTag).toHaveBeenCalledWith('rhythm-index', 'max')
     expect(fetch).toHaveBeenCalledWith('http://localhost:3000/rhythm/brand-new-slug', {
+      cache: 'no-store',
+    })
+    expect(fetch).toHaveBeenCalledWith('http://localhost:3000/api/rhythm-index', {
       cache: 'no-store',
     })
   })
