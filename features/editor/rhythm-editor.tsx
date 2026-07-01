@@ -229,12 +229,7 @@ export const RhythmEditor = () => {
 
   return (
     <>
-      <div
-        className={cn(
-          'flex w-full flex-col gap-3',
-          !fullBleed && 'lg:pt-4 xl:px-4 xl:pt-6',
-        )}
-      >
+      <div className={cn('flex w-full flex-col gap-3', !fullBleed && 'lg:pt-4 xl:px-4 xl:pt-6')}>
         {!fullBleed ? (
           <FixedSideActions>
             <Button onClick={onBackToPicker} variant="subtle" className="!justify-start">

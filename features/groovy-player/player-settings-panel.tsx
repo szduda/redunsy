@@ -158,11 +158,7 @@ export const PlayerSettingsPanel = ({ open, onClose }: PlayerSettingsPanelProps)
       </SettingRow>
       {!isMobile ? (
         <SettingRow icon={<HelpIcon />}>
-          <Switch
-            checked={showKeyboardHints}
-            label="Show hints"
-            onChange={setShowKeyboardHints}
-          />
+          <Switch checked={showKeyboardHints} label="Show hints" onChange={setShowKeyboardHints} />
         </SettingRow>
       ) : null}
       {!isMobile ? (

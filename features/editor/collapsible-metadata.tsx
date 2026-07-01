@@ -31,10 +31,9 @@ export const CollapsibleMetadata = ({
         </div>
       ) : (
         <Text className="mt-1 opacity-70">
-          {metadataSummary(
-            rhythm,
-            [...new Set(Object.values(rhythm.instruments).map((track) => track.instrument))],
-          )}
+          {metadataSummary(rhythm, [
+            ...new Set(Object.values(rhythm.instruments).map((track) => track.instrument)),
+          ])}
         </Text>
       )}
     </section>
