@@ -99,6 +99,7 @@ describe('PublishPopover', () => {
         slug: 'brand-new-slug',
         created: true,
         url: '/rhythm/brand-new-slug',
+        indexRefresh: 'queued',
       }),
     }))
   })
@@ -139,10 +140,10 @@ describe('PublishPopover', () => {
     const slugInput = screen.getByPlaceholderText('slug')
     expect(slugInput).toHaveValue('my-rhythm-abc12')
 
+    await user.click(screen.getByRole('switch', { name: "I know what I'm doing" }))
     await user.click(screen.getByRole('button', { name: /^Publish$/ }))
 
-    const panel = screen.getByText('Publish as…', { selector: 'p' }).closest('.flex.md\\:w-96')
-    expect(within(panel as HTMLElement).getByText('Database unavailable')).toBeInTheDocument()
+    expect((await screen.findAllByText('Database unavailable')).length).toBeGreaterThan(0)
     expect(screen.getByPlaceholderText('slug')).toBeInTheDocument()
   })
 
@@ -165,6 +166,7 @@ describe('PublishPopover', () => {
     })
     expect(await screen.findByLabelText('Page status 404')).toHaveTextContent('404')
 
+    await user.click(screen.getByRole('switch', { name: "I know what I'm doing" }))
     await user.click(screen.getByRole('button', { name: /^Publish$/ }))
 
     await waitFor(() => {
@@ -178,7 +180,8 @@ describe('PublishPopover', () => {
     })
 
     expect(await screen.findByText('Created new published rhythm')).toBeInTheDocument()
-    expect(screen.getByText('Page revalidated and warmed')).toBeInTheDocument()
+    expect(screen.getByText('Rhythm page revalidated')).toBeInTheDocument()
+    expect(screen.getByText('Garage index redeploy queued')).toBeInTheDocument()
     expect(screen.getByText('Live at /rhythm/brand-new-slug')).toBeInTheDocument()
 
     await waitFor(() => {
@@ -195,6 +198,7 @@ describe('PublishPopover', () => {
         slug: 'existing-slug',
         created: false,
         url: '/rhythm/existing-slug',
+        indexRefresh: 'queued',
       }),
     }))
 
@@ -210,8 +214,8 @@ describe('PublishPopover', () => {
 
     expect(await screen.findByLabelText('Page status 200')).toHaveTextContent('200')
 
-    const panel = document.body
-    await user.click(within(panel).getByRole('button', { name: /^Publish$/ }))
+    await user.click(screen.getByRole('switch', { name: "I know what I'm doing" }))
+    await user.click(screen.getByRole('button', { name: /^Publish$/ }))
 
     await waitFor(() => {
       expect(publishFetchMock).toHaveBeenCalledOnce()

@@ -16,11 +16,14 @@ export type PublishRhythmInput = {
   rhythm: Rhythm
 }
 
+export type IndexRefreshStatus = 'queued' | 'not-configured' | 'failed'
+
 export type PublishRhythmResponse = {
   ok: true
   slug: string
   created: boolean
   url: string
+  indexRefresh: IndexRefreshStatus
 }
 
 export const publishRhythm = async ({

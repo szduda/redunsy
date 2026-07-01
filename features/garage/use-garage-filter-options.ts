@@ -8,11 +8,9 @@ import {
   listRhythmCardsForOwnership,
 } from '@/features/garage/search-snippets'
 import { useGarageFiltersStore } from '@/features/garage/garage-filters.store'
-import { useRhythmIndexStore } from '@/features/garage/rhythm-index.store'
 
 export const useGarageFilterOptions = () => {
   const ownership = useGarageFiltersStore((state) => state.ownership)
-  const revision = useRhythmIndexStore((state) => state.revision)
   const [hydrated, setHydrated] = useState(false)
 
   useEffect(() => {
@@ -26,6 +24,6 @@ export const useGarageFilterOptions = () => {
           ? listRhythmCardsForOwnership(ownership)
           : listIndexRhythmCardsForOwnership(ownership),
       ),
-    [hydrated, ownership, revision],
+    [hydrated, ownership],
   )
 }
