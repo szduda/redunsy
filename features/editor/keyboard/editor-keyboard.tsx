@@ -154,7 +154,7 @@ export const EditorKeyboard = ({
   )
 
   const modeToggle = (
-    <KeyboardHintWrap hint="`">
+    <KeyboardHintWrap hint="tilde">
       <div
         className="flex overflow-hidden rounded-lg border border-zinc-200/80 dark:border-zinc-700/80 h-11 md:h-full"
         role="group"

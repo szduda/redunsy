@@ -21,7 +21,7 @@ export const KeyboardHintWrap = ({ hint, children, className }: KeyboardHintWrap
   return (
     <div className={cn('relative', className)}>
       {children}
-      <span className="pointer-events-none absolute bottom-full left-1/2 z-50 mb-0.5 -translate-x-1/2 text-xs font-bold uppercase text-zinc-500 dark:text-zinc-400">
+      <span className="pointer-events-none absolute -bottom-3.5 left-1/2 z-50 mb-0.5 -translate-x-1/2 text-xs font-bold uppercase text-zinc-500 dark:text-zinc-400">
         {hint}
       </span>
     </div>

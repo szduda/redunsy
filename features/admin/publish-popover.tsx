@@ -6,6 +6,7 @@ import { publishSlugFromRhythm } from '@/features/admin/publish-slug'
 import { PublishSlugInput } from '@/features/admin/publish-slug-input'
 import { usePublishRhythm } from '@/features/admin/use-publish-rhythm'
 import { useToast } from '@/features/admin/toasts'
+import type { IndexRefreshStatus } from '@/features/admin/admin-api'
 import { Popover } from '@/features/groovy-player/popover'
 import { DeployIcon } from '@/features/icons/deploy-icon'
 import { slugFromTitle } from '@/features/rhythm/rhythm-helpers'
@@ -17,6 +18,14 @@ import { Switch } from '../theme/switch'
 
 type PublishPopoverProps = {
   rhythm: Rhythm
+}
+
+const indexRefreshToast = (status: IndexRefreshStatus) => {
+  if (status === 'queued') return 'Garage index redeploy queued'
+  if (status === 'not-configured') {
+    return 'Garage index redeploy not configured (set VERCEL_DEPLOY_HOOK_URL in production)'
+  }
+  return 'Garage index redeploy failed — garage cards may stay stale until the next deploy'
 }
 
 export const PublishPopover = ({ rhythm }: PublishPopoverProps) => {
@@ -44,7 +53,11 @@ export const PublishPopover = ({ rhythm }: PublishPopoverProps) => {
             payload.created ? 'Created new published rhythm' : 'Updated published rhythm',
             'success',
           )
-          pushToast('Page revalidated and warmed', 'success')
+          pushToast('Rhythm page revalidated', 'success')
+          pushToast(
+            indexRefreshToast(payload.indexRefresh),
+            payload.indexRefresh === 'failed' ? 'error' : 'success',
+          )
           pushToast(`Live at ${payload.url}`, 'success')
           close()
         },

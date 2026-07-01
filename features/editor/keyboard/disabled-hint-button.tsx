@@ -71,7 +71,7 @@ export const DisabledHintButton = ({
         </span>
       ) : null}
       {keyboardHint && showKeyboardHints && !isMobile ? (
-        <span className="pointer-events-none absolute bottom-full left-1/2 z-50 mb-0.5 -translate-x-1/2 text-xs font-bold uppercase text-zinc-500 dark:text-zinc-400">
+        <span className="pointer-events-none absolute -bottom-3 left-1/2 z-50 mb-0.5 -translate-x-1/2 text-xs font-bold uppercase text-zinc-500 dark:text-zinc-400">
           {keyboardHint}
         </span>
       ) : null}

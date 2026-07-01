@@ -4,17 +4,15 @@ vi.mock('server-only', () => ({}))
 
 const apiMocks = vi.hoisted(() => ({
   revalidatePath: vi.fn(),
-  revalidateTag: vi.fn(),
   upsertPublishedRhythm: vi.fn(),
   requireAdminSession: vi.fn(),
+  triggerDeployHook: vi.fn(),
 }))
 
-vi.mock('next/cache', () => ({
-  revalidatePath: apiMocks.revalidatePath,
-  revalidateTag: apiMocks.revalidateTag,
-}))
+vi.mock('next/cache', () => ({ revalidatePath: apiMocks.revalidatePath }))
 vi.mock('@/db/admin-rhythms', () => ({ upsertPublishedRhythm: apiMocks.upsertPublishedRhythm }))
 vi.mock('@/lib/auth-session', () => ({ requireAdminSession: apiMocks.requireAdminSession }))
+vi.mock('@/lib/deploy-hook', () => ({ triggerDeployHook: apiMocks.triggerDeployHook }))
 
 import { POST } from '@/app/api/admin/rhythms/route'
 import { sampleRhythm } from '@/features/admin/publish-as.test-helpers'
@@ -35,6 +33,7 @@ describe('POST /api/admin/rhythms', () => {
     vi.clearAllMocks()
     apiMocks.requireAdminSession.mockResolvedValue({ user: { email: 'admin@gmail.com' } })
     apiMocks.upsertPublishedRhythm.mockResolvedValue({ created: true, slug: 'new-slug' })
+    apiMocks.triggerDeployHook.mockResolvedValue('queued')
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true }))
   })
 
@@ -48,7 +47,7 @@ describe('POST /api/admin/rhythms', () => {
     expect(apiMocks.upsertPublishedRhythm).not.toHaveBeenCalled()
   })
 
-  it('creates a new published rhythm and revalidates the page', async () => {
+  it('creates a new published rhythm, revalidates the page, and queues index redeploy', async () => {
     apiMocks.upsertPublishedRhythm.mockResolvedValue({ created: true, slug: 'brand-new-slug' })
     const rhythm = sampleRhythm()
 
@@ -61,17 +60,24 @@ describe('POST /api/admin/rhythms', () => {
       slug: 'brand-new-slug',
       created: true,
       url: '/rhythm/brand-new-slug',
+      indexRefresh: 'queued',
     })
     expect(apiMocks.upsertPublishedRhythm).toHaveBeenCalledWith('brand-new-slug', rhythm)
     expect(apiMocks.revalidatePath).toHaveBeenCalledWith('/rhythm/brand-new-slug')
-    expect(apiMocks.revalidatePath).toHaveBeenCalledWith('/garage')
-    expect(apiMocks.revalidateTag).toHaveBeenCalledWith('rhythm-index', 'max')
+    expect(apiMocks.triggerDeployHook).toHaveBeenCalledOnce()
     expect(fetch).toHaveBeenCalledWith('http://localhost:3000/rhythm/brand-new-slug', {
       cache: 'no-store',
     })
-    expect(fetch).toHaveBeenCalledWith('http://localhost:3000/api/rhythm-index', {
-      cache: 'no-store',
-    })
+  })
+
+  it('returns not-configured when the deploy hook is unset', async () => {
+    apiMocks.triggerDeployHook.mockResolvedValue('not-configured')
+
+    const response = await POST(jsonRequest({ slug: 'new-slug', rhythm: sampleRhythm() }))
+    const payload = await response.json()
+
+    expect(response.status).toBe(200)
+    expect(payload.indexRefresh).toBe('not-configured')
   })
 
   it('updates an existing published rhythm', async () => {

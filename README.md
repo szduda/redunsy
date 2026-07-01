@@ -122,9 +122,10 @@ Open [http://localhost:3000](http://localhost:3000). The dev server works withou
 
 Create `.env.local` (or pull from Vercel with `vercel env pull`):
 
-| Variable                         | Required for      | Purpose                    |
-| -------------------------------- | ----------------- | -------------------------- |
-| `POSTGRES_URL` or `DATABASE_URL` | Build, DB scripts | Postgres connection string |
+| Variable                         | Required for       | Purpose                                        |
+| -------------------------------- | ------------------ | ---------------------------------------------- |
+| `POSTGRES_URL` or `DATABASE_URL` | Build, DB scripts  | Postgres connection string                     |
+| `VERCEL_DEPLOY_HOOK_URL`         | Production publish | Queues redeploy to refresh garage search index |
 
 ### Database
 
@@ -148,6 +149,36 @@ npm run search-index   # Regenerate garage search JSON from Postgres
 | `npm run test`          | Run all Vitest suites                             |
 | `npm run test:playback` | Playback timing and groove-length invariants      |
 | `npm run format`        | Prettier write                                    |
+
+### Garage search index (static)
+
+Garage browse/search uses [`features/garage/rhythm-index.generated.json`](features/garage/rhythm-index.generated.json), bundled into the client build. User sessions do **not** read Postgres for catalogue cards; search, filters, and pagination run entirely in the browser over that static index.
+
+**Publish flow:**
+
+1. Admin publish writes the rhythm to Postgres.
+2. The rhythm detail page is revalidated (`/rhythm/[slug]`).
+3. A Vercel deploy hook (`VERCEL_DEPLOY_HOOK_URL`) queues a production rebuild.
+4. `prebuild` runs `scripts/generate-search-index.ts`, regenerating the JSON from Postgres.
+5. The new deployment serves updated garage cards.
+
+**Limitations:**
+
+- Garage cards stay stale until the redeploy finishes; the rhythm detail page can be fresh earlier.
+- Local/dev publish works without a deploy hook, but garage cards only update after `npm run search-index` or a deploy.
+- Search/filter changes never hit the server — by design, to keep session cost near zero.
+
+**Cost profile (expected scale):**
+
+| Event              | DB reads (garage) | API calls (garage) | Notes                                                               |
+| ------------------ | ----------------- | ------------------ | ------------------------------------------------------------------- |
+| New user session   | 0                 | 0                  | Static JS + bundled JSON only                                       |
+| Search/filter/page | 0                 | 0                  | Client CPU only                                                     |
+| One publish        | 0                 | 0                  | Build time: 1 catalogue DB read, 1 upsert, 1 deploy hook, 1 rebuild |
+
+Current catalogue is ~50 rhythms; under 1,000 should stay comfortably within Vercel Pro. Revisit bundle size and client search latency around 5,000–10,000 rhythms if growth continues.
+
+Set `VERCEL_DEPLOY_HOOK_URL` in production (Vercel project → Settings → Git → Deploy Hooks).
 
 ## Deployment
 
