@@ -22,7 +22,7 @@ const CreatorConfigNotice = () => (
 )
 
 const CreatorFlowShell = ({ title, children }: { title: string; children: ReactNode }) => (
-  <div className="flex w-full max-w-2xl flex-col gap-5 p-4 md:p-0">
+  <div className="mx-auto flex w-full max-w-2xl flex-col gap-5 p-4 lg:pt-4 xl:px-6 xl:pt-6 md:p-0">
     <CreatorConfigNotice />
     <div className="flex flex-col gap-4">
       <h1 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">{title}</h1>

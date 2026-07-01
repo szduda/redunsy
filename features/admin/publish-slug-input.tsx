@@ -37,7 +37,7 @@ export const PublishSlugInput = ({ value, onChange }: PublishSlugInputProps) => 
     <div className="relative">
       <Input
         autoComplete="off"
-        className={cn('pr-10')}
+        className={cn('pr-10 !bg-white/60 dark:!bg-black/40 font-semibold w-full')}
         onBlur={checkUrl}
         onChange={(event) => onValueChange(event.target.value)}
         placeholder="slug"

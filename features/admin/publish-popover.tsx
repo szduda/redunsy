@@ -13,6 +13,7 @@ import type { Rhythm } from '@/features/rhythm/rhythm.types'
 import { Button } from '@/features/theme/button'
 import { Text } from '@/features/theme/text'
 import { cn } from '@/features/theme/cn'
+import { Switch } from '../theme/switch'
 
 type PublishPopoverProps = {
   rhythm: Rhythm
@@ -22,6 +23,7 @@ export const PublishPopover = ({ rhythm }: PublishPopoverProps) => {
   const { pushToast } = useToast()
   const [slug, setSlug] = useState(() => publishSlugFromRhythm(rhythm))
   const [error, setError] = useState<string | null>(null)
+  const [safetyToggle, setSafetyToggle] = useState(false)
   const { mutate, isPending } = usePublishRhythm()
 
   const onSubmit = (close: () => void) => {
@@ -58,28 +60,32 @@ export const PublishPopover = ({ rhythm }: PublishPopoverProps) => {
   return (
     <Popover
       panel={({ close }) => (
-        <div className="flex w-64 flex-col gap-2 p-2">
-          <Text className="font-semibold text-zinc-900 dark:text-zinc-100">Publish as…</Text>
+        <div className="flex w-full flex-col gap-2 p-2 md:w-96">
           <PublishSlugInput onChange={setSlug} value={slug} />
+
           {error ? (
             <Text className="text-red-600 dark:text-red-400" variant="mono">
               {error}
             </Text>
           ) : null}
-          <Button disabled={isPending} onClick={() => onSubmit(close)} variant="filled">
-            {isPending ? 'Publishing…' : 'Publish'}
-          </Button>
-        </div>
+
+          <div className="flex justify-between items-center">
+            <Switch checked={safetyToggle} onChange={setSafetyToggle} label="I know what I'm doing" reversed labelClassName='dark:!text-yellowy-light !text-xs font-semibold uppercase' />
+            <Button disabled={isPending || !safetyToggle} onClick={() => onSubmit(close)} variant="filled" className="md:w-fit bg-yellowy dark:bg-yellowy-light hover:bg-yellowy/80 dark:hover:bg-yellowy-light/80">
+              {isPending ? 'Publishing…' : 'Publish'}
+            </Button>
+          </div>
+        </div >
       )}
-      panelClassName="w-auto"
-      preferredDirection="bottom"
+      panelClassName="w-auto max-md:!left-0 max-md:!w-[100dvw] max-md:!translate-x-0 max-md:rounded-none max-md:border-x-0 max-md:!right-0 !bg-yellowy/50 dark:!bg-yellowy/15 backdrop-blur-xl"
+      preferredDirection="right"
     >
       {({ toggle, open }) => (
         <Button
           className={cn(
             '!justify-start w-full',
             open &&
-              '!text-[#af8545] dark:!text-yellowy-light bg-zinc-200 bg-zinc-200/70 dark:bg-zinc-800/50',
+            '!text-[#af8545] dark:!text-yellowy-light bg-zinc-200 bg-zinc-200/70 dark:bg-zinc-800/50',
           )}
           onClick={toggle}
           variant="subtle"
@@ -87,6 +93,6 @@ export const PublishPopover = ({ rhythm }: PublishPopoverProps) => {
           <DeployIcon className="mr-1 size-4" /> Publish as…
         </Button>
       )}
-    </Popover>
+    </Popover >
   )
 }

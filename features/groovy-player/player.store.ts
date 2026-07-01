@@ -131,6 +131,8 @@ type PlayerState = {
   setFullBleed: (fullBleed: boolean) => void
   preventScreenSleep: boolean
   setPreventScreenSleep: (preventScreenSleep: boolean) => void
+  showKeyboardHints: boolean
+  setShowKeyboardHints: (showKeyboardHints: boolean) => void
 }
 
 type PersistedPlayerState = Pick<
@@ -146,6 +148,7 @@ type PersistedPlayerState = Pick<
   | 'markTriplets'
   | 'fullBleed'
   | 'preventScreenSleep'
+  | 'showKeyboardHints'
 >
 
 export const usePlayerStore = create<PlayerState>()(
@@ -195,6 +198,8 @@ export const usePlayerStore = create<PlayerState>()(
       setFullBleed: (fullBleed) => set({ fullBleed }),
       preventScreenSleep: true,
       setPreventScreenSleep: (preventScreenSleep) => set({ preventScreenSleep }),
+      showKeyboardHints: false,
+      setShowKeyboardHints: (showKeyboardHints) => set({ showKeyboardHints }),
     }),
     {
       name: 'redunsy-player',
@@ -211,6 +216,7 @@ export const usePlayerStore = create<PlayerState>()(
         markTriplets: state.markTriplets,
         fullBleed: state.fullBleed,
         preventScreenSleep: state.preventScreenSleep,
+        showKeyboardHints: state.showKeyboardHints,
       }),
       merge: (persisted, current) => {
         const saved = persisted as Partial<PersistedPlayerState> & { markFirstBeat?: boolean }
@@ -246,6 +252,10 @@ export const usePlayerStore = create<PlayerState>()(
             typeof saved.preventScreenSleep === 'boolean'
               ? saved.preventScreenSleep
               : current.preventScreenSleep,
+          showKeyboardHints:
+            typeof saved.showKeyboardHints === 'boolean'
+              ? saved.showKeyboardHints
+              : current.showKeyboardHints,
         }
       },
     },

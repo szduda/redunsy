@@ -21,6 +21,6 @@ export const PublishGate = ({ rhythm }: PublishGateProps) => {
   const [hasHint] = useState(hasAdminHintCookie)
   const { data } = useAdminSession(hasHint)
 
-  if (!data?.authenticated) return null
+  if (!data?.authenticated && process.env.NODE_ENV !== 'development') return null
   return <PublishRhythmButton rhythm={rhythm} />
 }

@@ -1,14 +1,12 @@
 'use client'
 import { useEffect, useRef } from 'react'
 
-const isInteractiveTarget = (target: EventTarget | null) =>
+const isTypingTarget = (target: EventTarget | null) =>
   target instanceof HTMLInputElement ||
   target instanceof HTMLTextAreaElement ||
-  target instanceof HTMLSelectElement ||
-  target instanceof HTMLButtonElement ||
-  (target instanceof HTMLElement && target.isContentEditable)
+  target instanceof HTMLSelectElement
 
-/** Toggle play/pause on the Space key, unless an interactive element is focused. */
+/** Toggle play/pause on Space unless a text field is focused. */
 export const useSpaceTogglePlay = (onToggle: () => void) => {
   const onToggleRef = useRef(onToggle)
 
@@ -19,7 +17,7 @@ export const useSpaceTogglePlay = (onToggle: () => void) => {
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.code !== 'Space' && event.key !== ' ') return
-      if (event.repeat || isInteractiveTarget(event.target)) return
+      if (event.repeat || isTypingTarget(event.target)) return
       event.preventDefault()
       onToggleRef.current()
     }
