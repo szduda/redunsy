@@ -1,15 +1,15 @@
-import { describe, expect, it } from 'vitest'
+import { afterEach, describe, expect, it, vi } from 'vitest'
 
 import { hasAdminHintCookie } from '@/features/admin/admin-cookies'
 
 describe('hasAdminHintCookie (server)', () => {
+  afterEach(() => {
+    vi.unstubAllGlobals()
+  })
+
   it('returns false when document is unavailable', () => {
-    const documentValue = globalThis.document
-    // @ts-expect-error simulate server runtime
-    delete globalThis.document
+    vi.stubGlobal('document', undefined)
 
     expect(hasAdminHintCookie()).toBe(false)
-
-    globalThis.document = documentValue
   })
 })
