@@ -51,9 +51,11 @@ const LAYER_CONFIG = {
 type GroovyPlayerProps = {
   /** Build-time rhythm for static `/rhythm/[slug]` pages (no browser DB access). */
   rhythm?: Rhythm
+  /** Hide title and subtitle — used when the page renders metadata separately. */
+  hideHeader?: boolean
 }
 
-export const GroovyPlayer = ({ rhythm }: GroovyPlayerProps = {}) => {
+export const GroovyPlayer = ({ rhythm, hideHeader = false }: GroovyPlayerProps = {}) => {
   useTopNavSticky(false)
   const router = useRouter()
 
@@ -253,7 +255,12 @@ export const GroovyPlayer = ({ rhythm }: GroovyPlayerProps = {}) => {
 
   return (
     <>
-      <div className={cn('flex w-full flex-col gap-3', !fullBleed && 'lg:pt-4 xl:px-4 xl:pt-6')}>
+      <div
+        className={cn(
+          'flex w-full flex-col gap-3',
+          !fullBleed && !hideHeader && 'lg:pt-4 xl:px-4 xl:pt-6',
+        )}
+      >
         {isPlayerDemo ? <PlayerDemoBanner onFork={onForkDemo} /> : null}
 
         {!fullBleed && !isPlayerDemo ? (
@@ -293,7 +300,7 @@ export const GroovyPlayer = ({ rhythm }: GroovyPlayerProps = {}) => {
               : 'md:rounded-xl md:border md:border-zinc-100 dark:border-transparent max-w-4xl mx-auto',
           )}
         >
-          {loadedRhythm ? (
+          {loadedRhythm && !hideHeader ? (
             <div className="px-4 pt-4">
               <h1 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
                 {loadedRhythm.title}

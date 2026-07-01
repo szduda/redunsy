@@ -45,16 +45,18 @@ const beatSizeChipClass = (active: boolean) =>
 const capitalize = (value: string) =>
   value.length ? value[0].toUpperCase() + value.slice(1) : value
 
-export const metadataSummary = (values: RhythmMetadataValues) => {
+export const metadataSummary = (values: RhythmMetadataValues, instruments: string[] = []) => {
   const parts: string[] = [`on ${values.meter}`, `${values.tempo} bpm`]
   if (values.signalPattern.trim()) parts.push('with signal')
   if (!isSwingPatternEmpty(values.swingPattern)) parts.push('with swing')
+  if (values.description.trim()) parts.push(values.description.trim())
   parts.push(
     ...values.rhythmGroup,
     ...values.origin.map(capitalize),
     ...values.author,
     ...values.tags.filter((tag) => !values.rhythmGroup.includes(tag)),
   )
+  if (instruments.length) parts.push(...instruments)
   return parts.join(' · ')
 }
 

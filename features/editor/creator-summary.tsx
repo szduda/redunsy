@@ -32,7 +32,7 @@ export const CreatorSummary = ({ draft }: CreatorSummaryProps) => {
     <div className="overflow-hidden rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-950">
       <div className="border-b border-zinc-200/80 bg-zinc-50/80 px-4 py-4 dark:border-zinc-800/80 dark:bg-zinc-900/40">
         <p className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">{title}</p>
-        <Text className="mt-1">{metadataSummary(draft)}</Text>
+        <Text className="mt-1">{metadataSummary(draft, draft.layers)}</Text>
       </div>
 
       <div className="flex flex-col gap-4 px-4 py-4">

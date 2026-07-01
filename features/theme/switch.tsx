@@ -9,6 +9,7 @@ type SwitchProps = {
   inline?: boolean
   reversed?: boolean
   className?: string
+  labelClassName?: string
 }
 
 export const Switch = ({
@@ -18,6 +19,7 @@ export const Switch = ({
   inline = false,
   reversed = false,
   className,
+  labelClassName,
 }: SwitchProps) => {
   const switchButton = (
     <button
@@ -40,7 +42,9 @@ export const Switch = ({
     </button>
   )
 
-  const labelSpan = <span className="text-sm text-zinc-600 dark:text-zinc-400">{label}</span>
+  const labelSpan = (
+    <span className={cn('text-sm text-zinc-600 dark:text-zinc-400', labelClassName)}>{label}</span>
+  )
 
   return (
     <label

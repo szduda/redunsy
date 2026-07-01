@@ -2,6 +2,7 @@
 
 import { useCallback, useState, type ReactNode } from 'react'
 
+import { usePlayerStore } from '@/features/groovy-player/player.store'
 import { useIsMobile } from '@/features/shared/use-is-mobile'
 import { cn } from '@/features/theme/cn'
 import { PRESSABLE_CLASS } from '@/features/theme/pressable'
@@ -9,6 +10,7 @@ import { PRESSABLE_CLASS } from '@/features/theme/pressable'
 type DisabledHintButtonProps = {
   disabled?: boolean
   hint?: string
+  keyboardHint?: string
   className?: string
   children: ReactNode
   onClick?: () => void
@@ -20,6 +22,7 @@ type DisabledHintButtonProps = {
 export const DisabledHintButton = ({
   disabled = false,
   hint,
+  keyboardHint,
   className,
   children,
   onClick,
@@ -27,6 +30,7 @@ export const DisabledHintButton = ({
   ...aria
 }: DisabledHintButtonProps) => {
   const isMobile = useIsMobile()
+  const showKeyboardHints = usePlayerStore((state) => state.showKeyboardHints)
   const [mobileHint, setMobileHint] = useState(false)
 
   const showMobileHint = useCallback(() => {
@@ -64,6 +68,11 @@ export const DisabledHintButton = ({
       {hint && disabled && isMobile && mobileHint ? (
         <span className="pointer-events-none absolute bottom-full left-1/2 z-50 mb-1.5 w-max max-w-44 -translate-x-1/2 rounded-md bg-zinc-900 px-2 py-1 text-center text-[10px] leading-snug text-white dark:bg-zinc-100 dark:text-zinc-900">
           {hint}
+        </span>
+      ) : null}
+      {keyboardHint && showKeyboardHints && !isMobile ? (
+        <span className="pointer-events-none absolute -bottom-3 left-1/2 z-50 mb-0.5 -translate-x-1/2 text-xs font-bold uppercase text-zinc-500 dark:text-zinc-400">
+          {keyboardHint}
         </span>
       ) : null}
     </div>

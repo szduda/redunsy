@@ -1,6 +1,6 @@
 'use client'
 
-import { type ChangeEvent, type KeyboardEvent, type PointerEvent } from 'react'
+import { type ChangeEvent, type KeyboardEvent, type PointerEvent, type Ref } from 'react'
 
 import { Popover, popoverTriggerOpenClass } from '@/features/groovy-player/popover'
 import { usePlayerStore } from '@/features/groovy-player/player.store'
@@ -33,6 +33,7 @@ type TempoSliderInputProps = {
   onTempoChange: (tempo: number) => void
   className?: string
   vertical?: boolean
+  focusRef?: Ref<HTMLInputElement>
 }
 
 const TempoMinMaxLabels = ({ vertical = false }: { vertical?: boolean }) => (
@@ -119,6 +120,7 @@ const TempoSliderInput = ({
   onTempoChange,
   className,
   vertical = false,
+  focusRef,
 }: TempoSliderInputProps) => {
   if (vertical)
     return <VerticalTempoSlider className={className} onTempoChange={onTempoChange} tempo={tempo} />
@@ -128,6 +130,7 @@ const TempoSliderInput = ({
 
   return (
     <input
+      ref={focusRef}
       aria-label="Tempo"
       className={cn('cursor-pointer', horizontalSliderClass, className)}
       max={MAX_TEMPO}
@@ -143,12 +146,20 @@ const TempoSliderInput = ({
 const DesktopTempoSlider = ({
   tempo,
   onTempoChange,
-}: Omit<TempoSliderInputProps, 'vertical' | 'className'>) => (
+  focusRef,
+}: Omit<TempoSliderInputProps, 'vertical' | 'className'> & {
+  focusRef?: Ref<HTMLInputElement>
+}) => (
   <div className="flex w-40 flex-col items-end gap-1 pr-5">
     <Text variant="mono" className="font-bold">
       {tempo} BPM
     </Text>
-    <TempoSliderInput className="w-full" onTempoChange={onTempoChange} tempo={tempo} />
+    <TempoSliderInput
+      className="w-full"
+      focusRef={focusRef}
+      onTempoChange={onTempoChange}
+      tempo={tempo}
+    />
     <TempoMinMaxLabels />
   </div>
 )
@@ -156,7 +167,7 @@ const DesktopTempoSlider = ({
 const MobileTempoSlider = ({
   tempo,
   onTempoChange,
-}: Omit<TempoSliderInputProps, 'vertical' | 'className'>) => (
+}: Omit<TempoSliderInputProps, 'vertical' | 'className' | 'focusRef'>) => (
   <Popover
     panel={
       <div className="flex flex-col items-center gap-3">
@@ -200,7 +211,11 @@ const MobileTempoSlider = ({
   </Popover>
 )
 
-export const TempoSlider = () => {
+export const TempoSlider = ({
+  focusRef,
+}: {
+  focusRef?: Ref<HTMLInputElement | HTMLButtonElement>
+} = {}) => {
   const isMobile = useIsMobile()
   const tempo = usePlayerStore((state) => state.tempo)
   const setTempo = usePlayerStore((state) => state.setTempo)
@@ -208,6 +223,10 @@ export const TempoSlider = () => {
   return isMobile ? (
     <MobileTempoSlider onTempoChange={setTempo} tempo={tempo} />
   ) : (
-    <DesktopTempoSlider onTempoChange={setTempo} tempo={tempo} />
+    <DesktopTempoSlider
+      focusRef={focusRef as Ref<HTMLInputElement>}
+      onTempoChange={setTempo}
+      tempo={tempo}
+    />
   )
 }

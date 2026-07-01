@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 import { useRouter } from 'next/navigation'
 
+import { PublishGate } from '@/features/admin/publish-gate'
 import { CollapsibleMetadata } from '@/features/editor/collapsible-metadata'
 import { BackIcon } from '@/features/icons/back-icon'
 import { Note16Icon } from '@/features/icons/note-16-icon'
@@ -10,6 +11,7 @@ import { EditableBarsCanvas } from '@/features/editor/editable-bars-canvas'
 import { EditorKeyboard } from '@/features/editor/keyboard/editor-keyboard'
 import { useEditorStore } from '@/features/editor/editor.store'
 import { useEditorKeyboard } from '@/features/editor/use-editor-keyboard'
+import { useFlamMode } from '@/features/editor/use-flam-mode'
 import { useNoteEditor } from '@/features/editor/use-note-editor'
 import { useBarsPerRow } from '@/features/groovy-player/use-bars-per-row'
 import { PlayerBottomNav } from '@/features/groovy-player/player-bottom-nav'
@@ -66,6 +68,7 @@ export const RhythmEditor = () => {
   const setIsPlaying = usePlayerStore((state) => state.setIsPlaying)
   const setBeatIndex = usePlayerStore((state) => state.setBeatIndex)
   const setTempo = usePlayerStore((state) => state.setTempo)
+  const fullBleed = usePlayerStore((state) => state.fullBleed)
   const [playError, setPlayError] = useState<string | null>(null)
 
   const barSize = rhythm ? rhythm.meter * 2 : 8
@@ -86,11 +89,21 @@ export const RhythmEditor = () => {
     (bars) => focusedTrack && updateTrackBars(focusedTrack.id, bars),
   )
 
+  const flam = useFlamMode(
+    focusedTrack?.instrument ?? 'djembe',
+    focusedTrack?.bars ?? [],
+    noteEditor.selection,
+    noteEditor.setSound,
+    noteEditor.selectionMode === 'note',
+  )
+
   useEditorKeyboard(focusedTrack?.instrument ?? 'djembe', {
     selection: noteEditor.selection,
     selectionMode: noteEditor.selectionMode,
     navigate: noteEditor.navigate,
+    setSelectionMode: noteEditor.setSelectionMode,
     setSound: noteEditor.setSound,
+    toggleFlam: flam.toggleFlam,
     convertToSixteenth: noteEditor.convertToSixteenth,
     convertToTriplet: noteEditor.convertToTriplet,
     convertToEighth: noteEditor.convertToEighth,
@@ -216,21 +229,31 @@ export const RhythmEditor = () => {
 
   return (
     <>
-      <div className="flex w-full max-w-4xl flex-col gap-3 xl:max-w-5xl xl:px-10 2xl:px-0">
-        <FixedSideActions>
-          <Button onClick={onBackToPicker} variant="subtle" className="!justify-start">
-            <BackIcon className="size-4 mr-1" /> Back to My Rhythms
-          </Button>
-          <Button
-            href={`/player?rhythm=${rhythm.slug}`}
-            variant="subtle"
-            className="!justify-start"
-          >
-            <Note16Icon className="mr-1 size-4" /> Show in Player
-          </Button>
-        </FixedSideActions>
+      <div className={cn('flex w-full flex-col gap-3', !fullBleed && 'lg:pt-4 xl:px-4 xl:pt-6')}>
+        {!fullBleed ? (
+          <FixedSideActions>
+            <Button onClick={onBackToPicker} variant="subtle" className="!justify-start">
+              <BackIcon className="size-4 mr-1" /> Back to My Rhythms
+            </Button>
+            <Button
+              href={`/player?rhythm=${rhythm.slug}`}
+              variant="subtle"
+              className="!justify-start"
+            >
+              <Note16Icon className="mr-1 size-4" /> Show in Player
+            </Button>
+            <PublishGate rhythm={rhythm} />
+          </FixedSideActions>
+        ) : null}
 
-        <section className="flex w-full flex-col gap-2 bg-white md:rounded-xl md:border md:border-zinc-100 dark:bg-zinc-900/60 dark:border-transparent">
+        <section
+          className={cn(
+            'flex w-full flex-col gap-2 overflow-hidden bg-white dark:bg-zinc-900/60',
+            fullBleed
+              ? 'md:rounded-none md:border-0'
+              : 'mx-auto max-w-4xl md:rounded-xl md:border md:border-zinc-100 dark:border-transparent xl:max-w-5xl',
+          )}
+        >
           <CollapsibleMetadata
             onChange={patchActiveRhythm}
             onTitleBlur={onTitleBlur}
@@ -291,10 +314,14 @@ export const RhythmEditor = () => {
 
       <EditorKeyboard
         bars={focusedTrack.bars}
+        canFlam={flam.canFlam}
+        flamMode={flam.flamMode}
+        flamSymbols={flam.flamSymbols}
         instrument={focusedTrack.instrument}
         onConvertToEighth={noteEditor.convertToEighth}
         onConvertToSixteenth={noteEditor.convertToSixteenth}
         onConvertToTriplet={noteEditor.convertToTriplet}
+        onFlamToggle={flam.toggleFlam}
         onNavigate={noteEditor.navigate}
         onRunBarModeAction={noteEditor.runBarModeAction}
         onSelectionModeChange={noteEditor.setSelectionMode}

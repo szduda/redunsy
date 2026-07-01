@@ -5,7 +5,7 @@ import { EditorPage } from '@/features/editor/editor-page'
 export const dynamic = 'force-static'
 
 const Page = () => (
-  <main className="flex flex-1 justify-center lg:p-4 xl:p-6">
+  <main className="flex flex-1 flex-col">
     <Suspense>
       <EditorPage />
     </Suspense>

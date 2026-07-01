@@ -2,19 +2,14 @@
 
 import Link from 'next/link'
 
+import { RhythmMetadataView } from '@/features/rhythm/rhythm-metadata-view'
 import type { RhythmCard } from '@/features/rhythm/rhythm.types'
-import { Text } from '@/features/theme/text'
 import { cn } from '@/features/theme/cn'
 
 type RhythmCardProps = {
   card: RhythmCard
   className?: string
 }
-
-const barsOnMeterLabel = (bars: number, meter: RhythmCard['meter']) => `${bars} bars on ${meter}`
-
-const capitalize = (value: string) =>
-  value.length ? value[0].toUpperCase() + value.slice(1) : value
 
 const MyRhythmBadge = () => (
   <span
@@ -33,39 +28,14 @@ export const RhythmCardView = ({ card, className }: RhythmCardProps) => (
     )}
   >
     <Link
-      className="flex flex-col h-full p-4"
+      className="flex h-full flex-col p-4"
       href={card.userOwned ? `/player?rhythm=${card.slug}` : `/rhythm/${card.slug}`}
     >
-      <div className="flex items-center gap-1.5">
-        {card.userOwned ? <MyRhythmBadge /> : null}
-        <span className="font-mono text-xs text-zinc-500">
-          {barsOnMeterLabel(card.longestTrack, card.meter)}
-        </span>
-      </div>
-
-      <h2 className="mt-1 text-lg font-semibold text-zinc-900 dark:text-zinc-100">{card.title}</h2>
-
-      <Text className="mt-1">
-        {[...(card.author ?? []), ...(card.origin ?? []).map(capitalize)].join(' · ')}
-      </Text>
-
-      <Text className="mt-2" variant="mono">
-        {card.instruments.join(' · ')}
-      </Text>
-
-      <div className="mt-3 flex flex-wrap gap-1.5">
-        {[
-          ...(card.rhythmGroup ?? []),
-          ...(card.tags ?? []).filter((tag) => !(card.rhythmGroup ?? []).includes(tag)),
-        ].map((tag) => (
-          <span
-            key={tag}
-            className="rounded-full bg-zinc-100 px-2 py-0.5 text-xs text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400"
-          >
-            {tag}
-          </span>
-        ))}
-      </div>
+      <RhythmMetadataView
+        card={card}
+        leading={card.userOwned ? <MyRhythmBadge /> : undefined}
+        titleAs="h2"
+      />
     </Link>
   </div>
 )
