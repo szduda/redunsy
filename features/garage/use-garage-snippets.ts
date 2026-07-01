@@ -4,6 +4,7 @@ import { keepPreviousData, useQuery } from '@tanstack/react-query'
 import { useShallow } from 'zustand/react/shallow'
 
 import { selectGarageFilters, useGarageFiltersStore } from '@/features/garage/garage-filters.store'
+import { useRhythmIndexStore } from '@/features/garage/rhythm-index.store'
 import { usePaginationStore } from '@/features/garage/pagination.store'
 import { searchRhythmCards } from '@/features/garage/search-snippets'
 import type { GarageFilters } from '@/features/rhythm/rhythm.types'
@@ -13,15 +14,17 @@ export const garageSnippetsQueryKey = (
   filters: GarageFilters,
   page: number,
   pageSize: number,
-) => ['garage-snippets', search, filters, page, pageSize] as const
+  revision: number,
+) => ['garage-snippets', search, filters, page, pageSize, revision] as const
 
 export const useGarageSnippets = (search: string) => {
   const filters = useGarageFiltersStore(useShallow(selectGarageFilters))
   const page = usePaginationStore((state) => state.page)
   const pageSize = usePaginationStore((state) => state.pageSize)
+  const revision = useRhythmIndexStore((state) => state.revision)
 
   return useQuery({
-    queryKey: garageSnippetsQueryKey(search, filters, page, pageSize),
+    queryKey: garageSnippetsQueryKey(search, filters, page, pageSize, revision),
     queryFn: () => searchRhythmCards({ search, filters, page, pageSize }),
     // Search is synchronous in-memory — keep previous results visible while the
     // new query key resolves so there is no blank/spinner flash between pages.

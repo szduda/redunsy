@@ -1,6 +1,7 @@
-import { revalidatePath } from 'next/cache'
+import { revalidatePath, revalidateTag } from 'next/cache'
 
 import { upsertPublishedRhythm } from '@/db/admin-rhythms'
+import { RHYTHM_INDEX_CACHE_TAG } from '@/lib/cached-rhythm-index'
 import { slugFromTitle } from '@/features/rhythm/rhythm-helpers'
 import type { Rhythm } from '@/features/rhythm/rhythm.types'
 import { requireAdminSession } from '@/lib/auth-session'
@@ -12,11 +13,11 @@ type PublishBody = {
 
 const sanitizeSlug = (raw: string) => slugFromTitle(raw.trim())
 
-const warmRhythmPage = async (request: Request, slug: string) => {
+const warmPath = async (request: Request, path: string) => {
   const host = request.headers.get('host')
   if (!host) return
   const protocol = request.headers.get('x-forwarded-proto') ?? 'http'
-  await fetch(`${protocol}://${host}/rhythm/${slug}`, { cache: 'no-store' })
+  await fetch(`${protocol}://${host}${path}`, { cache: 'no-store' })
 }
 
 export const POST = async (request: Request) => {
@@ -41,7 +42,10 @@ export const POST = async (request: Request) => {
   try {
     const result = await upsertPublishedRhythm(slug, rhythm)
     revalidatePath(`/rhythm/${slug}`)
-    await warmRhythmPage(request, slug)
+    revalidatePath('/garage')
+    revalidateTag(RHYTHM_INDEX_CACHE_TAG, 'max')
+    await warmPath(request, `/rhythm/${slug}`)
+    await warmPath(request, '/api/rhythm-index')
 
     return Response.json({
       ok: true,
