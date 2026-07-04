@@ -1,10 +1,10 @@
-import { revalidatePath, revalidateTag } from 'next/cache'
+import { revalidatePath } from 'next/cache'
 
 import { upsertPublishedRhythm } from '@/db/admin-rhythms'
-import { RHYTHM_SEARCH_INDEX_TAG } from '@/features/garage/rhythm-search-index-tag'
 import { slugFromTitle } from '@/features/rhythm/rhythm-helpers'
 import type { Rhythm } from '@/features/rhythm/rhythm.types'
 import { requireAdminSession } from '@/lib/auth-session'
+import { triggerDeployHook } from '@/lib/deploy-hook'
 
 type PublishBody = {
   slug?: string
@@ -13,16 +13,12 @@ type PublishBody = {
 
 const sanitizeSlug = (raw: string) => slugFromTitle(raw.trim())
 
-const warmUrl = async (request: Request, path: string) => {
+const warmRhythmPage = async (request: Request, slug: string) => {
   const host = request.headers.get('host')
   if (!host) return
   const protocol = request.headers.get('x-forwarded-proto') ?? 'http'
-  await fetch(`${protocol}://${host}${path}`, { cache: 'no-store' })
+  await fetch(`${protocol}://${host}/rhythm/${slug}`, { cache: 'no-store' })
 }
-
-const warmRhythmPage = (request: Request, slug: string) => warmUrl(request, `/rhythm/${slug}`)
-
-const warmSearchIndex = (request: Request) => warmUrl(request, '/api/rhythms/search-index')
 
 export const POST = async (request: Request) => {
   const session = await requireAdminSession()
@@ -46,14 +42,15 @@ export const POST = async (request: Request) => {
   try {
     const result = await upsertPublishedRhythm(slug, rhythm)
     revalidatePath(`/rhythm/${slug}`)
-    revalidateTag(RHYTHM_SEARCH_INDEX_TAG, { expire: 0 })
-    await Promise.all([warmRhythmPage(request, slug), warmSearchIndex(request)])
+    await warmRhythmPage(request, slug)
+    const indexRefresh = await triggerDeployHook()
 
     return Response.json({
       ok: true,
       slug,
       created: result.created,
       url: `/rhythm/${slug}`,
+      indexRefresh,
     })
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Publish failed'

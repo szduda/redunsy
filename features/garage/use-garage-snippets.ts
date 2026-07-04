@@ -13,16 +13,15 @@ export const garageSnippetsQueryKey = (
   filters: GarageFilters,
   page: number,
   pageSize: number,
-  indexVersion: number,
-) => ['garage-snippets', search, filters, page, pageSize, indexVersion] as const
+) => ['garage-snippets', search, filters, page, pageSize] as const
 
-export const useGarageSnippets = (search: string, indexVersion: number) => {
+export const useGarageSnippets = (search: string) => {
   const filters = useGarageFiltersStore(useShallow(selectGarageFilters))
   const page = usePaginationStore((state) => state.page)
   const pageSize = usePaginationStore((state) => state.pageSize)
 
   return useQuery({
-    queryKey: garageSnippetsQueryKey(search, filters, page, pageSize, indexVersion),
+    queryKey: garageSnippetsQueryKey(search, filters, page, pageSize),
     queryFn: () => searchRhythmCards({ search, filters, page, pageSize }),
     // Search is synchronous in-memory — keep previous results visible while the
     // new query key resolves so there is no blank/spinner flash between pages.

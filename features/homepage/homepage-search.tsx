@@ -4,11 +4,9 @@ import { useCallback, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 
 import { suggestSearchTerms } from '@/features/garage/search-suggestions'
-import { useRhythmSearchIndexHydration } from '@/features/garage/use-rhythm-search-index'
 import { Input } from '@/features/theme/input'
 
 export const HomepageSearch = () => {
-  useRhythmSearchIndexHydration()
   const [draft, setDraft] = useState('')
   const draftRef = useRef(draft)
   const router = useRouter()
