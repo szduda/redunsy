@@ -23,7 +23,7 @@ type PublishPopoverProps = {
 const indexRefreshToast = (status: IndexRefreshStatus) => {
   if (status === 'queued') return 'Garage index redeploy queued'
   if (status === 'not-configured') {
-    return 'Garage index redeploy not configured (set VERCEL_DEPLOY_HOOK_URL in production)'
+    return 'Garage index redeploy not configured (set VERCEL_DEPLOY_HOOK_URL and redeploy)'
   }
   return 'Garage index redeploy failed — garage cards may stay stale until the next deploy'
 }

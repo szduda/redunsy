@@ -1,9 +1,17 @@
 import 'server-only'
 
+import { connection } from 'next/server'
+
 export type IndexRefreshStatus = 'queued' | 'not-configured' | 'failed'
 
+const deployHookUrl = () => {
+  const key = 'VERCEL_DEPLOY_HOOK_URL'
+  return process.env[key]?.trim()
+}
+
 export const triggerDeployHook = async (): Promise<IndexRefreshStatus> => {
-  const url = process.env.VERCEL_DEPLOY_HOOK_URL
+  await connection()
+  const url = deployHookUrl()
   if (!url) return 'not-configured'
 
   try {
