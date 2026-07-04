@@ -4,6 +4,7 @@ import { GarageFilters } from '@/features/garage/garage-filters'
 import { GarageOwnershipFilter } from '@/features/garage/garage-ownership-filter'
 import { GarageResults } from '@/features/garage/garage-results'
 import { GarageSearchInput } from '@/features/garage/garage-search-input'
+import { useRhythmSearchIndexHydration } from '@/features/garage/use-rhythm-search-index'
 import {
   GARAGE_MOBILE_TOOLBAR_STICKY_CLASS,
   TOP_NAV_STICKY_SIDEBAR_LG_CLASS,
@@ -13,6 +14,7 @@ import { cn } from '@/features/theme/cn'
 
 export const GaragePage = () => {
   useTopNavSticky(true)
+  useRhythmSearchIndexHydration()
 
   return (
     <div className="mx-auto w-full max-w-8xl flex-1 px-3 md:px-4">

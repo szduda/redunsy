@@ -4,12 +4,16 @@ vi.mock('server-only', () => ({}))
 
 const apiMocks = vi.hoisted(() => ({
   revalidatePath: vi.fn(),
+  revalidateTag: vi.fn(),
   upsertPublishedRhythm: vi.fn(),
   requireAdminSession: vi.fn(),
   triggerDeployHook: vi.fn(),
 }))
 
-vi.mock('next/cache', () => ({ revalidatePath: apiMocks.revalidatePath }))
+vi.mock('next/cache', () => ({
+  revalidatePath: apiMocks.revalidatePath,
+  revalidateTag: apiMocks.revalidateTag,
+}))
 vi.mock('@/db/admin-rhythms', () => ({ upsertPublishedRhythm: apiMocks.upsertPublishedRhythm }))
 vi.mock('@/lib/auth-session', () => ({ requireAdminSession: apiMocks.requireAdminSession }))
 vi.mock('@/lib/deploy-hook', () => ({ triggerDeployHook: apiMocks.triggerDeployHook }))
@@ -64,8 +68,11 @@ describe('POST /api/admin/rhythms', () => {
     })
     expect(apiMocks.upsertPublishedRhythm).toHaveBeenCalledWith('brand-new-slug', rhythm)
     expect(apiMocks.revalidatePath).toHaveBeenCalledWith('/rhythm/brand-new-slug')
-    expect(apiMocks.triggerDeployHook).toHaveBeenCalledOnce()
+    expect(apiMocks.revalidateTag).toHaveBeenCalledWith('rhythm-search-index', { expire: 0 })
     expect(fetch).toHaveBeenCalledWith('http://localhost:3000/rhythm/brand-new-slug', {
+      cache: 'no-store',
+    })
+    expect(fetch).toHaveBeenCalledWith('http://localhost:3000/api/rhythms/search-index', {
       cache: 'no-store',
     })
   })
@@ -92,6 +99,10 @@ describe('POST /api/admin/rhythms', () => {
     expect(payload.slug).toBe('existing-slug')
     expect(apiMocks.upsertPublishedRhythm).toHaveBeenCalledWith('existing-slug', rhythm)
     expect(apiMocks.revalidatePath).toHaveBeenCalledWith('/rhythm/existing-slug')
+    expect(apiMocks.revalidateTag).toHaveBeenCalledWith('rhythm-search-index', { expire: 0 })
+    expect(fetch).toHaveBeenCalledWith('http://localhost:3000/api/rhythms/search-index', {
+      cache: 'no-store',
+    })
   })
 
   it('normalizes slug input before upserting', async () => {

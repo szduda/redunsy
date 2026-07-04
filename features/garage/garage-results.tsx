@@ -15,6 +15,7 @@ import {
 import { RhythmCardView } from '@/features/garage/rhythm-card'
 import { useDebouncedValue } from '@/features/garage/use-debounced-value'
 import { useGarageSnippets } from '@/features/garage/use-garage-snippets'
+import { useRhythmIndexVersion } from '@/features/garage/use-rhythm-search-index'
 import { useSearchStore } from '@/features/store/search.store'
 import { Button } from '@/features/theme/button'
 import { Text } from '@/features/theme/text'
@@ -149,6 +150,7 @@ export const GarageResults = () => {
   const hasQueryParams = searchTerm.length > 0 || hasFilters
   const debouncedSearch = useDebouncedValue(searchTerm, 200)
   const isDebouncing = searchTerm !== debouncedSearch
+  const indexVersion = useRhythmIndexVersion()
 
   const page = usePaginationStore((state) => state.page)
   const setPage = usePaginationStore((state) => state.setPage)
@@ -163,7 +165,10 @@ export const GarageResults = () => {
     [setPage],
   )
 
-  const { data, isLoading, isFetching, isPlaceholderData } = useGarageSnippets(debouncedSearch)
+  const { data, isLoading, isFetching, isPlaceholderData } = useGarageSnippets(
+    debouncedSearch,
+    indexVersion,
+  )
 
   const snippets = data?.items ?? []
   const total = data?.total ?? 0
