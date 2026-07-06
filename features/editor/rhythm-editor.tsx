@@ -24,7 +24,7 @@ import {
 } from '@/features/groovy-player/player.store'
 import { useMetronomeShakerVolume } from '@/features/groovy-player/use-metronome-shaker-volume'
 import { TrackVolume } from '@/features/groovy-player/track/track-volume'
-import { useSpaceTogglePlay } from '@/features/groovy-player/use-space-toggle-play'
+import { usePlayerPlaybackControl } from '@/features/groovy-player/use-player-playback-control'
 import { PageBottomNav } from '@/features/layout/page-bottom-nav'
 import { FixedSideActions } from '@/features/layout/fixed-side-actions'
 import { useTopNavSticky } from '@/features/layout/use-top-nav-sticky'
@@ -134,12 +134,6 @@ export const RhythmEditor = () => {
   useMetronomeShakerVolume(setInstrumentVolume)
 
   useEffect(() => {
-    stop()
-  }, [rhythm?.slug, stop])
-
-  useEffect(() => () => stop(), [stop])
-
-  useEffect(() => {
     if (!rhythm) return
     setTempo(rhythm.tempo)
   }, [rhythm, setTempo])
@@ -173,12 +167,8 @@ export const RhythmEditor = () => {
     [setInstrumentVolume],
   )
 
-  const onTogglePlayPause = () => {
-    if (!rhythm) return
-    if (isPlaying) {
-      pause()
-      return
-    }
+  const startPlayback = useCallback(() => {
+    if (!rhythm) return false
     try {
       Object.values(rhythm.instruments).forEach((track) =>
         validateBarsForGroove(track.bars, barSize),
@@ -188,13 +178,15 @@ export const RhythmEditor = () => {
       }
       setPlayError(null)
       play(playbackTrackBars, groovePattern)
+      return true
     } catch (error) {
       setPlayError(error instanceof Error ? error.message : 'Could not play pattern')
+      return false
     }
-  }
+  }, [barSize, groovePattern, play, playbackTrackBars, rhythm, trackBars])
 
-  const onRestart = () => {
-    if (!rhythm) return
+  const restartPlayback = useCallback(() => {
+    if (!rhythm) return false
     try {
       Object.values(rhythm.instruments).forEach((track) =>
         validateBarsForGroove(track.bars, barSize),
@@ -203,13 +195,24 @@ export const RhythmEditor = () => {
         throw new Error(`Each bar must fill ${barSize} cells for beat size ${rhythm.meter}`)
       }
       setPlayError(null)
-      if (!restart()) play(playbackTrackBars, groovePattern)
+      return Boolean(restart())
     } catch (error) {
       setPlayError(error instanceof Error ? error.message : 'Could not restart pattern')
+      return false
     }
-  }
+  }, [barSize, restart, rhythm, trackBars])
 
-  useSpaceTogglePlay(onTogglePlayPause)
+  const { mediaAudio, onRestart, onStop, onTogglePlayPause } = usePlayerPlaybackControl({
+    artist: rhythm?.author.join(', '),
+    isPlaying,
+    pause,
+    playing,
+    restartPlayback,
+    sessionKey: rhythm?.slug,
+    startPlayback,
+    stop,
+    title: rhythm?.title,
+  })
 
   if (!rhythm || !focusedTrack) return null
 
@@ -229,6 +232,7 @@ export const RhythmEditor = () => {
 
   return (
     <>
+      {mediaAudio}
       <div className={cn('flex w-full flex-col gap-3', !fullBleed && 'lg:pt-4 xl:px-4 xl:pt-6')}>
         {!fullBleed ? (
           <FixedSideActions>
@@ -335,7 +339,7 @@ export const RhythmEditor = () => {
           isPlaying={isPlaying}
           onPlayPause={onTogglePlayPause}
           onRestart={onRestart}
-          onStop={stop}
+          onStop={onStop}
         />
       </PageBottomNav>
     </>

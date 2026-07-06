@@ -113,6 +113,7 @@ export const createMidiPlayer = (drums: number[]): MidiPlayer => {
   return {
     startPlayLoop: (beats, bpm, density, fromBeat, onBeat) => {
       stopPlayLoop(state)
+      void state.audioContext.resume()
       state.loopStarted = true
       const wholeNoteDuration = (4 * 60) / bpm
       const stepSec = density * wholeNoteDuration

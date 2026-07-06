@@ -26,7 +26,7 @@ import {
 import { useBarsPerRow } from '@/features/groovy-player/use-bars-per-row'
 import { useMetronomeShakerVolume } from '@/features/groovy-player/use-metronome-shaker-volume'
 import { Track } from '@/features/groovy-player/track/track'
-import { useSpaceTogglePlay } from '@/features/groovy-player/use-space-toggle-play'
+import { usePlayerPlaybackControl } from '@/features/groovy-player/use-player-playback-control'
 import { PageBottomNav } from '@/features/layout/page-bottom-nav'
 import { findRhythmBySlug, forkRhythmToMyRhythms } from '@/features/rhythm/rhythm-catalog'
 import { trackBarsRecord, tracksFromRecord } from '@/features/rhythm/rhythm-helpers'
@@ -159,18 +159,12 @@ export const GroovyPlayer = ({ rhythm, hideHeader = false }: GroovyPlayerProps =
   useMetronomeShakerVolume(setInstrumentVolume)
 
   useEffect(() => {
-    stop()
-  }, [loadedRhythm?.slug, stop])
-
-  useEffect(() => {
     if (isPlaying !== playing) setIsPlaying(playing)
   }, [isPlaying, playing, setIsPlaying])
 
   useEffect(() => {
     if (storeBeatIndex !== beatIndex) setBeatIndex(beatIndex)
   }, [beatIndex, setBeatIndex, storeBeatIndex])
-
-  useEffect(() => () => stop(), [stop])
 
   useEffect(() => {
     setSwingBarSize(notationGrooveLength)
@@ -195,36 +189,52 @@ export const GroovyPlayer = ({ rhythm, hideHeader = false }: GroovyPlayerProps =
     }
   }
 
-  const onTogglePlayPause = () => {
-    if (isPlaying) {
-      pause()
-      return
-    }
+  const startPlayback = useCallback(() => {
     try {
       validatePlaybackTracks()
       setPlayError(null)
       play(playbackTracksWithShaker, groovePattern)
+      return true
     } catch (error) {
       setPlayError(error instanceof Error ? error.message : 'Could not play pattern')
+      return false
     }
-  }
+  }, [
+    groovePattern,
+    loadedRhythm,
+    notationGrooveLength,
+    playbackTracks,
+    playbackTracksWithShaker,
+    play,
+  ])
 
-  const onRestart = () => {
+  const restartPlayback = useCallback(() => {
     try {
       validatePlaybackTracks()
       setPlayError(null)
-      if (!restart()) play(playbackTracksWithShaker, groovePattern)
+      return Boolean(restart())
     } catch (error) {
       setPlayError(error instanceof Error ? error.message : 'Could not restart pattern')
+      return false
     }
-  }
+  }, [loadedRhythm, notationGrooveLength, playbackTracks, restart])
+
+  const { mediaAudio, onRestart, onStop, onTogglePlayPause } = usePlayerPlaybackControl({
+    artist: loadedRhythm?.author.join(', '),
+    isPlaying,
+    pause,
+    playing,
+    restartPlayback,
+    sessionKey: loadedRhythm?.slug,
+    startPlayback,
+    stop,
+    title: loadedRhythm?.title ?? (isPlayerDemo ? 'Player demo' : undefined),
+  })
 
   const onVolumeLevelChange = useCallback(
     (instrument: string, level: number) => setInstrumentVolume(instrument, level),
     [setInstrumentVolume],
   )
-
-  useSpaceTogglePlay(onTogglePlayPause)
 
   const onFork = () => {
     if (!loadedRhythm) return
@@ -255,6 +265,7 @@ export const GroovyPlayer = ({ rhythm, hideHeader = false }: GroovyPlayerProps =
 
   return (
     <>
+      {mediaAudio}
       <div
         className={cn(
           'flex w-full flex-col gap-3',
@@ -341,7 +352,7 @@ export const GroovyPlayer = ({ rhythm, hideHeader = false }: GroovyPlayerProps =
           isPlaying={isPlaying}
           onPlayPause={onTogglePlayPause}
           onRestart={onRestart}
-          onStop={stop}
+          onStop={onStop}
         />
       </PageBottomNav>
     </>
