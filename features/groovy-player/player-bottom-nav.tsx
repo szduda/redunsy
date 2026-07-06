@@ -12,6 +12,7 @@ import { PlayerTransport } from '@/features/groovy-player/player-transport'
 import { usePlayerStore } from '@/features/groovy-player/player.store'
 import { BOTTOM_NAV_HEIGHT_CLASS } from '@/features/layout/constants'
 import { useIsMobile } from '@/features/shared/use-is-mobile'
+import { useIsTablet } from '@/features/shared/use-is-tablet'
 import { KeyboardHintWrap } from '@/features/shared/keyboard-hint-wrap'
 import { SwingToggle } from '@/features/groovy-player/swing-toggle'
 import { TempoSlider } from '@/features/groovy-player/tempo-slider'
@@ -33,6 +34,8 @@ export const PlayerBottomNav = ({
   const [settingsOpen, setSettingsOpen] = useState(false)
   const fullBleed = usePlayerStore((state) => state.fullBleed)
   const isMobile = useIsMobile()
+  const isTablet = useIsTablet()
+  const useInlineSettings = isMobile || isTablet
   const tempoFocusRef = useRef<HTMLInputElement | HTMLButtonElement>(null)
 
   usePlayerKeyboard({
@@ -68,7 +71,7 @@ export const PlayerBottomNav = ({
           onStop={onStop}
         />
 
-        {isMobile ? settingsButton : null}
+        {useInlineSettings ? settingsButton : null}
 
         <div className="flex items-center gap-1 md:gap-2">
           <KeyboardHintWrap hint={PLAYER_KEYBOARD_HINTS.tempo}>
@@ -83,7 +86,7 @@ export const PlayerBottomNav = ({
         </div>
       </div>
 
-      {!isMobile ? (
+      {!useInlineSettings ? (
         <div
           className={cn(
             'fixed right-0 bottom-0 z-30 flex items-center pr-2 md:pr-4',
