@@ -180,14 +180,14 @@ export const GroovyPlayer = ({ rhythm, hideHeader = false }: GroovyPlayerProps =
     setMidinikeTempo(tempo)
   }, [setMidinikeTempo, tempo])
 
-  const validatePlaybackTracks = () => {
+  const validatePlaybackTracks = useCallback(() => {
     displayTracks.forEach((track) => validateBarsForGroove(track.bars, notationGrooveLength))
     if (loadedRhythm && !tracksMatchGrooveLength(playbackTracks, notationGrooveLength)) {
       throw new Error(
         `Each bar must fill ${notationGrooveLength} cells for beat size ${loadedRhythm.meter}`,
       )
     }
-  }
+  }, [displayTracks, loadedRhythm, notationGrooveLength, playbackTracks])
 
   const startPlayback = useCallback(() => {
     try {
@@ -199,14 +199,7 @@ export const GroovyPlayer = ({ rhythm, hideHeader = false }: GroovyPlayerProps =
       setPlayError(error instanceof Error ? error.message : 'Could not play pattern')
       return false
     }
-  }, [
-    groovePattern,
-    loadedRhythm,
-    notationGrooveLength,
-    playbackTracks,
-    playbackTracksWithShaker,
-    play,
-  ])
+  }, [groovePattern, playbackTracksWithShaker, play, validatePlaybackTracks])
 
   const restartPlayback = useCallback(() => {
     try {
@@ -217,7 +210,7 @@ export const GroovyPlayer = ({ rhythm, hideHeader = false }: GroovyPlayerProps =
       setPlayError(error instanceof Error ? error.message : 'Could not restart pattern')
       return false
     }
-  }, [loadedRhythm, notationGrooveLength, playbackTracks, restart])
+  }, [restart, validatePlaybackTracks])
 
   const { mediaAudio, onRestart, onStop, onTogglePlayPause } = usePlayerPlaybackControl({
     artist: loadedRhythm?.author.join(', '),
