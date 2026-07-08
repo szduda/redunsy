@@ -14,7 +14,7 @@ const linkStyles = {
   default:
     'rounded-md px-3 py-2.5 text-sm text-zinc-700 transition-colors hover:bg-zinc-200/50 dark:text-zinc-200 dark:hover:bg-zinc-800',
   mobile:
-    'rounded px-4 py-3 text-base text-zinc-300 transition-colors hover:bg-zinc-800 hover:text-zinc-100',
+    'rounded px-4 py-3 text-base text-zinc-700 transition-colors hover:bg-zinc-200/50 hover:text-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-800 dark:hover:text-zinc-100',
   homepage:
     'rounded-md px-3 py-2.5 text-sm text-zinc-900 transition-colors hover:bg-zinc-200/50 dark:text-zinc-100 dark:hover:bg-zinc-800/30 opacity-50 hover:opacity-100',
 } as const

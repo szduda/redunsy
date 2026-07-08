@@ -7,8 +7,9 @@ import { NavMenuContent } from '@/features/layout/nav-menu-content'
 import { topNavItemClass } from '@/features/layout/top-nav-item'
 import { cn } from '@/features/theme/cn'
 
-const MOBILE_NAV_PANEL_CLASS = '!border-zinc-800 !bg-zinc-900/95 backdrop-blur'
-const MOBILE_NAV_BACKDROP_CLASS = 'bg-zinc-900/95 backdrop-blur'
+const MOBILE_NAV_PANEL_CLASS =
+  'h-[300px] !bottom-auto border-zinc-200 bg-white/95 backdrop-blur dark:border-zinc-800 dark:bg-zinc-900/95'
+const MOBILE_NAV_BACKDROP_CLASS = 'bg-black/40 backdrop-blur dark:bg-zinc-900/95'
 
 const MenuCloseBadge = () => (
   <svg aria-hidden className="size-3" fill="none" viewBox="0 0 24 24">
@@ -37,7 +38,7 @@ const MenuButton = ({ open, onClick, variant = 'topNav' }: MenuButtonProps) => (
   <button
     aria-expanded={open}
     aria-label={open ? 'Close menu' : 'Open menu'}
-    className={cn(menuButtonClass[variant], open && variant === 'topNav' && 'text-zinc-100')}
+    className={cn(menuButtonClass[variant], open && variant === 'topNav' && 'text-zinc-700 dark:text-zinc-100')}
     onClick={onClick}
     type="button"
   >
