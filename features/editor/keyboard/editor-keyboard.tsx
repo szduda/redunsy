@@ -241,7 +241,7 @@ export const EditorKeyboard = ({
                     aria-label={`Set note to ${sound}`}
                     className={cn(
                       keyButtonClass,
-                      selected?.note === sound && 'border-zinc-400 ring-2 ring-zinc-400/30',
+                      lengthToggleActiveClass(tone, selected?.note === sound),
                     )}
                     disabled={!hasSelection}
                     hint={NO_SELECTION_HINT}
@@ -256,7 +256,7 @@ export const EditorKeyboard = ({
                   aria-label="Set note to rest"
                   className={cn(
                     keyButtonClass,
-                    selected?.note === '-' && 'border-zinc-400 ring-2 ring-zinc-400/30',
+                    lengthToggleActiveClass(tone, selected?.note === '-'),
                   )}
                   disabled={!hasSelection}
                   hint={NO_SELECTION_HINT}
