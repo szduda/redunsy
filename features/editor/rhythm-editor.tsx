@@ -24,6 +24,7 @@ import {
 } from '@/features/groovy-player/player.store'
 import { useMetronomeShakerVolume } from '@/features/groovy-player/use-metronome-shaker-volume'
 import { TrackVolume } from '@/features/groovy-player/track/track-volume'
+import { useTrackVolume } from '@/features/groovy-player/track/use-track-volume'
 import { usePlayerPlaybackControl } from '@/features/groovy-player/use-player-playback-control'
 import { PageBottomNav } from '@/features/layout/page-bottom-nav'
 import { FixedSideActions } from '@/features/layout/fixed-side-actions'
@@ -167,6 +168,8 @@ export const RhythmEditor = () => {
     [setInstrumentVolume],
   )
 
+  const focusedTrackVolume = useTrackVolume(focusedTrack?.instrument ?? '', onVolumeLevelChange)
+
   const startPlayback = useCallback(() => {
     if (!rhythm) return false
     try {
@@ -287,10 +290,10 @@ export const RhythmEditor = () => {
               <Text className="font-semibold">{focusedTrack.name}</Text>
               <TrackVolume
                 compact
-                muted={false}
-                onToggleMute={() => onVolumeLevelChange(focusedTrack.instrument, 0)}
-                onVolumeChange={(value) => onVolumeLevelChange(focusedTrack.instrument, value)}
-                volume={50}
+                muted={focusedTrackVolume.muted}
+                onToggleMute={focusedTrackVolume.onToggleMute}
+                onVolumeChange={focusedTrackVolume.onVolumeChange}
+                volume={focusedTrackVolume.volume}
               />
             </div>
 

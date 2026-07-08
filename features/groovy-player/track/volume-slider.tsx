@@ -68,6 +68,7 @@ const VerticalVolumeSlider = ({
       <input
         aria-hidden
         className={cn('pointer-events-none', horizontalSliderClass, '-rotate-90', className)}
+        key={muted ? 'muted' : 'unmuted'}
         max={100}
         min={0}
         readOnly
@@ -104,9 +105,11 @@ export const VolumeSlider = ({
     <input
       aria-label="Track volume"
       className={cn('cursor-pointer', horizontalSliderClass, className)}
+      key={muted ? 'muted' : 'unmuted'}
       max={100}
       min={0}
       onChange={onChange}
+      onInput={onChange}
       step={1}
       type="range"
       value={muted ? 0 : volume}
