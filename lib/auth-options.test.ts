@@ -71,15 +71,16 @@ describe('authOptions', () => {
       const token = jwt?.({
         token: { email: 'admin@gmail.com' },
         user: undefined,
-      } as Parameters<NonNullable<typeof jwt>>[0])
+        account: null,
+      } as unknown as Parameters<NonNullable<typeof jwt>>[0])
 
       expect(token).toEqual({ email: 'admin@gmail.com' })
     })
   })
 
   describe('session callback', () => {
-    it('copies the token email onto the session user', () => {
-      const nextSession = session?.({
+    it('copies the token email onto the session user', async () => {
+      const nextSession = await session?.({
         session: { user: { name: 'Admin' } },
         token: { email: 'admin@gmail.com' },
       } as Parameters<NonNullable<typeof session>>[0])

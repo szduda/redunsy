@@ -1,6 +1,6 @@
 'use client'
 
-import { type ChangeEvent, type KeyboardEvent, type PointerEvent } from 'react'
+import { type ChangeEvent, type FormEvent, type KeyboardEvent, type PointerEvent } from 'react'
 
 import { cn } from '@/features/theme/cn'
 
@@ -101,6 +101,9 @@ export const VolumeSlider = ({
   const onChange = ({ target }: ChangeEvent<HTMLInputElement>) =>
     onVolumeChange(Number(target.value))
 
+  const onInput = ({ currentTarget }: FormEvent<HTMLInputElement>) =>
+    onVolumeChange(Number(currentTarget.value))
+
   return (
     <input
       aria-label="Track volume"
@@ -109,7 +112,7 @@ export const VolumeSlider = ({
       max={100}
       min={0}
       onChange={onChange}
-      onInput={onChange}
+      onInput={onInput}
       step={1}
       type="range"
       value={muted ? 0 : volume}

@@ -26,8 +26,6 @@ import { ADMIN_HINT_COOKIE } from '@/features/admin/admin-cookies'
 import { GET } from '@/app/foladmin/route'
 
 describe('GET /foladmin', () => {
-  const originalNodeEnv = process.env.NODE_ENV
-
   beforeEach(() => {
     vi.clearAllMocks()
     foladminMocks.redirect.mockImplementation((url: string) => {
@@ -37,7 +35,7 @@ describe('GET /foladmin', () => {
   })
 
   afterEach(() => {
-    process.env.NODE_ENV = originalNodeEnv
+    vi.unstubAllEnvs()
     vi.restoreAllMocks()
   })
 
@@ -53,7 +51,7 @@ describe('GET /foladmin', () => {
 
   it('sets the admin hint cookie and redirects authenticated admins to the editor', async () => {
     foladminMocks.requireAdminSession.mockResolvedValue({ user: { email: 'admin@gmail.com' } })
-    process.env.NODE_ENV = 'development'
+    vi.stubEnv('NODE_ENV', 'development')
 
     await expect(GET()).rejects.toThrow('REDIRECT:/editor')
 
@@ -71,7 +69,7 @@ describe('GET /foladmin', () => {
 
   it('marks the hint cookie secure in production', async () => {
     foladminMocks.requireAdminSession.mockResolvedValue({ user: { email: 'admin@gmail.com' } })
-    process.env.NODE_ENV = 'production'
+    vi.stubEnv('NODE_ENV', 'production')
 
     await expect(GET()).rejects.toThrow('REDIRECT:/editor')
 
