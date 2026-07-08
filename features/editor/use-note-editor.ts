@@ -31,6 +31,7 @@ export const useNoteEditor = (
     setSelection(defaultNoteSelection(bars))
     setSelectionMode('note')
     // bars intentionally omitted — preserve selection across edits; reset only when switching tracks
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [trackId])
 
   const selectNote = useCallback((barIndex: number, glyphIndex: number) => {
