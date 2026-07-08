@@ -11,6 +11,7 @@
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
+    "jakis-problem": "tsc --noEmit && npm test && npm run lint:fix && npm run format",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:playback": "vitest run features/groovy-player/playback.test.ts features/groovy-player/swing-pattern.test.ts lib/midinike/groove/playback-groove.test.ts lib/midinike/groove/playback-tempo.test.ts lib/midinike/groove/compile-groove.test.ts",
