@@ -137,7 +137,7 @@ export const RhythmEditor = () => {
   useEffect(() => {
     if (!rhythm) return
     setTempo(rhythm.tempo)
-  }, [rhythm, setTempo])
+  }, [activeSlug, rhythm?.tempo, setTempo])
 
   useEffect(() => {
     if (!rhythm) return
@@ -145,7 +145,7 @@ export const RhythmEditor = () => {
     const pattern = empty ? defaultSwingPatternForMeter(rhythm.meter) : rhythm.swingPattern
     setSwingPattern(pattern, barSize)
     setSwingEnabled(!empty)
-  }, [barSize, rhythm, setSwingEnabled, setSwingPattern])
+  }, [activeSlug, barSize, rhythm?.meter, rhythm?.swingPattern, setSwingEnabled, setSwingPattern])
 
   useEffect(() => {
     setMidinikeTempo(tempo)
