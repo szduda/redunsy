@@ -6,6 +6,7 @@ import { suggestFromOptions } from '@/features/editor/suggest-from-options'
 import { GARAGE_FILTER_OPTIONS } from '@/features/garage/rhythm-index'
 import { swingBarSizeForMeter, isSwingPatternEmpty } from '@/features/groovy-player/player.store'
 import { SwingPatternField } from '@/features/groovy-player/swing-pattern-field'
+import { slugFromTitle } from '@/features/rhythm/rhythm-helpers'
 import type { Rhythm, RhythmMeter } from '@/features/rhythm/rhythm.types'
 import { Input } from '@/features/theme/input'
 import { Text } from '@/features/theme/text'
@@ -67,6 +68,7 @@ export const RhythmMetadataForm = ({
   titlePlaceholder,
 }: RhythmMetadataFormProps) => {
   const [titleDraft, setTitleDraft] = useState(values.title)
+  const slugPreview = titleDraft.trim() ? slugFromTitle(titleDraft.trim()) : ''
 
   useEffect(() => {
     setTitleDraft(values.title)
@@ -74,7 +76,7 @@ export const RhythmMetadataForm = ({
 
   return (
     <div className="grid grid-cols-12 gap-3">
-      <label className={cn(fieldLabelClass, 'col-span-12')}>
+      <label className={cn(fieldLabelClass, 'col-span-6')}>
         <Text variant="mono">Title</Text>
         <Input
           className="w-full"
@@ -86,6 +88,17 @@ export const RhythmMetadataForm = ({
           onChange={(event) => setTitleDraft(event.target.value)}
           placeholder={titlePlaceholder}
           value={titleDraft}
+        />
+      </label>
+
+      <label className={cn(fieldLabelClass, 'col-span-6')}>
+        <Text variant="mono">Slug</Text>
+        <Input
+          className="w-full cursor-default opacity-70"
+          placeholder="auto-generated"
+          readOnly
+          tabIndex={-1}
+          value={slugPreview}
         />
       </label>
 

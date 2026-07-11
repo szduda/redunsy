@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation'
 
 import { PublishGate } from '@/features/admin/publish-gate'
 import { CollapsibleMetadata } from '@/features/editor/collapsible-metadata'
+import { replaceEditorSlugUrl } from '@/features/editor/editor-url'
 import { BackIcon } from '@/features/icons/back-icon'
 import { Note16Icon } from '@/features/icons/note-16-icon'
 import { EditableBarsCanvas } from '@/features/editor/editable-bars-canvas'
@@ -229,7 +230,7 @@ export const RhythmEditor = () => {
     patchActiveRhythm({ title })
     const nextSlug = slugFromTitle(title)
     if (nextSlug !== previousSlug) {
-      router.replace(`/editor/${nextSlug}`, { scroll: false })
+      replaceEditorSlugUrl(nextSlug)
     }
   }
 
