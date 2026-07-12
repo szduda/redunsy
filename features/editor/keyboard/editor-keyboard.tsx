@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from 'react'
 
-import { instrumentSounds, digitForSound } from '@/features/editor/instrument-sounds'
+import { instrumentSounds, digitForSound, soundHintMeta } from '@/features/editor/instrument-sounds'
 
 import { DisabledHintButton } from '@/features/editor/keyboard/disabled-hint-button'
 import {
@@ -23,6 +23,7 @@ import type { SelectionMode } from '@/features/editor/use-note-editor'
 import { ClearBarIcon } from '@/features/icons/clear-bar-icon'
 import { FlamIcon } from '@/features/icons/flam-icon'
 import { MinusIcon } from '@/features/icons/minus-icon'
+import { NavArrowIcon } from '@/features/icons/nav-arrow-icon'
 import { Note16Icon } from '@/features/icons/note-16-icon'
 import { Note8Icon } from '@/features/icons/note-8-icon'
 import { PlusIcon } from '@/features/icons/plus-icon'
@@ -128,30 +129,30 @@ export const EditorKeyboard = ({
   const navButtons = (
     <div className="flex gap-2">
       <DisabledHintButton
-        className={cn(PRESSABLE_CLASS, keyButtonClass, 'flex-1 text-lg font-mono')}
+        className={cn(PRESSABLE_CLASS, keyButtonClass)}
         disabled={!hasSelection}
         hint={isBarMode ? NO_BAR_HINT : NO_SELECTION_HINT}
-        keyboardHint="←"
+        label="Prev"
         onClick={() => onNavigate(-1)}
         style={hasSelection && !isBarMode ? navShadowStyle : undefined}
       >
-        &lt;
+        <NavArrowIcon className="rotate-180" />
       </DisabledHintButton>
       <DisabledHintButton
-        className={cn(PRESSABLE_CLASS, keyButtonClass, 'flex-1 text-lg font-mono')}
+        className={cn(PRESSABLE_CLASS, keyButtonClass)}
         disabled={!hasSelection}
         hint={isBarMode ? NO_BAR_HINT : NO_SELECTION_HINT}
-        keyboardHint="→"
+        label="Next"
         onClick={() => onNavigate(1)}
         style={hasSelection && !isBarMode ? navShadowStyle : undefined}
       >
-        &gt;
+        <NavArrowIcon />
       </DisabledHintButton>
     </div>
   )
 
   const modeToggle = (
-    <KeyboardHintWrap hint="tilde">
+    <KeyboardHintWrap hint="~" label="Mode">
       <div
         className="flex overflow-hidden rounded-lg border border-zinc-200/80 dark:border-zinc-700/80 h-11 md:h-full"
         role="group"
@@ -232,7 +233,10 @@ export const EditorKeyboard = ({
           ) : (
             <div className="col-span-2 flex flex-col md:flex-row items-end justify-end md:justify-between gap-2 md:gap-8 xl:gap-12 md:order-first flex-1">
               <div className="flex flex-wrap justify-end gap-2">
-                {visibleSounds.map((sound) => (
+                {visibleSounds.map((sound) => {
+                  const { label, labelClassName } = soundHintMeta(instrument, sound)
+
+                  return (
                   <DisabledHintButton
                     key={sound}
                     aria-label={`Set note to ${sound}`}
@@ -243,12 +247,15 @@ export const EditorKeyboard = ({
                     disabled={!hasSelection}
                     hint={NO_SELECTION_HINT}
                     keyboardHint={digitForSound(instrument, sound)}
+                    label={label}
+                    labelClassName={labelClassName}
                     onClick={() => onSelectSound(sound)}
                     style={hasSelection ? soundShadowStyle : undefined}
                   >
                     <NoteGlyphIcon instrument={instrument} note={sound} />
                   </DisabledHintButton>
-                ))}
+                  )
+                })}
                 <DisabledHintButton
                   aria-label="Set note to rest"
                   className={cn(
@@ -258,6 +265,7 @@ export const EditorKeyboard = ({
                   disabled={!hasSelection}
                   hint={NO_SELECTION_HINT}
                   keyboardHint="Bksp"
+                  label="Rest"
                   onClick={() => onSelectSound('-')}
                   style={hasSelection ? soundShadowStyle : undefined}
                 >
@@ -278,6 +286,7 @@ export const EditorKeyboard = ({
                   disabled={!canSixteenth}
                   hint={!hasSelection ? NO_SELECTION_HINT : PLAIN_ONLY_HINT}
                   keyboardHint="R"
+                  label="16th"
                   onClick={() => onLengthSelect('16th')}
                 >
                   <Note16Icon className="size-5" />
@@ -294,6 +303,7 @@ export const EditorKeyboard = ({
                   disabled={!canTriplet}
                   hint={!hasSelection ? NO_SELECTION_HINT : PLAIN_ONLY_HINT}
                   keyboardHint="T"
+                  label="Triplet"
                   onClick={() => onLengthSelect('triplet')}
                 >
                   <TripletBracketIcon className="size-5" />
@@ -310,6 +320,7 @@ export const EditorKeyboard = ({
                   disabled={!canEighth}
                   hint={!hasSelection ? NO_SELECTION_HINT : EIGHTH_ONLY_HINT}
                   keyboardHint="Y"
+                  label="8th"
                   onClick={() => onLengthSelect('8th')}
                 >
                   <Note8Icon />
@@ -320,6 +331,7 @@ export const EditorKeyboard = ({
                   disabled={!canFlam}
                   hint={!hasSelection ? NO_SELECTION_HINT : undefined}
                   keyboardHint="U"
+                  label="Flam"
                   onClick={onFlamToggle}
                   style={flamToggleBackgroundStyle(tone, flamMode)}
                 >

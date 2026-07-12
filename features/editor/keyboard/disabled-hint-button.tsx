@@ -3,6 +3,7 @@
 import { useCallback, useState, type ReactNode } from 'react'
 
 import { usePlayerStore } from '@/features/groovy-player/player.store'
+import { KeyboardHintText } from '@/features/shared/keyboard-hint-text'
 import { useIsMobile } from '@/features/shared/use-is-mobile'
 import { cn } from '@/features/theme/cn'
 import { PRESSABLE_CLASS } from '@/features/theme/pressable'
@@ -11,6 +12,8 @@ type DisabledHintButtonProps = {
   disabled?: boolean
   hint?: string
   keyboardHint?: string
+  label?: string
+  labelClassName?: string
   className?: string
   children: ReactNode
   onClick?: () => void
@@ -23,6 +26,8 @@ export const DisabledHintButton = ({
   disabled = false,
   hint,
   keyboardHint,
+  label,
+  labelClassName,
   className,
   children,
   onClick,
@@ -70,10 +75,13 @@ export const DisabledHintButton = ({
           {hint}
         </span>
       ) : null}
+      {label && showKeyboardHints && !isMobile ? (
+        <KeyboardHintText className={labelClassName} position="above">
+          {label}
+        </KeyboardHintText>
+      ) : null}
       {keyboardHint && showKeyboardHints && !isMobile ? (
-        <span className="pointer-events-none absolute -bottom-3 left-1/2 z-50 mb-0.5 -translate-x-1/2 text-xs font-bold uppercase text-zinc-500 dark:text-zinc-400">
-          {keyboardHint}
-        </span>
+        <KeyboardHintText position="below">{keyboardHint}</KeyboardHintText>
       ) : null}
     </div>
   )
