@@ -8,6 +8,7 @@ import {
 import { deleteRhythm, readMyRhythms, saveRhythm } from '@/features/rhythm/my-rhythms-storage'
 import { createRhythm, slugFromTitle } from '@/features/rhythm/rhythm-helpers'
 import type { Rhythm, RhythmInstrument, RhythmMeter } from '@/features/rhythm/rhythm.types'
+import { updateRhythmInstrumentsMap } from '@/features/editor/update-rhythm-instruments'
 
 export type EditorView = 'picker' | 'creator' | 'editor'
 
@@ -69,6 +70,7 @@ type EditorState = {
   updateActiveRhythm: (updater: (rhythm: Rhythm) => Rhythm) => void
   patchActiveRhythm: (patch: Partial<Rhythm>) => void
   updateTrackBars: (trackId: string, bars: string[]) => void
+  updateRhythmInstruments: (layers: RhythmInstrument[]) => void
   removeRhythm: (slug: string) => void
 }
 
@@ -209,6 +211,17 @@ export const useEditorStore = create<EditorState>((set, get) => ({
         [trackId]: { ...rhythm.instruments[trackId], bars },
       },
     }))
+  },
+  updateRhythmInstruments: (layers) => {
+    if (layers.length === 0) return
+    const { focusedTrackId } = get()
+    get().updateActiveRhythm((rhythm) => ({
+      ...rhythm,
+      instruments: updateRhythmInstrumentsMap(rhythm.instruments, layers, rhythm.meter),
+    }))
+    if (!focusedTrackId || !layers.includes(focusedTrackId as RhythmInstrument)) {
+      set({ focusedTrackId: layers[0] ?? null })
+    }
   },
   removeRhythm: (slug) => {
     const rhythms = deleteRhythm(slug)

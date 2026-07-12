@@ -8,6 +8,7 @@ import { CollapsibleMetadata } from '@/features/editor/collapsible-metadata'
 import { replaceEditorSlugUrl } from '@/features/editor/editor-url'
 import { BackIcon } from '@/features/icons/back-icon'
 import { Note16Icon } from '@/features/icons/note-16-icon'
+import { InstrumentTabs } from '@/features/editor/instrument-tabs'
 import { EditableBarsCanvas } from '@/features/editor/editable-bars-canvas'
 import { EditorKeyboard } from '@/features/editor/keyboard/editor-keyboard'
 import { useEditorStore } from '@/features/editor/editor.store'
@@ -57,6 +58,7 @@ export const RhythmEditor = () => {
   const setFocusedTrackId = useEditorStore((state) => state.setFocusedTrackId)
   const patchActiveRhythm = useEditorStore((state) => state.patchActiveRhythm)
   const updateTrackBars = useEditorStore((state) => state.updateTrackBars)
+  const updateRhythmInstruments = useEditorStore((state) => state.updateRhythmInstruments)
   const backToPicker = useEditorStore((state) => state.backToPicker)
 
   const barsPerRow = useBarsPerRow()
@@ -269,23 +271,13 @@ export const RhythmEditor = () => {
             rhythm={rhythm}
           />
 
-          <div className="flex flex-wrap gap-2 border-b border-zinc-200/60 px-2 py-2 dark:border-zinc-800/60 md:px-4">
-            {tracks.map((track) => (
-              <button
-                key={track.id}
-                className={cn(
-                  'rounded-full px-3 py-1 text-sm font-medium transition-colors',
-                  track.id === focusedTrack.id
-                    ? 'bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900'
-                    : 'bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300',
-                )}
-                onClick={() => setFocusedTrackId(track.id)}
-                type="button"
-              >
-                {track.name}
-              </button>
-            ))}
-          </div>
+          <InstrumentTabs
+            focusedTrackId={focusedTrack.id}
+            onFocusTrack={setFocusedTrackId}
+            onUpdateInstruments={updateRhythmInstruments}
+            rhythm={rhythm}
+            tracks={tracks}
+          />
 
           <section className="flex flex-col gap-2 px-1 py-2 pb-36 md:px-4">
             <div className="flex items-center justify-between gap-2">
