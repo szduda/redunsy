@@ -9,7 +9,8 @@ import type { NoteSelection } from '@/features/editor/notation/bar-note-edits'
 type EditorKeyboardActions = {
   selection: NoteSelection | null
   selectionMode: SelectionMode
-  navigate: (direction: -1 | 1) => void
+  previewNavigate: (direction: -1 | 1) => void
+  commitSelection: () => void
   setSelectionMode: (mode: SelectionMode) => void
   setSound: (sound: string) => void
   toggleFlam: () => void
@@ -18,37 +19,47 @@ type EditorKeyboardActions = {
   convertToEighth: () => void
 }
 
+const isEditableTarget = (target: EventTarget | null) =>
+  target instanceof HTMLInputElement ||
+  target instanceof HTMLTextAreaElement ||
+  target instanceof HTMLSelectElement
+
 export const useEditorKeyboard = (instrument: string, actions: EditorKeyboardActions | null) => {
   const actionsRef = useRef(actions)
+  const arrowHeldRef = useRef(false)
 
   useEffect(() => {
     actionsRef.current = actions
   }, [actions])
 
   useEffect(() => {
+    const commitIfHeld = () => {
+      if (!arrowHeldRef.current) return
+      arrowHeldRef.current = false
+      actionsRef.current?.commitSelection()
+    }
+
     const onKeyDown = (event: KeyboardEvent) => {
       const current = actionsRef.current
       if (!current) return
-
-      const target = event.target
-      if (
-        target instanceof HTMLInputElement ||
-        target instanceof HTMLTextAreaElement ||
-        target instanceof HTMLSelectElement
-      ) {
-        return
-      }
+      if (isEditableTarget(event.target)) return
 
       if (event.key === 'ArrowLeft') {
         event.preventDefault()
-        current.navigate(-1)
+        arrowHeldRef.current = true
+        current.previewNavigate(-1)
         return
       }
 
       if (event.key === 'ArrowRight') {
         event.preventDefault()
-        current.navigate(1)
+        arrowHeldRef.current = true
+        current.previewNavigate(1)
         return
+      }
+
+      if (arrowHeldRef.current) {
+        commitIfHeld()
       }
 
       if (event.key === '`' || event.code === 'Backquote') {
@@ -99,7 +110,18 @@ export const useEditorKeyboard = (instrument: string, actions: EditorKeyboardAct
       current.setSound(sound)
     }
 
+    const onKeyUp = (event: KeyboardEvent) => {
+      if (event.key !== 'ArrowLeft' && event.key !== 'ArrowRight') return
+      commitIfHeld()
+    }
+
     window.addEventListener('keydown', onKeyDown)
-    return () => window.removeEventListener('keydown', onKeyDown)
+    window.addEventListener('keyup', onKeyUp)
+    window.addEventListener('blur', commitIfHeld)
+    return () => {
+      window.removeEventListener('keydown', onKeyDown)
+      window.removeEventListener('keyup', onKeyUp)
+      window.removeEventListener('blur', commitIfHeld)
+    }
   }, [instrument])
 }

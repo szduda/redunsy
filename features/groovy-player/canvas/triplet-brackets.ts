@@ -12,11 +12,14 @@ export type TripletBracketLayout = {
   glyphs: BarGlyph[]
 }
 
+export type TripletBracketEndCaps = 'both' | 'start' | 'end'
+
 export type TripletBracketSpan = {
   left: number
   right: number
   y: number
   showLabel: boolean
+  endCaps: TripletBracketEndCaps
 }
 
 const barStartCells = (barCellCounts: number[]) => {
@@ -97,6 +100,7 @@ export const tripletBracketSpans = (
         right: noteCenterX(last.left, last.width),
         y: bracketY,
         showLabel: true,
+        endCaps: 'both',
       })
       return
     }
@@ -111,6 +115,7 @@ export const tripletBracketSpans = (
           right: openLayout.barEl.left + openLayout.barEl.width,
           y: bracketY,
           showLabel: true,
+          endCaps: 'start',
         })
       }
 
@@ -121,6 +126,7 @@ export const tripletBracketSpans = (
           right: noteCenterX(lastClose.left, lastClose.width),
           y: closeLayout.barEl.top + 5,
           showLabel: true,
+          endCaps: 'end',
         })
       }
       return
@@ -135,6 +141,7 @@ export const tripletBracketSpans = (
       right: noteCenterX(last.left, last.width),
       y: bracketY,
       showLabel: true,
+      endCaps: 'both',
     })
   })
 
@@ -143,13 +150,20 @@ export const tripletBracketSpans = (
 
 export const drawTripletBracket = (context: CanvasRenderingContext2D, span: TripletBracketSpan) => {
   const tickHeight = 3
+  const drawStartCap = span.endCaps === 'both' || span.endCaps === 'start'
+  const drawEndCap = span.endCaps === 'both' || span.endCaps === 'end'
+
   context.beginPath()
   context.moveTo(span.left, span.y)
   context.lineTo(span.right, span.y)
-  context.moveTo(span.left, span.y)
-  context.lineTo(span.left, span.y + tickHeight)
-  context.moveTo(span.right, span.y)
-  context.lineTo(span.right, span.y + tickHeight)
+  if (drawStartCap) {
+    context.moveTo(span.left, span.y)
+    context.lineTo(span.left, span.y + tickHeight)
+  }
+  if (drawEndCap) {
+    context.moveTo(span.right, span.y)
+    context.lineTo(span.right, span.y + tickHeight)
+  }
   context.stroke()
 
   if (span.showLabel) {

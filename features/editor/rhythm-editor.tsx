@@ -102,7 +102,8 @@ export const RhythmEditor = () => {
   useEditorKeyboard(focusedTrack?.instrument ?? 'djembe', {
     selection: noteEditor.selection,
     selectionMode: noteEditor.selectionMode,
-    navigate: noteEditor.navigate,
+    previewNavigate: noteEditor.previewNavigate,
+    commitSelection: noteEditor.commitSelection,
     setSelectionMode: noteEditor.setSelectionMode,
     setSound: noteEditor.setSound,
     toggleFlam: flam.toggleFlam,
@@ -307,7 +308,6 @@ export const RhythmEditor = () => {
               onReorderBar={noteEditor.reorderBarAt}
               onSelectBar={noteEditor.selectBar}
               onSelectNote={noteEditor.selectNote}
-              selection={noteEditor.selection}
               selectionMode={noteEditor.selectionMode}
             />
           </section>
