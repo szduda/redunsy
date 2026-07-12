@@ -118,7 +118,7 @@ export const InstrumentTabs = ({
   )
 
   return (
-    <div className="flex items-center gap-2 border-b border-zinc-200/60 px-2 dark:border-zinc-800/60 md:px-4">
+    <div className="flex items-center gap-2 border-b border-zinc-200/60 dark:border-zinc-800/60">
       <div className="flex min-w-0 flex-1 items-center gap-0">
         {tracks.map((track) => {
           const active = track.id === focusedTrackId
