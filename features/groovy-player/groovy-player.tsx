@@ -80,7 +80,6 @@ export const GroovyPlayer = ({ rhythm, hideHeader = false }: GroovyPlayerProps =
   const barsPerRow = useBarsPerRow()
   const tempo = usePlayerStore((state) => state.tempo)
   const isPlaying = usePlayerStore((state) => state.isPlaying)
-  const storeBeatIndex = usePlayerStore((state) => state.beatIndex)
   const swingPattern = usePlayerStore((state) => state.swingPattern)
   const swingEnabled = usePlayerStore((state) => state.swingEnabled)
   const setSwingPattern = usePlayerStore((state) => state.setSwingPattern)
@@ -89,7 +88,6 @@ export const GroovyPlayer = ({ rhythm, hideHeader = false }: GroovyPlayerProps =
   const fullBleed = usePlayerStore((state) => state.fullBleed)
   const preventScreenSleep = usePlayerStore((state) => state.preventScreenSleep)
   const setIsPlaying = usePlayerStore((state) => state.setIsPlaying)
-  const setBeatIndex = usePlayerStore((state) => state.setBeatIndex)
   const setSwingBarSize = usePlayerStore((state) => state.setSwingBarSize)
   const [playError, setPlayError] = useState<string | null>(null)
 
@@ -138,7 +136,6 @@ export const GroovyPlayer = ({ rhythm, hideHeader = false }: GroovyPlayerProps =
     setInstrumentVolume,
     playing,
     activeBarIndex,
-    beatIndex,
   } = useMidinike({
     djembe: LAYER_CONFIG,
     dundunba: { ...LAYER_CONFIG, instrument: 'dundunba', sounds: ['o', 'x'], lengths: ['8th'] },
@@ -161,10 +158,6 @@ export const GroovyPlayer = ({ rhythm, hideHeader = false }: GroovyPlayerProps =
   useEffect(() => {
     if (isPlaying !== playing) setIsPlaying(playing)
   }, [isPlaying, playing, setIsPlaying])
-
-  useEffect(() => {
-    if (storeBeatIndex !== beatIndex) setBeatIndex(beatIndex)
-  }, [beatIndex, setBeatIndex, storeBeatIndex])
 
   useEffect(() => {
     setSwingBarSize(notationGrooveLength)

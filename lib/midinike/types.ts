@@ -46,6 +46,8 @@ export type MidiPlayer = {
     onBeat?: (index: number) => void,
   ) => void
   stopPlayLoop: () => void
+  getBeatIndex: () => number
+  dispose: () => void
   setDrumVolume: (drum: number, volume: number) => void
   playDrumsNow: (drums: number[]) => void
 }

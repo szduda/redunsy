@@ -27,8 +27,12 @@ export const MidiSoundsProvider = ({ children }: { children: ReactNode }) => {
   const midiSounds = useRef<MidiPlayer | null>(null)
 
   useEffect(() => {
-    midiSounds.current = createMidiPlayer(SAMPLE_IDS)
-    return () => midiSounds.current?.stopPlayLoop()
+    const player = createMidiPlayer(SAMPLE_IDS)
+    midiSounds.current = player
+    return () => {
+      if (midiSounds.current === player) midiSounds.current = null
+      player.dispose()
+    }
   }, [])
 
   return createElement(MidiSoundsContext.Provider, { value: midiSounds }, children)

@@ -63,13 +63,11 @@ export const RhythmEditor = () => {
   const barsPerRow = useBarsPerRow()
   const tempo = usePlayerStore((state) => state.tempo)
   const isPlaying = usePlayerStore((state) => state.isPlaying)
-  const storeBeatIndex = usePlayerStore((state) => state.beatIndex)
   const swingPattern = usePlayerStore((state) => state.swingPattern)
   const swingEnabled = usePlayerStore((state) => state.swingEnabled)
   const setSwingPattern = usePlayerStore((state) => state.setSwingPattern)
   const setSwingEnabled = usePlayerStore((state) => state.setSwingEnabled)
   const setIsPlaying = usePlayerStore((state) => state.setIsPlaying)
-  const setBeatIndex = usePlayerStore((state) => state.setBeatIndex)
   const setTempo = usePlayerStore((state) => state.setTempo)
   const fullBleed = usePlayerStore((state) => state.fullBleed)
   const [playError, setPlayError] = useState<string | null>(null)
@@ -122,7 +120,6 @@ export const RhythmEditor = () => {
     setTempo: setMidinikeTempo,
     setInstrumentVolume,
     playing,
-    beatIndex,
     activeBarIndex,
   } = useMidinike({
     djembe: LAYER_CONFIG,
@@ -160,10 +157,6 @@ export const RhythmEditor = () => {
   useEffect(() => {
     if (isPlaying !== playing) setIsPlaying(playing)
   }, [isPlaying, playing, setIsPlaying])
-
-  useEffect(() => {
-    if (storeBeatIndex !== beatIndex) setBeatIndex(beatIndex)
-  }, [beatIndex, setBeatIndex, storeBeatIndex])
 
   useEffect(() => {
     setGroove(groovePattern)
