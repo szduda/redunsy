@@ -5,7 +5,13 @@ import { defineConfig } from 'vitest/config'
 export default defineConfig({
   test: {
     environment: 'node',
-    include: ['lib/**/*.test.ts', 'features/**/*.test.ts'],
+    include: [
+      'lib/**/*.test.ts',
+      'features/**/*.test.{ts,tsx}',
+      'db/**/*.test.ts',
+      'app/**/*.test.ts',
+    ],
+    setupFiles: ['./vitest.setup.ts'],
   },
   resolve: {
     alias: {

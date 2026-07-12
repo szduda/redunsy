@@ -1,10 +1,11 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 import { BarsCanvas } from '@/features/groovy-player/canvas/bars-canvas'
 import { previewWindowStart } from '@/features/groovy-player/demo-tracks'
 import { TrackVolume } from '@/features/groovy-player/track/track-volume'
+import { useTrackVolume } from '@/features/groovy-player/track/use-track-volume'
 import { useIsMobile } from '@/features/shared/use-is-mobile'
 import { CollapseLabel } from './collapse-label'
 import { cn } from '@/features/theme/cn'
@@ -32,15 +33,13 @@ export const Track = ({
   onVolumeLevelChange,
 }: TrackProps) => {
   const [collapsed, setCollapsed] = useState(false)
-  const [volume, setVolume] = useState(50)
-  const [muted, setMuted] = useState(false)
+  const { volume, muted, onVolumeChange, onToggleMute } = useTrackVolume(
+    instrument,
+    onVolumeLevelChange,
+  )
 
   const isMobile = useIsMobile()
   const collapsedBarsPerRow = isMobile ? 2 : 4
-
-  useEffect(() => {
-    onVolumeLevelChange?.(instrument, muted ? 0 : volume)
-  }, [instrument, muted, onVolumeLevelChange, volume])
 
   const currentBar = trackActiveIndex(activeIndex, bars.length)
   const windowStart = previewWindowStart(currentBar, bars.length, collapsedBarsPerRow)
@@ -72,11 +71,8 @@ export const Track = ({
           <TrackVolume
             compact={collapsed || isMobile}
             muted={muted}
-            onToggleMute={() => setMuted((value) => !value)}
-            onVolumeChange={(value: number) => {
-              setVolume(value)
-              if (value > 0) setMuted(false)
-            }}
+            onToggleMute={onToggleMute}
+            onVolumeChange={onVolumeChange}
             volume={volume}
           />
         </div>

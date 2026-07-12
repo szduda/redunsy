@@ -136,6 +136,54 @@ describe('compileGroove — triplets', () => {
     const eighth = compileResult(['ttstts'], GROOVE_6)
     expect(triplet.beats.length).toBe(eighth.beats.length)
   })
+
+  it('plays a triplet split across two bars with continuous spacing', () => {
+    const bars = ['-----{tt', 't}-----']
+    const compiled = compileResult(bars, GROOVE_6)
+    const firstBarHits = barLocalHits(compiled, 0)
+    const secondBarHits = barLocalHits(compiled, 1)
+    expect(firstBarHits).toEqual([60, 68])
+    expect(secondBarHits[0]).toBe(4)
+    expect(compiled.beats.length).toBe(barSlotCount(6) * 2)
+  })
+
+  it('compiles a cross-bar triplet opened before the bar end', () => {
+    const bars = ['sss-s{ss', 's}-----']
+    expect(() => compileResult(bars, GROOVE_6)).not.toThrow()
+    const compiled = compileResult(bars, GROOVE_6)
+    expect(compiled.beats.length).toBe(barSlotCount(6) * bars.length)
+  })
+
+  it('keeps self-contained bars on the isolated parser when the track has cross-bar bars', () => {
+    const bars = ['b-sb-{st', '-}tsb-s', 'ss{ttsstt}']
+    const compiled = compileResult(bars, GROOVE_6)
+    const tripletBarHits = barLocalHits(compiled, 2)
+    expect(tripletBarHits).toEqual([0, 12, 24, 32, 40, 48, 56, 64])
+    const barStart = compiled.barSlotOffsets[2] ?? 0
+    const barEnd = compiled.barSlotOffsets[3] ?? compiled.beats.length
+    expect(barEnd - barStart).toBe(barSlotCount(6))
+  })
+
+  it('maps every notation cell when a triplet uses one parsed cell with span 2', () => {
+    const bars = [
+      'ttsb-s',
+      'b-sb-{st',
+      '-}tsb-{sb',
+      '-}-sb-{ss',
+      '-}ssst{t-',
+      '-}ssst{tt',
+      '-}s---{tt',
+      '-}tbsb{-s',
+      '-}s{ttsstt}',
+      'sstss-',
+      'f-{sf-}-s',
+    ]
+    const compiled = compileResult(bars, GROOVE_6)
+    const start = compiled.barSlotOffsets[10] ?? 0
+    const end = compiled.barSlotOffsets[11] ?? compiled.beats.length
+    expect(end - start).toBe(barSlotCount(6))
+    expect(barLocalHits(compiled, 10).at(-1)).toBe(60)
+  })
 })
 
 describe('compileGroove — mixed subdivision bars', () => {

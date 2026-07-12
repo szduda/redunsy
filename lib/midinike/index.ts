@@ -7,7 +7,7 @@ export {
 } from './groove/metronome-bar'
 export { mergeBeatMatrices } from './groove/merge-beat-matrices'
 export { MidiSoundsProvider, useMidiSounds } from './audio/provider'
-export { barCellCount, TICKS_PER_EIGHTH } from './notation/cell-duration'
+export { barCellCount, isGroupGlue, TICKS_PER_EIGHTH } from './notation/cell-duration'
 export {
   validateBarForGroove,
   validateBarsForGroove,

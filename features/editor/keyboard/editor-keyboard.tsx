@@ -1,14 +1,9 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useState } from 'react'
 
-import {
-  flamDisableTarget,
-  flamEnableTarget,
-  flamSymbolsForInstrument,
-  isFlamSymbol,
-} from '@/features/editor/flam-sounds'
-import { instrumentSounds } from '@/features/editor/instrument-sounds'
+import { instrumentSounds, digitForSound } from '@/features/editor/instrument-sounds'
+
 import { DisabledHintButton } from '@/features/editor/keyboard/disabled-hint-button'
 import {
   flamToggleActiveClass,
@@ -33,6 +28,8 @@ import { Note8Icon } from '@/features/icons/note-8-icon'
 import { PlusIcon } from '@/features/icons/plus-icon'
 import { TripletBracketIcon } from '@/features/icons/triplet-bracket-icon'
 import { BOTTOM_NAV_OFFSET_CLASS, PAGE_BODY_BG_CLASS } from '@/features/layout/constants'
+import { usePlayerStore } from '@/features/groovy-player/player.store'
+import { KeyboardHintWrap } from '@/features/shared/keyboard-hint-wrap'
 import { useIsMobile } from '@/features/shared/use-is-mobile'
 import { cn } from '@/features/theme/cn'
 import { PRESSABLE_CLASS } from '@/features/theme/pressable'
@@ -42,6 +39,10 @@ type EditorKeyboardProps = {
   instrument: string
   selection: NoteSelection | null
   selectionMode: SelectionMode
+  flamMode: boolean
+  canFlam: boolean
+  flamSymbols: string[]
+  onFlamToggle: () => void
   onSelectionModeChange: (mode: SelectionMode) => void
   onNavigate: (direction: -1 | 1) => void
   onRunBarModeAction: (action: 'add' | 'remove' | 'clear') => void
@@ -69,13 +70,17 @@ const NO_SELECTION_HINT = 'Select a note on the canvas first'
 const NO_BAR_HINT = 'Select a bar on the canvas first'
 const PLAIN_ONLY_HINT = 'Only plain 8th notes can be split'
 const EIGHTH_ONLY_HINT = 'Select a 16th or triplet note to merge to 8th'
-const BAR_DRAG_HINT = 'You can drag & drop bars to reposition'
+const BAR_DRAG_HINT = 'Drag & drop bars to reposition'
 
 export const EditorKeyboard = ({
   bars,
   instrument,
   selection,
   selectionMode,
+  flamMode,
+  canFlam,
+  flamSymbols,
+  onFlamToggle,
   onSelectionModeChange,
   onNavigate,
   onRunBarModeAction,
@@ -85,23 +90,17 @@ export const EditorKeyboard = ({
   onConvertToEighth,
 }: EditorKeyboardProps) => {
   const isMobile = useIsMobile()
+  const fullBleed = usePlayerStore((state) => state.fullBleed)
   const isBarMode = selectionMode === 'bar'
   const hasSelection = selection !== null
   const hasBarSelection =
     hasSelection && selection.barIndex >= 0 && selection.barIndex < bars.length
   const selected = hasSelection && !isBarMode ? getSelectedFlatNote(bars, selection) : null
-  const editKind =
-    hasSelection && !isBarMode
-      ? getSelectionEditKind(bars[selection.barIndex] ?? '', selection.glyphIndex)
-      : null
+  const editKind = hasSelection && !isBarMode ? getSelectionEditKind(bars, selection) : null
   const tone = toneFromEditKind(editKind)
 
   const [lengthMode, setLengthMode] = useState<NoteLengthTone>('8th')
-  const [flamMode, setFlamMode] = useState(false)
-  const flamBaseNoteRef = useRef<string | null>(null)
-  const flamSelectionKeyRef = useRef<string | null>(null)
 
-  const flamSymbols = flamSymbolsForInstrument(instrument)
   const allSounds = instrumentSounds(instrument)
   const regularSounds = allSounds.filter((sound) => !flamSymbols.includes(sound) && sound !== '-')
   const visibleSounds = flamMode ? flamSymbols : regularSounds
@@ -112,55 +111,8 @@ export const EditorKeyboard = ({
     else setLengthMode('8th')
   }, [editKind, selection?.barIndex, selection?.glyphIndex])
 
-  useEffect(() => {
-    const selectionKey = selected == null ? null : `${selected.barIndex}:${selected.glyphIndex}`
-
-    if (selectionKey !== flamSelectionKeyRef.current) {
-      flamBaseNoteRef.current = null
-      flamSelectionKeyRef.current = selectionKey
-    }
-
-    if (!selected) {
-      setFlamMode(false)
-      return
-    }
-    if (isFlamSymbol(selected.note, instrument)) {
-      setFlamMode(true)
-      return
-    }
-    if (selected.note === '-') return
-    setFlamMode(false)
-    flamBaseNoteRef.current = null
-  }, [instrument, selected?.barIndex, selected?.glyphIndex, selected?.note])
-
   const navShadowStyle = noteKeyShadowStyle(tone)
   const soundShadowStyle = noteKeyShadowStyle(tone, flamMode)
-
-  const onFlamToggle = () => {
-    if (!hasSelection || !selected || !flamSymbols.length) return
-    const next = !flamMode
-    setFlamMode(next)
-    if (next) {
-      flamBaseNoteRef.current = selected.note
-      if (selected.note === '-') return
-      const flam = flamEnableTarget(selected.note, instrument)
-      if (flam) onSelectSound(flam)
-      return
-    }
-    if (selected.note === '-') {
-      flamBaseNoteRef.current = null
-      return
-    }
-    if (!isFlamSymbol(selected.note, instrument)) {
-      flamBaseNoteRef.current = null
-      return
-    }
-    const restore = flamDisableTarget(flamBaseNoteRef.current ?? selected.note, selected.note)
-    if (restore) onSelectSound(restore)
-    flamBaseNoteRef.current = null
-  }
-
-  const canFlam = hasSelection && flamSymbols.length > 0
 
   const onLengthSelect = (mode: NoteLengthTone) => {
     setLengthMode(mode)
@@ -179,6 +131,7 @@ export const EditorKeyboard = ({
         className={cn(PRESSABLE_CLASS, keyButtonClass, 'flex-1 text-lg font-mono')}
         disabled={!hasSelection}
         hint={isBarMode ? NO_BAR_HINT : NO_SELECTION_HINT}
+        keyboardHint="←"
         onClick={() => onNavigate(-1)}
         style={hasSelection && !isBarMode ? navShadowStyle : undefined}
       >
@@ -188,6 +141,7 @@ export const EditorKeyboard = ({
         className={cn(PRESSABLE_CLASS, keyButtonClass, 'flex-1 text-lg font-mono')}
         disabled={!hasSelection}
         hint={isBarMode ? NO_BAR_HINT : NO_SELECTION_HINT}
+        keyboardHint="→"
         onClick={() => onNavigate(1)}
         style={hasSelection && !isBarMode ? navShadowStyle : undefined}
       >
@@ -197,39 +151,46 @@ export const EditorKeyboard = ({
   )
 
   const modeToggle = (
-    <div
-      className="flex overflow-hidden rounded-lg border border-zinc-200/80 dark:border-zinc-700/80 h-11 md:h-full"
-      role="group"
-      aria-label="Selection mode"
-    >
-      <button
-        aria-pressed={isBarMode}
-        className={cn(PRESSABLE_CLASS, modeToggleSegmentClass(isBarMode))}
-        onClick={() => onSelectionModeChange('bar')}
-        type="button"
+    <KeyboardHintWrap hint="tilde">
+      <div
+        className="flex overflow-hidden rounded-lg border border-zinc-200/80 dark:border-zinc-700/80 h-11 md:h-full"
+        role="group"
+        aria-label="Selection mode"
       >
-        bar
-      </button>
-      <button
-        aria-pressed={!isBarMode}
-        className={cn(PRESSABLE_CLASS, modeToggleSegmentClass(!isBarMode))}
-        onClick={() => onSelectionModeChange('note')}
-        type="button"
-      >
-        note
-      </button>
-    </div>
+        <button
+          aria-pressed={isBarMode}
+          className={cn(PRESSABLE_CLASS, modeToggleSegmentClass(isBarMode))}
+          onClick={() => onSelectionModeChange('bar')}
+          type="button"
+        >
+          bar
+        </button>
+        <button
+          aria-pressed={!isBarMode}
+          className={cn(PRESSABLE_CLASS, modeToggleSegmentClass(!isBarMode))}
+          onClick={() => onSelectionModeChange('note')}
+          type="button"
+        >
+          note
+        </button>
+      </div>
+    </KeyboardHintWrap>
   )
 
   return (
     <div
       className={cn(
-        'pointer-events-auto fixed inset-x-0 z-10 px-2 pt-2 pb-2 border-t border-zinc-300/70 dark:border-zinc-700/70',
+        'relative pointer-events-auto fixed inset-x-0 z-10 px-2 pt-2 pb-2 border-t border-zinc-300/70 dark:border-zinc-700/70',
         BOTTOM_NAV_OFFSET_CLASS,
         PAGE_BODY_BG_CLASS,
       )}
     >
-      <div className="mx-auto flex w-full max-w-5xl flex-col gap-2">
+      <div
+        className={cn(
+          'mx-auto flex w-full flex-col gap-2',
+          fullBleed ? 'md:pr-24 md:pl-4' : 'max-w-5xl',
+        )}
+      >
         <div className="grid grid-cols-3 gap-2">
           <div className="flex flex-col md:flex-row items-start justify-end md:justify-end flex-1 gap-2 md:gap-6">
             {navButtons}
@@ -277,10 +238,11 @@ export const EditorKeyboard = ({
                     aria-label={`Set note to ${sound}`}
                     className={cn(
                       keyButtonClass,
-                      selected?.note === sound && 'border-zinc-400 ring-2 ring-zinc-400/30',
+                      lengthToggleActiveClass(tone, selected?.note === sound),
                     )}
                     disabled={!hasSelection}
                     hint={NO_SELECTION_HINT}
+                    keyboardHint={digitForSound(instrument, sound)}
                     onClick={() => onSelectSound(sound)}
                     style={hasSelection ? soundShadowStyle : undefined}
                   >
@@ -291,10 +253,11 @@ export const EditorKeyboard = ({
                   aria-label="Set note to rest"
                   className={cn(
                     keyButtonClass,
-                    selected?.note === '-' && 'border-zinc-400 ring-2 ring-zinc-400/30',
+                    lengthToggleActiveClass(tone, selected?.note === '-'),
                   )}
                   disabled={!hasSelection}
                   hint={NO_SELECTION_HINT}
+                  keyboardHint="Bksp"
                   onClick={() => onSelectSound('-')}
                   style={hasSelection ? soundShadowStyle : undefined}
                 >
@@ -314,6 +277,7 @@ export const EditorKeyboard = ({
                   )}
                   disabled={!canSixteenth}
                   hint={!hasSelection ? NO_SELECTION_HINT : PLAIN_ONLY_HINT}
+                  keyboardHint="R"
                   onClick={() => onLengthSelect('16th')}
                 >
                   <Note16Icon className="size-5" />
@@ -329,6 +293,7 @@ export const EditorKeyboard = ({
                   )}
                   disabled={!canTriplet}
                   hint={!hasSelection ? NO_SELECTION_HINT : PLAIN_ONLY_HINT}
+                  keyboardHint="T"
                   onClick={() => onLengthSelect('triplet')}
                 >
                   <TripletBracketIcon className="size-5" />
@@ -344,6 +309,7 @@ export const EditorKeyboard = ({
                   )}
                   disabled={!canEighth}
                   hint={!hasSelection ? NO_SELECTION_HINT : EIGHTH_ONLY_HINT}
+                  keyboardHint="Y"
                   onClick={() => onLengthSelect('8th')}
                 >
                   <Note8Icon />
@@ -353,6 +319,7 @@ export const EditorKeyboard = ({
                   className={cn(roundToggleClass, flamToggleActiveClass(flamMode))}
                   disabled={!canFlam}
                   hint={!hasSelection ? NO_SELECTION_HINT : undefined}
+                  keyboardHint="U"
                   onClick={onFlamToggle}
                   style={flamToggleBackgroundStyle(tone, flamMode)}
                 >
@@ -363,6 +330,11 @@ export const EditorKeyboard = ({
           )}
         </div>
       </div>
+      {!isMobile && isBarMode && (
+        <p className="hidden md:block pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 m-1 text-sm text-zinc-500 dark:text-zinc-400 px-2 py-1.5 rounded-md bg-yellowy-light/10">
+          {BAR_DRAG_HINT}
+        </p>
+      )}
     </div>
   )
 }

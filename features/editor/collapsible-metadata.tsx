@@ -30,7 +30,11 @@ export const CollapsibleMetadata = ({
           <RhythmMetadataForm onChange={onChange} onTitleBlur={onTitleBlur} values={rhythm} />
         </div>
       ) : (
-        <Text className="mt-1 opacity-70">{metadataSummary(rhythm)}</Text>
+        <Text className="mt-1 opacity-70">
+          {metadataSummary(rhythm, [
+            ...new Set(Object.values(rhythm.instruments).map((track) => track.instrument)),
+          ])}
+        </Text>
       )}
     </section>
   )

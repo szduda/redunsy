@@ -10,7 +10,7 @@ const Page = async ({ params }: EditorSlugPageProps) => {
   const { slug } = await params
 
   return (
-    <main className="flex flex-1 justify-center lg:p-4 xl:p-6">
+    <main className="flex flex-1 flex-col">
       <Suspense>
         <EditorPage slug={slug} />
       </Suspense>

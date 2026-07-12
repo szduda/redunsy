@@ -21,7 +21,7 @@ import {
   renderGhostBar,
 } from '@/features/editor/canvas/render-editor-bars'
 import { buildDragSlots } from '@/features/editor/notation/reorder-bars'
-import type { NoteSelection } from '@/features/editor/notation/bar-note-edits'
+import { useNoteSelectionStore } from '@/features/editor/note-selection.store'
 import type { SelectionMode } from '@/features/editor/use-note-editor'
 import { setupCanvasDpi } from '@/features/groovy-player/canvas/canvas-dpi'
 import { darkCanvasColors, lightCanvasColors } from '@/features/groovy-player/canvas/canvas-colors'
@@ -63,7 +63,6 @@ type EditableBarsCanvasProps = {
   barsPerRow: number
   instrument: string
   beatSize: number
-  selection: NoteSelection | null
   selectionMode: SelectionMode
   onSelectNote: (barIndex: number, glyphIndex: number) => void
   onSelectBar: (barIndex: number) => void
@@ -78,10 +77,10 @@ const EditableBars = ({
   onSelectNote,
   onSelectBar,
   onReorderBar,
-  selection,
   selectionMode,
   id,
 }: EditableBarsCanvasProps) => {
+  const previewSelection = useNoteSelectionStore((state) => state.previewSelection)
   const isMobile = useIsMobile()
   const prefersDark = useIsDark()
   const allowBarDrag = selectionMode === 'bar' && !isMobile
@@ -101,7 +100,7 @@ const EditableBars = ({
   const { width: canvasWidth, dpr } = useCanvasWidth(containerRef)
   const hash = bars.join('')
   const canvasHeight = canvasHeightForBars(canvasWidth, barsPerRow, bars)
-  const barCursor = selection?.barIndex ?? -1
+  const barCursor = previewSelection?.barIndex ?? -1
 
   useLayoutEffect(() => {
     const canvas = document.getElementById(canvasId) as HTMLCanvasElement | null
@@ -141,18 +140,18 @@ const EditableBars = ({
 
     canvasElementsRef.current = elements
 
-    if (!drag && selection) {
+    if (!drag && previewSelection) {
       if (selectionMode === 'bar') {
         const selectedBar = elements.find(
-          (element) => element.type === 'bar' && element.barIndex === selection.barIndex,
+          (element) => element.type === 'bar' && element.barIndex === previewSelection.barIndex,
         )
         if (selectedBar) drawBarSelectionBorder(context, selectedBar, prefersDark)
       } else {
         const selected = elements.find(
           (element) =>
             element.type === 'note' &&
-            element.barIndex === selection.barIndex &&
-            element.noteIndex === selection.glyphIndex,
+            element.barIndex === previewSelection.barIndex &&
+            element.noteIndex === previewSelection.glyphIndex,
         )
         if (selected) drawSelectionBorder(context, selected, prefersDark)
       }
@@ -206,7 +205,7 @@ const EditableBars = ({
     barCursor,
     prefersDark,
     beatSize,
-    selection,
+    previewSelection,
     selectionMode,
     drag,
     bars,
@@ -464,7 +463,5 @@ export const EditableBarsCanvas = memo(
     prev.barsPerRow === next.barsPerRow &&
     prev.beatSize === next.beatSize &&
     prev.bars.join('') === next.bars.join('') &&
-    prev.selection?.barIndex === next.selection?.barIndex &&
-    prev.selection?.glyphIndex === next.selection?.glyphIndex &&
     prev.selectionMode === next.selectionMode,
 )

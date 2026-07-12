@@ -103,12 +103,16 @@ export const useEditorStore = create<EditorState>((set, get) => ({
     const rhythms = readMyRhythms()
     const rhythm = rhythms[slug]
     if (!rhythm) return
+    const state = get()
+    const alreadyEditing = state.view === 'editor' && state.activeSlug === slug
     set({
       rhythms,
       view: 'editor',
       activeSlug: slug,
       previousSlug: slug,
-      focusedTrackId: Object.keys(rhythm.instruments)[0] ?? null,
+      focusedTrackId: alreadyEditing
+        ? state.focusedTrackId
+        : (Object.keys(rhythm.instruments)[0] ?? null),
     })
   },
   backToPicker: () =>

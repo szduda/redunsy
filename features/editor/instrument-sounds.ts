@@ -18,7 +18,12 @@ export const keyboardSounds = (instrument: string) =>
   instrumentSounds(instrument).filter((sound) => sound !== '-')
 
 export const soundForDigit = (instrument: string, digit: number) => {
-  if (digit === 0) return '-'
+  if (digit < 1 || digit > 9) return null
   const sounds = keyboardSounds(instrument)
   return sounds[digit - 1] ?? null
+}
+
+export const digitForSound = (instrument: string, sound: string) => {
+  const index = keyboardSounds(instrument).indexOf(sound)
+  return index >= 0 ? String(index + 1) : undefined
 }

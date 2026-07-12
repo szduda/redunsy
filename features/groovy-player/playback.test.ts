@@ -18,7 +18,7 @@ import {
   swingBarSizeForMeter,
 } from '@/features/groovy-player/player.store'
 import { compileGroove } from '@/lib/midinike/groove/compile-groove'
-import { barSlotCount } from '@/lib/midinike/groove/compile-groove.test-helpers'
+import { barLocalHits, barSlotCount } from '@/lib/midinike/groove/compile-groove.test-helpers'
 import {
   calcPlaybackTempo,
   compiledPatternDurationSeconds,
@@ -215,6 +215,28 @@ describe('meter=3 playback — 6-cell bars with 6-cell groove', () => {
         swingBarSizeForMeter(3),
       ),
     ).toBe(true)
+  })
+
+  it('validates cross-bar triplet bars as six cells each', () => {
+    const crossBarBars = ['sss-s{ss', 's}-----']
+    expect(() => validateBarsForGroove(crossBarBars, swingBarSizeForMeter(3))).not.toThrow()
+    expect(tracksMatchGrooveLength({ djembe: crossBarBars }, swingBarSizeForMeter(3))).toBe(true)
+    expect(() =>
+      compileGroove({
+        bars: crossBarBars,
+        groove: resolveGroovePattern(GROOVE3, swingBarSizeForMeter(3), false),
+      }),
+    ).not.toThrow()
+  })
+
+  it('does not shift timing for self-contained bars in a cross-bar track', () => {
+    const crossBarBars = ['b-sb-{st', '-}tsb-s', 'ss{ttsstt}']
+    const groove = resolveGroovePattern(DEMO_SWING_PATTERN, PLAYER_GROOVE_LENGTH, true)
+    const isolated = compileGroove({ bars: ['ss{ttsstt}'], groove })
+    const mixed = compileGroove({ bars: crossBarBars, groove })
+    const isolatedHits = barLocalHits(isolated, 0)
+    const mixedHits = barLocalHits(mixed, 2)
+    expect(mixedHits).toEqual(isolatedHits)
   })
 
   it('compiles straight groove without errors', () => {

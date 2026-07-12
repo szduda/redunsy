@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
 import { barCellCount } from './cell-duration'
+import { barsCellCounts } from './grouped-notation'
 import { reflowBarsToSize } from './reflow-bars'
 
 const totalCells = (bars: string[]) => bars.reduce((sum, bar) => sum + barCellCount(bar), 0)
@@ -45,6 +46,13 @@ describe('reflowBarsToSize', () => {
     const reflowed = reflowBarsToSize(bars, 8)
     expect(reflowed.join('')).toContain('[tt]')
     expect(reflowed.every((bar) => barCellCount(bar) <= 8)).toBe(true)
+  })
+
+  it('preserves split triplet notation when reflowing', () => {
+    const bars = ['-----{tt', '-}-----', '------']
+    const reflowed = reflowBarsToSize(bars, 6)
+    expect(reflowed.join('')).toBe(bars.join(''))
+    expect(barsCellCounts(reflowed)).toEqual([6, 6, 6])
   })
 
   it('roundtrips 6→8→6 without appending rests', () => {

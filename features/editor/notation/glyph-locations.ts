@@ -1,6 +1,12 @@
-import { isGroupGlue } from '@/lib/midinike/notation/cell-duration'
+import {
+  parseGroupedNotation,
+  type GroupedGlyphLocation,
+} from '@/lib/midinike/notation/grouped-notation'
 
-export type PlainGlyphLocation = { kind: 'plain'; charIndex: number }
+export type PlainGlyphLocation = {
+  kind: 'plain'
+  charIndex: number
+}
 
 export type SixteenthGlyphLocation = {
   kind: 'sixteenth'
@@ -20,74 +26,46 @@ export type TripletGlyphLocation = {
 
 export type GlyphLocation = PlainGlyphLocation | SixteenthGlyphLocation | TripletGlyphLocation
 
-export const getGlyphLocations = (bar: string): GlyphLocation[] => {
-  const locations: GlyphLocation[] = []
-  let index = 0
-
-  while (index < bar.length) {
-    if (isGroupGlue(bar, index)) {
-      index += 1
-      continue
-    }
-
-    const char = bar[index]
-
-    if (char === '[') {
-      const end = bar.indexOf(']', index)
-      if (end === -1) {
-        locations.push({ kind: 'plain', charIndex: index })
-        index += 1
-        continue
-      }
-      const content = bar.slice(index + 1, end)
-      for (let pair = 0; pair < content.length; pair += 2) {
-        locations.push({
-          kind: 'sixteenth',
-          groupStart: index,
-          groupEnd: end,
-          charIndex: index + 1 + pair,
-          pairIndex: 0,
-        })
-        if (pair + 1 < content.length) {
-          locations.push({
-            kind: 'sixteenth',
-            groupStart: index,
-            groupEnd: end,
-            charIndex: index + 1 + pair + 1,
-            pairIndex: 1,
-          })
-        }
-      }
-      index = end + 1
-      continue
-    }
-
-    if (char === '{') {
-      const end = bar.indexOf('}', index)
-      if (end === -1) {
-        locations.push({ kind: 'plain', charIndex: index })
-        index += 1
-        continue
-      }
-      const content = bar.slice(index + 1, end)
-      for (let group = 0; group < content.length; group += 3) {
-        for (let tripletIndex = 0; tripletIndex < 3; tripletIndex += 1) {
-          locations.push({
-            kind: 'triplet',
-            groupStart: index,
-            groupEnd: end,
-            charIndex: index + 1 + group + tripletIndex,
-            tripletIndex: tripletIndex as 0 | 1 | 2,
-          })
-        }
-      }
-      index = end + 1
-      continue
-    }
-
-    locations.push({ kind: 'plain', charIndex: index })
-    index += 1
+const toBarLocalLocation = (
+  bars: string[],
+  barIndex: number,
+  location: GroupedGlyphLocation,
+): GlyphLocation => {
+  if (location.kind === 'plain') {
+    return { kind: 'plain', charIndex: location.charIndex }
   }
 
-  return locations
+  const bar = bars[barIndex] ?? ''
+  const groupStart = location.groupStartBar === barIndex ? location.groupStartChar : 0
+  const groupEnd = location.groupEndBar === barIndex ? location.groupEndChar : bar.length - 1
+
+  if (location.kind === 'sixteenth') {
+    return {
+      kind: 'sixteenth',
+      groupStart,
+      groupEnd,
+      charIndex: location.charIndex,
+      pairIndex: (location.subdivIndex % 2) as 0 | 1,
+    }
+  }
+
+  return {
+    kind: 'triplet',
+    groupStart,
+    groupEnd,
+    charIndex: location.charIndex,
+    tripletIndex: location.subdivIndex as 0 | 1 | 2,
+  }
 }
+
+export const getGlyphLocations = (bar: string, bars?: string[], barIndex?: number) => {
+  const allBars = bars ?? [bar]
+  const index = barIndex ?? 0
+  const { glyphLocationsByBar } = parseGroupedNotation(allBars)
+  return (glyphLocationsByBar[index] ?? []).map((location) =>
+    toBarLocalLocation(allBars, index, location),
+  )
+}
+
+export const getGlyphLocationsInBars = (bars: string[], barIndex: number) =>
+  getGlyphLocations(bars[barIndex] ?? '', bars, barIndex)

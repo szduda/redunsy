@@ -1,18 +1,22 @@
 'use client'
 
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 
 import { SettingsIcon } from '@/features/icons/settings-icon'
 import { IconButton } from '@/features/groovy-player/icon-button'
 import { cn } from '@/features/theme/cn'
 import { MetronomeToggle } from '@/features/groovy-player/metronome-toggle'
+import { PLAYER_KEYBOARD_HINTS } from '@/features/groovy-player/player-keyboard-hints'
 import { PlayerSettingsPanel } from '@/features/groovy-player/player-settings-panel'
 import { PlayerTransport } from '@/features/groovy-player/player-transport'
 import { usePlayerStore } from '@/features/groovy-player/player.store'
 import { BOTTOM_NAV_HEIGHT_CLASS } from '@/features/layout/constants'
 import { useIsMobile } from '@/features/shared/use-is-mobile'
+import { useIsTablet } from '@/features/shared/use-is-tablet'
+import { KeyboardHintWrap } from '@/features/shared/keyboard-hint-wrap'
 import { SwingToggle } from '@/features/groovy-player/swing-toggle'
 import { TempoSlider } from '@/features/groovy-player/tempo-slider'
+import { usePlayerKeyboard } from '@/features/groovy-player/use-player-keyboard'
 
 type PlayerBottomNavProps = {
   isPlaying: boolean
@@ -30,6 +34,14 @@ export const PlayerBottomNav = ({
   const [settingsOpen, setSettingsOpen] = useState(false)
   const fullBleed = usePlayerStore((state) => state.fullBleed)
   const isMobile = useIsMobile()
+  const isTablet = useIsTablet()
+  const useInlineSettings = isMobile || isTablet
+  const tempoFocusRef = useRef<HTMLInputElement | HTMLButtonElement>(null)
+
+  usePlayerKeyboard({
+    onStop,
+    focusTempo: () => tempoFocusRef.current?.focus(),
+  })
 
   const settingsButton = (
     <IconButton
@@ -59,16 +71,22 @@ export const PlayerBottomNav = ({
           onStop={onStop}
         />
 
-        {isMobile ? settingsButton : null}
+        {useInlineSettings ? settingsButton : null}
 
         <div className="flex items-center gap-1 md:gap-2">
-          <TempoSlider />
-          <MetronomeToggle />
-          <SwingToggle />
+          <KeyboardHintWrap hint={PLAYER_KEYBOARD_HINTS.tempo}>
+            <TempoSlider focusRef={tempoFocusRef} />
+          </KeyboardHintWrap>
+          <KeyboardHintWrap hint={PLAYER_KEYBOARD_HINTS.metronome}>
+            <MetronomeToggle />
+          </KeyboardHintWrap>
+          <KeyboardHintWrap hint={PLAYER_KEYBOARD_HINTS.swing}>
+            <SwingToggle />
+          </KeyboardHintWrap>
         </div>
       </div>
 
-      {!isMobile ? (
+      {!useInlineSettings ? (
         <div
           className={cn(
             'fixed right-0 bottom-0 z-30 flex items-center pr-2 md:pr-4',
