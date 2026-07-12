@@ -89,11 +89,11 @@ const InstrumentConfigPanel = ({
       <div className="min-h-5">
         <Text
           className={cn(
-            'text-xs text-yellowy transition-opacity duration-200',
+            'text-xs text-[#af8545] transition-opacity duration-200 dark:text-yellowy-light',
             showWarning ? 'opacity-100' : 'opacity-0',
           )}
         >
-          Turning off an instrument removes its pattern permanently.
+          ⚠️ Some of your data will be lost
         </Text>
       </div>
       <Button disabled={!canUpdate} onClick={onUpdate} variant="filled">
