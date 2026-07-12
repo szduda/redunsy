@@ -237,23 +237,23 @@ export const EditorKeyboard = ({
                   const { label, labelClassName } = soundHintMeta(instrument, sound)
 
                   return (
-                  <DisabledHintButton
-                    key={sound}
-                    aria-label={`Set note to ${sound}`}
-                    className={cn(
-                      keyButtonClass,
-                      lengthToggleActiveClass(tone, selected?.note === sound),
-                    )}
-                    disabled={!hasSelection}
-                    hint={NO_SELECTION_HINT}
-                    keyboardHint={digitForSound(instrument, sound)}
-                    label={label}
-                    labelClassName={labelClassName}
-                    onClick={() => onSelectSound(sound)}
-                    style={hasSelection ? soundShadowStyle : undefined}
-                  >
-                    <NoteGlyphIcon instrument={instrument} note={sound} />
-                  </DisabledHintButton>
+                    <DisabledHintButton
+                      key={sound}
+                      aria-label={`Set note to ${sound}`}
+                      className={cn(
+                        keyButtonClass,
+                        lengthToggleActiveClass(tone, selected?.note === sound),
+                      )}
+                      disabled={!hasSelection}
+                      hint={NO_SELECTION_HINT}
+                      keyboardHint={digitForSound(instrument, sound)}
+                      label={label}
+                      labelClassName={labelClassName}
+                      onClick={() => onSelectSound(sound)}
+                      style={hasSelection ? soundShadowStyle : undefined}
+                    >
+                      <NoteGlyphIcon instrument={instrument} note={sound} />
+                    </DisabledHintButton>
                   )
                 })}
                 <DisabledHintButton
