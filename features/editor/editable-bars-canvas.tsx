@@ -25,6 +25,7 @@ import { useNoteSelectionStore } from '@/features/editor/note-selection.store'
 import type { SelectionMode } from '@/features/editor/use-note-editor'
 import { setupCanvasDpi } from '@/features/groovy-player/canvas/canvas-dpi'
 import { darkCanvasColors, lightCanvasColors } from '@/features/groovy-player/canvas/canvas-colors'
+import { findPatternLength } from '@/features/groovy-player/canvas/find-pattern-length'
 import { canvasHeightForBars, renderBars } from '@/features/groovy-player/canvas/renderers'
 import { useCanvasWidth } from '@/features/groovy-player/canvas/use-canvas-width'
 import { useIsMobile } from '@/features/shared/use-is-mobile'
@@ -63,6 +64,7 @@ type EditableBarsCanvasProps = {
   barsPerRow: number
   instrument: string
   beatSize: number
+  activeIndex?: number
   selectionMode: SelectionMode
   onSelectNote: (barIndex: number, glyphIndex: number) => void
   onSelectBar: (barIndex: number) => void
@@ -74,6 +76,7 @@ const EditableBars = ({
   barsPerRow,
   instrument,
   beatSize,
+  activeIndex = -1,
   onSelectNote,
   onSelectBar,
   onReorderBar,
@@ -100,7 +103,9 @@ const EditableBars = ({
   const { width: canvasWidth, dpr } = useCanvasWidth(containerRef)
   const hash = bars.join('')
   const canvasHeight = canvasHeightForBars(canvasWidth, barsPerRow, bars)
-  const barCursor = previewSelection?.barIndex ?? -1
+  const barsInPattern = Math.max(findPatternLength(bars, 8), barsPerRow)
+  const highlightedBarIndex =
+    activeIndex < 0 ? -1 : barsInPattern > 1 ? activeIndex % barsInPattern : activeIndex
 
   useLayoutEffect(() => {
     const canvas = document.getElementById(canvasId) as HTMLCanvasElement | null
@@ -132,7 +137,7 @@ const EditableBars = ({
           context,
           canvasWidth,
           barsPerRow,
-          highlightedBarIndex: drag ? -1 : barCursor,
+          highlightedBarIndex: drag ? -1 : highlightedBarIndex,
           palette,
           showBarIndex: true,
           markTriplets: true,
@@ -202,7 +207,7 @@ const EditableBars = ({
     barsPerRow,
     instrument,
     bars.length,
-    barCursor,
+    highlightedBarIndex,
     prefersDark,
     beatSize,
     previewSelection,
@@ -460,6 +465,7 @@ export const EditableBarsCanvas = memo(
   EditableBars,
   (prev, next) =>
     prev.id === next.id &&
+    prev.activeIndex === next.activeIndex &&
     prev.barsPerRow === next.barsPerRow &&
     prev.beatSize === next.beatSize &&
     prev.bars.join('') === next.bars.join('') &&

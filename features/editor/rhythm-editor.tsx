@@ -123,6 +123,7 @@ export const RhythmEditor = () => {
     setInstrumentVolume,
     playing,
     beatIndex,
+    activeBarIndex,
   } = useMidinike({
     djembe: LAYER_CONFIG,
     dundunba: { ...LAYER_CONFIG, instrument: 'dundunba', sounds: ['o', 'x'], lengths: ['8th'] },
@@ -303,6 +304,7 @@ export const RhythmEditor = () => {
             </div>
 
             <EditableBarsCanvas
+              activeIndex={activeBarIndex}
               bars={focusedTrack.bars}
               barsPerRow={barsPerRow}
               beatSize={rhythm.meter}
