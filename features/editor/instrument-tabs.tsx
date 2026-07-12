@@ -128,8 +128,8 @@ export const InstrumentTabs = ({
               className={cn(
                 'shrink-0 -mb-0.5 border-2 px-3 py-2 text-sm font-medium transition-colors',
                 active
-                  ? 'border-t-zinc-200/60 border-l-zinc-200/60 border-r-zinc-200/60 border-b-white text-zinc-900 dark:border-t-zinc-800/60 dark:border-l-zinc-800/60 dark:border-r-zinc-800/60 dark:border-b-zinc-800/60 dark:text-zinc-100'
-                  : 'border-white text-zinc-500 hover:text-zinc-700 dark:border-zinc-900/60 dark:text-zinc-400 dark:hover:text-zinc-200',
+                  ? 'border-t-zinc-200/60 border-l-zinc-200/60 border-r-zinc-200/60 border-b-editor-surface text-zinc-900 dark:border-t-zinc-800/60 dark:border-l-zinc-800/60 dark:border-r-zinc-800/60 dark:border-b-editor-surface dark:text-zinc-100'
+                  : 'border-editor-surface text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200',
               )}
               onClick={() => onFocusTrack(track.id)}
               type="button"

@@ -5,6 +5,7 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --editor-surface: #ffffff;
   --yellowy: #d2b769;
   --yellowy-light: #e2cb8a;
   color-scheme: light;
@@ -13,6 +14,7 @@
 .dark {
   --background: #0a0a0a;
   --foreground: #ededed;
+  --editor-surface: #121214;
   --yellowy: #f9c926;
   --yellowy-light: #fbd760;
   color-scheme: dark;
@@ -73,6 +75,7 @@
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-editor-surface: var(--editor-surface);
   --color-yellowy: var(--yellowy);
   --color-yellowy-light: var(--yellowy-light);
   --color-yellowy-logo: #f9c926;

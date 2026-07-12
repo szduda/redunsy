@@ -259,7 +259,7 @@ export const RhythmEditor = () => {
 
         <section
           className={cn(
-            'flex w-full flex-col gap-2 overflow-hidden bg-white dark:bg-zinc-900/60',
+            'flex w-full flex-col gap-2 overflow-hidden bg-editor-surface',
             fullBleed
               ? 'md:rounded-none md:border-0'
               : 'mx-auto max-w-4xl md:rounded-xl md:border md:border-zinc-100 dark:border-transparent xl:max-w-5xl',
