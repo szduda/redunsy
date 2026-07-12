@@ -277,20 +277,19 @@ export const RhythmEditor = () => {
             onUpdateInstruments={updateRhythmInstruments}
             rhythm={rhythm}
             tracks={tracks}
-          />
-
-          <section className="flex flex-col gap-2 px-1 py-2 pb-36 md:px-4">
-            <div className="flex items-center justify-between gap-2">
-              <Text className="font-semibold">{focusedTrack.name}</Text>
+            trailing={
               <TrackVolume
                 compact
+                className="m-0 shrink-0"
                 muted={focusedTrackVolume.muted}
                 onToggleMute={focusedTrackVolume.onToggleMute}
                 onVolumeChange={focusedTrackVolume.onVolumeChange}
                 volume={focusedTrackVolume.volume}
               />
-            </div>
+            }
+          />
 
+          <section className="flex flex-col gap-2 px-1 py-2 pb-36 md:px-4">
             <EditableBarsCanvas
               bars={focusedTrack.bars}
               barsPerRow={barsPerRow}

@@ -1,6 +1,6 @@
 'use client'
 
-import { useMemo, useState } from 'react'
+import { type ReactNode, useMemo, useState } from 'react'
 
 import { trackHasPattern } from '@/features/editor/track-has-pattern'
 import { IconButton } from '@/features/groovy-player/icon-button'
@@ -24,6 +24,7 @@ type InstrumentTabsProps = {
   rhythm: Rhythm
   onFocusTrack: (trackId: string) => void
   onUpdateInstruments: (layers: RhythmInstrument[]) => void
+  trailing?: ReactNode
 }
 
 const layersEqual = (left: RhythmInstrument[], right: RhythmInstrument[]) =>
@@ -86,10 +87,10 @@ const InstrumentConfigPanel = ({
           />
         ))}
       </div>
-      <div className="min-h-5">
+      <div className="flex min-h-5 justify-center">
         <Text
           className={cn(
-            'text-xs text-[#af8545] transition-opacity duration-200 dark:text-yellowy-light',
+            'text-center text-xs font-semibold text-[#af8545] transition-opacity duration-200 dark:text-yellowy-light',
             showWarning ? 'opacity-100' : 'opacity-0',
           )}
         >
@@ -109,6 +110,7 @@ export const InstrumentTabs = ({
   rhythm,
   onFocusTrack,
   onUpdateInstruments,
+  trailing,
 }: InstrumentTabsProps) => {
   const activeLayers = useMemo(
     () => tracks.map((track) => track.instrument as RhythmInstrument),
@@ -116,51 +118,54 @@ export const InstrumentTabs = ({
   )
 
   return (
-    <div className="flex items-end gap-0 border-b border-zinc-200/60 px-2 dark:border-zinc-800/60 md:px-4">
-      {tracks.map((track) => {
-        const active = track.id === focusedTrackId
-        return (
-          <button
-            key={track.id}
-            className={cn(
-              '-mb-px border-b-2 px-3 py-2 text-sm font-medium transition-colors',
-              active
-                ? 'border-zinc-900 text-zinc-900 dark:border-zinc-100 dark:text-zinc-100'
-                : 'border-transparent text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200',
-            )}
-            onClick={() => onFocusTrack(track.id)}
-            type="button"
-          >
-            {track.name}
-          </button>
-        )
-      })}
-      <Popover
-        panel={({ close }) => (
-          <InstrumentConfigPanel
-            activeLayers={activeLayers}
-            close={close}
-            onUpdateInstruments={onUpdateInstruments}
-            rhythm={rhythm}
-          />
-        )}
-        panelClassName="w-auto"
-        preferredDirection="bottom"
-      >
-        {({ open, toggle }) => (
-          <IconButton
-            active={open}
-            aria-expanded={open}
-            aria-label="Configure instruments"
-            className={cn('mb-0.5 !p-1', open && popoverTriggerOpenClass)}
-            onClick={toggle}
-          >
-            <SettingsIcon
-              className={cn('size-4', open ? 'text-yellowy opacity-100' : 'opacity-20')}
+    <div className="flex items-center gap-2 border-b border-zinc-200/60 px-2 dark:border-zinc-800/60 md:px-4">
+      <div className="flex min-w-0 flex-1 items-center gap-0">
+        {tracks.map((track) => {
+          const active = track.id === focusedTrackId
+          return (
+            <button
+              key={track.id}
+              className={cn(
+                '-mb-px border-b-2 px-3 py-2 text-sm font-medium transition-colors',
+                active
+                  ? 'border-zinc-900 text-zinc-900 dark:border-zinc-100 dark:text-zinc-100'
+                  : 'border-transparent text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200',
+              )}
+              onClick={() => onFocusTrack(track.id)}
+              type="button"
+            >
+              {track.name}
+            </button>
+          )
+        })}
+        <Popover
+          panel={({ close }) => (
+            <InstrumentConfigPanel
+              activeLayers={activeLayers}
+              close={close}
+              onUpdateInstruments={onUpdateInstruments}
+              rhythm={rhythm}
             />
-          </IconButton>
-        )}
-      </Popover>
+          )}
+          panelClassName="w-auto"
+          preferredDirection="bottom"
+        >
+          {({ open, toggle }) => (
+            <IconButton
+              active={open}
+              aria-expanded={open}
+              aria-label="Configure instruments"
+              className={cn('!p-1', open && popoverTriggerOpenClass)}
+              onClick={toggle}
+            >
+              <SettingsIcon
+                className={cn('size-4', open ? 'text-yellowy opacity-100' : 'opacity-20')}
+              />
+            </IconButton>
+          )}
+        </Popover>
+      </div>
+      {trailing}
     </div>
   )
 }
