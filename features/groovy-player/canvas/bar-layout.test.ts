@@ -76,4 +76,15 @@ describe('parseBarLayout', () => {
     expect(layout.cellCount).toBe(5)
     expect(layout.glyphs.map((g) => g.position)).toEqual([0, 1, 2, 2.5, 3, 3.5, 4])
   })
+
+  it('lays out a triplet split across two bars', () => {
+    const bars = ['-----{tt', '-}-----']
+    const first = parseBarLayout(bars[0], bars, 0)
+    const second = parseBarLayout(bars[1], bars, 1)
+    expect(first.cellCount).toBe(6)
+    expect(second.cellCount).toBe(6)
+    expect(first.glyphs.map((g) => g.position)).toEqual([0, 1, 2, 3, 4, 5, 5 + 2 / 3])
+    expect(second.glyphs.map((g) => g.position)[0]).toBeCloseTo(1 / 3, 5)
+    expect(second.glyphs.map((g) => g.position).slice(1)).toEqual([1, 2, 3, 4, 5])
+  })
 })

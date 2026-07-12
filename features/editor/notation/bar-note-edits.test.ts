@@ -1,6 +1,8 @@
 import { describe, expect, it } from 'vitest'
 
 import {
+  convertBarsToEighth,
+  convertBarsToTriplet,
   convertToEighth,
   convertToSixteenth,
   convertToTriplet,
@@ -8,9 +10,10 @@ import {
   flattenBarNotes,
   navigateBarSelection,
   navigateSelection,
-  setNoteAtGlyph,
+  setNoteAtGlyphInBar,
 } from '@/features/editor/notation/bar-note-edits'
 import { barCellCount } from '@/lib/midinike/notation/cell-duration'
+import { barsCellCounts } from '@/lib/midinike/notation/grouped-notation'
 
 describe('bar-note-edits', () => {
   it('flattens glyphs across bars', () => {
@@ -48,11 +51,11 @@ describe('bar-note-edits', () => {
   })
 
   it('updates a sixteenth rest inside a group', () => {
-    expect(setNoteAtGlyph('[t-]sb', 1, 'r')).toBe('[tr]sb')
+    expect(setNoteAtGlyphInBar('[t-]sb', 1, 'r')).toBe('[tr]sb')
   })
 
   it('updates a plain note', () => {
-    expect(setNoteAtGlyph('tsb', 1, 't')).toBe('ttb')
+    expect(setNoteAtGlyphInBar('tsb', 1, 't')).toBe('ttb')
   })
 
   it('converts plain 8th to 16th group without changing bar length', () => {
@@ -92,5 +95,62 @@ describe('bar-note-edits', () => {
     const next = convertToEighth(bar, 2)
     expect(next).toBe('stt')
     expect(barCellCount(next)).toBe(barCellCount(bar))
+  })
+})
+
+describe('cross-bar conversions', () => {
+  it('converts the last plain 8th and first plain 8th of the next bar into a split triplet', () => {
+    const bars = ['-----t', 't-----']
+    const lastGlyph = flattenBarNotes(bars).findIndex(
+      (note) => note.barIndex === 0 && note.glyphIndex === flattenBarNotes(['-----t']).length - 1,
+    )
+    const next = convertBarsToTriplet(bars, { barIndex: 0, glyphIndex: lastGlyph }, 6)
+    expect(next).toEqual(['-----{tt', '-}-----'])
+    expect(barsCellCounts(next)).toEqual([6, 6])
+  })
+
+  it('validates converted cross-bar triplets for playback cell counts', () => {
+    const bars = ['sss-s{ss', 's}-----']
+    expect(barsCellCounts(bars)).toEqual([6, 6])
+  })
+
+  it('appends a bar when converting the final plain 8th without a next bar', () => {
+    const bars = ['-----t']
+    const lastGlyph = flattenBarNotes(bars).length - 1
+    const next = convertBarsToTriplet(bars, { barIndex: 0, glyphIndex: lastGlyph }, 6)
+    expect(next).toHaveLength(2)
+    expect(next[0]).toBe('-----{t-')
+    expect(next[1]).toBe('-}-----')
+    expect(barsCellCounts(next)).toEqual([6, 6])
+  })
+
+  it('preserves joined notation across bar boundaries', () => {
+    const bars = ['-----t', 't-----']
+    const lastGlyph = flattenBarNotes(['-----t']).length - 1
+    const converted = convertBarsToTriplet(bars, { barIndex: 0, glyphIndex: lastGlyph }, 6)
+    expect(converted.join('')).toBe('-----{tt-}-----')
+  })
+
+  it('unwraps only the selected sixteenth unit inside a multi-unit bracket group', () => {
+    const bars = ['-}st-t{tt', '-}-s[ttt-s-]', '[ttt-]ssbt']
+    const next = convertBarsToEighth(bars, { barIndex: 1, glyphIndex: 3 })
+    expect(next[1]).toBe('-}-s[tt-s-]')
+    expect(next[1]).not.toBe('-}-st')
+    expect(barsCellCounts(next)[1]).toBe(6)
+  })
+
+  it('converts a plain pair after a cross-bar triplet continuation using bar context', () => {
+    const bars = ['-}st-t{tt', '-}-s[ttt-s-]', '[ttt-]ssbt']
+    const next = convertBarsToTriplet(bars, { barIndex: 1, glyphIndex: 1 }, 6)
+    expect(next[1]).toBe('-}{-s-}[ttt-s-]')
+    expect(next[1]).not.toContain('-{}--')
+  })
+
+  it('keeps trailing symbols on the first bar during cross-bar triplet conversion', () => {
+    const bars = ['ttt-st', 't-----']
+    const next = convertBarsToTriplet(bars, { barIndex: 0, glyphIndex: 4 }, 6)
+    expect(next[0]).toBe('ttt-{st-}')
+    expect(next[1]).toBe('t-----')
+    expect(barsCellCounts(next)).toEqual([6, 6])
   })
 })

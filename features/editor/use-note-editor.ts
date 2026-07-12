@@ -4,14 +4,13 @@ import { useCallback, useEffect, useState } from 'react'
 
 import { applyBarModeAction } from '@/features/editor/canvas/bar-pattern-actions'
 import {
-  convertToEighth,
-  convertToSixteenth,
-  convertToTriplet,
+  convertBarsToEighth,
+  convertBarsToSixteenth,
+  convertBarsToTriplet,
   defaultNoteSelection,
   navigateBarSelection,
   navigateSelection,
   setNoteAtGlyph,
-  updateBarAtSelection,
   type NoteSelection,
 } from '@/features/editor/notation/bar-note-edits'
 import { remapBarIndex, reorderBar } from '@/features/editor/notation/reorder-bars'
@@ -71,19 +70,7 @@ export const useNoteEditor = (
   const setSound = useCallback(
     (sound: string) => {
       if (!selection || selectionMode !== 'note') return
-      const nextBars = updateBarAtSelection(bars, selection, (bar, glyphIndex) =>
-        setNoteAtGlyph(bar, glyphIndex, sound),
-      )
-      onBarsChange(nextBars)
-    },
-    [bars, onBarsChange, selection, selectionMode],
-  )
-
-  const applyConversion = useCallback(
-    (converter: (bar: string, glyphIndex: number) => string) => {
-      if (!selection || selectionMode !== 'note') return
-      const nextBars = updateBarAtSelection(bars, selection, converter)
-      onBarsChange(nextBars)
+      onBarsChange(setNoteAtGlyph(bars, selection, sound))
     },
     [bars, onBarsChange, selection, selectionMode],
   )
@@ -123,9 +110,18 @@ export const useNoteEditor = (
     setSound,
     reorderBarAt,
     runBarModeAction,
-    convertToSixteenth: () => applyConversion(convertToSixteenth),
-    convertToTriplet: () => applyConversion(convertToTriplet),
-    convertToEighth: () => applyConversion(convertToEighth),
+    convertToSixteenth: () => {
+      if (!selection || selectionMode !== 'note') return
+      onBarsChange(convertBarsToSixteenth(bars, selection))
+    },
+    convertToTriplet: () => {
+      if (!selection || selectionMode !== 'note') return
+      onBarsChange(convertBarsToTriplet(bars, selection, barSize))
+    },
+    convertToEighth: () => {
+      if (!selection || selectionMode !== 'note') return
+      onBarsChange(convertBarsToEighth(bars, selection))
+    },
   }
 }
 

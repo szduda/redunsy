@@ -26,13 +26,15 @@ export const barSlotSegments = (
   while (index < cells.length) {
     const cell = cells[index]
     if (cell.kind === 'triplet') {
+      const span = cell.tripletCellSpan ?? 2
       segments.push({
         notationCellIndex: notationIndex,
-        notationCellSpan: 2,
-        slots: tripletGroupSlots(cell, cellTicks * 2),
+        notationCellSpan: span,
+        slots: tripletGroupSlots(cell, cellTicks * span),
       })
-      index += 2
-      notationIndex += 2
+      const hasPairPlaceholder = cells[index + 1]?.kind === 'triplet-pair'
+      index += hasPairPlaceholder ? 2 : 1
+      notationIndex += span
       continue
     }
     if (cell.kind === 'triplet-pair') {

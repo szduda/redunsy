@@ -13,6 +13,8 @@ export type ParsedCell = {
   hits: CellHit[]
   slotIndexes: number[]
   tripletNotes?: CellHit[]
+  tripletCellSpan?: number
+  tripletStartSubdiv?: number
 }
 
 export type LayerConfig = {

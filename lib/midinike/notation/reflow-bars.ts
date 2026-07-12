@@ -1,57 +1,14 @@
-import { barCellCount, isGroupGlue } from './cell-duration'
+import { barsCellCounts } from './grouped-notation'
+import { parseGroupedNotation } from './grouped-notation'
 
-type NotationToken = {
-  text: string
-  cells: number
-}
+const tokensToBar = (tokens: { text: string }[]) => tokens.map((token) => token.text).join('')
 
-const expandBarToTokens = (bar: string): NotationToken[] => {
-  const tokens: NotationToken[] = []
-  let index = 0
-  let glue = ''
-
-  while (index < bar.length) {
-    if (isGroupGlue(bar, index)) {
-      glue = '-'
-      index += 1
-      continue
-    }
-    const char = bar[index]
-    if (char === '[') {
-      const end = bar.indexOf(']', index)
-      if (end === -1) throw new Error(`Unclosed sixteenth group in "${bar}"`)
-      const inner = bar.slice(index + 1, end)
-      for (let pair = 0; pair < inner.length; pair += 2) {
-        tokens.push({ text: `${glue}[${inner.slice(pair, pair + 2)}]`, cells: 1 })
-        glue = ''
-      }
-      index = end + 1
-      continue
-    }
-    if (char === '{') {
-      const end = bar.indexOf('}', index)
-      if (end === -1) throw new Error(`Unclosed triplet group in "${bar}"`)
-      const inner = bar.slice(index + 1, end)
-      for (let group = 0; group < inner.length; group += 3) {
-        tokens.push({ text: `${glue}{${inner.slice(group, group + 3)}}`, cells: 2 })
-        glue = ''
-      }
-      index = end + 1
-      continue
-    }
-    tokens.push({ text: `${glue}${char}`, cells: 1 })
-    glue = ''
-    index += 1
-  }
-
-  return tokens
-}
-
-const tokensToBar = (tokens: NotationToken[]) => tokens.map((token) => token.text).join('')
-
-const reflowTokensToBars = (tokens: NotationToken[], barSize: number): string[] => {
+const reflowTokensToBars = (
+  tokens: { text: string; cells: number }[],
+  barSize: number,
+): string[] => {
   const bars: string[] = []
-  let current: NotationToken[] = []
+  let current: { text: string; cells: number }[] = []
   let currentCells = 0
 
   const flushBar = () => {
@@ -75,14 +32,15 @@ const reflowTokensToBars = (tokens: NotationToken[], barSize: number): string[] 
 }
 
 export const reflowBarsToSize = (bars: string[], barSize: number): string[] => {
-  const tokens = bars.flatMap(expandBarToTokens)
+  const { tokens } = parseGroupedNotation(bars)
   const reflowed = reflowTokensToBars(tokens, barSize)
-  reflowed.forEach((bar) => validateReflowedBar(bar, barSize))
+  reflowed.forEach((bar) => validateReflowedBar(bar, barSize, reflowed))
   return reflowed
 }
 
-const validateReflowedBar = (bar: string, barSize: number) => {
-  const count = barCellCount(bar)
+const validateReflowedBar = (bar: string, barSize: number, allBars: string[]) => {
+  const barIndex = allBars.indexOf(bar)
+  const count = barIndex >= 0 ? barsCellCounts(allBars)[barIndex] : 0
   if (count > barSize) {
     throw new Error(`Reflowed bar "${bar}" has ${count} cells, more than bar size ${barSize}`)
   }

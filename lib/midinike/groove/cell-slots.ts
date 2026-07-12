@@ -14,8 +14,12 @@ const placeHit = (slots: BeatSlot[], tick: number, hit: { sampleId: number | nul
 export const tripletGroupSlots = (cell: ParsedCell, spanTicks: number): BeatSlot[] => {
   const slots = emptyTicks(spanTicks)
   const notes = cell.tripletNotes ?? []
+  const cellSpan = cell.tripletCellSpan ?? 2
+  const portionCell = cell.tripletStartSubdiv ?? 0
+  const fullSpanTicks = spanTicks * (2 / cellSpan)
+
   notes.forEach((note, index) => {
-    const tick = Math.floor((index * spanTicks) / 3)
+    const tick = Math.floor((index * fullSpanTicks) / 3) - portionCell * (fullSpanTicks / 2)
     placeHit(slots, tick, note)
   })
   return slots

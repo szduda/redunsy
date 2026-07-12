@@ -96,10 +96,7 @@ export const EditorKeyboard = ({
   const hasBarSelection =
     hasSelection && selection.barIndex >= 0 && selection.barIndex < bars.length
   const selected = hasSelection && !isBarMode ? getSelectedFlatNote(bars, selection) : null
-  const editKind =
-    hasSelection && !isBarMode
-      ? getSelectionEditKind(bars[selection.barIndex] ?? '', selection.glyphIndex)
-      : null
+  const editKind = hasSelection && !isBarMode ? getSelectionEditKind(bars, selection) : null
   const tone = toneFromEditKind(editKind)
 
   const [lengthMode, setLengthMode] = useState<NoteLengthTone>('8th')

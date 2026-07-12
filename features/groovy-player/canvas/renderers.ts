@@ -2,6 +2,7 @@ import { darkCanvasColors, type CanvasColors } from './canvas-colors'
 import { font } from './drum-font'
 import { drawBarIndexLabel } from '@/features/groovy-player/bar-index-mark'
 import { onBeatCellIndexes, parseBarLayout } from './bar-layout'
+import { drawTripletBracket, tripletBracketSpans } from './triplet-brackets'
 
 import type { BarGlyph } from './bar-layout'
 import type { CanvasElement } from './types'
@@ -14,8 +15,14 @@ export const barWidthForCanvas = (canvasWidth: number, barsPerRow: number) =>
 
 export const noteHeightFromWidth = (width: number) => width / NOTE_ASPECT_W_OVER_H
 
-export const barHeightForBar = (canvasWidth: number, barsPerRow: number, bar: string) => {
-  const { cellCount } = parseBarLayout(bar)
+export const barHeightForBar = (
+  canvasWidth: number,
+  barsPerRow: number,
+  bar: string,
+  bars?: string[],
+  barIndex?: number,
+) => {
+  const { cellCount } = parseBarLayout(bar, bars, barIndex)
   return noteHeightFromWidth(barWidthForCanvas(canvasWidth, barsPerRow) / cellCount)
 }
 
@@ -23,7 +30,12 @@ export const rowHeightsForBars = (canvasWidth: number, barsPerRow: number, bars:
   const rowCount = Math.ceil(bars.length / barsPerRow)
   return Array.from({ length: rowCount }, (_, row) => {
     const rowBars = bars.slice(row * barsPerRow, (row + 1) * barsPerRow)
-    return Math.max(0, ...rowBars.map((bar) => barHeightForBar(canvasWidth, barsPerRow, bar)))
+    return Math.max(
+      0,
+      ...rowBars.map((bar, offset) =>
+        barHeightForBar(canvasWidth, barsPerRow, bar, bars, row * barsPerRow + offset),
+      ),
+    )
   })
 }
 
@@ -116,7 +128,7 @@ export const layoutBar = ({
   rowHeights = rowHeightsForBars(canvasWidth, barsPerRow, bars),
 }: LayoutBarArgs): LaidOutBar => {
   const bar = bars[barIndex]
-  const { cellCount, glyphs } = parseBarLayout(bar)
+  const { cellCount, glyphs } = parseBarLayout(bar, bars, barIndex)
   const barWidth = barWidthForCanvas(canvasWidth, barsPerRow)
   const noteWidth = barWidth / cellCount
   const barHeight = noteHeightFromWidth(noteWidth)
@@ -219,12 +231,12 @@ const renderBarIndexLabels = (
   })
 }
 
-const noteCenterX = (note: Required<CanvasElement>) => note.left + note.width / 2
-
 const renderTripletMarks = (
   context: CanvasRenderingContext2D,
+  bars: string[],
   layouts: LaidOutBar[],
   palette: CanvasColors,
+  barsPerRow: number,
 ) => {
   context.strokeStyle = palette.w1
   context.fillStyle = palette.w1
@@ -233,31 +245,9 @@ const renderTripletMarks = (
   context.textAlign = 'center'
   context.textBaseline = 'bottom'
 
-  layouts.forEach((layout) => {
-    for (let index = 0; index < layout.glyphs.length; index += 1) {
-      const glyph = layout.glyphs[index]
-      if (glyph.kind !== 'eighth' || layout.glyphs[index + 1]?.kind !== 'triplet') continue
-
-      const groupNotes = layout.noteElements.slice(index, index + 3)
-      if (groupNotes.length < 3) continue
-
-      const left = noteCenterX(groupNotes[0])
-      const right = noteCenterX(groupNotes[2])
-      const bracketY = layout.barEl.top + 5
-      const tickHeight = 3
-
-      context.beginPath()
-      context.moveTo(left, bracketY)
-      context.lineTo(right, bracketY)
-      context.moveTo(left, bracketY)
-      context.lineTo(left, bracketY + tickHeight)
-      context.moveTo(right, bracketY)
-      context.lineTo(right, bracketY + tickHeight)
-      context.stroke()
-
-      context.fillText('3', (left + right) / 2, bracketY - 1)
-    }
-  })
+  tripletBracketSpans(bars, layouts, barsPerRow).forEach((span) =>
+    drawTripletBracket(context, span),
+  )
 }
 
 export const renderBars = ({
@@ -301,7 +291,7 @@ export const renderBars = ({
     })
   })
 
-  if (markTriplets) renderTripletMarks(context, layouts, palette)
+  if (markTriplets) renderTripletMarks(context, bars, layouts, palette, barsPerRow)
   if (showBarIndex) renderBarIndexLabels(context, layouts, palette)
 
   return layouts.flatMap((layout) => [layout.barEl, ...layout.noteElements])
