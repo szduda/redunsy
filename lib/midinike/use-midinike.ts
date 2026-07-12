@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { DRUMS, soundMapForInstrument } from './audio/drums-config'
+import { DEFAULT_INSTRUMENT_VOLUME_LEVEL } from './instrument-volume'
 import { useMidiSounds } from './audio/provider'
 import { compileGroove } from './groove/compile-groove'
 import { mergeBeatMatrices } from './groove/merge-beat-matrices'
@@ -107,7 +108,7 @@ export const useMidinike = (options: MidinikeOptions) => {
     Object.values(DRUMS).forEach(({ sampleId, volume, instrument }) => {
       const layer = layerEntries.find(([, cfg]) => cfg.instrument === instrument)
       if (!layer) return
-      const level = instrumentVolumeRef.current[instrument] ?? 100
+      const level = instrumentVolumeRef.current[instrument] ?? DEFAULT_INSTRUMENT_VOLUME_LEVEL
       midiSounds.current?.setDrumVolume(sampleId, volume * (level / 100))
     })
   }, [layerEntries, midiSounds])

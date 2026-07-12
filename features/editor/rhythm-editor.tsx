@@ -25,6 +25,7 @@ import {
 } from '@/features/groovy-player/player.store'
 import { useMetronomeShakerVolume } from '@/features/groovy-player/use-metronome-shaker-volume'
 import { TrackVolume } from '@/features/groovy-player/track/track-volume'
+import { useSyncInstrumentVolumes } from '@/features/groovy-player/track/use-sync-instrument-volumes'
 import { useTrackVolume } from '@/features/groovy-player/track/use-track-volume'
 import { usePlayerPlaybackControl } from '@/features/groovy-player/use-player-playback-control'
 import { PageBottomNav } from '@/features/layout/page-bottom-nav'
@@ -165,12 +166,14 @@ export const RhythmEditor = () => {
     setGroove(groovePattern)
   }, [groovePattern, setGroove])
 
-  const onVolumeLevelChange = useCallback(
-    (instrument: string, level: number) => setInstrumentVolume(instrument, level),
-    [setInstrumentVolume],
+  const rhythmInstruments = useMemo(
+    () => [...new Set(tracks.map((track) => track.instrument))],
+    [tracks],
   )
 
-  const focusedTrackVolume = useTrackVolume(focusedTrack?.instrument ?? '', onVolumeLevelChange)
+  useSyncInstrumentVolumes(rhythmInstruments, setInstrumentVolume)
+
+  const focusedTrackVolume = useTrackVolume(focusedTrack?.instrument ?? '')
 
   const startPlayback = useCallback(() => {
     if (!rhythm) return false
