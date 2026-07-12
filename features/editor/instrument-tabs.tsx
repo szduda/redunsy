@@ -118,18 +118,22 @@ export const InstrumentTabs = ({
   )
 
   return (
-    <div className="flex items-center gap-2 border-b border-zinc-200/60 dark:border-zinc-800/60">
-      <div className="flex min-w-0 flex-1 items-center gap-0 overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+    <div className="relative flex items-center gap-2">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 border-b border-zinc-200/60 dark:border-zinc-800/60"
+      />
+      <div className="relative z-10 flex min-w-0 flex-1 items-center gap-0 overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {tracks.map((track) => {
           const active = track.id === focusedTrackId
           return (
             <button
               key={track.id}
               className={cn(
-                'shrink-0 -mb-0.5 border-2 px-3 py-2 text-sm font-medium transition-colors',
+                'shrink-0 border-2 px-3 py-2 text-sm font-medium transition-colors',
                 active
                   ? 'border-t-zinc-200/60 border-l-zinc-200/60 border-r-zinc-200/60 border-b-editor-surface text-zinc-900 dark:border-t-zinc-800/60 dark:border-l-zinc-800/60 dark:border-r-zinc-800/60 dark:border-b-editor-surface dark:text-zinc-100'
-                  : 'border-editor-surface text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200',
+                  : 'border-t-editor-surface border-l-editor-surface border-r-editor-surface border-b-zinc-200/60 text-zinc-500 hover:text-zinc-700 dark:border-b-zinc-800/60 dark:text-zinc-400 dark:hover:text-zinc-200',
               )}
               onClick={() => onFocusTrack(track.id)}
               type="button"
@@ -167,7 +171,7 @@ export const InstrumentTabs = ({
           </Popover>
         </div>
       </div>
-      {trailing ? <div className="shrink-0">{trailing}</div> : null}
+      {trailing ? <div className="relative z-10 shrink-0">{trailing}</div> : null}
     </div>
   )
 }
