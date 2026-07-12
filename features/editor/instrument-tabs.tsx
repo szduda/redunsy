@@ -152,11 +152,11 @@ export const InstrumentTabs = ({
             active={open}
             aria-expanded={open}
             aria-label="Configure instruments"
-            className={cn('mb-0.5', open && popoverTriggerOpenClass)}
+            className={cn('mb-0.5 !p-1', open && popoverTriggerOpenClass)}
             onClick={toggle}
           >
             <SettingsIcon
-              className={cn('size-5', open ? 'text-yellowy opacity-100' : 'opacity-40')}
+              className={cn('size-4', open ? 'text-yellowy opacity-100' : 'opacity-20')}
             />
           </IconButton>
         )}
