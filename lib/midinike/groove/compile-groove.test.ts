@@ -38,6 +38,11 @@ describe('compileGroove notation — cell counts', () => {
     expect(barCellCount('b-{---}b-{---}')).toBe(6)
   })
 
+  it('counts polyrhythm groups as two cells per six symbols', () => {
+    expect(barCellCount('<fststs>')).toBe(2)
+    expect(barCellCount('b-<fststs>b--')).toBe(6)
+  })
+
   it('treats hyphen before { or [ as glue, not a rest', () => {
     expect(barCellCount('b-{---}b-{---}')).toBe(6)
     expect(barCellCount('b-[----]b-[----]')).toBe(6)
@@ -183,6 +188,34 @@ describe('compileGroove — triplets', () => {
     const end = compiled.barSlotOffsets[11] ?? compiled.beats.length
     expect(end - start).toBe(barSlotCount(6))
     expect(barLocalHits(compiled, 10).at(-1)).toBe(60)
+  })
+})
+
+describe('compileGroove — polyrhythm', () => {
+  it('places six polyrhythm hits on the 4:3 union grid', () => {
+    const hits = compileHits(['<fststs>----'], GROOVE_6)
+    expect(hits).toEqual([0, 6, 8, 12, 16, 18])
+  })
+
+  it('absorbs a glued bass into the first polyrhythm slot in a six-cell bar', () => {
+    const hits = compileHits(['b-<------>s---'], GROOVE_6)
+    expect(hits).toEqual([0, 24])
+  })
+
+  it('absorbs a glued bass that matches the first polyrhythm slot', () => {
+    expect(barCellCount('b-<b----->s---')).toBe(6)
+    expect(compileHits(['b-<b----->s---'], GROOVE_6)).toEqual([0, 24])
+  })
+
+  it('keeps a glued note separate when the group already starts with a different note', () => {
+    expect(barCellCount('b-<fststs>b--')).toBe(6)
+    expect(() => validateBarForGroove('b-<fststs>s---', 6)).toThrow(/more than groove length/)
+  })
+
+  it('matches bar length of an 8th-only bar with the same groove', () => {
+    const polyrhythm = compileResult(['<fststs>----'], GROOVE_6)
+    const eighth = compileResult(['ttstts'], GROOVE_6)
+    expect(polyrhythm.beats.length).toBe(eighth.beats.length)
   })
 })
 

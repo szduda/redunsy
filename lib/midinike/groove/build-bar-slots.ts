@@ -1,6 +1,11 @@
 import { TICKS_PER_EIGHTH } from '../notation/cell-duration'
 
-import { eighthCellSlots, sixteenthCellSlots, tripletGroupSlots } from './cell-slots'
+import {
+  eighthCellSlots,
+  polyrhythmGroupSlots,
+  sixteenthCellSlots,
+  tripletGroupSlots,
+} from './cell-slots'
 
 import type { BeatSlot, ParsedCell } from '../types'
 
@@ -38,6 +43,22 @@ export const barSlotSegments = (
       continue
     }
     if (cell.kind === 'triplet-pair') {
+      index += 1
+      continue
+    }
+    if (cell.kind === 'polyrhythm') {
+      const span = cell.polyrhythmCellSpan ?? 2
+      segments.push({
+        notationCellIndex: notationIndex,
+        notationCellSpan: span,
+        slots: polyrhythmGroupSlots(cell, cellTicks * span),
+      })
+      const hasPairPlaceholder = cells[index + 1]?.kind === 'polyrhythm-pair'
+      index += hasPairPlaceholder ? 2 : 1
+      notationIndex += span
+      continue
+    }
+    if (cell.kind === 'polyrhythm-pair') {
       index += 1
       continue
     }

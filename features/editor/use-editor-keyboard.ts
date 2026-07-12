@@ -16,6 +16,7 @@ type EditorKeyboardActions = {
   toggleFlam: () => void
   convertToSixteenth: () => void
   convertToTriplet: () => void
+  convertToPolyrhythm: () => void
   convertToEighth: () => void
 }
 
@@ -85,6 +86,12 @@ export const useEditorKeyboard = (instrument: string, actions: EditorKeyboardAct
       if (event.key === 't') {
         event.preventDefault()
         current.convertToTriplet()
+        return
+      }
+
+      if (event.key === 'e') {
+        event.preventDefault()
+        current.convertToPolyrhythm()
         return
       }
 

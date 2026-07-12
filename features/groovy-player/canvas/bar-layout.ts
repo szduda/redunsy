@@ -6,6 +6,7 @@ export type BarGlyph = {
   note: string
   position: number
   kind: GlyphKind
+  polyrhythmIndex?: number
 }
 
 export type BarLayout = {
@@ -20,7 +21,12 @@ export const parseBarLayout = (bar: string, bars?: string[], barIndex?: number):
   const layout = barLayouts[index] ?? { cellCount: 0, glyphs: [] }
   return {
     cellCount: layout.cellCount,
-    glyphs: layout.glyphs.map(({ note, position, kind }) => ({ note, position, kind })),
+    glyphs: layout.glyphs.map(({ note, position, kind, polyrhythmIndex }) => ({
+      note,
+      position,
+      kind,
+      polyrhythmIndex,
+    })),
   }
 }
 

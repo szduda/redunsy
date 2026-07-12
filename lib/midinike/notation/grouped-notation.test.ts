@@ -6,7 +6,9 @@ describe('parseGroupedNotation', () => {
   it('counts self-contained groups within one bar', () => {
     expect(barsCellCounts(['{ttt}'])).toEqual([2])
     expect(barsCellCounts(['[tttt]'])).toEqual([2])
+    expect(barsCellCounts(['<fststs>'])).toEqual([2])
     expect(barsCellCounts(['b-[----]'])).toEqual([3])
+    expect(barsCellCounts(['b-<------>s---'])).toEqual([6])
   })
 
   it('splits triplet cells across two bars without rewriting notation', () => {

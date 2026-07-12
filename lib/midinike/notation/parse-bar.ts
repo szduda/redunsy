@@ -2,6 +2,8 @@ import { symbolToSampleId } from '../audio/drums-config'
 
 import { barsCellCounts, parseGroupedNotation } from './grouped-notation'
 import { barCellCount, isGroupGlue } from './cell-duration'
+import { canAbsorbPlainIntoPolyrhythm } from './polyrhythm-glue'
+import { POLYRHYTHM_SLOT_COUNT } from './polyrhythm-positions'
 
 import type { CellHit, ParsedCell } from '../types'
 
@@ -37,6 +39,35 @@ const placeTripletGroup = (
   if (cellSpan === 1) return [triplet]
 
   return [triplet, { kind: 'triplet-pair' as const, hits: [], slotIndexes: [] }]
+}
+
+const placePolyrhythmGroup = (
+  chars: string,
+  toHit: (sound: string) => CellHit,
+  cellSpan = 2,
+): ParsedCell[] => {
+  const notes = [...chars].map(toHit)
+  while (notes.length < POLYRHYTHM_SLOT_COUNT) notes.push(toHit('-'))
+
+  const polyrhythm = {
+    kind: 'polyrhythm' as const,
+    hits: [],
+    slotIndexes: [],
+    polyrhythmNotes: notes,
+    polyrhythmCellSpan: cellSpan,
+  }
+
+  if (cellSpan === 1) return [polyrhythm]
+
+  return [polyrhythm, { kind: 'polyrhythm-pair' as const, hits: [], slotIndexes: [] }]
+}
+
+const polyrhythmCellsFrom = (chars: string, toHit: (sound: string) => CellHit): ParsedCell[] => {
+  const cells: ParsedCell[] = []
+  for (let index = 0; index < chars.length; index += POLYRHYTHM_SLOT_COUNT) {
+    cells.push(...placePolyrhythmGroup(chars.slice(index, index + POLYRHYTHM_SLOT_COUNT), toHit))
+  }
+  return cells
 }
 
 const tripletCellsFrom = (chars: string, toHit: (sound: string) => CellHit): ParsedCell[] => {
@@ -93,6 +124,25 @@ const parseSegment = (bar: string, toHit: (sound: string) => CellHit): ParsedCel
       index = end + 1
       continue
     }
+    if (char === '<') {
+      const end = bar.indexOf('>', index)
+      if (end === -1) {
+        cells.push({ kind: 'eighth', hits: [toHit(char)], slotIndexes: [0] })
+        index += 1
+        continue
+      }
+      cells.push(...polyrhythmCellsFrom(bar.slice(index + 1, end), toHit))
+      index = end + 1
+      continue
+    }
+
+    const absorbed = canAbsorbPlainIntoPolyrhythm(bar, index)
+    if (absorbed) {
+      cells.push(...polyrhythmCellsFrom(absorbed.inner, toHit))
+      index = absorbed.end + 1
+      continue
+    }
+
     cells.push(
       char === '-'
         ? emptyCell('eighth')
@@ -172,6 +222,25 @@ const cellsForBarFromSegments = (
       return
     }
 
+    if (segment.descriptor.kind === 'polyrhythm') {
+      const fullNotes = segment.content.map((ref) => toHit(ref.char))
+      while (fullNotes.length < POLYRHYTHM_SLOT_COUNT) fullNotes.push(toHit('-'))
+      const notes = fullNotes.map((note, index) => {
+        const ref = segment.content[index]
+        if (!ref || ref.barIndex !== barIndex) return { sound: '-', sampleId: null }
+        return note
+      })
+      cells.push({
+        kind: 'polyrhythm',
+        hits: [],
+        slotIndexes: [],
+        polyrhythmNotes: notes,
+        polyrhythmCellSpan: overlapCells,
+        polyrhythmStartSubdiv: overlapStart - groupStart,
+      })
+      return
+    }
+
     const contentInBar = segment.content
       .filter((ref) => ref.barIndex === barIndex)
       .map((ref) => ref.char)
@@ -209,8 +278,9 @@ export const barNeedsCrossBarContext = (bars: string[], barIndex: number) => {
 
   const hasOpenTriplet = bar.includes('{') && !bar.includes('}')
   const hasOpenSixteenth = bar.includes('[') && !bar.includes(']')
-  const continuesGroup = /^[^{\[]*[\}\]]/.test(bar)
-  if (hasOpenTriplet || hasOpenSixteenth || continuesGroup) return true
+  const hasOpenPolyrhythm = bar.includes('<') && !bar.includes('>')
+  const continuesGroup = /^[^{\[<]*[\}\]>]/.test(bar)
+  if (hasOpenTriplet || hasOpenSixteenth || hasOpenPolyrhythm || continuesGroup) return true
 
   const { segments } = parseGroupedNotation(bars)
   return segments.some((segment) => {

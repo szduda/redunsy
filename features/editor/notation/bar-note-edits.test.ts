@@ -3,8 +3,10 @@ import { describe, expect, it } from 'vitest'
 import {
   clampSelectionForTrack,
   convertBarsToEighth,
+  convertBarsToPolyrhythm,
   convertBarsToTriplet,
   convertToEighth,
+  convertToPolyrhythm,
   convertToSixteenth,
   convertToTriplet,
   defaultNoteSelection,
@@ -133,6 +135,20 @@ describe('bar-note-edits', () => {
     expect(next).toBe('stt')
     expect(barCellCount(next)).toBe(barCellCount(bar))
   })
+
+  it('converts two plain 8ths to a polyrhythm group anchored at slots 1 and 4', () => {
+    const bar = 'tsb'
+    const next = convertToPolyrhythm(bar, 0)
+    expect(next).toBe('<t--s-->b')
+    expect(barCellCount(next)).toBe(barCellCount(bar))
+  })
+
+  it('converts polyrhythm group back to two anchored 8th notes', () => {
+    const bar = '<fststs>'
+    const next = convertToEighth(bar, 2)
+    expect(next).toBe('fs')
+    expect(barCellCount(next)).toBe(barCellCount(bar))
+  })
 })
 
 describe('cross-bar conversions', () => {
@@ -188,6 +204,16 @@ describe('cross-bar conversions', () => {
     const next = convertBarsToTriplet(bars, { barIndex: 0, glyphIndex: 4 }, 6)
     expect(next[0]).toBe('ttt-{st-}')
     expect(next[1]).toBe('t-----')
+    expect(barsCellCounts(next)).toEqual([6, 6])
+  })
+
+  it('converts the last plain 8th and first plain 8th of the next bar into a split polyrhythm', () => {
+    const bars = ['-----t', 't-----']
+    const lastGlyph = flattenBarNotes(bars).findIndex(
+      (note) => note.barIndex === 0 && note.glyphIndex === flattenBarNotes(['-----t']).length - 1,
+    )
+    const next = convertBarsToPolyrhythm(bars, { barIndex: 0, glyphIndex: lastGlyph }, 6)
+    expect(next).toEqual(['-----<tt', '-->-----'])
     expect(barsCellCounts(next)).toEqual([6, 6])
   })
 })

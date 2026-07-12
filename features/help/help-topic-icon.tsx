@@ -20,6 +20,7 @@ import { SpeakerIcon } from '@/features/icons/speaker-icon'
 import { StopIcon } from '@/features/icons/stop-icon'
 import { TagIcon } from '@/features/icons/tag-icon'
 import type { Icon, IconProps } from '@/features/icons/types'
+import { PolyrhythmBracketIcon } from '@/features/icons/polyrhythm-bracket-icon'
 import { TripletBracketIcon } from '@/features/icons/triplet-bracket-icon'
 import { UserIcon } from '@/features/icons/user-icon'
 import type { HelpIconKey } from '@/features/help/help.types'
@@ -76,6 +77,7 @@ const HELP_ICON_RENDERERS: Record<HelpIconKey, Icon> = {
   note16: iconRenderer(Note16Icon),
   barIndex: iconRenderer(BarIndexIcon),
   triplet: iconRenderer(TripletBracketIcon),
+  polyrhythm: iconRenderer(PolyrhythmBracketIcon),
   screenAwake: iconRenderer(ScreenAwakeIcon),
   fullBleed: iconRenderer(FullBleedIcon),
   columns: iconRenderer(ColumnsIcon),

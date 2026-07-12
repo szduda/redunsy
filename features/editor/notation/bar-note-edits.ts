@@ -199,6 +199,16 @@ const convertToTripletInBar = (bar: string, glyphIndex: number) => {
   return `${bar.slice(0, pair.firstCharIndex)}${group}${bar.slice(pair.secondCharIndex + 1)}`
 }
 
+const polyrhythmGroupFromPair = (first: string, second: string) => `<${first}--${second}-->`
+
+const convertToPolyrhythmInBar = (bar: string, glyphIndex: number) => {
+  const pair = plainEighthPairAt([bar], { barIndex: 0, glyphIndex })
+  if (!pair || pair.firstBarIndex !== pair.secondBarIndex) return bar
+
+  const group = polyrhythmGroupFromPair(pair.first, pair.second)
+  return `${bar.slice(0, pair.firstCharIndex)}${group}${bar.slice(pair.secondCharIndex + 1)}`
+}
+
 const appendEmptyBar = (bars: string[], barSize: number) => [...bars, '-'.repeat(barSize)]
 
 export const convertBarsToTriplet = (bars: string[], selection: NoteSelection, barSize: number) => {
@@ -251,6 +261,62 @@ export const convertBarsToTriplet = (bars: string[], selection: NoteSelection, b
   return nextBars
 }
 
+export const convertBarsToPolyrhythm = (
+  bars: string[],
+  selection: NoteSelection,
+  barSize: number,
+) => {
+  let workingBars = [...bars]
+  let pair = plainEighthPairAt(workingBars, selection)
+
+  if (!pair) {
+    const locations = getGlyphLocationsInBars(workingBars, selection.barIndex)
+    const location = locations[selection.glyphIndex]
+    if (!location || location.kind !== 'plain') return workingBars
+
+    const locationsByBar = workingBars.map((_, barIndex) =>
+      getGlyphLocationsInBars(workingBars, barIndex),
+    )
+    const flat = locationsByBar.flatMap((entries, barIndex) =>
+      entries.map((entry, glyphIndex) => ({ barIndex, glyphIndex, location: entry })),
+    )
+    const currentIndex = flat.findIndex(
+      (entry) => entry.barIndex === selection.barIndex && entry.glyphIndex === selection.glyphIndex,
+    )
+    const isLastPlain = currentIndex === flat.length - 1
+    if (!isLastPlain) return workingBars
+
+    workingBars = appendEmptyBar(workingBars, barSize)
+    pair = {
+      firstBarIndex: selection.barIndex,
+      firstCharIndex: location.charIndex,
+      secondBarIndex: workingBars.length - 1,
+      secondCharIndex: 0,
+      first: workingBars[selection.barIndex]?.[location.charIndex] ?? '-',
+      second: '-',
+    }
+  }
+
+  if (pair.firstBarIndex === pair.secondBarIndex) {
+    const nextBars = [...workingBars]
+    nextBars[pair.firstBarIndex] = convertToPolyrhythmInBar(
+      workingBars[pair.firstBarIndex] ?? '',
+      selection.glyphIndex,
+    )
+    return nextBars
+  }
+
+  const nextBars = [...workingBars]
+  const firstBar = nextBars[pair.firstBarIndex] ?? ''
+  const secondBar = nextBars[pair.secondBarIndex] ?? ''
+
+  nextBars[pair.firstBarIndex] =
+    `${firstBar.slice(0, pair.firstCharIndex)}<${pair.first}${pair.second}`
+  nextBars[pair.secondBarIndex] = `-->${secondBar.slice(pair.secondCharIndex + 1)}`
+
+  return nextBars
+}
+
 export const convertBarsToSixteenth = (bars: string[], selection: NoteSelection) => {
   const locations = getGlyphLocationsInBars(bars, selection.barIndex)
   const location = locations[selection.glyphIndex]
@@ -273,6 +339,9 @@ export const convertToSixteenth = (bar: string, glyphIndex: number) => {
 
 export const convertToTriplet = (bar: string, glyphIndex: number) =>
   convertToTripletInBar(bar, glyphIndex)
+
+export const convertToPolyrhythm = (bar: string, glyphIndex: number) =>
+  convertToPolyrhythmInBar(bar, glyphIndex)
 
 export const convertBarsToEighth = (bars: string[], selection: NoteSelection) => {
   const locations = getGlyphLocationsInBars(bars, selection.barIndex)
@@ -346,6 +415,59 @@ export const convertBarsToEighth = (bars: string[], selection: NoteSelection) =>
       nextBars[closeRef.barIndex] = `${second}${closeBar.slice(closeRef.charIndex + 1)}`
     } else {
       const secondRef = tripletSegment.content[1]
+      if (secondRef) {
+        const secondBar = nextBars[secondRef.barIndex] ?? ''
+        nextBars[secondRef.barIndex] = `${second}${secondBar.slice(secondRef.charIndex + 1)}`
+      }
+    }
+
+    return nextBars
+  }
+
+  if (location.kind === 'polyrhythm') {
+    const { segments } = parseGroupedNotation(bars)
+    const polyrhythmSegment = segments.find(
+      (segment) =>
+        segment.kind === 'group' &&
+        segment.descriptor.kind === 'polyrhythm' &&
+        segment.locations.some(
+          (entry) =>
+            entry.barIndex === selection.barIndex && entry.charIndex === location.charIndex,
+        ),
+    )
+
+    if (!polyrhythmSegment || polyrhythmSegment.kind !== 'group') {
+      const bar = nextBars[selection.barIndex] ?? ''
+      const content = bar.slice(location.groupStart + 1, location.groupEnd)
+      const first = content[0] ?? '-'
+      const second = content[3] ?? '-'
+      nextBars[selection.barIndex] =
+        `${bar.slice(0, location.groupStart)}${first}${second}${bar.slice(location.groupEnd + 1)}`
+      return nextBars
+    }
+
+    const { openRef, closeRef } = polyrhythmSegment
+    if (!closeRef || openRef.barIndex === closeRef.barIndex) {
+      const bar = nextBars[selection.barIndex] ?? ''
+      const content = bar.slice(location.groupStart + 1, location.groupEnd)
+      const first = content[0] ?? '-'
+      const second = content[3] ?? '-'
+      nextBars[selection.barIndex] =
+        `${bar.slice(0, location.groupStart)}${first}${second}${bar.slice(location.groupEnd + 1)}`
+      return nextBars
+    }
+
+    const first = polyrhythmSegment.content[0]?.char ?? '-'
+    const second = polyrhythmSegment.content[3]?.char ?? '-'
+
+    const openBar = nextBars[openRef.barIndex] ?? ''
+    nextBars[openRef.barIndex] = `${openBar.slice(0, openRef.charIndex)}${first}`
+
+    if (closeRef) {
+      const closeBar = nextBars[closeRef.barIndex] ?? ''
+      nextBars[closeRef.barIndex] = `${second}${closeBar.slice(closeRef.charIndex + 1)}`
+    } else {
+      const secondRef = polyrhythmSegment.content[3]
       if (secondRef) {
         const secondBar = nextBars[secondRef.barIndex] ?? ''
         nextBars[secondRef.barIndex] = `${second}${secondBar.slice(secondRef.charIndex + 1)}`

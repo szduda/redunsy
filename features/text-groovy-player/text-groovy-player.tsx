@@ -44,7 +44,7 @@ export const TextGroovyPlayer = () => {
     djembe: {
       instrument: 'djembe',
       sounds: ['b', 't', 's'],
-      lengths: ['8th', '16th', '8th triplet'],
+      lengths: ['8th', '16th', '8th triplet', 'polyrhythm'],
       grooves: [DEFAULT_GROOVE],
     },
     loop: true,

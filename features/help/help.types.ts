@@ -21,6 +21,7 @@ export type HelpIconKey =
   | 'note16'
   | 'barIndex'
   | 'triplet'
+  | 'polyrhythm'
   | 'screenAwake'
   | 'fullBleed'
   | 'columns'

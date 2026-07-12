@@ -6,7 +6,13 @@ export type CellHit = {
   sampleId: number | null
 }
 
-export type CellKind = 'eighth' | 'sixteenth' | 'triplet' | 'triplet-pair'
+export type CellKind =
+  | 'eighth'
+  | 'sixteenth'
+  | 'triplet'
+  | 'triplet-pair'
+  | 'polyrhythm'
+  | 'polyrhythm-pair'
 
 export type ParsedCell = {
   kind: CellKind
@@ -15,12 +21,15 @@ export type ParsedCell = {
   tripletNotes?: CellHit[]
   tripletCellSpan?: number
   tripletStartSubdiv?: number
+  polyrhythmNotes?: CellHit[]
+  polyrhythmCellSpan?: number
+  polyrhythmStartSubdiv?: number
 }
 
 export type LayerConfig = {
   instrument: string
   sounds: string[]
-  lengths: ('8th' | '16th' | '8th triplet')[]
+  lengths: ('8th' | '16th' | '8th triplet' | 'polyrhythm')[]
   grooves?: string[]
 }
 

@@ -87,4 +87,38 @@ describe('parseBarLayout', () => {
     expect(second.glyphs.map((g) => g.position)[0]).toBeCloseTo(1 / 3, 5)
     expect(second.glyphs.map((g) => g.position).slice(1)).toEqual([1, 2, 3, 4, 5])
   })
+
+  it('places polyrhythm notes on the 4:3 union grid across two 8th cells', () => {
+    const layout = parseBarLayout('<fststs>')
+    expect(layout.cellCount).toBe(2)
+    expect(layout.glyphs.map((g) => g.position)).toEqual([0, 0.5, 2 / 3, 1, 4 / 3, 3 / 2])
+    expect(layout.glyphs.map((g) => g.kind)).toEqual([
+      'eighth',
+      'polyrhythm',
+      'polyrhythm',
+      'polyrhythm',
+      'polyrhythm',
+      'polyrhythm',
+    ])
+    expect(layout.glyphs.map((g) => g.polyrhythmIndex)).toEqual([0, 1, 2, 3, 4, 5])
+  })
+
+  it('absorbs a glued note into the first polyrhythm slot', () => {
+    const layout = parseBarLayout('b-<------>s---')
+    expect(layout.cellCount).toBe(6)
+    expect(layout.glyphs.map((g) => g.note)).toEqual([
+      'b',
+      '-',
+      '-',
+      '-',
+      '-',
+      '-',
+      's',
+      '-',
+      '-',
+      '-',
+    ])
+    expect(layout.glyphs[0]).toMatchObject({ position: 0, polyrhythmIndex: 0 })
+    expect(layout.glyphs[6]?.position).toBe(2)
+  })
 })

@@ -44,7 +44,12 @@ import {
 const LAYER_CONFIG = {
   instrument: 'djembe',
   sounds: ['b', 't', 's', 'f'],
-  lengths: ['8th', '16th', '8th triplet'] as ('8th' | '16th' | '8th triplet')[],
+  lengths: ['8th', '16th', '8th triplet', 'polyrhythm'] as (
+    | '8th'
+    | '16th'
+    | '8th triplet'
+    | 'polyrhythm'
+  )[],
   grooves: [DEMO_SWING_PATTERN],
 }
 
