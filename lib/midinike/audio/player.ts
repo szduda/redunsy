@@ -1,10 +1,17 @@
 'use client'
 
 import WebAudioFontPlayer from './webaudiofont'
+import {
+  playbackCursorAfter,
+  playbackIndexAt,
+  schedulePlaybackWindow,
+  type PlaybackCursor,
+} from './playback-clock'
 
 import type { BeatMatrix, MidiPlayer } from '../types'
 
-const MAX_LAG_MS = 5
+const SCHEDULER_INTERVAL_MS = 25
+const SCHEDULE_AHEAD_MS = 100
 const DEFAULT_ECHO = 0.05
 
 type PlayerState = {
@@ -15,8 +22,12 @@ type PlayerState = {
   echo: ReturnType<InstanceType<typeof WebAudioFontPlayer>['createReverberator']>
   volumesDrum: Record<number, number>
   loopIntervalId?: ReturnType<typeof setInterval>
-  beatIndex: number
   loopStarted: boolean
+  loopGeneration: number
+  beatIndex: number
+  scheduleInvalidated: boolean
+  currentBeatIndex?: () => number
+  schedulerTick?: () => void
   drums: number[]
 }
 
@@ -77,8 +88,13 @@ const cancelQueue = (state: PlayerState) => {
 }
 
 const stopPlayLoop = (state: PlayerState) => {
+  if (state.currentBeatIndex) state.beatIndex = state.currentBeatIndex()
   state.loopStarted = false
-  if (state.loopIntervalId) clearInterval(state.loopIntervalId)
+  state.loopGeneration += 1
+  if (state.loopIntervalId !== undefined) clearInterval(state.loopIntervalId)
+  state.loopIntervalId = undefined
+  state.currentBeatIndex = undefined
+  state.schedulerTick = undefined
   cancelQueue(state)
 }
 
@@ -103,34 +119,116 @@ export const createMidiPlayer = (drums: number[]): MidiPlayer => {
     output,
     echo,
     volumesDrum: {},
-    beatIndex: 0,
     loopStarted: false,
+    loopGeneration: 0,
+    beatIndex: 0,
+    scheduleInvalidated: false,
     drums,
   }
 
   refreshCache(state)
 
+  const resumeVisibleLoop = () => {
+    if (!state.loopStarted || document.visibilityState !== 'visible') return
+    void state.audioContext
+      .resume()
+      .then(() => state.schedulerTick?.())
+      .catch(() => undefined)
+  }
+  const handleContextStateChange = () => {
+    if (!state.loopStarted) return
+    if (state.audioContext.state !== 'running') {
+      state.scheduleInvalidated = true
+      cancelQueue(state)
+      return
+    }
+    if (state.audioContext.state === 'running') state.schedulerTick?.()
+  }
+
+  document.addEventListener('visibilitychange', resumeVisibleLoop)
+  audioContext.addEventListener('statechange', handleContextStateChange)
+
   return {
     startPlayLoop: (beats, bpm, density, fromBeat, onBeat) => {
       stopPlayLoop(state)
-      void state.audioContext.resume()
+      if (beats.length === 0) return
       state.loopStarted = true
       const wholeNoteDuration = (4 * 60) / bpm
-      const stepSec = density * wholeNoteDuration
-      state.beatIndex = fromBeat < beats.length ? fromBeat : 0
-      playBeatAt(state, contextTime(state), beats[state.beatIndex])
-      let nextLoopTime = contextTime(state) + stepSec
+      const stepMs = density * wholeNoteDuration * 1000
+      const startIndex = fromBeat < beats.length ? fromBeat : 0
+      const generation = state.loopGeneration
+      state.beatIndex = startIndex
+      state.scheduleInvalidated = false
 
-      state.loopIntervalId = setInterval(() => {
-        if (contextTime(state) <= nextLoopTime - stepSec) return
-        state.beatIndex += 1
-        if (state.beatIndex >= beats.length) state.beatIndex = 0
-        playBeatAt(state, nextLoopTime, beats[state.beatIndex])
-        nextLoopTime += stepSec
-        onBeat?.(state.beatIndex)
-      }, MAX_LAG_MS)
+      void state.audioContext
+        .resume()
+        .then(() => {
+          if (!state.loopStarted || state.loopGeneration !== generation) return
+          const startedAtMs = performance.now()
+          let lastReportedIndex = startIndex
+          let cursor: PlaybackCursor = {
+            nextIndex: (startIndex + 1) % beats.length,
+            nextTimeMs: startedAtMs + stepMs,
+          }
+          const currentBeatIndex = () =>
+            playbackIndexAt(startIndex, startedAtMs, performance.now(), stepMs, beats.length)
+          state.currentBeatIndex = currentBeatIndex
+
+          playBeatAt(state, contextTime(state), beats[startIndex])
+          onBeat?.(startIndex)
+          if (!state.loopStarted || state.loopGeneration !== generation) return
+
+          const schedulerTick = () => {
+            if (!state.loopStarted || state.loopGeneration !== generation) return
+            const nowMs = performance.now()
+            const currentIndex = currentBeatIndex()
+            state.beatIndex = currentIndex
+            if (currentIndex !== lastReportedIndex) {
+              lastReportedIndex = currentIndex
+              onBeat?.(currentIndex)
+            }
+            if (
+              !state.loopStarted ||
+              state.loopGeneration !== generation ||
+              state.audioContext.state !== 'running'
+            ) {
+              return
+            }
+
+            if (state.scheduleInvalidated) {
+              cursor = playbackCursorAfter(startIndex, startedAtMs, nowMs, stepMs, beats.length)
+              state.scheduleInvalidated = false
+            }
+            const window = schedulePlaybackWindow({
+              beatCount: beats.length,
+              cursor,
+              nowMs,
+              scheduleUntilMs: nowMs + SCHEDULE_AHEAD_MS,
+              stepMs,
+            })
+            cursor = window.cursor
+            const audioNow = contextTime(state)
+            window.scheduled.forEach(({ index, timeMs }) => {
+              playBeatAt(state, audioNow + (timeMs - nowMs) / 1000, beats[index])
+            })
+          }
+
+          state.schedulerTick = schedulerTick
+          schedulerTick()
+          if (state.loopStarted && state.loopGeneration === generation) {
+            state.loopIntervalId = setInterval(schedulerTick, SCHEDULER_INTERVAL_MS)
+          }
+        })
+        .catch(() => undefined)
     },
     stopPlayLoop: () => stopPlayLoop(state),
+    getBeatIndex: () => state.currentBeatIndex?.() ?? state.beatIndex,
+    dispose: () => {
+      stopPlayLoop(state)
+      document.removeEventListener('visibilitychange', resumeVisibleLoop)
+      audioContext.removeEventListener('statechange', handleContextStateChange)
+      void audioContext.close()
+    },
     setDrumVolume: (drum, volume) => {
       state.volumesDrum[drum] = volume
     },

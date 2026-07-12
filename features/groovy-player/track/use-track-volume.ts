@@ -3,8 +3,9 @@
 import { useEffect } from 'react'
 
 import { useTrackVolumeStore } from '@/features/groovy-player/track/track-volume.store'
+import { DEFAULT_INSTRUMENT_VOLUME_LEVEL } from '@/lib/midinike/instrument-volume'
 
-const DEFAULT_VOLUME = 50
+const DEFAULT_VOLUME = DEFAULT_INSTRUMENT_VOLUME_LEVEL
 
 export const useTrackVolume = (
   instrument: string,

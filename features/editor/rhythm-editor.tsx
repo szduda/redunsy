@@ -25,6 +25,7 @@ import {
 } from '@/features/groovy-player/player.store'
 import { useMetronomeShakerVolume } from '@/features/groovy-player/use-metronome-shaker-volume'
 import { TrackVolume } from '@/features/groovy-player/track/track-volume'
+import { useSyncInstrumentVolumes } from '@/features/groovy-player/track/use-sync-instrument-volumes'
 import { useTrackVolume } from '@/features/groovy-player/track/use-track-volume'
 import { usePlayerPlaybackControl } from '@/features/groovy-player/use-player-playback-control'
 import { PageBottomNav } from '@/features/layout/page-bottom-nav'
@@ -62,13 +63,11 @@ export const RhythmEditor = () => {
   const barsPerRow = useBarsPerRow()
   const tempo = usePlayerStore((state) => state.tempo)
   const isPlaying = usePlayerStore((state) => state.isPlaying)
-  const storeBeatIndex = usePlayerStore((state) => state.beatIndex)
   const swingPattern = usePlayerStore((state) => state.swingPattern)
   const swingEnabled = usePlayerStore((state) => state.swingEnabled)
   const setSwingPattern = usePlayerStore((state) => state.setSwingPattern)
   const setSwingEnabled = usePlayerStore((state) => state.setSwingEnabled)
   const setIsPlaying = usePlayerStore((state) => state.setIsPlaying)
-  const setBeatIndex = usePlayerStore((state) => state.setBeatIndex)
   const setTempo = usePlayerStore((state) => state.setTempo)
   const fullBleed = usePlayerStore((state) => state.fullBleed)
   const [playError, setPlayError] = useState<string | null>(null)
@@ -121,7 +120,7 @@ export const RhythmEditor = () => {
     setTempo: setMidinikeTempo,
     setInstrumentVolume,
     playing,
-    beatIndex,
+    activeBarIndex,
   } = useMidinike({
     djembe: LAYER_CONFIG,
     dundunba: { ...LAYER_CONFIG, instrument: 'dundunba', sounds: ['o', 'x'], lengths: ['8th'] },
@@ -139,6 +138,7 @@ export const RhythmEditor = () => {
   useEffect(() => {
     if (!rhythm) return
     setTempo(rhythm.tempo)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeSlug, rhythm?.tempo, setTempo])
 
   useEffect(() => {
@@ -147,6 +147,7 @@ export const RhythmEditor = () => {
     const pattern = empty ? defaultSwingPatternForMeter(rhythm.meter) : rhythm.swingPattern
     setSwingPattern(pattern, barSize)
     setSwingEnabled(!empty)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeSlug, barSize, rhythm?.meter, rhythm?.swingPattern, setSwingEnabled, setSwingPattern])
 
   useEffect(() => {
@@ -158,19 +159,18 @@ export const RhythmEditor = () => {
   }, [isPlaying, playing, setIsPlaying])
 
   useEffect(() => {
-    if (storeBeatIndex !== beatIndex) setBeatIndex(beatIndex)
-  }, [beatIndex, setBeatIndex, storeBeatIndex])
-
-  useEffect(() => {
     setGroove(groovePattern)
   }, [groovePattern, setGroove])
 
-  const onVolumeLevelChange = useCallback(
-    (instrument: string, level: number) => setInstrumentVolume(instrument, level),
-    [setInstrumentVolume],
+  const rhythmInstruments = useMemo(
+    () => [...new Set(tracks.map((track) => track.instrument))],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [rhythm],
   )
 
-  const focusedTrackVolume = useTrackVolume(focusedTrack?.instrument ?? '', onVolumeLevelChange)
+  useSyncInstrumentVolumes(rhythmInstruments, setInstrumentVolume)
+
+  const focusedTrackVolume = useTrackVolume(focusedTrack?.instrument ?? '')
 
   const startPlayback = useCallback(() => {
     if (!rhythm) return false
@@ -300,6 +300,7 @@ export const RhythmEditor = () => {
             </div>
 
             <EditableBarsCanvas
+              activeIndex={activeBarIndex}
               bars={focusedTrack.bars}
               barsPerRow={barsPerRow}
               beatSize={rhythm.meter}

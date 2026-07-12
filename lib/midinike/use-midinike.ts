@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
 import { DRUMS, soundMapForInstrument } from './audio/drums-config'
+import { DEFAULT_INSTRUMENT_VOLUME_LEVEL } from './instrument-volume'
 import { useMidiSounds } from './audio/provider'
 import { compileGroove } from './groove/compile-groove'
 import { mergeBeatMatrices } from './groove/merge-beat-matrices'
@@ -28,6 +29,13 @@ const barsFitGroove = (bars: string[], grooveLength: number) => {
   } catch {
     return false
   }
+}
+
+const barIndexForBeat = (beatIndex: number, offsets: number[]) => {
+  for (let index = offsets.length - 1; index >= 0; index -= 1) {
+    if (beatIndex >= offsets[index]) return index
+  }
+  return 0
 }
 
 type LayerPlayer = {
@@ -63,7 +71,7 @@ export const useMidinike = (options: MidinikeOptions) => {
   const lastGroovePatternRef = useRef(resolvedInitialGroove)
   const [playing, setPlaying] = useState(false)
   const [paused, setPaused] = useState(false)
-  const [beatIndex, setBeatIndex] = useState(-1)
+  const [activeBarIndex, setActiveBarIndex] = useState(-1)
 
   const beatsRef = useRef<BeatMatrix>([])
   const compileRef = useRef(
@@ -79,15 +87,11 @@ export const useMidinike = (options: MidinikeOptions) => {
   const lastInstrumentRef = useRef<string | undefined>(undefined)
   const instrumentVolumeRef = useRef<Record<string, number>>({})
   const playingRef = useRef(false)
-
-  const activeBarIndex = useMemo(() => {
-    if (beatIndex < 0) return -1
-    const offsets = compileRef.current.barSlotOffsets
-    for (let i = offsets.length - 1; i >= 0; i -= 1) {
-      if (beatIndex >= offsets[i]) return i
-    }
-    return 0
-  }, [beatIndex, groove])
+  const activeBarIndexRef = useRef(-1)
+  const currentBeatIndex = useCallback(
+    () => midiSounds.current?.getBeatIndex() ?? noteIndexRef.current,
+    [midiSounds],
+  )
 
   const swingModifier = swingModifierFromGroove(groove)
 
@@ -107,7 +111,7 @@ export const useMidinike = (options: MidinikeOptions) => {
     Object.values(DRUMS).forEach(({ sampleId, volume, instrument }) => {
       const layer = layerEntries.find(([, cfg]) => cfg.instrument === instrument)
       if (!layer) return
-      const level = instrumentVolumeRef.current[instrument] ?? 100
+      const level = instrumentVolumeRef.current[instrument] ?? DEFAULT_INSTRUMENT_VOLUME_LEVEL
       midiSounds.current?.setDrumVolume(sampleId, volume * (level / 100))
     })
   }, [layerEntries, midiSounds])
@@ -127,13 +131,18 @@ export const useMidinike = (options: MidinikeOptions) => {
       setVolumes()
       player.startPlayLoop(beatsRef.current, playbackTempo, DENSITY, fromBeat, (index) => {
         noteIndexRef.current = index
-        setBeatIndex(index)
+        const nextBarIndex = barIndexForBeat(index, compileRef.current.barSlotOffsets)
+        if (nextBarIndex !== activeBarIndexRef.current) {
+          activeBarIndexRef.current = nextBarIndex
+          setActiveBarIndex(nextBarIndex)
+        }
         if (!loop && index >= beatsRef.current.length - 1) {
           player.stopPlayLoop()
           setPlaying(false)
           setPaused(false)
           playingRef.current = false
-          setBeatIndex(-1)
+          activeBarIndexRef.current = -1
+          setActiveBarIndex(-1)
         }
       })
       setPlaying(true)
@@ -297,12 +306,12 @@ export const useMidinike = (options: MidinikeOptions) => {
   )
 
   const pause = useCallback(() => {
-    pausedAtRef.current = noteIndexRef.current
+    pausedAtRef.current = currentBeatIndex()
     midiSounds.current?.stopPlayLoop()
     setPlaying(false)
     setPaused(true)
     playingRef.current = false
-  }, [midiSounds])
+  }, [currentBeatIndex, midiSounds])
 
   const stop = useCallback(() => {
     midiSounds.current?.stopPlayLoop()
@@ -312,7 +321,8 @@ export const useMidinike = (options: MidinikeOptions) => {
     setPlaying(false)
     setPaused(false)
     playingRef.current = false
-    setBeatIndex(-1)
+    activeBarIndexRef.current = -1
+    setActiveBarIndex(-1)
   }, [midiSounds])
 
   const restart = useCallback(() => {
@@ -354,15 +364,15 @@ export const useMidinike = (options: MidinikeOptions) => {
       lastGroovePatternRef.current = pattern
       setGrooveState(pattern)
       if (!playingRef.current) return
-      recompileActivePattern(pattern, noteIndexRef.current)
+      recompileActivePattern(pattern, currentBeatIndex())
     },
-    [groove, recompileActivePattern],
+    [currentBeatIndex, groove, recompileActivePattern],
   )
 
   useEffect(() => {
     if (!playingRef.current) return
-    startLoopRef.current(noteIndexRef.current)
-  }, [tempo])
+    startLoopRef.current(currentBeatIndex())
+  }, [currentBeatIndex, tempo])
 
   const layerHandles = useMemo(
     () =>
@@ -391,7 +401,6 @@ export const useMidinike = (options: MidinikeOptions) => {
     paused,
     groove,
     tempo,
-    beatIndex,
     activeBarIndex,
     swingModifier,
     compile: compileBars,

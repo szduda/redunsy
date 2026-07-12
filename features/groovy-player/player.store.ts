@@ -112,8 +112,6 @@ type PlayerState = {
   setTempo: (tempo: number) => void
   isPlaying: boolean
   setIsPlaying: (isPlaying: boolean) => void
-  beatIndex: number
-  setBeatIndex: (beatIndex: number) => void
   swingPattern: string
   swingBarSize: number
   setSwingPattern: (swingPattern: string, barSize?: number) => void
@@ -172,8 +170,6 @@ export const usePlayerStore = create<PlayerState>()(
       setTempo: (tempo) => set({ tempo }),
       isPlaying: false,
       setIsPlaying: (isPlaying) => set({ isPlaying }),
-      beatIndex: -1,
-      setBeatIndex: (beatIndex) => set({ beatIndex }),
       swingPattern: DEMO_NOTATION_SWING_PATTERN,
       swingBarSize: swingBarSizeForMeter(3),
       setSwingPattern: (swingPattern, barSize) => {
