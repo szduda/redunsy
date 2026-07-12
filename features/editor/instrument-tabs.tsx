@@ -126,10 +126,10 @@ export const InstrumentTabs = ({
             <button
               key={track.id}
               className={cn(
-                '-mb-px border-b-2 px-3 py-2 text-sm font-medium transition-colors',
+                '-mb-px px-3 py-2 text-sm font-medium transition-colors',
                 active
-                  ? 'border-zinc-900 text-zinc-900 dark:border-zinc-100 dark:text-zinc-100'
-                  : 'border-transparent text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200',
+                  ? 'border border-b-2 border-t-zinc-200/60 border-l-zinc-200/60 border-r-transparent border-b-white text-zinc-900 dark:border-t-zinc-800/60 dark:border-l-zinc-800/60 dark:border-b-zinc-900/60 dark:text-zinc-100'
+                  : 'border border-transparent text-zinc-500 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200',
               )}
               onClick={() => onFocusTrack(track.id)}
               type="button"
