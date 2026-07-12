@@ -141,6 +141,7 @@ export const RhythmEditor = () => {
   useEffect(() => {
     if (!rhythm) return
     setTempo(rhythm.tempo)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeSlug, rhythm?.tempo, setTempo])
 
   useEffect(() => {
@@ -149,6 +150,7 @@ export const RhythmEditor = () => {
     const pattern = empty ? defaultSwingPatternForMeter(rhythm.meter) : rhythm.swingPattern
     setSwingPattern(pattern, barSize)
     setSwingEnabled(!empty)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeSlug, barSize, rhythm?.meter, rhythm?.swingPattern, setSwingEnabled, setSwingPattern])
 
   useEffect(() => {
@@ -169,7 +171,8 @@ export const RhythmEditor = () => {
 
   const rhythmInstruments = useMemo(
     () => [...new Set(tracks.map((track) => track.instrument))],
-    [tracks],
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [rhythm],
   )
 
   useSyncInstrumentVolumes(rhythmInstruments, setInstrumentVolume)

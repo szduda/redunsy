@@ -23,7 +23,11 @@ describe('instrument volume defaults', () => {
   it('applies the stored instrument level on top of drum sample gain', () => {
     const djembeTone = DRUMS.djembeOpenTone
     expect(
-      drumVolumeLevel({ djembe: DEFAULT_INSTRUMENT_VOLUME_LEVEL }, djembeTone.instrument, djembeTone.volume),
+      drumVolumeLevel(
+        { djembe: DEFAULT_INSTRUMENT_VOLUME_LEVEL },
+        djembeTone.instrument,
+        djembeTone.volume,
+      ),
     ).toBeCloseTo(djembeTone.volume * 0.5)
   })
 })
