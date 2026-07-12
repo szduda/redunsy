@@ -6,7 +6,7 @@ import { SettingsIcon } from '@/features/icons/settings-icon'
 import { IconButton } from '@/features/groovy-player/icon-button'
 import { cn } from '@/features/theme/cn'
 import { MetronomeToggle } from '@/features/groovy-player/metronome-toggle'
-import { PLAYER_KEYBOARD_HINTS } from '@/features/groovy-player/player-keyboard-hints'
+import { PLAYER_HINTS } from '@/features/groovy-player/player-keyboard-hints'
 import { PlayerSettingsPanel } from '@/features/groovy-player/player-settings-panel'
 import { PlayerTransport } from '@/features/groovy-player/player-transport'
 import { usePlayerStore } from '@/features/groovy-player/player.store'
@@ -74,13 +74,13 @@ export const PlayerBottomNav = ({
         {useInlineSettings ? settingsButton : null}
 
         <div className="flex items-center gap-1 md:gap-2">
-          <KeyboardHintWrap hint={PLAYER_KEYBOARD_HINTS.tempo}>
+          <KeyboardHintWrap hint={PLAYER_HINTS.tempo.key} label={PLAYER_HINTS.tempo.label}>
             <TempoSlider focusRef={tempoFocusRef} />
           </KeyboardHintWrap>
-          <KeyboardHintWrap hint={PLAYER_KEYBOARD_HINTS.metronome}>
+          <KeyboardHintWrap hint={PLAYER_HINTS.metronome.key} label={PLAYER_HINTS.metronome.label}>
             <MetronomeToggle />
           </KeyboardHintWrap>
-          <KeyboardHintWrap hint={PLAYER_KEYBOARD_HINTS.swing}>
+          <KeyboardHintWrap hint={PLAYER_HINTS.swing.key} label={PLAYER_HINTS.swing.label}>
             <SwingToggle />
           </KeyboardHintWrap>
         </div>

@@ -27,3 +27,40 @@ export const digitForSound = (instrument: string, sound: string) => {
   const index = keyboardSounds(instrument).indexOf(sound)
   return index >= 0 ? String(index + 1) : undefined
 }
+
+export type SoundHintMeta = {
+  label: string
+  labelClassName?: string
+}
+
+const DJEMBE_SOUND_HINTS: Record<string, SoundHintMeta> = {
+  b: { label: 'bass' },
+  t: { label: 'tone' },
+  s: { label: 'slap' },
+  f: { label: 'slaps' },
+  r: { label: 'tones' },
+  g: { label: 'slaptones', labelClassName: '-translate-x-[10px]' },
+  j: { label: '' },
+  c: { label: 'basstones', labelClassName: '-translate-x-[10px]' },
+  d: { label: '' },
+}
+
+const DUNDUN_SOUND_HINTS: Record<string, SoundHintMeta> = {
+  o: { label: 'open' },
+  x: { label: 'close' },
+}
+
+const DUNDUN_INSTRUMENTS = new Set(['dundunba', 'sangban', 'kenkeni', 'kenkeni2'])
+
+export const soundHintMeta = (instrument: string, sound: string): SoundHintMeta => {
+  if (instrument === 'djembe') {
+    return DJEMBE_SOUND_HINTS[sound] ?? { label: sound.toUpperCase() }
+  }
+  if (DUNDUN_INSTRUMENTS.has(instrument)) {
+    return DUNDUN_SOUND_HINTS[sound] ?? { label: sound.toUpperCase() }
+  }
+  return { label: sound.toUpperCase() }
+}
+
+export const soundHintLabel = (instrument: string, sound: string) =>
+  soundHintMeta(instrument, sound).label
