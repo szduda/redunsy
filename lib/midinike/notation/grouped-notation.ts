@@ -2,6 +2,7 @@ import { POLYRHYTHM_POSITIONS, POLYRHYTHM_SLOT_COUNT } from './polyrhythm-positi
 import {
   absorbPlainIntoPolyrhythmInner,
   hasConvertedPolyrhythmGlue,
+  isEditorAnchoredPolyrhythmInner,
   polyrhythmGroupInner,
   shouldAbsorbPlainIntoPolyrhythm,
 } from './polyrhythm-glue'
@@ -162,7 +163,12 @@ const isGroupGlue = (bar: string, index: number) => {
 
   if (next === '<') {
     const inner = polyrhythmGroupInner(bar, index + 1)
-    if (inner && hasConvertedPolyrhythmGlue(inner)) return false
+    if (
+      inner &&
+      (hasConvertedPolyrhythmGlue(inner) || isEditorAnchoredPolyrhythmInner(inner))
+    ) {
+      return false
+    }
   }
 
   return true

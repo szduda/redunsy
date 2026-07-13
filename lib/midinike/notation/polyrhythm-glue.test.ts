@@ -4,6 +4,7 @@ import {
   absorbPlainIntoPolyrhythmInner,
   canAbsorbPlainIntoPolyrhythm,
   hasConvertedPolyrhythmGlue,
+  isEditorAnchoredPolyrhythmInner,
   shouldAbsorbPlainIntoPolyrhythm,
 } from './polyrhythm-glue'
 import { isGroupGlue } from './grouped-notation'
@@ -14,6 +15,18 @@ describe('polyrhythm glue', () => {
     expect(hasConvertedPolyrhythmGlue('b-----')).toBe(false)
     expect(hasConvertedPolyrhythmGlue('------')).toBe(false)
     expect(hasConvertedPolyrhythmGlue('fststs')).toBe(false)
+  })
+
+  it('detects edited editor-anchored polyrhythm groups', () => {
+    expect(isEditorAnchoredPolyrhythmInner('t--s--')).toBe(true)
+    expect(isEditorAnchoredPolyrhythmInner('ts-s--')).toBe(true)
+    expect(isEditorAnchoredPolyrhythmInner('fststs')).toBe(false)
+    expect(isEditorAnchoredPolyrhythmInner('b-----')).toBe(false)
+  })
+
+  it('does not treat glue before an edited editor-anchored polyrhythm group', () => {
+    expect(isGroupGlue('s---s-<ss-s-->', 5)).toBe(false)
+    expect(canAbsorbPlainIntoPolyrhythm('s---s-<ss-s-->', 4)).toBeNull()
   })
 
   it('does not treat glue before an explicit polyrhythm group as converted', () => {

@@ -14,10 +14,13 @@ import {
   lastNoteSelection,
   navigateBarSelection,
   navigateSelection,
+  setNoteAtGlyph,
   setNoteAtGlyphInBar,
 } from '@/features/editor/notation/bar-note-edits'
+import { getGlyphLocationsInBars } from '@/features/editor/notation/glyph-locations'
 import { barCellCount } from '@/lib/midinike/notation/cell-duration'
 import { barsCellCounts } from '@/lib/midinike/notation/grouped-notation'
+import { barsMatchGrooveLength } from '@/lib/midinike/notation/fit-bar'
 
 describe('bar-note-edits', () => {
   it('flattens glyphs across bars', () => {
@@ -148,6 +151,23 @@ describe('bar-note-edits', () => {
     const next = convertToEighth(bar, 2)
     expect(next).toBe('fs')
     expect(barCellCount(next)).toBe(barCellCount(bar))
+  })
+
+  it('keeps bar length when editing an editor-anchored polyrhythm group', () => {
+    const bar = 's---s-ss'
+    const converted = convertToPolyrhythm(bar, 6)
+    expect(converted).toBe('s---s-<s--s-->')
+    expect(barsCellCounts([converted])).toEqual([8])
+    expect(barsMatchGrooveLength([converted], 8)).toBe(true)
+
+    const locations = getGlyphLocationsInBars([converted], 0)
+    const editedGlyph = locations.findIndex(
+      (location) => location.kind === 'polyrhythm' && location.charIndex === 8,
+    )
+    const edited = setNoteAtGlyph([converted], { barIndex: 0, glyphIndex: editedGlyph }, 's')
+    expect(edited[0]).toBe('s---s-<ss-s-->')
+    expect(barsCellCounts(edited)).toEqual([8])
+    expect(barsMatchGrooveLength(edited, 8)).toBe(true)
   })
 })
 
