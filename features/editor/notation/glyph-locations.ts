@@ -24,7 +24,19 @@ export type TripletGlyphLocation = {
   tripletIndex: 0 | 1 | 2
 }
 
-export type GlyphLocation = PlainGlyphLocation | SixteenthGlyphLocation | TripletGlyphLocation
+export type PolyrhythmGlyphLocation = {
+  kind: 'polyrhythm'
+  groupStart: number
+  groupEnd: number
+  charIndex: number
+  polyrhythmIndex: 0 | 1 | 2 | 3 | 4 | 5
+}
+
+export type GlyphLocation =
+  | PlainGlyphLocation
+  | SixteenthGlyphLocation
+  | TripletGlyphLocation
+  | PolyrhythmGlyphLocation
 
 const toBarLocalLocation = (
   bars: string[],
@@ -46,6 +58,16 @@ const toBarLocalLocation = (
       groupEnd,
       charIndex: location.charIndex,
       pairIndex: (location.subdivIndex % 2) as 0 | 1,
+    }
+  }
+
+  if (location.kind === 'polyrhythm') {
+    return {
+      kind: 'polyrhythm',
+      groupStart,
+      groupEnd,
+      charIndex: location.charIndex,
+      polyrhythmIndex: location.subdivIndex as 0 | 1 | 2 | 3 | 4 | 5,
     }
   }
 

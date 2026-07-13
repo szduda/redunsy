@@ -46,7 +46,12 @@ import {
 const LAYER_CONFIG = {
   instrument: 'djembe',
   sounds: ['b', 't', 's', 'f'],
-  lengths: ['8th', '16th', '8th triplet'] as ('8th' | '16th' | '8th triplet')[],
+  lengths: ['8th', '16th', '8th triplet', 'polyrhythm'] as (
+    | '8th'
+    | '16th'
+    | '8th triplet'
+    | 'polyrhythm'
+  )[],
 }
 
 export const RhythmEditor = () => {
@@ -110,6 +115,7 @@ export const RhythmEditor = () => {
     toggleFlam: flam.toggleFlam,
     convertToSixteenth: noteEditor.convertToSixteenth,
     convertToTriplet: noteEditor.convertToTriplet,
+    convertToPolyrhythm: noteEditor.convertToPolyrhythm,
     convertToEighth: noteEditor.convertToEighth,
   })
 
@@ -319,6 +325,7 @@ export const RhythmEditor = () => {
         flamSymbols={flam.flamSymbols}
         instrument={focusedTrack.instrument}
         onConvertToEighth={noteEditor.convertToEighth}
+        onConvertToPolyrhythm={noteEditor.convertToPolyrhythm}
         onConvertToSixteenth={noteEditor.convertToSixteenth}
         onConvertToTriplet={noteEditor.convertToTriplet}
         onFlamToggle={flam.toggleFlam}

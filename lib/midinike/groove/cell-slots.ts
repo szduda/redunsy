@@ -1,3 +1,5 @@
+import { polyrhythmTickAt } from '../notation/polyrhythm-positions'
+
 import type { BeatSlot, ParsedCell } from '../types'
 
 const emptySlot = (): BeatSlot => [[], []]
@@ -9,6 +11,20 @@ const emptyTicks = (count: number): BeatSlot[] => Array.from({ length: count }, 
 const placeHit = (slots: BeatSlot[], tick: number, hit: { sampleId: number | null }) => {
   if (!hit.sampleId || tick < 0 || tick >= slots.length) return
   slots[tick] = hitToSlot(hit.sampleId)
+}
+
+export const polyrhythmGroupSlots = (cell: ParsedCell, spanTicks: number): BeatSlot[] => {
+  const slots = emptyTicks(spanTicks)
+  const notes = cell.polyrhythmNotes ?? []
+  const cellSpan = cell.polyrhythmCellSpan ?? 2
+  const portionCell = cell.polyrhythmStartSubdiv ?? 0
+  const cellTicks = spanTicks / cellSpan
+
+  notes.forEach((note, index) => {
+    const tick = polyrhythmTickAt(index, cellTicks) - portionCell * cellTicks
+    placeHit(slots, tick, note)
+  })
+  return slots
 }
 
 export const tripletGroupSlots = (cell: ParsedCell, spanTicks: number): BeatSlot[] => {

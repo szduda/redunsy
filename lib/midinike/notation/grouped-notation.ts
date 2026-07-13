@@ -1,11 +1,20 @@
-export type GlyphKind = 'eighth' | 'sixteenth' | 'triplet'
+import { POLYRHYTHM_POSITIONS, POLYRHYTHM_SLOT_COUNT } from './polyrhythm-positions'
+import {
+  absorbPlainIntoPolyrhythmInner,
+  hasConvertedPolyrhythmGlue,
+  isEditorAnchoredPolyrhythmInner,
+  polyrhythmGroupInner,
+  shouldAbsorbPlainIntoPolyrhythm,
+} from './polyrhythm-glue'
 
-export type GroupKind = 'triplet' | 'sixteenth'
+export type GlyphKind = 'eighth' | 'sixteenth' | 'triplet' | 'polyrhythm'
+
+export type GroupKind = 'triplet' | 'sixteenth' | 'polyrhythm'
 
 export type GroupDescriptor = {
   kind: GroupKind
-  open: '{' | '['
-  close: '}' | ']'
+  open: '{' | '[' | '<'
+  close: '}' | ']' | '>'
   symbolsPerUnit: number
   cellsPerUnit: number
   glyphKind: GlyphKind
@@ -28,6 +37,14 @@ export const GROUP_DESCRIPTORS: readonly GroupDescriptor[] = [
     cellsPerUnit: 1,
     glyphKind: 'sixteenth',
   },
+  {
+    kind: 'polyrhythm',
+    open: '<',
+    close: '>',
+    symbolsPerUnit: POLYRHYTHM_SLOT_COUNT,
+    cellsPerUnit: 2,
+    glyphKind: 'polyrhythm',
+  },
 ]
 
 export type CharRef = {
@@ -37,7 +54,7 @@ export type CharRef = {
 }
 
 export type GroupGlyphLocation = {
-  kind: 'sixteenth' | 'triplet'
+  kind: 'sixteenth' | 'triplet' | 'polyrhythm'
   barIndex: number
   charIndex: number
   groupStartBar: number
@@ -61,6 +78,7 @@ export type GroupedBarGlyph = {
   kind: GlyphKind
   barIndex: number
   charIndex: number
+  polyrhythmIndex?: number
 }
 
 export type GroupedBarLayout = {
@@ -120,12 +138,12 @@ const findGroupClose = (chars: CharRef[], openIndex: number, close: string) => {
   return -1
 }
 
-/** `-` before `[` or `{` links a plain symbol to a group — not a rest. */
+/** `-` before `[`, `{`, or `<` links a plain symbol to a group — not a rest. */
 const isGroupGlue = (bar: string, index: number) => {
   const next = bar[index + 1]
   const prev = bar[index - 1]
-  if (bar[index] !== '-' || (next !== '[' && next !== '{')) return false
-  if (!prev || prev === '-' || prev === '}' || prev === ']') return false
+  if (bar[index] !== '-' || (next !== '[' && next !== '{' && next !== '<')) return false
+  if (!prev || prev === '-' || prev === '}' || prev === ']' || prev === '>') return false
 
   if (next === '[') {
     const open = index + 1
@@ -141,6 +159,13 @@ const isGroupGlue = (bar: string, index: number) => {
     const hasConvertedTripletRest =
       inner.length >= 2 && /[a-zA-Z]/.test(inner) && inner.endsWith('-')
     if (hasConvertedTripletRest) return false
+  }
+
+  if (next === '<') {
+    const inner = polyrhythmGroupInner(bar, index + 1)
+    if (inner && (hasConvertedPolyrhythmGlue(inner) || isEditorAnchoredPolyrhythmInner(inner))) {
+      return false
+    }
   }
 
   return true
@@ -194,7 +219,11 @@ const groupGlyphs = (
 
     unit.forEach((ref, subdivIndex) => {
       const position =
-        subdivIndex === 0 ? base : base + (subdivIndex * span) / descriptor.symbolsPerUnit
+        descriptor.kind === 'polyrhythm'
+          ? base + (POLYRHYTHM_POSITIONS[subdivIndex] ?? 0)
+          : subdivIndex === 0
+            ? base
+            : base + (subdivIndex * span) / descriptor.symbolsPerUnit
 
       glyphs.push({
         note: ref.char,
@@ -202,6 +231,7 @@ const groupGlyphs = (
         kind: subdivIndex === 0 ? 'eighth' : descriptor.glyphKind,
         barIndex: ref.barIndex,
         charIndex: ref.charIndex,
+        ...(descriptor.kind === 'polyrhythm' ? { polyrhythmIndex: subdivIndex } : {}),
       })
     })
   }
@@ -226,6 +256,52 @@ const groupLocations = (
     subdivIndex,
   }))
 
+const pushGroupSegment = (
+  segments: Segment[],
+  barCellCounts: number[],
+  barCount: number,
+  descriptor: GroupDescriptor,
+  openRef: CharRef,
+  closeRef: CharRef | null,
+  content: CharRef[],
+  globalStartCell: number,
+) => {
+  const totalCells = cellsForGroup(descriptor, content.length)
+  const cellsByBar = splitGroupCellsAcrossBars(openRef, closeRef, content, totalCells, barCount)
+  cellsByBar.forEach((count, barIndex) => {
+    barCellCounts[barIndex] += count
+  })
+
+  segments.push({
+    kind: 'group',
+    descriptor,
+    openRef,
+    closeRef,
+    content,
+    globalStartCell,
+    cells: totalCells,
+    cellsByBar,
+    glyphs: groupGlyphs(descriptor, content, globalStartCell),
+    locations: closeRef
+      ? groupLocations(descriptor, openRef, closeRef, content)
+      : groupLocations(descriptor, openRef, openRef, content),
+  })
+}
+
+const absorbedPolyrhythmContent = (
+  chars: CharRef[],
+  plainRef: CharRef,
+  openIndex: number,
+  closeIndex: number,
+) => {
+  const raw = chars.slice(openIndex + 1, closeIndex)
+  if (!raw.length) return null
+  const inner = raw.map((ref) => ref.char).join('')
+  if (!shouldAbsorbPlainIntoPolyrhythm(plainRef.char, inner)) return null
+  const absorbed = absorbPlainIntoPolyrhythmInner(plainRef.char, inner)
+  return raw.map((ref, index) => ({ ...ref, char: absorbed[index] ?? ref.char }))
+}
+
 const parseSegments = (bars: string[]): { segments: Segment[]; barCellCounts: number[] } => {
   const chars = flattenBars(bars)
   const segments: Segment[] = []
@@ -249,30 +325,52 @@ const parseSegments = (bars: string[]): { segments: Segment[]; barCellCounts: nu
       const hasClose = closeIndex >= 0
       const content = hasClose ? chars.slice(index + 1, closeIndex) : chars.slice(index + 1)
       const closeRef = hasClose ? chars[closeIndex] : null
-      const totalCells = cellsForGroup(descriptor, content.length)
       const globalStartCell = globalCellOffset()
-      const cellsByBar = splitGroupCellsAcrossBars(ref, closeRef, content, totalCells, barCount)
-      cellsByBar.forEach((count, barIndex) => {
-        barCellCounts[barIndex] += count
-      })
 
-      segments.push({
-        kind: 'group',
+      pushGroupSegment(
+        segments,
+        barCellCounts,
+        barCount,
         descriptor,
-        openRef: ref,
+        ref,
         closeRef,
         content,
         globalStartCell,
-        cells: totalCells,
-        cellsByBar,
-        glyphs: groupGlyphs(descriptor, content, globalStartCell),
-        locations: closeRef
-          ? groupLocations(descriptor, ref, closeRef, content)
-          : groupLocations(descriptor, ref, ref, content),
-      })
+      )
 
       index = hasClose ? closeIndex + 1 : chars.length
       continue
+    }
+
+    const bar = bars[ref.barIndex] ?? ''
+    if (ref.char !== '-') {
+      const glueIndex = ref.charIndex + 1
+      const openCharIndex = glueIndex + 1
+      if (bar[glueIndex] === '-' && bar[openCharIndex] === '<' && isGroupGlue(bar, glueIndex)) {
+        const openIndex = chars.findIndex(
+          (charRef) => charRef.barIndex === ref.barIndex && charRef.charIndex === openCharIndex,
+        )
+        const closeIndex = openIndex >= 0 ? findGroupClose(chars, openIndex, '>') : -1
+        const descriptor = descriptorForOpen('<')
+        if (openIndex >= 0 && closeIndex >= 0 && descriptor) {
+          const absorbed = absorbedPolyrhythmContent(chars, ref, openIndex, closeIndex)
+          if (absorbed) {
+            const globalStartCell = globalCellOffset()
+            pushGroupSegment(
+              segments,
+              barCellCounts,
+              barCount,
+              descriptor,
+              chars[openIndex],
+              chars[closeIndex],
+              absorbed,
+              globalStartCell,
+            )
+            index = closeIndex + 1
+            continue
+          }
+        }
+      }
     }
 
     const globalCell = globalCellOffset()

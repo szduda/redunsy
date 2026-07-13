@@ -3,8 +3,10 @@ import { describe, expect, it } from 'vitest'
 import {
   clampSelectionForTrack,
   convertBarsToEighth,
+  convertBarsToPolyrhythm,
   convertBarsToTriplet,
   convertToEighth,
+  convertToPolyrhythm,
   convertToSixteenth,
   convertToTriplet,
   defaultNoteSelection,
@@ -12,10 +14,13 @@ import {
   lastNoteSelection,
   navigateBarSelection,
   navigateSelection,
+  setNoteAtGlyph,
   setNoteAtGlyphInBar,
 } from '@/features/editor/notation/bar-note-edits'
+import { getGlyphLocationsInBars } from '@/features/editor/notation/glyph-locations'
 import { barCellCount } from '@/lib/midinike/notation/cell-duration'
 import { barsCellCounts } from '@/lib/midinike/notation/grouped-notation'
+import { barsMatchGrooveLength } from '@/lib/midinike/notation/fit-bar'
 
 describe('bar-note-edits', () => {
   it('flattens glyphs across bars', () => {
@@ -133,6 +138,37 @@ describe('bar-note-edits', () => {
     expect(next).toBe('stt')
     expect(barCellCount(next)).toBe(barCellCount(bar))
   })
+
+  it('converts two plain 8ths to a polyrhythm group anchored at slots 1 and 4', () => {
+    const bar = 'tsb'
+    const next = convertToPolyrhythm(bar, 0)
+    expect(next).toBe('<t--s-->b')
+    expect(barCellCount(next)).toBe(barCellCount(bar))
+  })
+
+  it('converts polyrhythm group back to two anchored 8th notes', () => {
+    const bar = '<fststs>'
+    const next = convertToEighth(bar, 2)
+    expect(next).toBe('fs')
+    expect(barCellCount(next)).toBe(barCellCount(bar))
+  })
+
+  it('keeps bar length when editing an editor-anchored polyrhythm group', () => {
+    const bar = 's---s-ss'
+    const converted = convertToPolyrhythm(bar, 6)
+    expect(converted).toBe('s---s-<s--s-->')
+    expect(barsCellCounts([converted])).toEqual([8])
+    expect(barsMatchGrooveLength([converted], 8)).toBe(true)
+
+    const locations = getGlyphLocationsInBars([converted], 0)
+    const editedGlyph = locations.findIndex(
+      (location) => location.kind === 'polyrhythm' && location.charIndex === 8,
+    )
+    const edited = setNoteAtGlyph([converted], { barIndex: 0, glyphIndex: editedGlyph }, 's')
+    expect(edited[0]).toBe('s---s-<ss-s-->')
+    expect(barsCellCounts(edited)).toEqual([8])
+    expect(barsMatchGrooveLength(edited, 8)).toBe(true)
+  })
 })
 
 describe('cross-bar conversions', () => {
@@ -188,6 +224,16 @@ describe('cross-bar conversions', () => {
     const next = convertBarsToTriplet(bars, { barIndex: 0, glyphIndex: 4 }, 6)
     expect(next[0]).toBe('ttt-{st-}')
     expect(next[1]).toBe('t-----')
+    expect(barsCellCounts(next)).toEqual([6, 6])
+  })
+
+  it('converts the last plain 8th and first plain 8th of the next bar into a split polyrhythm', () => {
+    const bars = ['-----t', 't-----']
+    const lastGlyph = flattenBarNotes(bars).findIndex(
+      (note) => note.barIndex === 0 && note.glyphIndex === flattenBarNotes(['-----t']).length - 1,
+    )
+    const next = convertBarsToPolyrhythm(bars, { barIndex: 0, glyphIndex: lastGlyph }, 6)
+    expect(next).toEqual(['-----<tt', '-->-----'])
     expect(barsCellCounts(next)).toEqual([6, 6])
   })
 })

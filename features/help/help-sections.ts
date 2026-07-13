@@ -142,6 +142,13 @@ export const HELP_SECTIONS: HelpSection[] = [
           'Three notes share two eighth cells as an eighth-note triplet. Select a plain note in the editor and tap Triplet to convert.',
         demoBar: { meter: 4, pattern: 's{bts}-tt--' },
       },
+      {
+        icon: 'polyrhythm',
+        title: 'Polyrhythm',
+        description:
+          'Six slots over two eighth cells combine four sixteenth positions and three triplet positions on a shared 4:3 grid. Notation uses angle brackets, for example <fststs>, where s marks sixteenth slots and t marks triplet slots. Select a plain note in the editor and tap Polyrhythm to convert.',
+        demoBar: { meter: 4, pattern: 's<fststs>-tt--' },
+      },
     ],
   },
   {
@@ -225,9 +232,9 @@ export const HELP_SECTIONS: HelpSection[] = [
       },
       {
         icon: 'triplet',
-        title: 'Show triplet brackets',
+        title: 'Show subdivision brackets',
         description:
-          'Draws a bracket and “3” above triplet groups in the notation so tuplets are easier to spot at a glance.',
+          'Draws brackets above grouped subdivisions: “3” for triplets and “4:3” for polyrhythm groups, making tuplets easier to spot at a glance.',
       },
       {
         icon: 'screenAwake',

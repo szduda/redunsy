@@ -39,6 +39,7 @@ describe('useEditorKeyboard held navigation', () => {
         toggleFlam: vi.fn(),
         convertToSixteenth: vi.fn(),
         convertToTriplet: vi.fn(),
+        convertToPolyrhythm: vi.fn(),
         convertToEighth: vi.fn(),
       }),
     )

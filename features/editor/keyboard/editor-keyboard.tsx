@@ -28,6 +28,7 @@ import { NavArrowIcon } from '@/features/icons/nav-arrow-icon'
 import { Note16Icon } from '@/features/icons/note-16-icon'
 import { Note8Icon } from '@/features/icons/note-8-icon'
 import { PlusIcon } from '@/features/icons/plus-icon'
+import { PolyrhythmBracketIcon } from '@/features/icons/polyrhythm-bracket-icon'
 import { TripletBracketIcon } from '@/features/icons/triplet-bracket-icon'
 import { BOTTOM_NAV_OFFSET_CLASS, PAGE_BODY_BG_CLASS } from '@/features/layout/constants'
 import { usePlayerStore } from '@/features/groovy-player/player.store'
@@ -51,6 +52,7 @@ type EditorKeyboardProps = {
   onSelectSound: (sound: string) => void
   onConvertToSixteenth: () => void
   onConvertToTriplet: () => void
+  onConvertToPolyrhythm: () => void
   onConvertToEighth: () => void
 }
 
@@ -71,7 +73,7 @@ const modeToggleSegmentClass = (active: boolean) =>
 const NO_SELECTION_HINT = 'Select a note on the canvas first'
 const NO_BAR_HINT = 'Select a bar on the canvas first'
 const PLAIN_ONLY_HINT = 'Only plain 8th notes can be split'
-const EIGHTH_ONLY_HINT = 'Select a 16th or triplet note to merge to 8th'
+const EIGHTH_ONLY_HINT = 'Select a 16th, triplet, or polyrhythm note to merge to 8th'
 
 export const EditorKeyboard = ({
   bars,
@@ -88,6 +90,7 @@ export const EditorKeyboard = ({
   onSelectSound,
   onConvertToSixteenth,
   onConvertToTriplet,
+  onConvertToPolyrhythm,
   onConvertToEighth,
 }: EditorKeyboardProps) => {
   const isMobile = useIsMobile()
@@ -109,6 +112,7 @@ export const EditorKeyboard = ({
   useEffect(() => {
     if (editKind === 'sixteenth') setLengthMode('16th')
     else if (editKind === 'triplet') setLengthMode('triplet')
+    else if (editKind === 'polyrhythm') setLengthMode('polyrhythm')
     else setLengthMode('8th')
   }, [editKind, selection?.barIndex, selection?.glyphIndex])
 
@@ -119,12 +123,16 @@ export const EditorKeyboard = ({
     setLengthMode(mode)
     if (mode === '16th') onConvertToSixteenth()
     if (mode === 'triplet') onConvertToTriplet()
+    if (mode === 'polyrhythm') onConvertToPolyrhythm()
     if (mode === '8th') onConvertToEighth()
   }
 
   const canSixteenth = hasSelection && editKind === 'plain'
   const canTriplet = hasSelection && editKind === 'plain'
-  const canEighth = hasSelection && (editKind === 'sixteenth' || editKind === 'triplet')
+  const canPolyrhythm = hasSelection && editKind === 'plain'
+  const canEighth =
+    hasSelection &&
+    (editKind === 'sixteenth' || editKind === 'triplet' || editKind === 'polyrhythm')
 
   const navButtons = (
     <div className="flex gap-2">
@@ -307,6 +315,22 @@ export const EditorKeyboard = ({
                   onClick={() => onLengthSelect('triplet')}
                 >
                   <TripletBracketIcon className="size-5" />
+                </DisabledHintButton>
+                <DisabledHintButton
+                  aria-pressed={lengthMode === 'polyrhythm' || editKind === 'polyrhythm'}
+                  className={cn(
+                    roundToggleClass,
+                    lengthToggleActiveClass(
+                      'polyrhythm',
+                      lengthMode === 'polyrhythm' || editKind === 'polyrhythm',
+                    ),
+                  )}
+                  disabled={!canPolyrhythm}
+                  hint={!hasSelection ? NO_SELECTION_HINT : PLAIN_ONLY_HINT}
+                  keyboardHint="E"
+                  onClick={() => onLengthSelect('polyrhythm')}
+                >
+                  <PolyrhythmBracketIcon className="size-5" />
                 </DisabledHintButton>
                 <DisabledHintButton
                   aria-pressed={lengthMode === '8th' && editKind === 'plain'}

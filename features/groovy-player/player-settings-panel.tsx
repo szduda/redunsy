@@ -147,7 +147,11 @@ export const PlayerSettingsPanel = ({ open, onClose }: PlayerSettingsPanelProps)
         <Switch checked={showBarIndex} label="Show bar index" onChange={setShowBarIndex} />
       </SettingRow>
       <SettingRow icon={<TripletBracketIcon />}>
-        <Switch checked={markTriplets} label="Show triplet brackets" onChange={setMarkTriplets} />
+        <Switch
+          checked={markTriplets}
+          label="Show subdivision brackets"
+          onChange={setMarkTriplets}
+        />
       </SettingRow>
       <SettingRow icon={<ScreenAwakeIcon />}>
         <Switch

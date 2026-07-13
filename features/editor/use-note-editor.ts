@@ -6,6 +6,7 @@ import { applyBarModeAction } from '@/features/editor/canvas/bar-pattern-actions
 import {
   clampSelectionForTrack,
   convertBarsToEighth,
+  convertBarsToPolyrhythm,
   convertBarsToSixteenth,
   convertBarsToTriplet,
   defaultNoteSelection,
@@ -167,6 +168,10 @@ export const useNoteEditor = (
     convertToTriplet: () => {
       if (!selection || selectionMode !== 'note') return
       onBarsChange(convertBarsToTriplet(bars, selection, barSize))
+    },
+    convertToPolyrhythm: () => {
+      if (!selection || selectionMode !== 'note') return
+      onBarsChange(convertBarsToPolyrhythm(bars, selection, barSize))
     },
     convertToEighth: () => {
       if (!selection || selectionMode !== 'note') return

@@ -3,6 +3,11 @@ import { font } from './drum-font'
 import { drawBarIndexLabel } from '@/features/groovy-player/bar-index-mark'
 import { onBeatCellIndexes, parseBarLayout } from './bar-layout'
 import { drawTripletBracket, tripletBracketSpans } from './triplet-brackets'
+import {
+  drawPolyrhythmBracket,
+  polyrhythmBracketSpans,
+  scaledPolyrhythmNoteRect,
+} from './polyrhythm-brackets'
 
 import type { BarGlyph } from './bar-layout'
 import type { CanvasElement } from './types'
@@ -88,6 +93,20 @@ export const renderNote = ({ instrument, el, context }: RendererArgs) => {
 
 const renderGlyphOnly = ({ instrument, el, context }: RendererArgs) => {
   renderChar({ instrument, el, context })
+}
+
+const renderScaledGlyph = ({
+  instrument,
+  el,
+  glyph,
+  context,
+}: RendererArgs & { glyph: BarGlyph }) => {
+  const rect = scaledPolyrhythmNoteRect(el as Required<CanvasElement>, glyph)
+  renderChar({
+    instrument,
+    el: { ...el, ...rect },
+    context,
+  })
 }
 
 export const renderBarWrapper = ({ context, el }: RendererArgs) => {
@@ -199,8 +218,13 @@ export const renderBar = ({
     renderNoteBackground({ context, el: layout.noteElements[noteIndex] })
   })
 
-  layout.glyphs.forEach((_, noteIndex) => {
-    renderGlyphOnly({ instrument, el: layout.noteElements[noteIndex], context })
+  layout.glyphs.forEach((glyph, noteIndex) => {
+    const note = layout.noteElements[noteIndex]
+    if (glyph.kind === 'polyrhythm' || glyph.polyrhythmIndex !== undefined) {
+      renderScaledGlyph({ instrument, el: note, glyph, context })
+      return
+    }
+    renderGlyphOnly({ instrument, el: note, context })
   })
 
   return [layout.barEl, ...layout.noteElements]
@@ -229,6 +253,25 @@ const renderBarIndexLabels = (
       palette.w1,
     )
   })
+}
+
+const renderPolyrhythmMarks = (
+  context: CanvasRenderingContext2D,
+  bars: string[],
+  layouts: LaidOutBar[],
+  palette: CanvasColors,
+  barsPerRow: number,
+) => {
+  context.strokeStyle = palette.w1
+  context.fillStyle = palette.w1
+  context.lineWidth = 2
+  context.font = '7px monospace'
+  context.textAlign = 'center'
+  context.textBaseline = 'bottom'
+
+  polyrhythmBracketSpans(bars, layouts, barsPerRow).forEach((span) =>
+    drawPolyrhythmBracket(context, span),
+  )
 }
 
 const renderTripletMarks = (
@@ -286,12 +329,20 @@ export const renderBars = ({
   })
 
   layouts.forEach((layout) => {
-    layout.glyphs.forEach((_, noteIndex) => {
-      renderGlyphOnly({ instrument, el: layout.noteElements[noteIndex], context })
+    layout.glyphs.forEach((glyph, noteIndex) => {
+      const note = layout.noteElements[noteIndex]
+      if (glyph.kind === 'polyrhythm' || glyph.polyrhythmIndex !== undefined) {
+        renderScaledGlyph({ instrument, el: note, glyph, context })
+        return
+      }
+      renderGlyphOnly({ instrument, el: note, context })
     })
   })
 
-  if (markTriplets) renderTripletMarks(context, bars, layouts, palette, barsPerRow)
+  if (markTriplets) {
+    renderTripletMarks(context, bars, layouts, palette, barsPerRow)
+    renderPolyrhythmMarks(context, bars, layouts, palette, barsPerRow)
+  }
   if (showBarIndex) renderBarIndexLabels(context, layouts, palette)
 
   return layouts.flatMap((layout) => [layout.barEl, ...layout.noteElements])
