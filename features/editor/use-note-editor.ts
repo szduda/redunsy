@@ -19,11 +19,6 @@ import { remapBarIndex, reorderBar } from '@/features/editor/notation/reorder-ba
 
 export type SelectionMode = 'note' | 'bar'
 
-type TrackEditorState = {
-  selection: NoteSelection | null
-  selectionMode: SelectionMode
-}
-
 const resolveNextSelection = (
   bars: string[],
   selectionMode: SelectionMode,
@@ -40,7 +35,6 @@ export const useNoteEditor = (
   barSize: number,
   onBarsChange: (bars: string[]) => void,
 ) => {
-  const trackStateRef = useRef<Map<string, TrackEditorState>>(new Map())
   const prevTrackIdRef = useRef(trackId)
 
   const [selection, setSelection] = useState<NoteSelection | null>(() => {
@@ -60,22 +54,13 @@ export const useNoteEditor = (
   )
 
   useEffect(() => {
-    const previousTrackId = prevTrackIdRef.current
-    if (previousTrackId === trackId) return
-
-    trackStateRef.current.set(previousTrackId, {
-      selection: useNoteSelectionStore.getState().previewSelection ?? selection,
-      selectionMode,
-    })
+    if (prevTrackIdRef.current === trackId) return
     prevTrackIdRef.current = trackId
 
-    const saved = trackStateRef.current.get(trackId)
-    const mode = saved?.selectionMode ?? 'note'
-    const next =
-      clampSelectionForTrack(bars, saved?.selection ?? null, mode) ?? defaultNoteSelection(bars)
+    const current = useNoteSelectionStore.getState().previewSelection ?? selection
+    const next = clampSelectionForTrack(bars, current, selectionMode) ?? defaultNoteSelection(bars)
     syncSelection(next)
-    setSelectionMode(mode)
-    // bars intentionally omitted — preserve selection across edits; restore when switching tracks
+    // bars and selectionMode intentionally omitted — shared across tracks; clamp on tab switch
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [trackId])
 

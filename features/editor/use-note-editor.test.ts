@@ -86,7 +86,7 @@ describe('useNoteEditor held navigation', () => {
     })
   })
 
-  it('restores selection and mode when switching back to a track', () => {
+  it('keeps shared selection mode and index when switching to an equally long track', () => {
     const onBarsChange = vi.fn()
     const { result, rerender } = renderHook(
       ({ trackId, trackBars }: { trackId: string; trackBars: string[] }) =>
@@ -99,12 +99,7 @@ describe('useNoteEditor held navigation', () => {
       result.current.selectBar(2)
     })
 
-    rerender({ trackId: 'track-2', trackBars: ['aa', 'bb'] })
-
-    expect(result.current.selectionMode).toBe('note')
-    expect(result.current.selection).toEqual({ barIndex: 0, glyphIndex: 0 })
-
-    rerender({ trackId: 'track-1', trackBars: bars })
+    rerender({ trackId: 'track-2', trackBars: ['aa', 'bb', 'cc'] })
 
     expect(result.current.selectionMode).toBe('bar')
     expect(result.current.selection).toEqual({ barIndex: 2, glyphIndex: 0 })
@@ -115,7 +110,7 @@ describe('useNoteEditor held navigation', () => {
     const { result, rerender } = renderHook(
       ({ trackId, trackBars }: { trackId: string; trackBars: string[] }) =>
         useNoteEditor(trackId, trackBars, 8, onBarsChange),
-      { initialProps: { trackId: 'track-2', trackBars: ['aa', 'bb', 'cc'] } },
+      { initialProps: { trackId: 'track-1', trackBars: bars } },
     )
 
     act(() => {
@@ -123,26 +118,24 @@ describe('useNoteEditor held navigation', () => {
       result.current.selectBar(2)
     })
 
-    rerender({ trackId: 'track-1', trackBars: bars })
     rerender({ trackId: 'track-2', trackBars: ['aa'] })
 
     expect(result.current.selectionMode).toBe('bar')
     expect(result.current.selection).toEqual({ barIndex: 0, glyphIndex: 0 })
   })
 
-  it('clamps saved selection to the last note when a track becomes shorter', () => {
+  it('clamps selection to the last note when switching to a shorter track in note mode', () => {
     const onBarsChange = vi.fn()
     const { result, rerender } = renderHook(
       ({ trackId, trackBars }: { trackId: string; trackBars: string[] }) =>
         useNoteEditor(trackId, trackBars, 8, onBarsChange),
-      { initialProps: { trackId: 'track-2', trackBars: ['aa', 'bb', 'cc', 'dd', 'ee'] } },
+      { initialProps: { trackId: 'track-1', trackBars: bars } },
     )
 
     act(() => {
-      result.current.selectNote(4, 0)
+      result.current.selectNote(2, 0)
     })
 
-    rerender({ trackId: 'track-1', trackBars: bars })
     rerender({ trackId: 'track-2', trackBars: ['aa', 'bb'] })
 
     expect(result.current.selectionMode).toBe('note')
