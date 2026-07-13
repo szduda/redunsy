@@ -1,3 +1,4 @@
+import { NoteBracketPaths } from '@/features/icons/note-bracket-icon'
 import type { Icon } from '@/features/icons/types'
 
 export const PolyrhythmBracketIcon: Icon = (props) => (
@@ -9,8 +10,7 @@ export const PolyrhythmBracketIcon: Icon = (props) => (
     viewBox="0 0 24 24"
     {...props}
   >
-    <path d="M6 14V11M18 14V11" strokeLinecap="round" />
-    <path d="M6 11h12" strokeLinecap="round" strokeWidth={3} />
+    <NoteBracketPaths />
     <text
       fill="currentColor"
       fontFamily="ui-monospace, monospace"

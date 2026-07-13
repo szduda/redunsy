@@ -5,6 +5,7 @@ import { useEffect, useState } from 'react'
 import { instrumentSounds, digitForSound, soundHintMeta } from '@/features/editor/instrument-sounds'
 
 import { BarDragHintPopover } from '@/features/editor/keyboard/bar-drag-hint-popover'
+import { BracketLengthLabel } from '@/features/editor/keyboard/bracket-length-label'
 import { DisabledHintButton } from '@/features/editor/keyboard/disabled-hint-button'
 import {
   flamToggleActiveClass,
@@ -28,8 +29,6 @@ import { NavArrowIcon } from '@/features/icons/nav-arrow-icon'
 import { Note16Icon } from '@/features/icons/note-16-icon'
 import { Note8Icon } from '@/features/icons/note-8-icon'
 import { PlusIcon } from '@/features/icons/plus-icon'
-import { PolyrhythmBracketIcon } from '@/features/icons/polyrhythm-bracket-icon'
-import { TripletBracketIcon } from '@/features/icons/triplet-bracket-icon'
 import { BOTTOM_NAV_OFFSET_CLASS, PAGE_BODY_BG_CLASS } from '@/features/layout/constants'
 import { usePlayerStore } from '@/features/groovy-player/player.store'
 import { KeyboardHintWrap } from '@/features/shared/keyboard-hint-wrap'
@@ -314,7 +313,7 @@ export const EditorKeyboard = ({
                   label="Triplet"
                   onClick={() => onLengthSelect('triplet')}
                 >
-                  <TripletBracketIcon className="size-5" />
+                  <BracketLengthLabel label="3" />
                 </DisabledHintButton>
                 <DisabledHintButton
                   aria-pressed={lengthMode === 'polyrhythm' || editKind === 'polyrhythm'}
@@ -330,7 +329,7 @@ export const EditorKeyboard = ({
                   keyboardHint="E"
                   onClick={() => onLengthSelect('polyrhythm')}
                 >
-                  <PolyrhythmBracketIcon className="size-5" />
+                  <BracketLengthLabel label="4:3" />
                 </DisabledHintButton>
                 <DisabledHintButton
                   aria-pressed={lengthMode === '8th' && editKind === 'plain'}
