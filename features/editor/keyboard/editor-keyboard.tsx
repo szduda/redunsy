@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 
 import { instrumentSounds, digitForSound, soundHintMeta } from '@/features/editor/instrument-sounds'
 
+import { BarDragHintPopover } from '@/features/editor/keyboard/bar-drag-hint-popover'
 import { DisabledHintButton } from '@/features/editor/keyboard/disabled-hint-button'
 import {
   flamToggleActiveClass,
@@ -71,7 +72,6 @@ const NO_SELECTION_HINT = 'Select a note on the canvas first'
 const NO_BAR_HINT = 'Select a bar on the canvas first'
 const PLAIN_ONLY_HINT = 'Only plain 8th notes can be split'
 const EIGHTH_ONLY_HINT = 'Select a 16th or triplet note to merge to 8th'
-const BAR_DRAG_HINT = 'Drag & drop bars to reposition'
 
 export const EditorKeyboard = ({
   bars,
@@ -342,11 +342,13 @@ export const EditorKeyboard = ({
           )}
         </div>
       </div>
-      {!isMobile && isBarMode && (
-        <p className="hidden md:block pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 m-1 text-sm text-zinc-500 dark:text-zinc-400 px-2 py-1.5 rounded-md bg-yellowy-light/10">
-          {BAR_DRAG_HINT}
-        </p>
-      )}
+      {!isMobile && isBarMode ? (
+        <div className="pointer-events-none absolute inset-x-0 bottom-full z-50 m-1 flex justify-center">
+          <div className="pointer-events-auto">
+            <BarDragHintPopover />
+          </div>
+        </div>
+      ) : null}
     </div>
   )
 }

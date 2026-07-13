@@ -98,6 +98,7 @@ const EditableBars = ({
     grabOffsetX: number
     grabOffsetY: number
     dragging: boolean
+    dropIndex?: number
   } | null>(null)
   const [drag, setDrag] = useState<BarDragState | null>(null)
   const { width: canvasWidth, dpr } = useCanvasWidth(containerRef)
@@ -240,6 +241,7 @@ const EditableBars = ({
     const { x, y } = canvasPointFromPage(canvas, event, canvasWidth, canvasHeight)
 
     if (isPointerOutsideCanvas(canvas, event)) {
+      state.dropIndex = state.barIndex
       setDrag({
         sourceIndex: state.barIndex,
         dropIndex: state.barIndex,
@@ -248,6 +250,7 @@ const EditableBars = ({
         grabOffsetX: state.grabOffsetX,
         grabOffsetY: state.grabOffsetY,
       })
+      state.dropIndex = state.barIndex
       return
     }
 
@@ -264,6 +267,8 @@ const EditableBars = ({
         slots,
         currentDrop,
       )
+
+      state.dropIndex = dropIndex
 
       return {
         sourceIndex: state.barIndex,
@@ -355,6 +360,7 @@ const EditableBars = ({
         grabOffsetX: state.grabOffsetX,
         grabOffsetY: state.grabOffsetY,
       })
+      state.dropIndex = state.barIndex
     }
 
     if (state.dragging) updateDragPosition(event)
@@ -385,7 +391,7 @@ const EditableBars = ({
       }
 
       const { x, y } = canvasPointFromPage(canvas, event, canvasWidth, canvasHeight)
-      const currentDrop = drag?.dropIndex ?? state.barIndex
+      const currentDrop = state.dropIndex ?? drag?.dropIndex ?? state.barIndex
       const slots = buildDragSlots(bars, state.barIndex, currentDrop)
       const dropIndex = resolveDropIndexFromDrag(
         bars.length,
