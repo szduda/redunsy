@@ -280,7 +280,7 @@ export const RhythmEditor = () => {
             trailing={
               <TrackVolume
                 compact
-                className="m-0 shrink-0"
+                className="m-0 mr-1 -translate-y-1 shrink-0"
                 muted={focusedTrackVolume.muted}
                 onToggleMute={focusedTrackVolume.onToggleMute}
                 onVolumeChange={focusedTrackVolume.onVolumeChange}

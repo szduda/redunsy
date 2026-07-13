@@ -73,7 +73,7 @@ const InstrumentConfigPanel = ({
   }
 
   return (
-    <div className="flex w-64 flex-col gap-3 p-1">
+    <div className="flex w-64 flex-col gap-2 p-1">
       <Text className="text-xs font-semibold tracking-widest uppercase opacity-40">
         Instruments
       </Text>
@@ -87,7 +87,7 @@ const InstrumentConfigPanel = ({
           />
         ))}
       </div>
-      <div className="flex min-h-5 justify-center">
+      <div className="flex min-h-4 justify-center">
         <Text
           className={cn(
             'text-center text-xs font-semibold text-[#af8545] transition-opacity duration-200 dark:text-yellowy-light',
@@ -121,19 +121,19 @@ export const InstrumentTabs = ({
     <div className="relative flex items-center gap-2">
       <div
         aria-hidden
-        className="pointer-events-none absolute inset-0 border-b border-zinc-200/60 dark:border-zinc-800/60"
+        className="pointer-events-none absolute inset-0 border-b-2 border-zinc-200 dark:border-zinc-800"
       />
-      <div className="relative z-10 flex min-w-0 flex-1 items-center gap-0 overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        {tracks.map((track) => {
+      <div className="relative z-10 flex min-w-0 flex-1 items-center gap-0 overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden pl-1 md:pl-3">
+        {tracks.map((track, trackIndex) => {
           const active = track.id === focusedTrackId
           return (
             <button
               key={track.id}
               className={cn(
-                'shrink-0 border-2 px-3 py-2 text-sm font-medium transition-colors',
+                'shrink-0 border-2 px-3 py-2 text-sm font-semibold tracking-tight rounded-t-lg',
                 active
-                  ? 'border-t-zinc-200/60 border-l-zinc-200/60 border-r-zinc-200/60 border-b-editor-surface text-zinc-900 dark:border-t-zinc-800/60 dark:border-l-zinc-800/60 dark:border-r-zinc-800/60 dark:border-b-editor-surface dark:text-zinc-100'
-                  : 'border-t-editor-surface border-l-editor-surface border-r-editor-surface border-b-zinc-200/60 text-zinc-500 hover:text-zinc-700 dark:border-b-zinc-800/60 dark:text-zinc-400 dark:hover:text-zinc-200',
+                  ? 'border-zinc-400/60 border-b-editor-surface text-zinc-900 dark:border-zinc-700 dark:border-b-editor-surface dark:text-zinc-100'
+                  : 'border-transparent border-b-zinc-200 text-zinc-500 hover:text-zinc-700 dark:border-b-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200',
               )}
               onClick={() => onFocusTrack(track.id)}
               type="button"
@@ -142,7 +142,7 @@ export const InstrumentTabs = ({
             </button>
           )
         })}
-        <div className="shrink-0">
+        <div className="shrink-0 ml-2 relative">
           <Popover
             panel={({ close }) => (
               <InstrumentConfigPanel
@@ -152,7 +152,7 @@ export const InstrumentTabs = ({
                 rhythm={rhythm}
               />
             )}
-            panelClassName="w-auto"
+            panelClassName="w-auto mt-[2.5px] !bg-editor-surface border-zinc-200 dark:border-zinc-800 border-2 rounded-t-none lg:-translate-x-[40%]"
             preferredDirection="bottom"
           >
             {({ open, toggle }) => (

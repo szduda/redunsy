@@ -31,7 +31,7 @@ export const TrackVolume = ({
   return (
     <div
       className={cn(
-        'flex items-center h-min rounded-lg border border-zinc-200/10 bg-white md:gap-1 md:border-transparent dark:bg-zinc-900 dark:lg:bg-transparent m-1',
+        'flex items-center h-min rounded-lg bg-black/8 dark:bg-black/30 md:gap-1 md:border-transparent m-1',
         compact && 'shrink-0',
         className,
       )}
@@ -40,7 +40,7 @@ export const TrackVolume = ({
         active={muted}
         aria-label={muted ? 'Unmute track' : 'Mute track'}
         aria-pressed={!muted}
-        className="!text-redy-light/80 px-4"
+        className="!text-redy-light/80 px-4 hover:bg-white/10 rounded-r-none rounded-l-lg !scale-100 -mr-1"
         onClick={onToggleMute}
       >
         {muted ? <SpeakerMutedIcon className="size-5" /> : <SpeakerIcon className="size-5" />}
@@ -62,12 +62,13 @@ export const TrackVolume = ({
             </div>
           }
           panelClassName="w-auto items-center p-3 rounded-lg"
+          rootClassName="h-stretch"
         >
           {({ open, toggle }) => (
             <Button
               aria-expanded={open}
               className={cn(
-                '!rounded-l-none !border-l border-l-zinc-200 font-semibold text-base dark:border-l-zinc-950 py-1',
+                '!rounded-l-none !border-l border-l-zinc-200 font-semibold text-base dark:border-l-zinc-900 py-1 w-14 h-[37px]',
                 open && popoverTriggerOpenClass,
               )}
               onClick={toggle}
