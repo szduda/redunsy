@@ -1,6 +1,13 @@
-import type { Icon } from '@/features/icons/types'
+import type { IconProps } from '@/features/icons/types'
 
-export const PolyrhythmBracketIcon: Icon = (props) => (
+type PolyrhythmBracketIconProps = IconProps & {
+  largeLabel?: boolean
+}
+
+export const PolyrhythmBracketIcon = ({
+  largeLabel = false,
+  ...props
+}: PolyrhythmBracketIconProps) => (
   <svg
     aria-hidden
     fill="none"
@@ -14,11 +21,12 @@ export const PolyrhythmBracketIcon: Icon = (props) => (
     <text
       fill="currentColor"
       fontFamily="ui-monospace, monospace"
-      fontSize="6"
+      fontSize={largeLabel ? 10 : 6}
+      fontWeight={largeLabel ? 700 : 400}
       stroke="none"
       textAnchor="middle"
       x="12"
-      y="9"
+      y={largeLabel ? 10 : 9}
     >
       4:3
     </text>

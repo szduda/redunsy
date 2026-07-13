@@ -314,7 +314,7 @@ export const EditorKeyboard = ({
                   label="Triplet"
                   onClick={() => onLengthSelect('triplet')}
                 >
-                  <TripletBracketIcon className="size-5" />
+                  <TripletBracketIcon className="size-5" largeLabel />
                 </DisabledHintButton>
                 <DisabledHintButton
                   aria-pressed={lengthMode === 'polyrhythm' || editKind === 'polyrhythm'}
@@ -330,7 +330,7 @@ export const EditorKeyboard = ({
                   keyboardHint="E"
                   onClick={() => onLengthSelect('polyrhythm')}
                 >
-                  <PolyrhythmBracketIcon className="size-5" />
+                  <PolyrhythmBracketIcon className="size-5" largeLabel />
                 </DisabledHintButton>
                 <DisabledHintButton
                   aria-pressed={lengthMode === '8th' && editKind === 'plain'}

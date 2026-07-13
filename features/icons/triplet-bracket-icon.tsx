@@ -1,6 +1,10 @@
-import type { Icon } from '@/features/icons/types'
+import type { IconProps } from '@/features/icons/types'
 
-export const TripletBracketIcon: Icon = (props) => (
+type TripletBracketIconProps = IconProps & {
+  largeLabel?: boolean
+}
+
+export const TripletBracketIcon = ({ largeLabel = false, ...props }: TripletBracketIconProps) => (
   <svg
     aria-hidden
     fill="none"
@@ -14,11 +18,12 @@ export const TripletBracketIcon: Icon = (props) => (
     <text
       fill="currentColor"
       fontFamily="ui-monospace, monospace"
-      fontSize="7"
+      fontSize={largeLabel ? 11 : 7}
+      fontWeight={largeLabel ? 700 : 400}
       stroke="none"
       textAnchor="middle"
       x="12"
-      y="9"
+      y={largeLabel ? 10 : 9}
     >
       3
     </text>
