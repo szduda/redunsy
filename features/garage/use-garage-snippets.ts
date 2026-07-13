@@ -15,8 +15,13 @@ export const garageSnippetsQueryKey = (
   pageSize: number,
 ) => ['garage-snippets', search, filters, page, pageSize] as const
 
-export const useGarageSnippets = (search: string) => {
-  const filters = useGarageFiltersStore(useShallow(selectGarageFilters))
+type UseGarageSnippetsOptions = {
+  filters?: GarageFilters
+}
+
+export const useGarageSnippets = (search: string, options?: UseGarageSnippetsOptions) => {
+  const storeFilters = useGarageFiltersStore(useShallow(selectGarageFilters))
+  const filters = options?.filters ?? storeFilters
   const page = usePaginationStore((state) => state.page)
   const pageSize = usePaginationStore((state) => state.pageSize)
 

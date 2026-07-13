@@ -90,11 +90,11 @@ export const selectGarageFilters = (state: GarageFiltersState): GarageFilters =>
   ownership: state.ownership,
 })
 
-export const hasActiveGarageFilters = (state: GarageFiltersState) =>
-  state.meter.length > 0 ||
-  state.instruments.length > 0 ||
-  state.artist.length > 0 ||
-  state.origin.length > 0 ||
-  state.rhythmGroup.length > 0 ||
-  state.tags.length > 0 ||
-  state.ownership !== 'all'
+export const hasActiveGarageFilters = (filters: GarageFilters) =>
+  filters.meter.length > 0 ||
+  filters.instruments.length > 0 ||
+  filters.artist.length > 0 ||
+  filters.origin.length > 0 ||
+  filters.rhythmGroup.length > 0 ||
+  filters.tags.length > 0 ||
+  filters.ownership !== 'all'
