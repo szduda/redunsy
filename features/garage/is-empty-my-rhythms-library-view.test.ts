@@ -33,8 +33,6 @@ describe('isEmptyMyRhythmsLibraryView', () => {
   it('is false when non-ownership filters are active', () => {
     listMyRhythmsMock.mockReturnValue([])
 
-    expect(
-      isEmptyMyRhythmsLibraryView({ ...PRIVATE_GARAGE_FILTERS, meter: [4] }, ''),
-    ).toBe(false)
+    expect(isEmptyMyRhythmsLibraryView({ ...PRIVATE_GARAGE_FILTERS, meter: [4] }, '')).toBe(false)
   })
 })

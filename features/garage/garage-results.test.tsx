@@ -94,9 +94,7 @@ describe('GarageResults', () => {
       <GarageResults filters={PRIVATE_GARAGE_FILTERS} searchTerm="" showHeading={false} />,
     )
 
-    expect(
-      screen.getByText("You didn't create any rhythm on this device yet"),
-    ).toBeInTheDocument()
+    expect(screen.getByText("You didn't create any rhythm on this device yet")).toBeInTheDocument()
     expect(screen.getByRole('link', { name: 'Create Your First Rhythm' })).toHaveAttribute(
       'href',
       '/editor',
