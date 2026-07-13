@@ -8,7 +8,9 @@ import {
   selectGarageFilters,
   useGarageFiltersStore,
 } from '@/features/garage/garage-filters.store'
+import { GarageEmptyMyRhythms } from '@/features/garage/garage-empty-my-rhythms'
 import { GarageNotFound } from '@/features/garage/garage-not-found'
+import { isEmptyMyRhythmsLibraryView } from '@/features/garage/is-empty-my-rhythms-library-view'
 import { GaragePagination } from '@/features/garage/garage-pagination'
 import { usePaginationStore } from '@/features/garage/pagination.store'
 import { RhythmCardView } from '@/features/garage/rhythm-card'
@@ -66,7 +68,10 @@ export const GarageResults = ({
   const totalPages = Math.max(1, Math.ceil(total / pageSize))
   const showSpinner = isDebouncing || (isLoading && !data)
   const hasActiveQuery = hasQueryParams
-  const showNotFound = !showSpinner && !isFetching && hasActiveQuery && snippets.length === 0
+  const showEmptyMyRhythms =
+    !showSpinner && !isFetching && isEmptyMyRhythmsLibraryView(filters, debouncedSearch)
+  const showNotFound =
+    !showSpinner && !isFetching && hasActiveQuery && snippets.length === 0 && !showEmptyMyRhythms
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -99,6 +104,8 @@ export const GarageResults = ({
       ) : null}
 
       {showSpinner ? <GarageSpinner /> : null}
+
+      {showEmptyMyRhythms ? <GarageEmptyMyRhythms /> : null}
 
       {showNotFound ? <GarageNotFound searchTerm={debouncedSearch} /> : null}
 
