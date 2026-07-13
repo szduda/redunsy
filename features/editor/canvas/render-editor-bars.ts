@@ -1,7 +1,4 @@
-import {
-  DRAG_SOURCE_OVERLAY_OPACITY,
-  yellowyOverlay,
-} from '@/lib/theme/yellowy'
+import { DRAG_SOURCE_OVERLAY_OPACITY, yellowyOverlay } from '@/lib/theme/yellowy'
 import { darkCanvasColors, type CanvasColors } from '@/features/groovy-player/canvas/canvas-colors'
 import {
   BAR_GAP_PX,

@@ -1,10 +1,11 @@
 import { describe, expect, it } from 'vitest'
 
-import { previewBarsForDrag, remapBarIndex, reorderBar } from '@/features/editor/notation/reorder-bars'
 import {
-  barBoundsForBars,
-  resolveBarDropTarget,
-} from '@/features/editor/canvas/resolve-drop-index'
+  previewBarsForDrag,
+  remapBarIndex,
+  reorderBar,
+} from '@/features/editor/notation/reorder-bars'
+import { barBoundsForBars, resolveBarDropTarget } from '@/features/editor/canvas/resolve-drop-index'
 
 describe('reorder-bars', () => {
   it('moves a bar to an earlier index', () => {
@@ -58,13 +59,7 @@ describe('resolveBarDropTarget', () => {
   it('places at the end when hovering the last bar', () => {
     const last = bounds[3]
     expect(
-      resolveBarDropTarget(
-        4,
-        0,
-        last.left + last.width / 2,
-        last.top + last.height / 2,
-        bounds,
-      ),
+      resolveBarDropTarget(4, 0, last.left + last.width / 2, last.top + last.height / 2, bounds),
     ).toEqual({
       dropIndex: 4,
       hoveredBarIndex: 3,

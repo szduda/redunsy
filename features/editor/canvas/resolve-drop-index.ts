@@ -2,7 +2,6 @@ import { canvasLogicalPoint } from '@/features/editor/canvas/canvas-pointer'
 import { barBoundsAtIndex } from '@/features/editor/canvas/render-editor-bars'
 import {
   BAR_GAP_PX,
-  barTopForIndex,
   barWidthForCanvas,
   rowHeightsForBars,
   rowIndexFromY,
