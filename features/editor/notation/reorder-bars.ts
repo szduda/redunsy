@@ -24,24 +24,5 @@ export const remapBarIndex = (index: number, from: number, to: number) => {
   return index
 }
 
-export type DragSlot = {
-  bar: string | null
-  originalIndex: number | null
-}
-
-export const buildDragSlots = (
-  bars: string[],
-  sourceIndex: number,
-  dropIndex: number,
-): DragSlot[] => {
-  const remaining = bars
-    .map((bar, index) => ({ bar, originalIndex: index }))
-    .filter((entry) => entry.originalIndex !== sourceIndex)
-  const insertAt = Math.max(
-    0,
-    Math.min(dropIndex > sourceIndex ? dropIndex - 1 : dropIndex, remaining.length),
-  )
-  const slots: DragSlot[] = [...remaining]
-  slots.splice(insertAt, 0, { bar: null, originalIndex: null })
-  return slots
-}
+export const previewBarsForDrag = (bars: string[], sourceIndex: number, dropIndex: number) =>
+  dropIndex === sourceIndex ? bars : reorderBar(bars, sourceIndex, dropIndex)

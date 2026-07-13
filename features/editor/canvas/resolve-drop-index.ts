@@ -1,5 +1,5 @@
 import { canvasLogicalPoint } from '@/features/editor/canvas/canvas-pointer'
-import type { DragSlot } from '@/features/editor/notation/reorder-bars'
+import { barBoundsAtIndex } from '@/features/editor/canvas/render-editor-bars'
 import {
   BAR_GAP_PX,
   barTopForIndex,
@@ -23,6 +23,16 @@ export type BarBounds = {
   height: number
 }
 
+export const barBoundsForBars = (
+  bars: string[],
+  canvasWidth: number,
+  barsPerRow: number,
+): BarBounds[] =>
+  bars.map((_, barIndex) => ({
+    barIndex,
+    ...barBoundsAtIndex(bars, barIndex, canvasWidth, barsPerRow),
+  }))
+
 export const barBoundsFromElements = (
   elements: {
     type: string
@@ -43,6 +53,42 @@ export const barBoundsFromElements = (
       height: element.height,
     }))
 
+export type BarDropTarget = {
+  dropIndex: number
+  hoveredBarIndex: number
+}
+
+export const resolveBarDropTarget = (
+  barCount: number,
+  sourceIndex: number,
+  x: number,
+  y: number,
+  barBounds: BarBounds[],
+): BarDropTarget => {
+  if (!barBounds.length) return { dropIndex: sourceIndex, hoveredBarIndex: -1 }
+
+  const first = barBounds[0]
+  if (x < first.left) return { dropIndex: 0, hoveredBarIndex: -1 }
+
+  const last = barBounds[barCount - 1]
+  const pastLastHorizontally = x >= last.left + last.width
+  const belowLastBar = y >= last.top + last.height
+  if (pastLastHorizontally || belowLastBar) {
+    return { dropIndex: barCount, hoveredBarIndex: barCount - 1 }
+  }
+
+  const hovered = barBounds.find(
+    (bar) => x >= bar.left && x < bar.left + bar.width && y >= bar.top && y < bar.top + bar.height,
+  )
+
+  if (!hovered) return { dropIndex: sourceIndex, hoveredBarIndex: -1 }
+  if (hovered.barIndex === sourceIndex) {
+    return { dropIndex: sourceIndex, hoveredBarIndex: sourceIndex }
+  }
+
+  return { dropIndex: hovered.barIndex + 1, hoveredBarIndex: hovered.barIndex }
+}
+
 export const slotIndexFromPoint = (
   x: number,
   y: number,
@@ -55,69 +101,4 @@ export const slotIndexFromPoint = (
   const row = rowIndexFromY(y, rowHeights)
   const col = Math.max(0, Math.min(Math.floor(x / (barWidth + BAR_GAP_PX)), barsPerRow - 1))
   return { slotIndex: row * barsPerRow + col, barWidth, rowHeights, row }
-}
-
-export const resolveDropIndex = (
-  barCount: number,
-  sourceIndex: number,
-  x: number,
-  y: number,
-  barBounds: BarBounds[],
-) => {
-  if (!barBounds.length) return sourceIndex
-
-  const last = barBounds.reduce((current, candidate) =>
-    candidate.barIndex > current.barIndex ? candidate : current,
-  )
-
-  const pastLastHorizontally = x >= last.left + last.width
-  const belowLastBar = y >= last.top + last.height
-  if (pastLastHorizontally || belowLastBar) return barCount
-
-  const hovered = barBounds.find(
-    (bar) => x >= bar.left && x < bar.left + bar.width && y >= bar.top && y < bar.top + bar.height,
-  )
-
-  if (hovered) return hovered.barIndex
-
-  return sourceIndex
-}
-
-export const resolveDropIndexFromDrag = (
-  barCount: number,
-  sourceIndex: number,
-  x: number,
-  y: number,
-  canvasWidth: number,
-  barsPerRow: number,
-  slots: DragSlot[],
-  currentDrop: number,
-) => {
-  if (!slots.length) return sourceIndex
-
-  const slotBars = slots.map((slot) => slot.bar ?? '-'.repeat(8))
-  const { slotIndex, barWidth, rowHeights } = slotIndexFromPoint(
-    x,
-    y,
-    canvasWidth,
-    barsPerRow,
-    slotBars,
-  )
-
-  const lastSlotIndex = slots.length - 1
-  const lastRow = Math.floor(lastSlotIndex / barsPerRow)
-  const lastLeft = (lastSlotIndex % barsPerRow) * (barWidth + BAR_GAP_PX)
-  const lastTop = barTopForIndex(lastSlotIndex, barsPerRow, rowHeights)
-  const lastBarHeight = rowHeights[lastRow] ?? 0
-
-  const pastLastHorizontally = x >= lastLeft + barWidth - 1
-  const belowLastBar = y >= lastTop + lastBarHeight
-  if (pastLastHorizontally || belowLastBar) return barCount
-
-  if (slotIndex >= slots.length) return barCount
-
-  const slot = slots[slotIndex]
-  if (slot.originalIndex === null) return currentDrop
-
-  return slot.originalIndex
 }

@@ -7,20 +7,21 @@ import {
   detectBarAtPoint,
   detectNoteAtPoint,
 } from '@/features/editor/canvas/canvas-pointer'
-import { canvasPointFromPage } from '@/features/editor/canvas/resolve-drop-index'
-import { resolveDropIndexFromDrag } from '@/features/editor/canvas/resolve-drop-index'
+import {
+  barBoundsForBars,
+  canvasPointFromPage,
+  resolveBarDropTarget,
+} from '@/features/editor/canvas/resolve-drop-index'
 import {
   drawBarSelectionBorder,
   drawSelectionBorder,
 } from '@/features/editor/canvas/draw-selection-border'
 import {
-  drawBarOverlayAtIndex,
+  drawDragPreviewHighlights,
   grabOffsetForBar,
-  renderDraggedBarAtSource,
-  renderEditorBarSlots,
   renderGhostBar,
 } from '@/features/editor/canvas/render-editor-bars'
-import { buildDragSlots } from '@/features/editor/notation/reorder-bars'
+import { previewBarsForDrag } from '@/features/editor/notation/reorder-bars'
 import { useNoteSelectionStore } from '@/features/editor/note-selection.store'
 import type { SelectionMode } from '@/features/editor/use-note-editor'
 import { setupCanvasDpi } from '@/features/groovy-player/canvas/canvas-dpi'
@@ -32,7 +33,6 @@ import { usePlayerStore } from '@/features/groovy-player/player.store'
 import { useIsMobile } from '@/features/shared/use-is-mobile'
 import { useIsDark } from '@/features/store/theme.store'
 import { cn } from '@/features/theme/cn'
-import { DRAG_SOURCE_OVERLAY_OPACITY } from '@/lib/theme/yellowy'
 import type { CanvasElement } from '@/features/groovy-player/canvas/types'
 
 const DRAG_THRESHOLD_PX = 6
@@ -40,6 +40,7 @@ const DRAG_THRESHOLD_PX = 6
 type BarDragState = {
   sourceIndex: number
   dropIndex: number
+  hoveredBarIndex: number
   pointerX: number
   pointerY: number
   grabOffsetX: number
@@ -102,6 +103,7 @@ const EditableBars = ({
     grabOffsetY: number
     dragging: boolean
     dropIndex?: number
+    hoveredBarIndex?: number
   } | null>(null)
   const [drag, setDrag] = useState<BarDragState | null>(null)
   const { width: canvasWidth, dpr } = useCanvasWidth(containerRef)
@@ -123,29 +125,22 @@ const EditableBars = ({
 
     const draggedBar = drag ? bars[drag.sourceIndex] : null
     const isDragPreview = drag !== null && drag.dropIndex !== drag.sourceIndex
+    const barsToRender = isDragPreview
+      ? previewBarsForDrag(bars, drag.sourceIndex, drag.dropIndex)
+      : bars
 
-    const elements = isDragPreview
-      ? renderEditorBarSlots({
-          slots: buildDragSlots(bars, drag.sourceIndex, drag.dropIndex),
-          draggedBar: draggedBar ?? '',
-          instrument,
-          context,
-          canvasWidth,
-          barsPerRow,
-          dark: prefersDark,
-        })
-      : renderBars({
-          bars,
-          instrument,
-          canvas,
-          context,
-          canvasWidth,
-          barsPerRow,
-          highlightedBarIndex: drag ? -1 : highlightedBarIndex,
-          palette,
-          showBarIndex,
-          markTriplets,
-        })
+    const elements = renderBars({
+      bars: barsToRender,
+      instrument,
+      canvas,
+      context,
+      canvasWidth,
+      barsPerRow,
+      highlightedBarIndex: isDragPreview ? -1 : highlightedBarIndex,
+      palette,
+      showBarIndex,
+      markTriplets,
+    })
 
     canvasElementsRef.current = elements
 
@@ -166,29 +161,19 @@ const EditableBars = ({
       }
     }
 
-    if (drag && draggedBar) {
-      if (isDragPreview) {
-        renderDraggedBarAtSource({
-          sourceIndex: drag.sourceIndex,
-          bars,
-          instrument,
-          context,
-          canvasWidth,
-          barsPerRow,
-          dark: prefersDark,
-        })
-      } else {
-        drawBarOverlayAtIndex({
-          barIndex: drag.sourceIndex,
-          bars,
-          canvasWidth,
-          barsPerRow,
-          context,
-          dark: prefersDark,
-          opacity: DRAG_SOURCE_OVERLAY_OPACITY,
-        })
-      }
+    if (isDragPreview && drag) {
+      drawDragPreviewHighlights({
+        bars,
+        canvasWidth,
+        barsPerRow,
+        context,
+        dark: prefersDark,
+        sourceIndex: drag.sourceIndex,
+        hoveredBarIndex: drag.hoveredBarIndex,
+      })
+    }
 
+    if (drag && draggedBar) {
       renderGhostBar({
         bar: draggedBar,
         instrument,
@@ -238,6 +223,11 @@ const EditableBars = ({
     return detectBarAtPoint(canvasElementsRef.current, x, y)
   }
 
+  const resolveDragTarget = (x: number, y: number) => {
+    const barBounds = barBoundsForBars(bars, canvasWidth, barsPerRow)
+    return resolveBarDropTarget(bars.length, pointerRef.current?.barIndex ?? 0, x, y, barBounds)
+  }
+
   const updateDragPosition = (event: React.PointerEvent<HTMLCanvasElement>) => {
     const canvas = document.getElementById(canvasId) as HTMLCanvasElement | null
     const state = pointerRef.current
@@ -247,42 +237,31 @@ const EditableBars = ({
 
     if (isPointerOutsideCanvas(canvas, event)) {
       state.dropIndex = state.barIndex
+      state.hoveredBarIndex = -1
       setDrag({
         sourceIndex: state.barIndex,
         dropIndex: state.barIndex,
+        hoveredBarIndex: -1,
         pointerX: x,
         pointerY: y,
         grabOffsetX: state.grabOffsetX,
         grabOffsetY: state.grabOffsetY,
       })
-      state.dropIndex = state.barIndex
       return
     }
 
-    setDrag((current) => {
-      const currentDrop = current?.dropIndex ?? state.barIndex
-      const slots = buildDragSlots(bars, state.barIndex, currentDrop)
-      const dropIndex = resolveDropIndexFromDrag(
-        bars.length,
-        state.barIndex,
-        x,
-        y,
-        canvasWidth,
-        barsPerRow,
-        slots,
-        currentDrop,
-      )
+    const { dropIndex, hoveredBarIndex } = resolveDragTarget(x, y)
+    state.dropIndex = dropIndex
+    state.hoveredBarIndex = hoveredBarIndex
 
-      state.dropIndex = dropIndex
-
-      return {
-        sourceIndex: state.barIndex,
-        dropIndex,
-        pointerX: x,
-        pointerY: y,
-        grabOffsetX: state.grabOffsetX,
-        grabOffsetY: state.grabOffsetY,
-      }
+    setDrag({
+      sourceIndex: state.barIndex,
+      dropIndex,
+      hoveredBarIndex,
+      pointerX: x,
+      pointerY: y,
+      grabOffsetX: state.grabOffsetX,
+      grabOffsetY: state.grabOffsetY,
     })
   }
 
@@ -360,12 +339,14 @@ const EditableBars = ({
       setDrag({
         sourceIndex: state.barIndex,
         dropIndex: state.barIndex,
+        hoveredBarIndex: state.barIndex,
         pointerX: x,
         pointerY: y,
         grabOffsetX: state.grabOffsetX,
         grabOffsetY: state.grabOffsetY,
       })
       state.dropIndex = state.barIndex
+      state.hoveredBarIndex = state.barIndex
     }
 
     if (state.dragging) updateDragPosition(event)
@@ -396,17 +377,12 @@ const EditableBars = ({
       }
 
       const { x, y } = canvasPointFromPage(canvas, event, canvasWidth, canvasHeight)
-      const currentDrop = state.dropIndex ?? drag?.dropIndex ?? state.barIndex
-      const slots = buildDragSlots(bars, state.barIndex, currentDrop)
-      const dropIndex = resolveDropIndexFromDrag(
+      const { dropIndex } = resolveBarDropTarget(
         bars.length,
         state.barIndex,
         x,
         y,
-        canvasWidth,
-        barsPerRow,
-        slots,
-        currentDrop,
+        barBoundsForBars(bars, canvasWidth, barsPerRow),
       )
 
       if (dropIndex !== state.barIndex) {
