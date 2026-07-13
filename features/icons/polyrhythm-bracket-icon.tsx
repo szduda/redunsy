@@ -1,13 +1,7 @@
-import type { IconProps } from '@/features/icons/types'
+import { NoteBracketPaths } from '@/features/icons/note-bracket-icon'
+import type { Icon } from '@/features/icons/types'
 
-type PolyrhythmBracketIconProps = IconProps & {
-  largeLabel?: boolean
-}
-
-export const PolyrhythmBracketIcon = ({
-  largeLabel = false,
-  ...props
-}: PolyrhythmBracketIconProps) => (
+export const PolyrhythmBracketIcon: Icon = (props) => (
   <svg
     aria-hidden
     fill="none"
@@ -16,17 +10,15 @@ export const PolyrhythmBracketIcon = ({
     viewBox="0 0 24 24"
     {...props}
   >
-    <path d="M6 14V11M18 14V11" strokeLinecap="round" />
-    <path d="M6 11h12" strokeLinecap="round" strokeWidth={3} />
+    <NoteBracketPaths />
     <text
       fill="currentColor"
       fontFamily="ui-monospace, monospace"
-      fontSize={largeLabel ? 10 : 6}
-      fontWeight={largeLabel ? 700 : 400}
+      fontSize="6"
       stroke="none"
       textAnchor="middle"
       x="12"
-      y={largeLabel ? 10 : 9}
+      y="9"
     >
       4:3
     </text>
