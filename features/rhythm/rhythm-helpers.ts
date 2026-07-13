@@ -49,7 +49,7 @@ export const rhythmToCard = (rhythm: Rhythm): RhythmCard => {
 export const trackBarsRecord = (rhythm: Rhythm) =>
   Object.fromEntries(Object.values(rhythm.instruments).map((track) => [track.id, track.bars]))
 
-const INSTRUMENT_LABELS: Record<RhythmInstrument, string> = {
+export const INSTRUMENT_LABELS: Record<RhythmInstrument, string> = {
   djembe: 'Djembe',
   dundunba: 'Dundunba',
   sangban: 'Sangban',

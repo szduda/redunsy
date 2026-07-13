@@ -52,13 +52,25 @@ const DUNDUN_SOUND_HINTS: Record<string, SoundHintMeta> = {
 
 const DUNDUN_INSTRUMENTS = new Set(['dundunba', 'sangban', 'kenkeni', 'kenkeni2'])
 
+const BELL_INSTRUMENTS = new Set(['bell'])
+
+const BELL_SOUND_HINTS: Record<string, SoundHintMeta> = {
+  x: { label: 'open' },
+}
+
 export const soundHintMeta = (instrument: string, sound: string): SoundHintMeta => {
   if (instrument === 'djembe') {
     return DJEMBE_SOUND_HINTS[sound] ?? { label: sound.toUpperCase() }
   }
+
   if (DUNDUN_INSTRUMENTS.has(instrument)) {
     return DUNDUN_SOUND_HINTS[sound] ?? { label: sound.toUpperCase() }
   }
+
+  if (BELL_INSTRUMENTS.has(instrument)) {
+    return BELL_SOUND_HINTS[sound] ?? { label: sound.toUpperCase() }
+  }
+
   return { label: sound.toUpperCase() }
 }
 

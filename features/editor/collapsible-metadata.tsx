@@ -21,7 +21,7 @@ export const CollapsibleMetadata = ({
   const [open, setOpen] = useState(false)
 
   return (
-    <section className="border-b border-zinc-200/60 px-2 py-2 dark:border-zinc-800/60 md:px-4">
+    <section className="px-2 py-2 md:px-4">
       <CollapseLabel collapsed={!open} onClick={() => setOpen((value) => !value)}>
         {rhythm.title}
       </CollapseLabel>
@@ -30,11 +30,7 @@ export const CollapsibleMetadata = ({
           <RhythmMetadataForm onChange={onChange} onTitleBlur={onTitleBlur} values={rhythm} />
         </div>
       ) : (
-        <Text className="mt-1 opacity-70">
-          {metadataSummary(rhythm, [
-            ...new Set(Object.values(rhythm.instruments).map((track) => track.instrument)),
-          ])}
-        </Text>
+        <Text className="mt-1 opacity-70">{metadataSummary(rhythm)}</Text>
       )}
     </section>
   )

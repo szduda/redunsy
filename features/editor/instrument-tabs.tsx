@@ -1,0 +1,177 @@
+'use client'
+
+import { type ReactNode, useMemo, useState } from 'react'
+
+import { trackHasPattern } from '@/features/editor/track-has-pattern'
+import { IconButton } from '@/features/groovy-player/icon-button'
+import { Popover, popoverTriggerOpenClass } from '@/features/groovy-player/popover'
+import { SettingsIcon } from '@/features/icons/settings-icon'
+import { INSTRUMENT_LABELS } from '@/features/rhythm/rhythm-helpers'
+import {
+  RHYTHM_INSTRUMENTS,
+  type Rhythm,
+  type RhythmInstrument,
+  type Track,
+} from '@/features/rhythm/rhythm.types'
+import { Button } from '@/features/theme/button'
+import { Switch } from '@/features/theme/switch'
+import { Text } from '@/features/theme/text'
+import { cn } from '@/features/theme/cn'
+
+type InstrumentTabsProps = {
+  tracks: Track[]
+  focusedTrackId: string
+  rhythm: Rhythm
+  onFocusTrack: (trackId: string) => void
+  onUpdateInstruments: (layers: RhythmInstrument[]) => void
+  trailing?: ReactNode
+}
+
+const layersEqual = (left: RhythmInstrument[], right: RhythmInstrument[]) =>
+  left.length === right.length && left.every((layer, index) => layer === right[index])
+
+const InstrumentConfigPanel = ({
+  activeLayers,
+  close,
+  rhythm,
+  onUpdateInstruments,
+}: {
+  activeLayers: RhythmInstrument[]
+  close: () => void
+  rhythm: Rhythm
+  onUpdateInstruments: (layers: RhythmInstrument[]) => void
+}) => {
+  const [draftLayers, setDraftLayers] = useState(activeLayers)
+
+  const showWarning = useMemo(
+    () =>
+      RHYTHM_INSTRUMENTS.some((instrument) => {
+        if (!activeLayers.includes(instrument) || draftLayers.includes(instrument)) return false
+        const track = rhythm.instruments[instrument]
+        return track ? trackHasPattern(track.bars) : false
+      }),
+    [activeLayers, draftLayers, rhythm.instruments],
+  )
+
+  const unchanged = layersEqual(draftLayers, activeLayers)
+  const canUpdate = draftLayers.length > 0 && !unchanged
+
+  const onToggle = (instrument: RhythmInstrument, checked: boolean) => {
+    setDraftLayers((current) =>
+      checked
+        ? current.includes(instrument)
+          ? current
+          : [...current, instrument]
+        : current.filter((layer) => layer !== instrument),
+    )
+  }
+
+  const onUpdate = () => {
+    if (!canUpdate) return
+    onUpdateInstruments(draftLayers)
+    close()
+  }
+
+  return (
+    <div className="flex w-64 flex-col gap-2 p-1">
+      <Text className="text-xs font-semibold tracking-widest uppercase opacity-40">
+        Instruments
+      </Text>
+      <div className="flex flex-col gap-3">
+        {RHYTHM_INSTRUMENTS.map((instrument) => (
+          <Switch
+            key={instrument}
+            checked={draftLayers.includes(instrument)}
+            label={INSTRUMENT_LABELS[instrument]}
+            onChange={(checked) => onToggle(instrument, checked)}
+          />
+        ))}
+      </div>
+      <div className="flex min-h-4 justify-center">
+        <Text
+          className={cn(
+            'text-center text-xs font-semibold text-[#af8545] transition-opacity duration-200 dark:text-yellowy-light',
+            showWarning ? 'opacity-100' : 'opacity-0',
+          )}
+        >
+          ⚠️ Some of your data will be lost
+        </Text>
+      </div>
+      <Button disabled={!canUpdate} onClick={onUpdate} variant="filled">
+        Update
+      </Button>
+    </div>
+  )
+}
+
+export const InstrumentTabs = ({
+  tracks,
+  focusedTrackId,
+  rhythm,
+  onFocusTrack,
+  onUpdateInstruments,
+  trailing,
+}: InstrumentTabsProps) => {
+  const activeLayers = useMemo(
+    () => tracks.map((track) => track.instrument as RhythmInstrument),
+    [tracks],
+  )
+
+  return (
+    <div className="relative flex items-center gap-2">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-0 border-b-2 border-zinc-200 dark:border-zinc-800"
+      />
+      <div className="relative z-10 flex min-w-0 flex-1 items-center gap-0 overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden pl-1 md:pl-3">
+        {tracks.map((track, trackIndex) => {
+          const active = track.id === focusedTrackId
+          return (
+            <button
+              key={track.id}
+              className={cn(
+                'shrink-0 border-2 px-3 py-2 text-sm font-semibold tracking-tight rounded-t-lg',
+                active
+                  ? 'border-zinc-400/60 border-b-editor-surface text-zinc-900 dark:border-zinc-700 dark:border-b-editor-surface dark:text-zinc-100'
+                  : 'border-transparent border-b-zinc-200 text-zinc-500 hover:text-zinc-700 dark:border-b-zinc-800 dark:text-zinc-400 dark:hover:text-zinc-200',
+              )}
+              onClick={() => onFocusTrack(track.id)}
+              type="button"
+            >
+              {track.name}
+            </button>
+          )
+        })}
+        <div className="shrink-0 ml-2 relative">
+          <Popover
+            panel={({ close }) => (
+              <InstrumentConfigPanel
+                activeLayers={activeLayers}
+                close={close}
+                onUpdateInstruments={onUpdateInstruments}
+                rhythm={rhythm}
+              />
+            )}
+            panelClassName="w-auto mt-[2.5px] !bg-editor-surface border-zinc-200 dark:border-zinc-800 border-2 rounded-t-none lg:-translate-x-[40%]"
+            preferredDirection="bottom"
+          >
+            {({ open, toggle }) => (
+              <IconButton
+                active={open}
+                aria-expanded={open}
+                aria-label="Configure instruments"
+                className={cn('!p-1', open && popoverTriggerOpenClass)}
+                onClick={toggle}
+              >
+                <SettingsIcon
+                  className={cn('size-4', open ? 'text-yellowy opacity-100' : 'opacity-20')}
+                />
+              </IconButton>
+            )}
+          </Popover>
+        </div>
+      </div>
+      {trailing ? <div className="relative z-10 shrink-0">{trailing}</div> : null}
+    </div>
+  )
+}
