@@ -100,9 +100,7 @@ export const clampSelectionForTrack = (
   if (!bars.length) return null
 
   if (mode === 'bar') {
-    const barIndex = selection
-      ? Math.min(Math.max(0, selection.barIndex), bars.length - 1)
-      : 0
+    const barIndex = selection ? Math.min(Math.max(0, selection.barIndex), bars.length - 1) : 0
     return { barIndex, glyphIndex: 0 }
   }
 
