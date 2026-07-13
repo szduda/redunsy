@@ -2,7 +2,7 @@ import { spawn, type ChildProcess } from 'node:child_process'
 import { mkdir, readdir, rm } from 'node:fs/promises'
 import path from 'node:path'
 
-import { chromium, type Page } from '@playwright/test'
+import { chromium, type Locator, type Page } from '@playwright/test'
 
 import { createRhythm } from '../features/rhythm/rhythm-helpers'
 import { MY_RHYTHMS_STORAGE_KEY } from '../features/rhythm/my-rhythms-storage'
@@ -10,20 +10,23 @@ import type { Rhythm } from '../features/rhythm/rhythm.types'
 
 const PORT = 3456
 const BASE_URL = `http://127.0.0.1:${PORT}`
-const OUTPUT_DIR = path.join(process.cwd(), 'public', 'images')
-const OUTPUT_GIF = path.join(OUTPUT_DIR, 'bar-drag-demo.gif')
+const OUTPUT_GIF = path.join(process.cwd(), 'public', 'images', 'bar-drag-demo.gif')
 const FRAMES_DIR = path.join(process.cwd(), '.tmp', 'bar-drag-demo-frames')
+const GIF_WIDTH = 480
+const GIF_HEIGHT = 160
 
 const demoRhythm = (): Rhythm => {
   const rhythm = createRhythm({
     title: 'bar-drag-demo',
-    meter: 4,
+    meter: 3,
     layers: ['djembe'],
     fillDjembe: false,
   })
-  rhythm.instruments.djembe.bars = ['s--ss-tt', 'bt--st-', 's-ts--s', 'bts--tt-']
+  rhythm.instruments.djembe.bars = ['ssssss', '------']
   return rhythm
 }
+
+type Point = { x: number; y: number }
 
 const waitForServer = async (url: string, timeoutMs = 60_000) => {
   const started = Date.now()
@@ -70,6 +73,17 @@ const seedEditor = async (page: Page) => {
         'redunsy-theme',
         JSON.stringify({ state: { theme: 'light' }, version: 0 }),
       )
+      localStorage.setItem(
+        'redunsy-player',
+        JSON.stringify({
+          state: {
+            desktopBarsPerRow: 2,
+            showBarIndex: false,
+            showKeyboardHints: false,
+          },
+          version: 0,
+        }),
+      )
     },
     { storageKey: MY_RHYTHMS_STORAGE_KEY, rhythms: { [rhythm.slug]: rhythm } },
   )
@@ -83,53 +97,73 @@ const ensureBarMode = async (page: Page) => {
   }
 }
 
-const captureFrame = async (page: Page, index: number) => {
-  const framePath = path.join(FRAMES_DIR, `frame-${String(index).padStart(3, '0')}.png`)
-  await page.screenshot({ path: framePath, type: 'png' })
+const pagePoint = (
+  box: { x: number; y: number; width: number; height: number },
+  rx: number,
+  ry: number,
+) => ({
+  x: box.x + box.width * rx,
+  y: box.y + box.height * ry,
+})
+
+const quadraticBezier = (start: Point, control: Point, end: Point, t: number): Point => {
+  const inverse = 1 - t
+  return {
+    x: inverse * inverse * start.x + 2 * inverse * t * control.x + t * t * end.x,
+    y: inverse * inverse * start.y + 2 * inverse * t * control.y + t * t * end.y,
+  }
 }
 
-const dragBarOnCanvas = async (page: Page) => {
-  const canvas = page.locator('canvas[id^="djembe-editor-canvas"]').first()
-  await canvas.waitFor({ state: 'visible' })
+const captureCanvasFrame = async (canvas: Locator, index: number) => {
+  const framePath = path.join(FRAMES_DIR, `frame-${String(index).padStart(3, '0')}.png`)
+  await canvas.screenshot({ path: framePath, type: 'png' })
+}
+
+const dragBarOnCanvas = async (page: Page, canvas: Locator) => {
   const box = await canvas.boundingBox()
   if (!box) throw new Error('Canvas bounding box unavailable')
 
-  const startX = box.x + box.width * 0.12
-  const startY = box.y + box.height * 0.5
-  const endX = box.x + box.width * 0.62
-  const endY = box.y + box.height * 0.5
+  const start = pagePoint(box, 0.25, 0.58)
+  const control = pagePoint(box, 0.52, 0.14)
+  const end = { x: box.x + box.width - 1, y: box.y + box.height * 0.58 }
 
   let frame = 0
-  await captureFrame(page, frame)
-  frame += 1
-
-  await page.mouse.move(startX, startY)
-  await page.waitForTimeout(200)
-  await captureFrame(page, frame)
-  frame += 1
-
-  await page.mouse.down()
-  await page.waitForTimeout(100)
-  await captureFrame(page, frame)
-  frame += 1
-
-  const steps = 18
-  for (let step = 1; step <= steps; step += 1) {
-    const t = step / steps
-    await page.mouse.move(startX + (endX - startX) * t, startY + (endY - startY) * t, { steps: 2 })
-    await page.waitForTimeout(70)
-    await captureFrame(page, frame)
+  const snap = async () => {
+    await captureCanvasFrame(canvas, frame)
     frame += 1
   }
 
-  await page.waitForTimeout(150)
-  await captureFrame(page, frame)
-  frame += 1
-  await page.mouse.up()
-  await page.waitForTimeout(300)
-  await captureFrame(page, frame)
+  await snap()
+  await page.waitForTimeout(180)
 
-  return frame + 1
+  await canvas.hover({ position: { x: box.width * 0.25, y: box.height * 0.58 } })
+  await page.waitForTimeout(120)
+  await snap()
+
+  await page.mouse.down()
+  await page.waitForTimeout(100)
+  await snap()
+
+  await page.mouse.move(start.x + 50, start.y)
+  await page.waitForTimeout(80)
+  await snap()
+
+  const steps = 24
+  for (let step = 1; step <= steps; step += 1) {
+    const t = step / steps
+    const point = quadraticBezier(start, control, end, t)
+    await page.mouse.move(point.x, point.y, { steps: 2 })
+    await page.waitForTimeout(60)
+    await snap()
+  }
+
+  await page.waitForTimeout(220)
+  await snap()
+  await page.mouse.up()
+  await page.waitForTimeout(500)
+  await snap()
+
+  return frame
 }
 
 const framesToGif = async (outputPath: string) => {
@@ -144,7 +178,7 @@ const framesToGif = async (outputPath: string) => {
         '-i',
         path.join(FRAMES_DIR, 'frame-%03d.png'),
         '-vf',
-        'scale=480:-1:flags=lanczos,split[s0][s1];[s0]palettegen=max_colors=64[p];[s1][p]paletteuse=dither=bayer',
+        `scale=${GIF_WIDTH}:${GIF_HEIGHT}:force_original_aspect_ratio=decrease,pad=${GIF_WIDTH}:${GIF_HEIGHT}:(ow-iw)/2:(oh-ih)/2:color=0xf4f4f5,split[s0][s1];[s0]palettegen=max_colors=64[p];[s1][p]paletteuse=dither=bayer`,
         outputPath,
       ],
       { stdio: 'inherit' },
@@ -163,25 +197,36 @@ const recordDemo = async () => {
 
   const browser = await chromium.launch()
   const context = await browser.newContext({
-    viewport: { width: 960, height: 720 },
+    viewport: { width: 900, height: 900 },
     deviceScaleFactor: 2,
   })
   const page = await context.newPage()
 
   await seedEditor(page)
   await page.goto(`${BASE_URL}/editor/bar-drag-demo`, { waitUntil: 'networkidle' })
-  await page.locator('canvas[id^="djembe-editor-canvas"]').first().waitFor({ state: 'visible' })
+  const canvas = page.locator('canvas[id^="djembe-editor-canvas"]').first()
+  await canvas.waitFor({ state: 'visible' })
   await ensureBarMode(page)
-  await page.waitForTimeout(400)
+  await canvas.scrollIntoViewIfNeeded()
+  await page.waitForTimeout(500)
 
-  const frameCount = await dragBarOnCanvas(page)
+  const frameCount = await dragBarOnCanvas(page, canvas)
   const savedFrames = (await readdir(FRAMES_DIR)).filter((entry) => entry.endsWith('.png')).length
   if (savedFrames === 0) throw new Error('No frames captured')
+
+  const barsAfter = await page.evaluate(() => {
+    const raw = localStorage.getItem('my-rhythms')
+    if (!raw) return null
+    return JSON.parse(raw)['bar-drag-demo']?.instruments?.djembe?.bars ?? null
+  })
+  if (barsAfter?.join('|') !== '------|ssssss') {
+    throw new Error(`Expected reordered bars, got ${JSON.stringify(barsAfter)}`)
+  }
 
   await context.close()
   await browser.close()
   await framesToGif(OUTPUT_GIF)
-  console.log(`Captured ${frameCount} frames, wrote ${OUTPUT_GIF}`)
+  console.log(`Captured ${frameCount} canvas frames, wrote ${OUTPUT_GIF}`)
 }
 
 const main = async () => {

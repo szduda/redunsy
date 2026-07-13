@@ -18,10 +18,10 @@ export const BarDragHintPopover = () => (
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           alt="Screen recording of dragging a bar to a new position in bar mode, with the cursor visible"
-          className="w-full rounded-md border border-zinc-200 dark:border-zinc-700"
-          height={180}
+          className="aspect-[3/1] w-full rounded-md border border-zinc-200 bg-zinc-50 object-contain dark:border-zinc-700 dark:bg-zinc-950"
+          height={160}
           src="/images/bar-drag-demo.gif"
-          width={288}
+          width={480}
         />
       </div>
     }

@@ -110,7 +110,7 @@ export const resolveDropIndexFromDrag = (
   const lastTop = barTopForIndex(lastSlotIndex, barsPerRow, rowHeights)
   const lastBarHeight = rowHeights[lastRow] ?? 0
 
-  const pastLastHorizontally = x >= lastLeft + barWidth
+  const pastLastHorizontally = x >= lastLeft + barWidth - 1
   const belowLastBar = y >= lastTop + lastBarHeight
   if (pastLastHorizontally || belowLastBar) return barCount
 
