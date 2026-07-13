@@ -342,7 +342,13 @@ export const EditorKeyboard = ({
           )}
         </div>
       </div>
-      {!isMobile && isBarMode ? <BarDragHintPopover /> : null}
+      {!isMobile && isBarMode ? (
+        <div className="pointer-events-none absolute inset-x-0 bottom-full z-50 m-1 flex justify-center">
+          <div className="pointer-events-auto">
+            <BarDragHintPopover />
+          </div>
+        </div>
+      ) : null}
     </div>
   )
 }

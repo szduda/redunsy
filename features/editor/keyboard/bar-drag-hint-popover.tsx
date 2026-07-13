@@ -27,12 +27,11 @@ export const BarDragHintPopover = () => (
     }
     panelClassName="w-auto max-w-[calc(100vw-1rem)]"
     preferredDirection="top"
-    rootClassName="absolute bottom-full left-1/2 z-50 m-1 hidden -translate-x-1/2 md:block"
   >
     {({ open, toggle }) => (
       <button
         className={cn(
-          'rounded-md bg-yellowy-light/10 px-2 py-1.5 text-sm text-zinc-500 transition-colors hover:bg-yellowy-light/20 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200',
+          'whitespace-nowrap rounded-md bg-yellowy-light/10 px-2 py-1.5 text-sm text-zinc-500 transition-colors hover:bg-yellowy-light/20 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200',
           open && popoverTriggerOpenClass,
         )}
         onClick={toggle}
