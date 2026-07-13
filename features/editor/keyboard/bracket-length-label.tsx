@@ -7,13 +7,8 @@ type BracketLengthLabelProps = {
 }
 
 export const BracketLengthLabel = ({ label, className }: BracketLengthLabelProps) => (
-  <span className={cn('flex flex-col items-center justify-center gap-0.5', className)}>
-    <span
-      className={cn(
-        'font-mono font-bold leading-none tracking-tight',
-        label.includes(':') ? 'text-[10px]' : 'text-[11px]',
-      )}
-    >
+  <span className={cn('flex flex-col items-center justify-center gap-0', className)}>
+    <span className="translate-y-1 font-mono text-[10px] font-bold leading-none tracking-tight">
       {label}
     </span>
     <NoteBracketIcon className="size-4" />
