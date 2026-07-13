@@ -85,4 +85,60 @@ describe('useNoteEditor held navigation', () => {
       glyphIndex: 0,
     })
   })
+
+  it('keeps shared selection mode and index when switching to an equally long track', () => {
+    const onBarsChange = vi.fn()
+    const { result, rerender } = renderHook(
+      ({ trackId, trackBars }: { trackId: string; trackBars: string[] }) =>
+        useNoteEditor(trackId, trackBars, 8, onBarsChange),
+      { initialProps: { trackId: 'track-1', trackBars: bars } },
+    )
+
+    act(() => {
+      result.current.setSelectionMode('bar')
+      result.current.selectBar(2)
+    })
+
+    rerender({ trackId: 'track-2', trackBars: ['aa', 'bb', 'cc'] })
+
+    expect(result.current.selectionMode).toBe('bar')
+    expect(result.current.selection).toEqual({ barIndex: 2, glyphIndex: 0 })
+  })
+
+  it('clamps selection to the last bar when switching to a shorter track in bar mode', () => {
+    const onBarsChange = vi.fn()
+    const { result, rerender } = renderHook(
+      ({ trackId, trackBars }: { trackId: string; trackBars: string[] }) =>
+        useNoteEditor(trackId, trackBars, 8, onBarsChange),
+      { initialProps: { trackId: 'track-1', trackBars: bars } },
+    )
+
+    act(() => {
+      result.current.setSelectionMode('bar')
+      result.current.selectBar(2)
+    })
+
+    rerender({ trackId: 'track-2', trackBars: ['aa'] })
+
+    expect(result.current.selectionMode).toBe('bar')
+    expect(result.current.selection).toEqual({ barIndex: 0, glyphIndex: 0 })
+  })
+
+  it('clamps selection to the last note when switching to a shorter track in note mode', () => {
+    const onBarsChange = vi.fn()
+    const { result, rerender } = renderHook(
+      ({ trackId, trackBars }: { trackId: string; trackBars: string[] }) =>
+        useNoteEditor(trackId, trackBars, 8, onBarsChange),
+      { initialProps: { trackId: 'track-1', trackBars: bars } },
+    )
+
+    act(() => {
+      result.current.selectNote(2, 0)
+    })
+
+    rerender({ trackId: 'track-2', trackBars: ['aa', 'bb'] })
+
+    expect(result.current.selectionMode).toBe('note')
+    expect(result.current.selection).toEqual({ barIndex: 1, glyphIndex: 1 })
+  })
 })

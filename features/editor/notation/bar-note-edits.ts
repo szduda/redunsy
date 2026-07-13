@@ -85,6 +85,41 @@ export const navigateSelection = (
 export const defaultNoteSelection = (bars: string[]): NoteSelection | null =>
   navigateSelection(bars, null, 1)
 
+export const lastNoteSelection = (bars: string[]): NoteSelection | null => {
+  const flat = flattenBarNotes(bars)
+  if (!flat.length) return null
+  const last = flat[flat.length - 1]
+  return { barIndex: last.barIndex, glyphIndex: last.glyphIndex }
+}
+
+export const clampSelectionForTrack = (
+  bars: string[],
+  selection: NoteSelection | null,
+  mode: 'note' | 'bar',
+): NoteSelection | null => {
+  if (!bars.length) return null
+
+  if (mode === 'bar') {
+    const barIndex = selection ? Math.min(Math.max(0, selection.barIndex), bars.length - 1) : 0
+    return { barIndex, glyphIndex: 0 }
+  }
+
+  if (!selection) return null
+  if (getSelectedFlatNote(bars, selection)) return selection
+
+  if (selection.barIndex < 0 || selection.barIndex >= bars.length) {
+    return lastNoteSelection(bars)
+  }
+
+  const locations = getGlyphLocationsInBars(bars, selection.barIndex)
+  if (!locations.length) return lastNoteSelection(bars)
+
+  return {
+    barIndex: selection.barIndex,
+    glyphIndex: Math.min(selection.glyphIndex, locations.length - 1),
+  }
+}
+
 const replaceCharAt = (bar: string, charIndex: number, note: string) =>
   `${bar.slice(0, charIndex)}${note}${bar.slice(charIndex + 1)}`
 

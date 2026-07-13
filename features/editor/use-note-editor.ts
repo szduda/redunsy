@@ -1,9 +1,10 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { applyBarModeAction } from '@/features/editor/canvas/bar-pattern-actions'
 import {
+  clampSelectionForTrack,
   convertBarsToEighth,
   convertBarsToSixteenth,
   convertBarsToTriplet,
@@ -34,6 +35,8 @@ export const useNoteEditor = (
   barSize: number,
   onBarsChange: (bars: string[]) => void,
 ) => {
+  const prevTrackIdRef = useRef(trackId)
+
   const [selection, setSelection] = useState<NoteSelection | null>(() => {
     const initial = defaultNoteSelection(bars)
     useNoteSelectionStore.getState().setPreviewSelection(initial)
@@ -51,10 +54,13 @@ export const useNoteEditor = (
   )
 
   useEffect(() => {
-    const next = defaultNoteSelection(bars)
+    if (prevTrackIdRef.current === trackId) return
+    prevTrackIdRef.current = trackId
+
+    const current = useNoteSelectionStore.getState().previewSelection ?? selection
+    const next = clampSelectionForTrack(bars, current, selectionMode) ?? defaultNoteSelection(bars)
     syncSelection(next)
-    setSelectionMode('note')
-    // bars intentionally omitted — preserve selection across edits; reset only when switching tracks
+    // bars and selectionMode intentionally omitted — shared across tracks; clamp on tab switch
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [trackId])
 
