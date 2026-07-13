@@ -163,10 +163,7 @@ const isGroupGlue = (bar: string, index: number) => {
 
   if (next === '<') {
     const inner = polyrhythmGroupInner(bar, index + 1)
-    if (
-      inner &&
-      (hasConvertedPolyrhythmGlue(inner) || isEditorAnchoredPolyrhythmInner(inner))
-    ) {
+    if (inner && (hasConvertedPolyrhythmGlue(inner) || isEditorAnchoredPolyrhythmInner(inner))) {
       return false
     }
   }
