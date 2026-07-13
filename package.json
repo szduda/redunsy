@@ -22,7 +22,8 @@
     "telegram:extract": "tsx scripts/telegram-export-migration/extract.ts",
     "telegram:seed": "tsx scripts/telegram-export-migration/seed-rhythms.ts",
     "search-index": "tsx scripts/generate-search-index.ts",
-    "search-index:bootstrap": "tsx scripts/firestore-migration/bootstrap-search-index.ts"
+    "search-index:bootstrap": "tsx scripts/firestore-migration/bootstrap-search-index.ts",
+    "record:bar-drag-demo": "tsx scripts/record-bar-drag-demo.ts"
   },
   "dependencies": {
     "@tanstack/react-query": "^5.101.0",
@@ -37,6 +38,7 @@
     "zustand": "^5.0.14"
   },
   "devDependencies": {
+    "@playwright/test": "^1.55.0",
     "@tailwindcss/postcss": "^4",
     "@testing-library/jest-dom": "^6.9.1",
     "@testing-library/react": "^16.3.2",
