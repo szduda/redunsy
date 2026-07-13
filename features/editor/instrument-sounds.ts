@@ -62,12 +62,12 @@ export const soundHintMeta = (instrument: string, sound: string): SoundHintMeta 
   if (instrument === 'djembe') {
     return DJEMBE_SOUND_HINTS[sound] ?? { label: sound.toUpperCase() }
   }
-  
+
   if (DUNDUN_INSTRUMENTS.has(instrument)) {
     return DUNDUN_SOUND_HINTS[sound] ?? { label: sound.toUpperCase() }
   }
 
-  if(BELL_INSTRUMENTS.has(instrument)) {
+  if (BELL_INSTRUMENTS.has(instrument)) {
     return BELL_SOUND_HINTS[sound] ?? { label: sound.toUpperCase() }
   }
 
