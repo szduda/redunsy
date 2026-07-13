@@ -28,6 +28,7 @@ import { darkCanvasColors, lightCanvasColors } from '@/features/groovy-player/ca
 import { findPatternLength } from '@/features/groovy-player/canvas/find-pattern-length'
 import { canvasHeightForBars, renderBars } from '@/features/groovy-player/canvas/renderers'
 import { useCanvasWidth } from '@/features/groovy-player/canvas/use-canvas-width'
+import { usePlayerStore } from '@/features/groovy-player/player.store'
 import { useIsMobile } from '@/features/shared/use-is-mobile'
 import { useIsDark } from '@/features/store/theme.store'
 import { cn } from '@/features/theme/cn'
@@ -84,6 +85,8 @@ const EditableBars = ({
   id,
 }: EditableBarsCanvasProps) => {
   const previewSelection = useNoteSelectionStore((state) => state.previewSelection)
+  const showBarIndex = usePlayerStore((state) => state.showBarIndex)
+  const markTriplets = usePlayerStore((state) => state.markTriplets)
   const isMobile = useIsMobile()
   const prefersDark = useIsDark()
   const allowBarDrag = selectionMode === 'bar' && !isMobile
@@ -140,8 +143,8 @@ const EditableBars = ({
           barsPerRow,
           highlightedBarIndex: drag ? -1 : highlightedBarIndex,
           palette,
-          showBarIndex: true,
-          markTriplets: true,
+          showBarIndex,
+          markTriplets,
         })
 
     canvasElementsRef.current = elements
@@ -215,6 +218,8 @@ const EditableBars = ({
     selectionMode,
     drag,
     bars,
+    showBarIndex,
+    markTriplets,
   ])
 
   const getCanvas = () => document.getElementById(canvasId) as HTMLCanvasElement | null
