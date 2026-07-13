@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
 import {
+  clampSelectionForTrack,
   convertBarsToEighth,
   convertBarsToTriplet,
   convertToEighth,
@@ -8,6 +9,7 @@ import {
   convertToTriplet,
   defaultNoteSelection,
   flattenBarNotes,
+  lastNoteSelection,
   navigateBarSelection,
   navigateSelection,
   setNoteAtGlyphInBar,
@@ -48,6 +50,41 @@ describe('bar-note-edits', () => {
     expect(third).toEqual({ barIndex: 2, glyphIndex: 0 })
     expect(navigateBarSelection(bars, third, 1)).toEqual(third)
     expect(navigateBarSelection(bars, first, -1)).toEqual(first)
+  })
+
+  it('selects the last note in a track', () => {
+    expect(lastNoteSelection(['tt', 'ss'])).toEqual({ barIndex: 1, glyphIndex: 1 })
+    expect(lastNoteSelection([])).toBeNull()
+  })
+
+  it('clamps bar selection to the last bar on shorter tracks', () => {
+    const bars = ['tt', 'ss']
+    expect(clampSelectionForTrack(bars, { barIndex: 5, glyphIndex: 0 }, 'bar')).toEqual({
+      barIndex: 1,
+      glyphIndex: 0,
+    })
+  })
+
+  it('clamps note selection to the last note on shorter tracks', () => {
+    const bars = ['tt', 'ss']
+    expect(clampSelectionForTrack(bars, { barIndex: 5, glyphIndex: 0 }, 'note')).toEqual({
+      barIndex: 1,
+      glyphIndex: 1,
+    })
+  })
+
+  it('keeps a valid note selection unchanged', () => {
+    const bars = ['tt', 'ss', 'bb']
+    const selection = { barIndex: 1, glyphIndex: 0 }
+    expect(clampSelectionForTrack(bars, selection, 'note')).toEqual(selection)
+  })
+
+  it('clamps glyph index within a valid bar', () => {
+    const bars = ['tt', 'ss']
+    expect(clampSelectionForTrack(bars, { barIndex: 0, glyphIndex: 9 }, 'note')).toEqual({
+      barIndex: 0,
+      glyphIndex: 1,
+    })
   })
 
   it('updates a sixteenth rest inside a group', () => {

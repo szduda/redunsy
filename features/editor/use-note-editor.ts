@@ -1,9 +1,10 @@
 'use client'
 
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { applyBarModeAction } from '@/features/editor/canvas/bar-pattern-actions'
 import {
+  clampSelectionForTrack,
   convertBarsToEighth,
   convertBarsToSixteenth,
   convertBarsToTriplet,
@@ -17,6 +18,11 @@ import { useNoteSelectionStore } from '@/features/editor/note-selection.store'
 import { remapBarIndex, reorderBar } from '@/features/editor/notation/reorder-bars'
 
 export type SelectionMode = 'note' | 'bar'
+
+type TrackEditorState = {
+  selection: NoteSelection | null
+  selectionMode: SelectionMode
+}
 
 const resolveNextSelection = (
   bars: string[],
@@ -34,6 +40,9 @@ export const useNoteEditor = (
   barSize: number,
   onBarsChange: (bars: string[]) => void,
 ) => {
+  const trackStateRef = useRef<Map<string, TrackEditorState>>(new Map())
+  const prevTrackIdRef = useRef(trackId)
+
   const [selection, setSelection] = useState<NoteSelection | null>(() => {
     const initial = defaultNoteSelection(bars)
     useNoteSelectionStore.getState().setPreviewSelection(initial)
@@ -51,10 +60,22 @@ export const useNoteEditor = (
   )
 
   useEffect(() => {
-    const next = defaultNoteSelection(bars)
+    const previousTrackId = prevTrackIdRef.current
+    if (previousTrackId === trackId) return
+
+    trackStateRef.current.set(previousTrackId, {
+      selection: useNoteSelectionStore.getState().previewSelection ?? selection,
+      selectionMode,
+    })
+    prevTrackIdRef.current = trackId
+
+    const saved = trackStateRef.current.get(trackId)
+    const mode = saved?.selectionMode ?? 'note'
+    const next =
+      clampSelectionForTrack(bars, saved?.selection ?? null, mode) ?? defaultNoteSelection(bars)
     syncSelection(next)
-    setSelectionMode('note')
-    // bars intentionally omitted — preserve selection across edits; reset only when switching tracks
+    setSelectionMode(mode)
+    // bars intentionally omitted — preserve selection across edits; restore when switching tracks
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [trackId])
 
