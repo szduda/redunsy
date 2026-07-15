@@ -4,7 +4,6 @@ import { useCallback, useEffect, useMemo, useRef, type ReactNode } from 'react'
 
 import { HiddenMediaAudio } from '@/features/groovy-player/hidden-media-audio'
 import { useMediaSessionPlayback } from '@/features/groovy-player/use-media-session-playback'
-import { useSpaceTogglePlay } from '@/features/groovy-player/use-space-toggle-play'
 
 type UsePlayerPlaybackControlArgs = {
   artist?: string
@@ -95,8 +94,6 @@ export const usePlayerPlaybackControl = ({
     if (restartPlayback()) playingRef.current = true
     mediaPlay()
   }, [mediaPlay, restartPlayback])
-
-  useSpaceTogglePlay(onTogglePlayPause)
 
   const mediaAudio = useMemo(
     () => (

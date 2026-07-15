@@ -1,10 +1,11 @@
 'use client'
 
-import { useRef, useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 
 import { SettingsIcon } from '@/features/icons/settings-icon'
 import { IconButton } from '@/features/groovy-player/icon-button'
 import { cn } from '@/features/theme/cn'
+import { focusFromKeyboard } from '@/features/theme/keyboard-focus'
 import { MetronomeToggle } from '@/features/groovy-player/metronome-toggle'
 import { PLAYER_HINTS } from '@/features/groovy-player/player-keyboard-hints'
 import { PlayerSettingsPanel } from '@/features/groovy-player/player-settings-panel'
@@ -17,6 +18,7 @@ import { KeyboardHintWrap } from '@/features/shared/keyboard-hint-wrap'
 import { SwingToggle } from '@/features/groovy-player/swing-toggle'
 import { TempoSlider } from '@/features/groovy-player/tempo-slider'
 import { usePlayerKeyboard } from '@/features/groovy-player/use-player-keyboard'
+import { useSpaceTogglePlay } from '@/features/groovy-player/use-space-toggle-play'
 
 type PlayerBottomNavProps = {
   isPlaying: boolean
@@ -38,10 +40,25 @@ export const PlayerBottomNav = ({
   const isTablet = useIsTablet()
   const useInlineSettings = isMobile || isTablet
   const tempoFocusRef = useRef<HTMLInputElement | HTMLButtonElement>(null)
+  const playPauseRef = useRef<HTMLButtonElement>(null)
+  const stopRef = useRef<HTMLButtonElement>(null)
+  const metronomeRef = useRef<HTMLButtonElement>(null)
+  const swingRef = useRef<HTMLButtonElement>(null)
+
+  const focusPlayPause = useCallback(() => focusFromKeyboard(playPauseRef.current), [])
+  const focusStop = useCallback(() => focusFromKeyboard(stopRef.current), [])
+  const focusMetronome = useCallback(() => focusFromKeyboard(metronomeRef.current), [])
+  const focusSwing = useCallback(() => focusFromKeyboard(swingRef.current), [])
+  const focusTempo = useCallback(() => tempoFocusRef.current?.focus({ preventScroll: true }), [])
+
+  useSpaceTogglePlay({ onToggle: onPlayPause, focusPlayPause })
 
   usePlayerKeyboard({
     onStop,
-    focusTempo: () => tempoFocusRef.current?.focus(),
+    focusTempo,
+    focusStop,
+    focusMetronome,
+    focusSwing,
   })
 
   const settingsButton = (
@@ -72,6 +89,8 @@ export const PlayerBottomNav = ({
           onPlayPause={onPlayPause}
           onRestart={onRestart}
           onStop={onStop}
+          playPauseRef={playPauseRef}
+          stopRef={stopRef}
         />
 
         {useInlineSettings ? settingsButton : null}
@@ -81,10 +100,10 @@ export const PlayerBottomNav = ({
             <TempoSlider focusRef={tempoFocusRef} />
           </KeyboardHintWrap>
           <KeyboardHintWrap hint={PLAYER_HINTS.metronome.key} label={PLAYER_HINTS.metronome.label}>
-            <MetronomeToggle />
+            <MetronomeToggle focusRef={metronomeRef} />
           </KeyboardHintWrap>
           <KeyboardHintWrap hint={PLAYER_HINTS.swing.key} label={PLAYER_HINTS.swing.label}>
-            <SwingToggle />
+            <SwingToggle focusRef={swingRef} />
           </KeyboardHintWrap>
         </div>
       </div>

@@ -1,11 +1,17 @@
 'use client'
 
+import { type Ref } from 'react'
+
 import { PepperIcon } from '@/features/icons/pepper-icon'
 import { IconButton } from '@/features/groovy-player/icon-button'
 import { isSwingPatternIncorrect, usePlayerStore } from '@/features/groovy-player/player.store'
 import { cn } from '@/features/theme/cn'
 
-export const SwingToggle = () => {
+type SwingToggleProps = {
+  focusRef?: Ref<HTMLButtonElement>
+}
+
+export const SwingToggle = ({ focusRef }: SwingToggleProps) => {
   const swingEnabled = usePlayerStore((state) => state.swingEnabled)
   const swingPattern = usePlayerStore((state) => state.swingPattern)
   const swingBarSize = usePlayerStore((state) => state.swingBarSize)
@@ -16,6 +22,7 @@ export const SwingToggle = () => {
 
   return (
     <IconButton
+      ref={focusRef}
       active={swingEnabled}
       aria-disabled={swingIncorrect && !swingEnabled}
       aria-label={`Turn swing ${swingEnabled ? 'off' : 'on'}`}

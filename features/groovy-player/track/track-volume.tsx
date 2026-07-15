@@ -8,6 +8,7 @@ import { VolumeSlider } from '@/features/groovy-player/track/volume-slider'
 import { Button } from '@/features/theme/button'
 import { Text } from '@/features/theme/text'
 import { cn } from '@/features/theme/cn'
+import { KEYBOARD_FOCUS_VISIBLE_CLASS } from '@/features/theme/keyboard-focus'
 
 type TrackVolumeProps = {
   volume: number
@@ -69,6 +70,7 @@ export const TrackVolume = ({
               aria-expanded={open}
               className={cn(
                 '!rounded-l-none !border-l border-l-zinc-200 font-semibold text-base dark:border-l-zinc-900 py-1 w-14 h-[37px]',
+                KEYBOARD_FOCUS_VISIBLE_CLASS,
                 open && popoverTriggerOpenClass,
               )}
               onClick={toggle}

@@ -3,6 +3,7 @@
 import { type ChangeEvent, type FormEvent, type KeyboardEvent, type PointerEvent } from 'react'
 
 import { cn } from '@/features/theme/cn'
+import { KEYBOARD_FOCUS_VISIBLE_CLASS } from '@/features/theme/keyboard-focus'
 
 type VolumeSliderProps = {
   volume: number
@@ -58,7 +59,10 @@ const VerticalVolumeSlider = ({
       aria-valuemax={100}
       aria-valuemin={0}
       aria-valuenow={displayVolume}
-      className="flex h-24 w-8 touch-none cursor-pointer items-center justify-center"
+      className={cn(
+        KEYBOARD_FOCUS_VISIBLE_CLASS,
+        'flex h-24 w-8 touch-none cursor-pointer items-center justify-center',
+      )}
       onKeyDown={onKeyDown}
       onPointerDown={onPointerDown}
       onPointerMove={setVolumeFromPointer}
@@ -107,7 +111,7 @@ export const VolumeSlider = ({
   return (
     <input
       aria-label="Track volume"
-      className={cn('cursor-pointer', horizontalSliderClass, className)}
+      className={cn('cursor-pointer outline-none', horizontalSliderClass, className)}
       key={muted ? 'muted' : 'unmuted'}
       max={100}
       min={0}

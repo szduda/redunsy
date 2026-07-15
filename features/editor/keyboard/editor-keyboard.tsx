@@ -34,6 +34,7 @@ import { usePlayerStore } from '@/features/groovy-player/player.store'
 import { KeyboardHintWrap } from '@/features/shared/keyboard-hint-wrap'
 import { useIsMobile } from '@/features/shared/use-is-mobile'
 import { cn } from '@/features/theme/cn'
+import { KEYBOARD_FOCUS_VISIBLE_CLASS } from '@/features/theme/keyboard-focus'
 import { PRESSABLE_CLASS } from '@/features/theme/pressable'
 
 type EditorKeyboardProps = {
@@ -63,6 +64,7 @@ const roundToggleClass =
 
 const modeToggleSegmentClass = (active: boolean) =>
   cn(
+    KEYBOARD_FOCUS_VISIBLE_CLASS,
     'flex-1 px-2 py-2 text-sm font-medium transition-colors',
     active
       ? 'bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900'
