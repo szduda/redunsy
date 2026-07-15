@@ -2,8 +2,8 @@ import { yellowyBorderColor } from '@/lib/theme/yellowy'
 
 import type { CanvasElement } from '@/features/groovy-player/canvas/types'
 
-const BAR_MARKER_MARGIN_PX = 3
-const BAR_MARKER_EXTRA_HEIGHT_PX = 4
+const BAR_MARKER_MARGIN_PX = 4
+const BAR_MARKER_EXTRA_HEIGHT_PX = -1
 
 export const drawSelectionBorder = (
   context: CanvasRenderingContext2D,
