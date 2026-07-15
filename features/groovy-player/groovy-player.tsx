@@ -265,8 +265,8 @@ export const GroovyPlayer = ({ rhythm, hideHeader = false }: GroovyPlayerProps =
       >
         {isPlayerDemo ? <PlayerDemoBanner onFork={onForkDemo} /> : null}
 
-        {!fullBleed && !isPlayerDemo ? (
-          <FixedSideActions>
+        {!isPlayerDemo ? (
+          <FixedSideActions placement={fullBleed ? 'above' : 'side'}>
             <Button
               className="!justify-start"
               href={rhythmSlug ? '/editor' : '/garage'}

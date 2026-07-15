@@ -247,21 +247,19 @@ export const RhythmEditor = () => {
     <>
       {mediaAudio}
       <div className={cn('flex w-full flex-col gap-3', !fullBleed && 'lg:pt-4 xl:px-4 xl:pt-6')}>
-        {!fullBleed ? (
-          <FixedSideActions>
-            <Button onClick={onBackToPicker} variant="subtle" className="!justify-start">
-              <BackIcon className="size-4 mr-1" /> Back to My Rhythms
-            </Button>
-            <Button
-              href={`/player?rhythm=${rhythm.slug}`}
-              variant="subtle"
-              className="!justify-start"
-            >
-              <Note16Icon className="mr-1 size-4" /> Show in Player
-            </Button>
-            <PublishGate rhythm={rhythm} />
-          </FixedSideActions>
-        ) : null}
+        <FixedSideActions placement={fullBleed ? 'above' : 'side'}>
+          <Button onClick={onBackToPicker} variant="subtle" className="!justify-start">
+            <BackIcon className="size-4 mr-1" /> Back to My Rhythms
+          </Button>
+          <Button
+            href={`/player?rhythm=${rhythm.slug}`}
+            variant="subtle"
+            className="!justify-start"
+          >
+            <Note16Icon className="mr-1 size-4" /> Show in Player
+          </Button>
+          <PublishGate rhythm={rhythm} />
+        </FixedSideActions>
 
         <section
           className={cn(
