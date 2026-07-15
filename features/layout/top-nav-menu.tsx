@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState, type RefObject } from 'react'
 import { createPortal } from 'react-dom'
 
 import { MenuIcon } from '@/features/icons/menu-icon'
@@ -26,10 +26,12 @@ const MenuCloseBadge = () => (
 type MenuButtonProps = {
   open: boolean
   onClick: () => void
+  triggerRef?: RefObject<HTMLButtonElement | null>
 }
 
-const MenuButton = ({ open, onClick }: MenuButtonProps) => (
+const MenuButton = ({ open, onClick, triggerRef }: MenuButtonProps) => (
   <button
+    ref={triggerRef}
     aria-expanded={open}
     aria-label={open ? 'Close menu' : 'Open menu'}
     className={cn(topNavItemClass, open && 'text-zinc-700 dark:text-zinc-100')}
@@ -50,9 +52,12 @@ const MenuButton = ({ open, onClick }: MenuButtonProps) => (
 type DesktopMenuPanelProps = {
   open: boolean
   onClose: () => void
+  excludeRef: RefObject<HTMLElement | null>
 }
 
-const DesktopMenuPanel = ({ open, onClose }: DesktopMenuPanelProps) => {
+const DesktopMenuPanel = ({ open, onClose, excludeRef }: DesktopMenuPanelProps) => {
+  const panelRef = useRef<HTMLDivElement>(null)
+
   useEffect(() => {
     if (!open) return
     const onKeyDown = ({ key }: KeyboardEvent) => {
@@ -62,29 +67,33 @@ const DesktopMenuPanel = ({ open, onClose }: DesktopMenuPanelProps) => {
     return () => document.removeEventListener('keydown', onKeyDown)
   }, [onClose, open])
 
+  useEffect(() => {
+    if (!open) return
+    const onPointerDown = ({ target }: PointerEvent) => {
+      const node = target as Node
+      if (panelRef.current?.contains(node) || excludeRef.current?.contains(node)) return
+      onClose()
+    }
+    document.addEventListener('pointerdown', onPointerDown)
+    return () => document.removeEventListener('pointerdown', onPointerDown)
+  }, [excludeRef, onClose, open])
+
   if (!open) return null
 
   return createPortal(
-    <>
-      <button
-        aria-label="Close menu"
-        className="fixed inset-0 z-30 bg-black/40"
-        onClick={onClose}
-        type="button"
-      />
-      <div
-        className={cn(
-          'fixed left-0 top-10 z-40 w-80 max-h-[calc(100dvh-2.5rem)] overflow-y-auto shadow-lg',
-          'border border-t-0 border-l-0 border-zinc-200 bg-background p-6 dark:border-zinc-800',
-          'rounded-br-xl',
-        )}
-        role="dialog"
-        aria-modal
-        aria-label="Menu"
-      >
-        <NavMenuContent onClose={onClose} />
-      </div>
-    </>,
+    <div
+      ref={panelRef}
+      className={cn(
+        'fixed left-0 top-10 z-40 w-80 max-h-[calc(100dvh-2.5rem)] overflow-y-auto shadow-lg',
+        'border border-t-0 border-l-0 border-zinc-200 bg-background p-6 dark:border-zinc-800',
+        'rounded-br-xl',
+      )}
+      role="dialog"
+      aria-modal
+      aria-label="Menu"
+    >
+      <NavMenuContent onClose={onClose} />
+    </div>,
     document.body,
   )
 }
@@ -92,14 +101,15 @@ const DesktopMenuPanel = ({ open, onClose }: DesktopMenuPanelProps) => {
 export const TopNavMenu = () => {
   const isMobile = useIsMobile()
   const [open, setOpen] = useState(false)
+  const triggerRef = useRef<HTMLButtonElement>(null)
   const close = () => setOpen(false)
 
   if (isMobile) return <MobileNavMenu />
 
   return (
     <>
-      <MenuButton onClick={() => setOpen((value) => !value)} open={open} />
-      <DesktopMenuPanel onClose={close} open={open} />
+      <MenuButton onClick={() => setOpen((value) => !value)} open={open} triggerRef={triggerRef} />
+      <DesktopMenuPanel excludeRef={triggerRef} onClose={close} open={open} />
     </>
   )
 }

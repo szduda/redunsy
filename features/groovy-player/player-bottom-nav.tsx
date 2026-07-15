@@ -32,6 +32,7 @@ export const PlayerBottomNav = ({
   onStop,
 }: PlayerBottomNavProps) => {
   const [settingsOpen, setSettingsOpen] = useState(false)
+  const settingsTriggerRef = useRef<HTMLSpanElement>(null)
   const fullBleed = usePlayerStore((state) => state.fullBleed)
   const isMobile = useIsMobile()
   const isTablet = useIsTablet()
@@ -44,16 +45,18 @@ export const PlayerBottomNav = ({
   })
 
   const settingsButton = (
-    <IconButton
-      active={settingsOpen}
-      aria-expanded={settingsOpen}
-      aria-label="Player settings"
-      onClick={() => setSettingsOpen((value) => !value)}
-    >
-      <SettingsIcon
-        className={cn('size-6', settingsOpen ? 'text-yellowy opacity-100' : 'opacity-20')}
-      />
-    </IconButton>
+    <span ref={settingsTriggerRef} className="inline-flex">
+      <IconButton
+        active={settingsOpen}
+        aria-expanded={settingsOpen}
+        aria-label="Player settings"
+        onClick={() => setSettingsOpen((value) => !value)}
+      >
+        <SettingsIcon
+          className={cn('size-6', settingsOpen ? 'text-yellowy opacity-100' : 'opacity-20')}
+        />
+      </IconButton>
+    </span>
   )
 
   return (
@@ -97,7 +100,11 @@ export const PlayerBottomNav = ({
         </div>
       ) : null}
 
-      <PlayerSettingsPanel onClose={() => setSettingsOpen(false)} open={settingsOpen} />
+      <PlayerSettingsPanel
+        excludeRef={settingsTriggerRef}
+        onClose={() => setSettingsOpen(false)}
+        open={settingsOpen}
+      />
     </>
   )
 }

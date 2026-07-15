@@ -9,7 +9,6 @@ import { cn } from '@/features/theme/cn'
 
 const MOBILE_NAV_PANEL_CLASS =
   'h-[300px] !bottom-auto border-zinc-200 bg-white/95 backdrop-blur dark:border-zinc-800 dark:bg-zinc-900/95'
-const MOBILE_NAV_BACKDROP_CLASS = 'bg-black/40 backdrop-blur dark:bg-zinc-900/95'
 
 const MenuCloseBadge = () => (
   <svg aria-hidden className="size-3" fill="none" viewBox="0 0 24 24">
@@ -63,10 +62,8 @@ type MobileNavMenuProps = {
 
 export const MobileNavMenu = ({ className, variant = 'topNav' }: MobileNavMenuProps) => (
   <Popover
-    backdropClassName={MOBILE_NAV_BACKDROP_CLASS}
     full
     fullAnchor={variant === 'homepage' ? 'trigger' : 'header'}
-    fullBackdrop
     panel={({ close }) => (
       <div className="mx-auto flex w-full max-w-4xl flex-col px-3 py-4 md:px-4">
         <NavMenuContent onClose={close} variant="mobile" />
