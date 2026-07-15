@@ -1,4 +1,8 @@
-import { DRAG_SOURCE_OVERLAY_OPACITY, yellowyOverlay } from '@/lib/theme/yellowy'
+import {
+  DRAG_SOURCE_OVERLAY_OPACITY,
+  DRAG_SOURCE_SLOT_OVERLAY_OPACITY,
+  yellowyOverlay,
+} from '@/lib/theme/yellowy'
 import { darkCanvasColors, type CanvasColors } from '@/features/groovy-player/canvas/canvas-colors'
 import {
   BAR_GAP_PX,
@@ -87,7 +91,8 @@ export const drawDragPreviewHighlights = ({
       barsPerRow,
       context,
       dark,
-      opacity: DRAG_SOURCE_OVERLAY_OPACITY,
+      opacity:
+        barIndex === sourceIndex ? DRAG_SOURCE_SLOT_OVERLAY_OPACITY : DRAG_SOURCE_OVERLAY_OPACITY,
     })
   })
 }

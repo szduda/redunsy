@@ -10,4 +10,5 @@ export const yellowyOverlay = (dark: boolean, opacity: number) =>
   dark ? `rgba(249, 201, 38, ${opacity})` : `rgba(210, 183, 105, ${opacity})`
 
 export const DRAG_SOURCE_OVERLAY_OPACITY = 0.7
+export const DRAG_SOURCE_SLOT_OVERLAY_OPACITY = 0.15
 export const DRAG_PREVIEW_OVERLAY_OPACITY = 0.2

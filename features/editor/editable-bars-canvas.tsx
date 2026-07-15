@@ -7,15 +7,12 @@ import {
   detectBarAtPoint,
   detectNoteAtPoint,
 } from '@/features/editor/canvas/canvas-pointer'
-import {
-  barBoundsForBars,
-  canvasPointFromPage,
-  resolveBarDropTarget,
-} from '@/features/editor/canvas/resolve-drop-index'
+import { barBoundsForBars, resolveBarDropTarget } from '@/features/editor/canvas/resolve-drop-index'
 import {
   drawBarSelectionBorder,
   drawSelectionBorder,
 } from '@/features/editor/canvas/draw-selection-border'
+import { editorCanvasInsets } from '@/features/editor/canvas/editor-canvas-padding'
 import {
   drawDragPreviewHighlights,
   grabOffsetForBar,
@@ -107,8 +104,10 @@ const EditableBars = ({
   } | null>(null)
   const [drag, setDrag] = useState<BarDragState | null>(null)
   const { width: canvasWidth, dpr } = useCanvasWidth(containerRef)
+  const { paddingX, paddingY, contentWidth } = editorCanvasInsets(canvasWidth, isMobile)
   const hash = bars.join('')
-  const canvasHeight = canvasHeightForBars(canvasWidth, barsPerRow, bars)
+  const contentHeight = canvasHeightForBars(contentWidth, barsPerRow, bars)
+  const canvasHeight = contentHeight + paddingY * 2
   const barsInPattern = Math.max(findPatternLength(bars, 8), barsPerRow)
   const highlightedBarIndex =
     activeIndex < 0 ? -1 : barsInPattern > 1 ? activeIndex % barsInPattern : activeIndex
@@ -129,12 +128,15 @@ const EditableBars = ({
       ? previewBarsForDrag(bars, drag.sourceIndex, drag.dropIndex)
       : bars
 
+    context.save()
+    context.translate(paddingX, paddingY)
+
     const elements = renderBars({
       bars: barsToRender,
       instrument,
       canvas,
       context,
-      canvasWidth,
+      canvasWidth: contentWidth,
       barsPerRow,
       highlightedBarIndex: isDragPreview ? -1 : highlightedBarIndex,
       palette,
@@ -164,7 +166,7 @@ const EditableBars = ({
     if (isDragPreview && drag) {
       drawDragPreviewHighlights({
         bars,
-        canvasWidth,
+        canvasWidth: contentWidth,
         barsPerRow,
         context,
         dark: prefersDark,
@@ -178,7 +180,7 @@ const EditableBars = ({
         bar: draggedBar,
         instrument,
         context,
-        canvasWidth,
+        canvasWidth: contentWidth,
         barsPerRow,
         pointerX: drag.pointerX,
         pointerY: drag.pointerY,
@@ -187,6 +189,8 @@ const EditableBars = ({
         palette,
       })
     }
+
+    context.restore()
   }, [
     hash,
     canvasId,
@@ -205,26 +209,43 @@ const EditableBars = ({
     bars,
     showBarIndex,
     markTriplets,
+    paddingX,
+    paddingY,
+    contentWidth,
+    isMobile,
   ])
+
+  const toContentPoint = (x: number, y: number) => ({
+    x: x - paddingX,
+    y: y - paddingY,
+  })
+
+  const contentPointFromEvent = (
+    canvas: HTMLCanvasElement,
+    event: { clientX: number; clientY: number },
+  ) => {
+    const { x, y } = canvasLogicalPoint(canvas, event, canvasWidth, canvasHeight)
+    return toContentPoint(x, y)
+  }
 
   const getCanvas = () => document.getElementById(canvasId) as HTMLCanvasElement | null
 
   const getNoteTarget = (event: { clientX: number; clientY: number }) => {
     const canvas = getCanvas()
     if (!canvas || canvasWidth <= 0 || canvasHeight <= 0) return null
-    const { x, y } = canvasLogicalPoint(canvas, event, canvasWidth, canvasHeight)
+    const { x, y } = contentPointFromEvent(canvas, event)
     return detectNoteAtPoint(canvasElementsRef.current, x, y)
   }
 
   const getBarIndexAt = (event: { clientX: number; clientY: number }) => {
     const canvas = getCanvas()
     if (!canvas || canvasWidth <= 0 || canvasHeight <= 0) return -1
-    const { x, y } = canvasLogicalPoint(canvas, event, canvasWidth, canvasHeight)
+    const { x, y } = contentPointFromEvent(canvas, event)
     return detectBarAtPoint(canvasElementsRef.current, x, y)
   }
 
   const resolveDragTarget = (x: number, y: number) => {
-    const barBounds = barBoundsForBars(bars, canvasWidth, barsPerRow)
+    const barBounds = barBoundsForBars(bars, contentWidth, barsPerRow)
     return resolveBarDropTarget(bars.length, pointerRef.current?.barIndex ?? 0, x, y, barBounds)
   }
 
@@ -233,7 +254,7 @@ const EditableBars = ({
     const state = pointerRef.current
     if (!canvas || !state?.dragging) return
 
-    const { x, y } = canvasPointFromPage(canvas, event, canvasWidth, canvasHeight)
+    const { x, y } = contentPointFromEvent(canvas, event)
 
     if (isPointerOutsideCanvas(canvas, event)) {
       state.dropIndex = state.barIndex
@@ -304,11 +325,11 @@ const EditableBars = ({
 
     const canvas = getCanvas()
     if (!canvas) return
-    const { x, y } = canvasPointFromPage(canvas, event, canvasWidth, canvasHeight)
+    const { x, y } = contentPointFromEvent(canvas, event)
     const { grabOffsetX, grabOffsetY } = grabOffsetForBar(
       barIndex,
       bars,
-      canvasWidth,
+      contentWidth,
       barsPerRow,
       x,
       y,
@@ -335,7 +356,7 @@ const EditableBars = ({
       state.dragging = true
       const canvas = document.getElementById(canvasId) as HTMLCanvasElement | null
       if (!canvas) return
-      const { x, y } = canvasPointFromPage(canvas, event, canvasWidth, canvasHeight)
+      const { x, y } = contentPointFromEvent(canvas, event)
       setDrag({
         sourceIndex: state.barIndex,
         dropIndex: state.barIndex,
@@ -376,13 +397,13 @@ const EditableBars = ({
         return
       }
 
-      const { x, y } = canvasPointFromPage(canvas, event, canvasWidth, canvasHeight)
+      const { x, y } = contentPointFromEvent(canvas, event)
       const { dropIndex } = resolveBarDropTarget(
         bars.length,
         state.barIndex,
         x,
         y,
-        barBoundsForBars(bars, canvasWidth, barsPerRow),
+        barBoundsForBars(bars, contentWidth, barsPerRow),
       )
 
       if (dropIndex !== state.barIndex) {

@@ -295,7 +295,7 @@ export const RhythmEditor = () => {
             }
           />
 
-          <section className="flex flex-col gap-2 px-1 py-2 pb-36 md:px-4">
+          <section className="flex flex-col gap-2 pb-36">
             <EditableBarsCanvas
               activeIndex={activeBarIndex}
               bars={focusedTrack.bars}
