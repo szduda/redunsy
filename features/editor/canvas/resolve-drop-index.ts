@@ -85,7 +85,10 @@ export const resolveBarDropTarget = (
     return { dropIndex: sourceIndex, hoveredBarIndex: sourceIndex }
   }
 
-  return { dropIndex: hovered.barIndex + 1, hoveredBarIndex: hovered.barIndex }
+  const dropIndex =
+    sourceIndex > hovered.barIndex ? hovered.barIndex : hovered.barIndex + 1
+
+  return { dropIndex, hoveredBarIndex: hovered.barIndex }
 }
 
 export const slotIndexFromPoint = (

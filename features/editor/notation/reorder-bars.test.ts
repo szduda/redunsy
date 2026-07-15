@@ -22,7 +22,7 @@ describe('reorder-bars', () => {
 
   it('previews bars after a drag without mutating the source array', () => {
     const bars = ['a', 'b', 'c', 'd']
-    expect(previewBarsForDrag(bars, 3, 2)).toEqual(['a', 'b', 'd', 'c'])
+    expect(previewBarsForDrag(bars, 3, 1)).toEqual(['a', 'd', 'b', 'c'])
     expect(bars).toEqual(['a', 'b', 'c', 'd'])
   })
 })
@@ -40,7 +40,7 @@ describe('resolveBarDropTarget', () => {
     })
   })
 
-  it('places after the hovered bar', () => {
+  it('places at the hovered bar slot when dragging from a later index', () => {
     const hovered = bounds[1]
     expect(
       resolveBarDropTarget(
@@ -51,8 +51,24 @@ describe('resolveBarDropTarget', () => {
         bounds,
       ),
     ).toEqual({
-      dropIndex: 2,
+      dropIndex: 1,
       hoveredBarIndex: 1,
+    })
+  })
+
+  it('places after the hovered bar when dragging from an earlier index', () => {
+    const hovered = bounds[2]
+    expect(
+      resolveBarDropTarget(
+        4,
+        0,
+        hovered.left + hovered.width / 2,
+        hovered.top + hovered.height / 2,
+        bounds,
+      ),
+    ).toEqual({
+      dropIndex: 3,
+      hoveredBarIndex: 2,
     })
   })
 
