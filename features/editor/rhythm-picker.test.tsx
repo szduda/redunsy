@@ -6,7 +6,7 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import { PRIVATE_GARAGE_FILTERS } from '@/features/garage/garage-filter-presets'
 import { RhythmPicker } from '@/features/editor/rhythm-picker'
 
-const garageResultsMock = vi.fn(() => <div data-testid="garage-results" />)
+const garageResultsMock = vi.fn((_props?: unknown) => <div data-testid="garage-results" />)
 
 vi.mock('@/features/garage/garage-results', () => ({
   GarageResults: (props: unknown) => garageResultsMock(props),
