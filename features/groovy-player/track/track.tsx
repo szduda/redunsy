@@ -8,6 +8,7 @@ import { TrackVolume } from '@/features/groovy-player/track/track-volume'
 import { useTrackVolume } from '@/features/groovy-player/track/use-track-volume'
 import { useIsMobile } from '@/features/shared/use-is-mobile'
 import { CollapseLabel } from './collapse-label'
+import { repeatBarsToFillCols } from './repeat-bars-to-fill-cols'
 import { cn } from '@/features/theme/cn'
 
 type TrackProps = {
@@ -46,10 +47,11 @@ export const Track = ({
 
   const currentBar = trackActiveIndex(activeIndex, bars.length)
   const windowStart = previewWindowStart(currentBar, bars.length, collapsedBarsPerRow)
-  const previewBars = bars.slice(windowStart, windowStart + collapsedBarsPerRow)
+  const sourcePreviewBars = bars.slice(windowStart, windowStart + collapsedBarsPerRow)
+  const previewBars = repeatBarsToFillCols(sourcePreviewBars, collapsedBarsPerRow)
   const previewActiveIndex =
-    currentBar >= windowStart && currentBar < windowStart + previewBars.length
-      ? currentBar - windowStart
+    currentBar >= windowStart && currentBar < windowStart + sourcePreviewBars.length
+      ? (currentBar - windowStart) % previewBars.length
       : -1
 
   const compact = !isMobile && collapsed

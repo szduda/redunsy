@@ -14,14 +14,19 @@ type Props = {
 export const CollapseLabel = ({ children, onClick, collapsed, disabled, className }: Props) => (
   <button
     className={cn(
-      'flex min-w-0 items-center py-2 gap-0.5 md:gap-1 font-semibold text-zinc-900 dark:text-zinc-100 text-sm md:text-sm shrink-0 disabled:opacity-50',
+      'flex min-w-0 items-center py-2 gap-0.5 md:gap-1 font-semibold text-zinc-900 dark:text-zinc-100 text-sm md:text-sm shrink-0',
+      disabled ? 'cursor-default' : 'cursor-pointer',
       className,
     )}
     disabled={disabled}
     onClick={onClick}
     type="button"
   >
-    {collapsed ? <ChevronDownIcon /> : <ChevronUpIcon />}
+    {collapsed ? (
+      <ChevronDownIcon className={cn(disabled && 'opacity-0')} />
+    ) : (
+      <ChevronUpIcon className={cn(disabled && 'opacity-0')} />
+    )}
     <span className="truncate">{children}</span>
   </button>
 )
