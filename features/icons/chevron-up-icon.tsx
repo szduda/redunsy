@@ -1,9 +1,10 @@
 import type { Icon } from '@/features/icons/types'
+import { cn } from '@/features/theme/cn'
 
 export const ChevronUpIcon: Icon = ({ className, ...props }) => (
   <svg
     aria-hidden
-    className={className ?? 'size-4'}
+    className={cn('size-4', className)}
     fill="none"
     stroke="currentColor"
     strokeWidth={2}
