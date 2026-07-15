@@ -13,11 +13,15 @@ export const RhythmPicker = () => {
       <div className="flex w-full flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-3 w-full md:w-fit justify-between">
           <h1 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">Your Rhythms</h1>
-          <Button className="px-2 py-1 text-xs opacity-50 hover:opacity-100" href="/garage?ownership=private" variant="outlined">
+          <Button
+            className="px-2 py-1 text-xs opacity-50 hover:opacity-100"
+            href="/garage?ownership=private"
+            variant="outlined"
+          >
             Browse in Garage
           </Button>
         </div>
-        
+
         <Button
           className="font-semibold !bg-greeny-light text-white hover:!bg-greeny-lighter dark:text-zinc-900 w-full my-6 md:my-0 md:w-fit"
           onClick={startCreator}
