@@ -20,6 +20,8 @@ type TrackProps = {
   onVolumeLevelChange?: (instrument: string, level: number) => void
 }
 
+const MIN_EXPANDABLE_BARS = 3
+
 const trackActiveIndex = (activeIndex: number | undefined, barCount: number) =>
   activeIndex !== undefined && activeIndex >= 0 ? activeIndex % barCount : -1
 
@@ -32,7 +34,8 @@ export const Track = ({
   barsPerRow,
   onVolumeLevelChange,
 }: TrackProps) => {
-  const [collapsed, setCollapsed] = useState(false)
+  const isShortTrack = bars.length < MIN_EXPANDABLE_BARS
+  const [collapsed, setCollapsed] = useState(isShortTrack)
   const { volume, muted, onVolumeChange, onToggleMute } = useTrackVolume(
     instrument,
     onVolumeLevelChange,
@@ -61,6 +64,7 @@ export const Track = ({
       <div className="flex items-center justify-between gap-2 lg:gap-3 flex-wrap px-1 md:px-2 lg:px-4">
         <CollapseLabel
           collapsed={collapsed}
+          disabled={isShortTrack}
           onClick={() => setCollapsed((value) => !value)}
           className={cn(compact ? 'w-24' : 'lg:w-auto flex-1')}
         >
