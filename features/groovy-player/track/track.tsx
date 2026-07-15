@@ -54,7 +54,7 @@ export const Track = ({
   return (
     <section
       className={cn(
-        'bg-greeny-dark/10 dark:bg-transparent flex justify-center gap-2 border-b last:border-b-0 border-zinc-200/60 dark:border-zinc-800/60 py-1 lg:py-2',
+        'bg-greeny-dark/10 dark:bg-transparent flex justify-center gap-2 border-b last:border-b-0 border-zinc-200/60 dark:border-zinc-800/60',
         compact ? 'pr-1 md:pr-2 lg:pr-4' : 'flex-col',
       )}
     >

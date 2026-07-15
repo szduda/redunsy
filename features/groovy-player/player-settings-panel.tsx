@@ -1,6 +1,6 @@
 'use client'
 
-import { type ReactNode, useEffect } from 'react'
+import { type ReactNode, useEffect, useRef, type RefObject } from 'react'
 
 import { HelpIcon } from '@/features/icons/help-icon'
 import { ScreenAwakeIcon } from '@/features/icons/screen-awake-icon'
@@ -22,6 +22,7 @@ import { cn } from '@/features/theme/cn'
 type PlayerSettingsPanelProps = {
   open: boolean
   onClose: () => void
+  excludeRef?: RefObject<HTMLElement | null>
 }
 
 type SettingRowProps = {
@@ -112,7 +113,8 @@ const SwingPatternSection = () => {
   )
 }
 
-export const PlayerSettingsPanel = ({ open, onClose }: PlayerSettingsPanelProps) => {
+export const PlayerSettingsPanel = ({ open, onClose, excludeRef }: PlayerSettingsPanelProps) => {
+  const panelRef = useRef<HTMLDivElement>(null)
   const isMobile = useIsMobile()
   const showBarIndex = usePlayerStore((state) => state.showBarIndex)
   const markTriplets = usePlayerStore((state) => state.markTriplets)
@@ -133,6 +135,17 @@ export const PlayerSettingsPanel = ({ open, onClose }: PlayerSettingsPanelProps)
     document.addEventListener('keydown', onKeyDown)
     return () => document.removeEventListener('keydown', onKeyDown)
   }, [open, onClose])
+
+  useEffect(() => {
+    if (!open) return
+    const onPointerDown = ({ target }: PointerEvent) => {
+      const node = target as Node
+      if (panelRef.current?.contains(node) || excludeRef?.current?.contains(node)) return
+      onClose()
+    }
+    document.addEventListener('pointerdown', onPointerDown)
+    return () => document.removeEventListener('pointerdown', onPointerDown)
+  }, [excludeRef, onClose, open])
 
   if (!open) return null
 
@@ -174,34 +187,27 @@ export const PlayerSettingsPanel = ({ open, onClose }: PlayerSettingsPanelProps)
   )
 
   return (
-    <>
-      <button
-        aria-label="Close settings"
-        className={cn('fixed inset-x-0 top-0 z-30 bg-black/40', BOTTOM_NAV_OFFSET_CLASS)}
-        onClick={onClose}
-        type="button"
-      />
-      <div
-        className={cn(
-          isMobile
-            ? cn(
-                'fixed inset-x-0 z-40 max-h-[calc(100dvh-7.5rem)] overflow-y-auto border-t',
-                BOTTOM_NAV_OFFSET_CLASS,
-                'border-zinc-200 bg-background p-5 dark:border-zinc-800',
-              )
-            : cn(
-                'fixed right-0 z-40 w-80 max-h-[calc(100dvh-5rem)] overflow-y-auto',
-                BOTTOM_NAV_OFFSET_CLASS,
-                'border border-b-0 border-zinc-200 bg-background p-6 dark:border-zinc-800',
-                'rounded-tl-xl',
-              ),
-        )}
-        role="dialog"
-        aria-modal
-        aria-label="Player settings"
-      >
-        {panelContent}
-      </div>
-    </>
+    <div
+      ref={panelRef}
+      className={cn(
+        isMobile
+          ? cn(
+              'fixed inset-x-0 z-40 max-h-[calc(100dvh-7.5rem)] overflow-y-auto border-t',
+              BOTTOM_NAV_OFFSET_CLASS,
+              'border-zinc-200 bg-background p-5 dark:border-zinc-800',
+            )
+          : cn(
+              'fixed right-0 z-40 w-80 max-h-[calc(100dvh-5rem)] overflow-y-auto',
+              BOTTOM_NAV_OFFSET_CLASS,
+              'border border-b-0 border-zinc-200 bg-background p-6 dark:border-zinc-800',
+              'rounded-tl-xl',
+            ),
+      )}
+      role="dialog"
+      aria-modal
+      aria-label="Player settings"
+    >
+      {panelContent}
+    </div>
   )
 }

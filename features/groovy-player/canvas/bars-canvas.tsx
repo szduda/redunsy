@@ -5,9 +5,11 @@ import { memo, useLayoutEffect, useRef } from 'react'
 import { setupCanvasDpi } from './canvas-dpi'
 import { darkCanvasColors, lightCanvasColors } from './canvas-colors'
 import { findPatternLength } from './find-pattern-length'
+import { playerCanvasInsets } from './player-canvas-padding'
 import { canvasHeightForBars, renderBars } from './renderers'
 import { useCanvasWidth } from './use-canvas-width'
 import { usePlayerStore } from '@/features/groovy-player/player.store'
+import { useIsMobile } from '@/features/shared/use-is-mobile'
 import { useIsDark } from '@/features/store/theme.store'
 import { cn } from '@/features/theme/cn'
 
@@ -21,14 +23,17 @@ type BarsCanvasProps = {
 
 const Bars = ({ bars, activeIndex = -1, barsPerRow, instrument, id }: BarsCanvasProps) => {
   const prefersDark = useIsDark()
+  const isMobile = useIsMobile()
   const showBarIndex = usePlayerStore((state) => state.showBarIndex)
   const markTriplets = usePlayerStore((state) => state.markTriplets)
   const canvasId = `${instrument}-canvas-${id}`
   const containerRef = useRef<HTMLDivElement>(null)
   const { width: canvasWidth, dpr } = useCanvasWidth(containerRef)
+  const { paddingY, contentWidth } = playerCanvasInsets(canvasWidth, isMobile)
   const barsInPattern = Math.max(findPatternLength(bars, 8), barsPerRow)
   const hash = bars.join('')
-  const canvasHeight = canvasHeightForBars(canvasWidth, barsPerRow, bars)
+  const contentHeight = canvasHeightForBars(contentWidth, barsPerRow, bars)
+  const canvasHeight = contentHeight + paddingY * 2
   const highlightedBarIndex =
     activeIndex < 0 ? -1 : barsInPattern > 1 ? activeIndex % barsInPattern : activeIndex
 
@@ -43,18 +48,23 @@ const Bars = ({ bars, activeIndex = -1, barsPerRow, instrument, id }: BarsCanvas
     context.fillStyle = palette.b0
     context.fillRect(0, 0, canvasWidth, canvasHeight)
 
+    context.save()
+    context.translate(0, paddingY)
+
     renderBars({
       bars,
       instrument,
       canvas,
       context,
-      canvasWidth,
+      canvasWidth: contentWidth,
       barsPerRow,
       highlightedBarIndex,
       palette,
       showBarIndex,
       markTriplets,
     })
+
+    context.restore()
   }, [
     hash,
     bars,
@@ -68,6 +78,9 @@ const Bars = ({ bars, activeIndex = -1, barsPerRow, instrument, id }: BarsCanvas
     prefersDark,
     showBarIndex,
     markTriplets,
+    paddingY,
+    contentWidth,
+    isMobile,
   ])
 
   return (
