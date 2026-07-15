@@ -8,6 +8,8 @@ import { TrackVolume } from '@/features/groovy-player/track/track-volume'
 import { useTrackVolume } from '@/features/groovy-player/track/use-track-volume'
 import { useIsMobile } from '@/features/shared/use-is-mobile'
 import { CollapseLabel } from './collapse-label'
+import { collapsedPreviewActiveIndex } from './collapsed-preview-active-index'
+import { repeatBarsToFillCols } from './repeat-bars-to-fill-cols'
 import { cn } from '@/features/theme/cn'
 
 type TrackProps = {
@@ -19,6 +21,8 @@ type TrackProps = {
   barsPerRow: number
   onVolumeLevelChange?: (instrument: string, level: number) => void
 }
+
+const MIN_EXPANDABLE_BARS = 3
 
 const trackActiveIndex = (activeIndex: number | undefined, barCount: number) =>
   activeIndex !== undefined && activeIndex >= 0 ? activeIndex % barCount : -1
@@ -32,7 +36,8 @@ export const Track = ({
   barsPerRow,
   onVolumeLevelChange,
 }: TrackProps) => {
-  const [collapsed, setCollapsed] = useState(false)
+  const isShortTrack = bars.length < MIN_EXPANDABLE_BARS
+  const [collapsed, setCollapsed] = useState(isShortTrack)
   const { volume, muted, onVolumeChange, onToggleMute } = useTrackVolume(
     instrument,
     onVolumeLevelChange,
@@ -43,11 +48,15 @@ export const Track = ({
 
   const currentBar = trackActiveIndex(activeIndex, bars.length)
   const windowStart = previewWindowStart(currentBar, bars.length, collapsedBarsPerRow)
-  const previewBars = bars.slice(windowStart, windowStart + collapsedBarsPerRow)
-  const previewActiveIndex =
-    currentBar >= windowStart && currentBar < windowStart + previewBars.length
-      ? currentBar - windowStart
-      : -1
+  const sourcePreviewBars = bars.slice(windowStart, windowStart + collapsedBarsPerRow)
+  const previewBars = repeatBarsToFillCols(sourcePreviewBars, collapsedBarsPerRow)
+  const previewActiveIndex = collapsedPreviewActiveIndex({
+    activeIndex,
+    currentBar,
+    windowStart,
+    sourceBarCount: sourcePreviewBars.length,
+    previewBarCount: previewBars.length,
+  })
 
   const compact = !isMobile && collapsed
 
@@ -61,6 +70,7 @@ export const Track = ({
       <div className="flex items-center justify-between gap-2 lg:gap-3 flex-wrap px-1 md:px-2 lg:px-4">
         <CollapseLabel
           collapsed={collapsed}
+          disabled={isShortTrack}
           onClick={() => setCollapsed((value) => !value)}
           className={cn(compact ? 'w-24' : 'lg:w-auto flex-1')}
         >

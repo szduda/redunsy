@@ -124,7 +124,7 @@ export const InstrumentTabs = ({
         className="pointer-events-none absolute inset-0 border-b-2 border-zinc-200 dark:border-zinc-800"
       />
       <div className="relative z-10 flex min-w-0 flex-1 items-center gap-0 overflow-x-auto [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden pl-1 md:pl-3">
-        {tracks.map((track, trackIndex) => {
+        {tracks.map((track) => {
           const active = track.id === focusedTrackId
           return (
             <button
