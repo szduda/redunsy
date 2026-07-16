@@ -136,7 +136,12 @@ const TempoSliderInput = ({
     <input
       ref={focusRef}
       aria-label="Tempo"
-      className={cn('cursor-pointer outline-none', horizontalSliderClass, className)}
+      className={cn(
+        'cursor-pointer',
+        KEYBOARD_FOCUS_VISIBLE_CLASS,
+        horizontalSliderClass,
+        className,
+      )}
       max={MAX_TEMPO}
       min={MIN_TEMPO}
       onChange={onChange}

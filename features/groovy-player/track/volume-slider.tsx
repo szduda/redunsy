@@ -111,7 +111,12 @@ export const VolumeSlider = ({
   return (
     <input
       aria-label="Track volume"
-      className={cn('cursor-pointer outline-none', horizontalSliderClass, className)}
+      className={cn(
+        'cursor-pointer',
+        KEYBOARD_FOCUS_VISIBLE_CLASS,
+        horizontalSliderClass,
+        className,
+      )}
       key={muted ? 'muted' : 'unmuted'}
       max={100}
       min={0}

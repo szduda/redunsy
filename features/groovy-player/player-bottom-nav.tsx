@@ -49,7 +49,7 @@ export const PlayerBottomNav = ({
   const focusStop = useCallback(() => focusFromKeyboard(stopRef.current), [])
   const focusMetronome = useCallback(() => focusFromKeyboard(metronomeRef.current), [])
   const focusSwing = useCallback(() => focusFromKeyboard(swingRef.current), [])
-  const focusTempo = useCallback(() => tempoFocusRef.current?.focus({ preventScroll: true }), [])
+  const focusTempo = useCallback(() => focusFromKeyboard(tempoFocusRef.current), [])
 
   useSpaceTogglePlay({ onToggle: onPlayPause, focusPlayPause })
 
