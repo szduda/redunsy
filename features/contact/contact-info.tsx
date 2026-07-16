@@ -5,6 +5,7 @@ import type { ComponentPropsWithoutRef } from 'react'
 
 import { CONTACT_CHANNELS } from '@/features/contact/contact.constants'
 import { cn } from '@/features/theme/cn'
+import { KEYBOARD_FOCUS_VISIBLE_CLASS } from '@/features/theme/keyboard-focus'
 import { Text } from '@/features/theme/text'
 
 type ContactInfoVariant = 'compact' | 'section' | 'page'
@@ -66,6 +67,8 @@ const ChannelItem = ({ variant, channel }: ChannelItemProps) => {
   )
 
   const itemClass = cn(
+    KEYBOARD_FOCUS_VISIBLE_CLASS,
+    'rounded-md',
     isPage ? pageItemClass : 'inline-flex items-center',
     !isPage && itemGap[variant],
     linkClass,

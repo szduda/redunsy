@@ -8,6 +8,7 @@ import { HomepageSearch } from '@/features/homepage/homepage-search'
 import { Logo } from '@/features/logo/logo'
 import { MobileNavMenu } from '@/features/layout/mobile-nav-menu'
 import { cn } from '@/features/theme/cn'
+import { KEYBOARD_FOCUS_VISIBLE_CLASS } from '@/features/theme/keyboard-focus'
 
 const REGIONS = ['Burkina Faso', 'Gambia', 'Guinea', 'Ivory Coast', 'Mali', 'Senegal'] as const
 
@@ -42,6 +43,7 @@ const actionCardLabelClass: Record<ActionCardVariant | 'default', string> = {
 const ActionCard = ({ variant, children, href, label, title }: ActionCardProps) => (
   <Link
     className={cn(
+      KEYBOARD_FOCUS_VISIBLE_CLASS,
       'group flex flex-col gap-2 rounded-xl border px-4 py-4 transition active:scale-[0.99]',
       actionCardClass[variant ?? 'default'],
     )}

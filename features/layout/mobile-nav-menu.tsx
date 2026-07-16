@@ -6,6 +6,7 @@ import { TOP_NAV_HALO_STROKE_CLASS } from '@/features/layout/constants'
 import { NavMenuContent } from '@/features/layout/nav-menu-content'
 import { topNavItemClass } from '@/features/layout/top-nav-item'
 import { cn } from '@/features/theme/cn'
+import { KEYBOARD_FOCUS_VISIBLE_CLASS } from '@/features/theme/keyboard-focus'
 
 const MOBILE_NAV_PANEL_CLASS =
   'h-[300px] !bottom-auto border-zinc-200 bg-white/95 backdrop-blur dark:border-zinc-800 dark:bg-zinc-900/95'
@@ -30,7 +31,10 @@ type MenuButtonProps = {
 
 const menuButtonClass = {
   topNav: topNavItemClass,
-  homepage: 'flex items-center justify-center rounded-md p-2 text-white !bg-black/40',
+  homepage: cn(
+    KEYBOARD_FOCUS_VISIBLE_CLASS,
+    'flex items-center justify-center rounded-md p-2 text-white !bg-black/40',
+  ),
 } as const
 
 const MenuButton = ({ open, onClick, variant = 'topNav' }: MenuButtonProps) => (

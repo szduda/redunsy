@@ -8,6 +8,7 @@ import { MenuIcon } from '@/features/icons/menu-icon'
 import { PAGE_BODY_BG_CLASS } from '@/features/layout/constants'
 import { NavMenuContent } from '@/features/layout/nav-menu-content'
 import { cn } from '@/features/theme/cn'
+import { KEYBOARD_FOCUS_VISIBLE_CLASS } from '@/features/theme/keyboard-focus'
 import { Text } from '@/features/theme/text'
 import { Button } from '@/features/theme/button'
 
@@ -24,7 +25,10 @@ export const HomepageNav = () => (
 
     <div className="flex flex-col flex-1 justify-center gap-6 opacity-70">
       <Link
-        className="inline-flex items-center justify-end gap-2 self-stretch rounded-md px-3 py-2.5 text-sm text-zinc-900 transition-colors hover:bg-zinc-200/50 dark:text-zinc-100 dark:hover:bg-zinc-800/30 opacity-50 hover:opacity-100"
+        className={cn(
+          KEYBOARD_FOCUS_VISIBLE_CLASS,
+          'inline-flex items-center justify-end gap-2 self-stretch rounded-md px-3 py-2.5 text-sm text-zinc-900 transition-colors hover:bg-zinc-200/50 dark:text-zinc-100 dark:hover:bg-zinc-800/30 opacity-50 hover:opacity-100',
+        )}
         href="/help"
       >
         <HelpIcon className="size-5 shrink-0" />

@@ -23,7 +23,6 @@ export const HomepageSearch = () => {
     <Input
       aria-label="Search"
       className="w-full"
-      onBlur={() => commit()}
       onChange={(event) => {
         draftRef.current = event.target.value
         setDraft(event.target.value)
