@@ -9,7 +9,7 @@ import { MetronomeToggle } from '@/features/groovy-player/metronome-toggle'
 import { PLAYER_HINTS } from '@/features/groovy-player/player-keyboard-hints'
 import { PlayerSettingsPanel } from '@/features/groovy-player/player-settings-panel'
 import { PlayerTransport } from '@/features/groovy-player/player-transport'
-import { usePlayerStore } from '@/features/groovy-player/player.store'
+import { useFullBleedActive } from '@/features/groovy-player/use-full-bleed-active'
 import { BOTTOM_NAV_HEIGHT_CLASS } from '@/features/layout/constants'
 import { useIsMobile } from '@/features/shared/use-is-mobile'
 import { useIsTablet } from '@/features/shared/use-is-tablet'
@@ -33,7 +33,7 @@ export const PlayerBottomNav = ({
 }: PlayerBottomNavProps) => {
   const [settingsOpen, setSettingsOpen] = useState(false)
   const settingsTriggerRef = useRef<HTMLSpanElement>(null)
-  const fullBleed = usePlayerStore((state) => state.fullBleed)
+  const fullBleedActive = useFullBleedActive()
   const isMobile = useIsMobile()
   const isTablet = useIsTablet()
   const useInlineSettings = isMobile || isTablet
@@ -64,7 +64,7 @@ export const PlayerBottomNav = ({
       <div
         className={cn(
           'mx-auto flex h-full w-full items-center justify-between gap-2 px-2 py-2',
-          fullBleed ? 'md:pr-24 md:pl-4' : 'max-w-4xl md:px-0',
+          fullBleedActive ? 'md:pr-24 md:pl-4' : 'max-w-4xl md:px-0',
         )}
       >
         <PlayerTransport

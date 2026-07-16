@@ -24,6 +24,7 @@ import {
   usePlayerStore,
 } from '@/features/groovy-player/player.store'
 import { useBarsPerRow } from '@/features/groovy-player/use-bars-per-row'
+import { useFullBleedActive } from '@/features/groovy-player/use-full-bleed-active'
 import { useMetronomeShakerVolume } from '@/features/groovy-player/use-metronome-shaker-volume'
 import { Track } from '@/features/groovy-player/track/track'
 import { usePlayerPlaybackControl } from '@/features/groovy-player/use-player-playback-control'
@@ -90,7 +91,7 @@ export const GroovyPlayer = ({ rhythm, hideHeader = false }: GroovyPlayerProps =
   const setSwingPattern = usePlayerStore((state) => state.setSwingPattern)
   const setSwingEnabled = usePlayerStore((state) => state.setSwingEnabled)
   const setTempo = usePlayerStore((state) => state.setTempo)
-  const fullBleed = usePlayerStore((state) => state.fullBleed)
+  const fullBleedActive = useFullBleedActive()
   const preventScreenSleep = usePlayerStore((state) => state.preventScreenSleep)
   const setIsPlaying = usePlayerStore((state) => state.setIsPlaying)
   const setSwingBarSize = usePlayerStore((state) => state.setSwingBarSize)
@@ -260,13 +261,13 @@ export const GroovyPlayer = ({ rhythm, hideHeader = false }: GroovyPlayerProps =
       <div
         className={cn(
           'flex w-full flex-col gap-3',
-          !fullBleed && !hideHeader && 'lg:pt-4 xl:px-4 xl:pt-6',
+          !fullBleedActive && !hideHeader && 'lg:pt-4 xl:px-4 xl:pt-6',
         )}
       >
         {isPlayerDemo ? <PlayerDemoBanner onFork={onForkDemo} /> : null}
 
         {!isPlayerDemo ? (
-          <FixedSideActions placement={fullBleed ? 'above' : 'side'}>
+          <FixedSideActions placement={fullBleedActive ? 'above' : 'side'}>
             <Button
               className="!justify-start"
               href={rhythmSlug ? '/editor' : '/garage'}
@@ -297,7 +298,7 @@ export const GroovyPlayer = ({ rhythm, hideHeader = false }: GroovyPlayerProps =
         <section
           className={cn(
             'flex w-full flex-col gap-4 bg-white dark:bg-zinc-900/60 overflow-hidden',
-            fullBleed
+            fullBleedActive
               ? 'md:rounded-none md:border-0'
               : 'md:rounded-xl md:border md:border-zinc-100 dark:border-transparent max-w-4xl mx-auto',
           )}
