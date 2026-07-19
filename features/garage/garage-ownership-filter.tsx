@@ -2,6 +2,7 @@
 
 import { useGarageFiltersStore } from '@/features/garage/garage-filters.store'
 import { cn } from '@/features/theme/cn'
+import { KEYBOARD_FOCUS_VISIBLE_CLASS } from '@/features/theme/keyboard-focus'
 import type { OwnershipFilter } from '@/features/rhythm/rhythm.types'
 
 const OWNERSHIP_OPTIONS: OwnershipFilter[] = ['all', 'public', 'private']
@@ -44,6 +45,7 @@ export const GarageOwnershipFilter = () => {
             key={value}
             aria-pressed={active}
             className={cn(
+              KEYBOARD_FOCUS_VISIBLE_CLASS,
               'rounded-lg px-3.5 py-1.5 text-xs font-semibold uppercase tracking-wide transition-colors',
               active
                 ? 'bg-greeny-dark text-white dark:bg-greeny-lighter dark:text-zinc-900'
@@ -67,7 +69,10 @@ export const GarageOwnershipFilterMobile = () => {
   return (
     <button
       aria-label={`Rhythm scope: ${MOBILE_OWNERSHIP_LABELS[ownership]}. Click to change.`}
-      className="shrink-0 rounded-md bg-greeny-light px-2.5 py-1.5 text-[10px] font-semibold tracking-wide text-white transition-colors active:scale-[0.98]"
+      className={cn(
+        KEYBOARD_FOCUS_VISIBLE_CLASS,
+        'shrink-0 rounded-md bg-greeny-light px-2.5 py-1.5 text-[10px] font-semibold tracking-wide text-white transition-colors active:scale-[0.98]',
+      )}
       onClick={() => setOwnership(nextOwnership(ownership))}
       type="button"
     >

@@ -11,6 +11,7 @@ import type { Rhythm, RhythmMeter } from '@/features/rhythm/rhythm.types'
 import { Input } from '@/features/theme/input'
 import { Text } from '@/features/theme/text'
 import { cn } from '@/features/theme/cn'
+import { KEYBOARD_FOCUS_VISIBLE_CLASS } from '@/features/theme/keyboard-focus'
 
 export type RhythmMetadataValues = Pick<
   Rhythm,
@@ -37,6 +38,7 @@ const fieldLabelClass = 'flex flex-col gap-1 text-sm'
 const beatSizeOptions = [3, 4] as const
 const beatSizeChipClass = (active: boolean) =>
   cn(
+    KEYBOARD_FOCUS_VISIBLE_CLASS,
     'rounded-md border flex-1 px-2.5 py-1.5 text-base transition-colors',
     active
       ? 'border-zinc-900 bg-zinc-900 text-white dark:border-zinc-100 dark:bg-zinc-100 dark:text-zinc-900'

@@ -64,7 +64,6 @@ const roundToggleClass =
 
 const modeToggleSegmentClass = (active: boolean) =>
   cn(
-    KEYBOARD_FOCUS_VISIBLE_CLASS,
     'flex-1 px-2 py-2 text-sm font-medium transition-colors',
     active
       ? 'bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900'
@@ -163,14 +162,24 @@ export const EditorKeyboard = ({
   const modeToggle = (
     <KeyboardHintWrap hint="~" label="Mode">
       <div
-        className="flex overflow-hidden rounded-lg border border-zinc-200/80 dark:border-zinc-700/80 h-11 md:h-full"
-        role="group"
         aria-label="Selection mode"
+        className={cn(
+          KEYBOARD_FOCUS_VISIBLE_CLASS,
+          'flex h-11 overflow-hidden rounded-lg border border-zinc-200/80 dark:border-zinc-700/80 md:h-full',
+        )}
+        onKeyDown={(event) => {
+          if (event.key !== 'Enter' && event.key !== ' ') return
+          event.preventDefault()
+          onSelectionModeChange(isBarMode ? 'note' : 'bar')
+        }}
+        role="group"
+        tabIndex={0}
       >
         <button
           aria-pressed={isBarMode}
           className={cn(PRESSABLE_CLASS, modeToggleSegmentClass(isBarMode))}
           onClick={() => onSelectionModeChange('bar')}
+          tabIndex={-1}
           type="button"
         >
           bar
@@ -179,6 +188,7 @@ export const EditorKeyboard = ({
           aria-pressed={!isBarMode}
           className={cn(PRESSABLE_CLASS, modeToggleSegmentClass(!isBarMode))}
           onClick={() => onSelectionModeChange('note')}
+          tabIndex={-1}
           type="button"
         >
           note

@@ -16,6 +16,7 @@ import {
   resolvePopoverStyle,
   type PopoverDirection,
 } from '@/features/groovy-player/popover-position'
+import { useFocusTrap } from '@/features/shared/use-focus-trap'
 import { cn } from '@/features/theme/cn'
 
 export type { PopoverDirection } from '@/features/groovy-player/popover-position'
@@ -59,6 +60,8 @@ type PopoverProps = {
   full?: boolean
   fullAnchor?: 'header' | 'trigger'
   rootClassName?: string
+  focusTrap?: boolean
+  closeOnEsc?: boolean
   children: (props: PopoverRenderProps) => ReactNode
 }
 
@@ -69,6 +72,8 @@ export const Popover = ({
   full = false,
   fullAnchor = 'header',
   rootClassName,
+  focusTrap = true,
+  closeOnEsc = true,
   children,
 }: PopoverProps) => {
   const [open, setOpen] = useState(false)
@@ -76,6 +81,8 @@ export const Popover = ({
   const rootRef = useRef<HTMLDivElement>(null)
   const panelRef = useRef<HTMLDivElement>(null)
   const close = () => setOpen(false)
+
+  useFocusTrap(panelRef, open && focusTrap)
 
   const updatePosition = useCallback(() => {
     const trigger = rootRef.current
@@ -131,6 +138,15 @@ export const Popover = ({
     document.addEventListener('pointerdown', onPointerDown)
     return () => document.removeEventListener('pointerdown', onPointerDown)
   }, [open])
+
+  useEffect(() => {
+    if (!open || !closeOnEsc) return
+    const onKeyDown = ({ key }: KeyboardEvent) => {
+      if (key === 'Escape') setOpen(false)
+    }
+    document.addEventListener('keydown', onKeyDown)
+    return () => document.removeEventListener('keydown', onKeyDown)
+  }, [closeOnEsc, open])
 
   const toggle = () => setOpen((value) => !value)
   const panelContent = typeof panel === 'function' ? panel({ close }) : panel

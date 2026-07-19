@@ -6,6 +6,7 @@ import { useCallback, useEffect, useRef, useState, type ComponentProps } from 'r
 import { DundunSetIcon } from '@/features/icons/dundun-set-icon'
 import { LogoIcon } from '@/features/icons/logo-icon'
 import { cn } from '@/features/theme/cn'
+import { KEYBOARD_FOCUS_VISIBLE_CLASS } from '@/features/theme/keyboard-focus'
 
 const DUNDUN_CLICKS = 4
 const CLICK_WINDOW_MS = 2000
@@ -86,11 +87,8 @@ export const Logo = ({
   const dundunUnlocked = dundunTime >= DUNDUN_CLICKS
   const stableLayout = onPage && !compact
 
-  return (
-    <Link
-      className={cn('flex items-center', compact ? 'scale-90' : 'scale-75 md:scale-100', className)}
-      href={href}
-    >
+  const content = (
+    <>
       <div
         className={cn(
           'relative shrink-0 overflow-visible',
@@ -164,6 +162,22 @@ export const Logo = ({
       >
         dunsy<small className={cn('opacity-50', compact ? 'text-xs' : 'text-2xl')}>.app</small>
       </h1>
+    </>
+  )
+
+  const rootClass = cn(
+    'flex items-center',
+    compact ? 'scale-90' : 'scale-75 md:scale-100',
+    className,
+  )
+
+  if (onPage) {
+    return <div className={rootClass}>{content}</div>
+  }
+
+  return (
+    <Link className={cn(KEYBOARD_FOCUS_VISIBLE_CLASS, 'rounded-md', rootClass)} href={href}>
+      {content}
     </Link>
   )
 }
