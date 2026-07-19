@@ -30,7 +30,7 @@ import { Note16Icon } from '@/features/icons/note-16-icon'
 import { Note8Icon } from '@/features/icons/note-8-icon'
 import { PlusIcon } from '@/features/icons/plus-icon'
 import { BOTTOM_NAV_OFFSET_CLASS, PAGE_BODY_BG_CLASS } from '@/features/layout/constants'
-import { usePlayerStore } from '@/features/groovy-player/player.store'
+import { useFullBleedActive } from '@/features/groovy-player/use-full-bleed-active'
 import { KeyboardHintWrap } from '@/features/shared/keyboard-hint-wrap'
 import { useIsMobile } from '@/features/shared/use-is-mobile'
 import { cn } from '@/features/theme/cn'
@@ -93,7 +93,7 @@ export const EditorKeyboard = ({
   onConvertToEighth,
 }: EditorKeyboardProps) => {
   const isMobile = useIsMobile()
-  const fullBleed = usePlayerStore((state) => state.fullBleed)
+  const fullBleedActive = useFullBleedActive()
   const isBarMode = selectionMode === 'bar'
   const hasSelection = selection !== null
   const hasBarSelection =
@@ -196,7 +196,7 @@ export const EditorKeyboard = ({
       <div
         className={cn(
           'mx-auto flex w-full flex-col gap-2',
-          fullBleed ? 'md:pr-24 md:pl-4' : 'max-w-5xl',
+          fullBleedActive ? 'md:pr-24 md:pl-4' : 'max-w-5xl',
         )}
       >
         <div className="grid grid-cols-3 gap-2">

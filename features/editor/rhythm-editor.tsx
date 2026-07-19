@@ -16,6 +16,7 @@ import { useEditorKeyboard } from '@/features/editor/use-editor-keyboard'
 import { useFlamMode } from '@/features/editor/use-flam-mode'
 import { useNoteEditor } from '@/features/editor/use-note-editor'
 import { useBarsPerRow } from '@/features/groovy-player/use-bars-per-row'
+import { useFullBleedActive } from '@/features/groovy-player/use-full-bleed-active'
 import { PlayerBottomNav } from '@/features/groovy-player/player-bottom-nav'
 import {
   defaultSwingPatternForMeter,
@@ -76,7 +77,7 @@ export const RhythmEditor = () => {
   const setSwingEnabled = usePlayerStore((state) => state.setSwingEnabled)
   const setIsPlaying = usePlayerStore((state) => state.setIsPlaying)
   const setTempo = usePlayerStore((state) => state.setTempo)
-  const fullBleed = usePlayerStore((state) => state.fullBleed)
+  const fullBleedActive = useFullBleedActive()
   const [playError, setPlayError] = useState<string | null>(null)
 
   const barSize = rhythm ? rhythm.meter * 2 : 8
@@ -246,27 +247,27 @@ export const RhythmEditor = () => {
   return (
     <>
       {mediaAudio}
-      <div className={cn('flex w-full flex-col gap-3', !fullBleed && 'lg:pt-4 xl:px-4 xl:pt-6')}>
-        {!fullBleed ? (
-          <FixedSideActions>
-            <Button onClick={onBackToPicker} variant="subtle" className="!justify-start">
-              <BackIcon className="size-4 mr-1" /> Back to My Rhythms
-            </Button>
-            <Button
-              href={`/player?rhythm=${rhythm.slug}`}
-              variant="subtle"
-              className="!justify-start"
-            >
-              <Note16Icon className="mr-1 size-4" /> Show in Player
-            </Button>
-            <PublishGate rhythm={rhythm} />
-          </FixedSideActions>
-        ) : null}
+      <div
+        className={cn('flex w-full flex-col gap-3', !fullBleedActive && 'lg:pt-4 xl:px-4 xl:pt-6')}
+      >
+        <FixedSideActions placement={fullBleedActive ? 'above' : 'side'}>
+          <Button onClick={onBackToPicker} variant="subtle" className="!justify-start">
+            <BackIcon className="size-4 mr-1" /> Back to My Rhythms
+          </Button>
+          <Button
+            href={`/player?rhythm=${rhythm.slug}`}
+            variant="subtle"
+            className="!justify-start"
+          >
+            <Note16Icon className="mr-1 size-4" /> Show in Player
+          </Button>
+          <PublishGate rhythm={rhythm} />
+        </FixedSideActions>
 
         <section
           className={cn(
             'flex w-full flex-col gap-2 overflow-hidden bg-editor-surface',
-            fullBleed
+            fullBleedActive
               ? 'md:rounded-none md:border-0'
               : 'mx-auto max-w-4xl md:rounded-xl md:border md:border-zinc-100 dark:border-transparent xl:max-w-5xl',
           )}

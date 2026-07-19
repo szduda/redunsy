@@ -246,7 +246,7 @@ export const HELP_SECTIONS: HelpSection[] = [
         icon: 'fullBleed',
         title: 'Full bleed',
         description:
-          'Desktop only. Stretches the player edge to edge and hides side margins for maximum notation width. In this mode the side panel is hidden, so Fork and Edit are not available until you turn full bleed off.',
+          'Desktop only. Stretches the player edge to edge for maximum notation width. Navigation actions move above the player instead of the fixed side panel.',
       },
     ],
   },
