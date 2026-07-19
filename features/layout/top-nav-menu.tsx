@@ -59,7 +59,7 @@ type DesktopMenuPanelProps = {
 const DesktopMenuPanel = ({ open, onClose, excludeRef }: DesktopMenuPanelProps) => {
   const panelRef = useRef<HTMLDivElement>(null)
 
-  useFocusTrap(panelRef, open, excludeRef)
+  useFocusTrap(panelRef, open, { excludeFromTabOrder: excludeRef })
 
   useEffect(() => {
     if (!open) return

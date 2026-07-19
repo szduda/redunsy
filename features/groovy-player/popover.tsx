@@ -82,7 +82,7 @@ export const Popover = ({
   const panelRef = useRef<HTMLDivElement>(null)
   const close = () => setOpen(false)
 
-  useFocusTrap(panelRef, open && focusTrap, rootRef)
+  useFocusTrap(panelRef, open && focusTrap, { excludeFromTabOrder: rootRef })
 
   const updatePosition = useCallback(() => {
     const trigger = rootRef.current

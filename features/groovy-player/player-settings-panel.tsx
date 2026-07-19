@@ -128,7 +128,7 @@ export const PlayerSettingsPanel = ({ open, onClose, excludeRef }: PlayerSetting
   const showKeyboardHints = usePlayerStore((state) => state.showKeyboardHints)
   const setShowKeyboardHints = usePlayerStore((state) => state.setShowKeyboardHints)
 
-  useFocusTrap(panelRef, open, excludeRef)
+  useFocusTrap(panelRef, open, { excludeFromTabOrder: excludeRef })
 
   useEffect(() => {
     if (!open) return
