@@ -2,6 +2,7 @@
 
 import { Popover, popoverTriggerOpenClass } from '@/features/groovy-player/popover'
 import { cn } from '@/features/theme/cn'
+import { KEYBOARD_FOCUS_VISIBLE_CLASS } from '@/features/theme/keyboard-focus'
 import { Text } from '@/features/theme/text'
 
 export const BAR_DRAG_HINT = 'Drag & drop bars to reposition'
@@ -31,6 +32,7 @@ export const BarDragHintPopover = () => (
     {({ open, toggle }) => (
       <button
         className={cn(
+          KEYBOARD_FOCUS_VISIBLE_CLASS,
           'whitespace-nowrap rounded-md bg-yellowy-light/10 px-2 py-1.5 text-sm text-zinc-500 transition-colors hover:bg-yellowy-light/20 hover:text-zinc-700 dark:text-zinc-400 dark:hover:text-zinc-200',
           open && popoverTriggerOpenClass,
         )}

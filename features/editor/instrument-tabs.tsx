@@ -17,6 +17,7 @@ import { Button } from '@/features/theme/button'
 import { Switch } from '@/features/theme/switch'
 import { Text } from '@/features/theme/text'
 import { cn } from '@/features/theme/cn'
+import { KEYBOARD_FOCUS_VISIBLE_CLASS } from '@/features/theme/keyboard-focus'
 
 type InstrumentTabsProps = {
   tracks: Track[]
@@ -130,6 +131,7 @@ export const InstrumentTabs = ({
             <button
               key={track.id}
               className={cn(
+                KEYBOARD_FOCUS_VISIBLE_CLASS,
                 'shrink-0 border-2 px-3 py-2 text-sm font-semibold tracking-tight rounded-t-lg',
                 active
                   ? 'border-zinc-400/60 border-b-editor-surface text-zinc-900 dark:border-zinc-700 dark:border-b-editor-surface dark:text-zinc-100'

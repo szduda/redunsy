@@ -6,6 +6,7 @@ import { usePlayerStore } from '@/features/groovy-player/player.store'
 import { KeyboardHintText } from '@/features/shared/keyboard-hint-text'
 import { useIsMobile } from '@/features/shared/use-is-mobile'
 import { cn } from '@/features/theme/cn'
+import { KEYBOARD_FOCUS_VISIBLE_CLASS } from '@/features/theme/keyboard-focus'
 import { PRESSABLE_CLASS } from '@/features/theme/pressable'
 
 type DisabledHintButtonProps = {
@@ -56,7 +57,12 @@ export const DisabledHintButton = ({
     <div className="group/hint relative">
       <button
         aria-disabled={disabled}
-        className={cn(PRESSABLE_CLASS, className, disabled && 'cursor-default')}
+        className={cn(
+          PRESSABLE_CLASS,
+          KEYBOARD_FOCUS_VISIBLE_CLASS,
+          className,
+          disabled && 'cursor-default',
+        )}
         disabled={disabled && !isMobile}
         onClick={handleClick}
         style={style}

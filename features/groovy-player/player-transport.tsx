@@ -1,5 +1,7 @@
 'use client'
 
+import { type Ref } from 'react'
+
 import { PauseIcon } from '@/features/icons/pause-icon'
 import { PlayIcon } from '@/features/icons/play-icon'
 import { RestartIcon } from '@/features/icons/restart-icon'
@@ -13,6 +15,8 @@ type PlayerTransportProps = {
   onPlayPause: () => void
   onStop: () => void
   onRestart: () => void
+  playPauseRef?: Ref<HTMLButtonElement>
+  stopRef?: Ref<HTMLButtonElement>
 }
 
 export const PlayerTransport = ({
@@ -20,15 +24,22 @@ export const PlayerTransport = ({
   onPlayPause,
   onStop,
   onRestart,
+  playPauseRef,
+  stopRef,
 }: PlayerTransportProps) => (
   <div className="flex gap-1 items-center">
     <KeyboardHintWrap hint={PLAYER_HINTS.playPause.key} label={PLAYER_HINTS.playPause.label}>
-      <IconButton active aria-label={isPlaying ? 'Pause' : 'Play'} onClick={onPlayPause}>
+      <IconButton
+        ref={playPauseRef}
+        active
+        aria-label={isPlaying ? 'Pause' : 'Play'}
+        onClick={onPlayPause}
+      >
         {isPlaying ? <PauseIcon className="mx-auto" /> : <PlayIcon className="mx-auto" />}
       </IconButton>
     </KeyboardHintWrap>
     <KeyboardHintWrap hint={PLAYER_HINTS.stop.key} label={PLAYER_HINTS.stop.label}>
-      <IconButton active aria-label="Stop" onClick={onStop}>
+      <IconButton ref={stopRef} active aria-label="Stop" onClick={onStop}>
         <StopIcon className="mx-auto" />
       </IconButton>
     </KeyboardHintWrap>

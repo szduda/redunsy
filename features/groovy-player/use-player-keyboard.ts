@@ -7,6 +7,9 @@ import { usePlayerStore } from '@/features/groovy-player/player.store'
 type PlayerKeyboardActions = {
   onStop: () => void
   focusTempo: () => void
+  focusStop: () => void
+  focusMetronome: () => void
+  focusSwing: () => void
 }
 
 const isTypingTarget = (target: EventTarget | null) =>
@@ -33,12 +36,14 @@ export const usePlayerKeyboard = (actions: PlayerKeyboardActions | null) => {
       if (key === 'm') {
         event.preventDefault()
         toggleHasMetronome()
+        current.focusMetronome()
         return
       }
 
       if (key === 'n') {
         event.preventDefault()
         toggleSwingEnabled()
+        current.focusSwing()
         return
       }
 
@@ -51,6 +56,7 @@ export const usePlayerKeyboard = (actions: PlayerKeyboardActions | null) => {
       if (key === 's') {
         event.preventDefault()
         current.onStop()
+        current.focusStop()
       }
     }
 

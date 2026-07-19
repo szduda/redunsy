@@ -1,6 +1,7 @@
 'use client'
 
 import { cn } from '@/features/theme/cn'
+import { KEYBOARD_FOCUS_VISIBLE_CLASS } from '@/features/theme/keyboard-focus'
 
 type SwitchProps = {
   checked: boolean
@@ -26,6 +27,7 @@ export const Switch = ({
       aria-checked={checked}
       aria-label={label}
       className={cn(
+        KEYBOARD_FOCUS_VISIBLE_CLASS,
         'relative h-6 w-10 shrink-0 rounded-full transition-colors',
         checked ? 'bg-zinc-900 dark:bg-zinc-100' : 'bg-zinc-300 dark:bg-zinc-700',
       )}

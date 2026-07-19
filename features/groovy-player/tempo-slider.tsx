@@ -7,6 +7,7 @@ import { usePlayerStore } from '@/features/groovy-player/player.store'
 import { useIsMobile } from '@/features/shared/use-is-mobile'
 import { Button } from '@/features/theme/button'
 import { cn } from '@/features/theme/cn'
+import { KEYBOARD_FOCUS_VISIBLE_CLASS } from '@/features/theme/keyboard-focus'
 import { Text } from '@/features/theme/text'
 
 const MIN_TEMPO = 60
@@ -83,7 +84,10 @@ const VerticalTempoSlider = ({
       aria-valuemax={MAX_TEMPO}
       aria-valuemin={MIN_TEMPO}
       aria-valuenow={tempo}
-      className="flex h-24 w-8 touch-none cursor-pointer items-center justify-center"
+      className={cn(
+        KEYBOARD_FOCUS_VISIBLE_CLASS,
+        'flex h-24 w-8 touch-none cursor-pointer items-center justify-center',
+      )}
       onKeyDown={onKeyDown}
       onPointerDown={onPointerDown}
       onPointerMove={setTempoFromPointer}
@@ -132,7 +136,12 @@ const TempoSliderInput = ({
     <input
       ref={focusRef}
       aria-label="Tempo"
-      className={cn('cursor-pointer', horizontalSliderClass, className)}
+      className={cn(
+        'cursor-pointer',
+        KEYBOARD_FOCUS_VISIBLE_CLASS,
+        horizontalSliderClass,
+        className,
+      )}
       max={MAX_TEMPO}
       min={MIN_TEMPO}
       onChange={onChange}
@@ -183,7 +192,11 @@ const MobileTempoSlider = ({
       <Button
         aria-expanded={open}
         aria-label={`Tempo ${tempo} BPM`}
-        className={cn('flex-col mr-1.5', open && popoverTriggerOpenClass)}
+        className={cn(
+          'flex-col mr-1.5',
+          KEYBOARD_FOCUS_VISIBLE_CLASS,
+          open && popoverTriggerOpenClass,
+        )}
         onClick={toggle}
         type="button"
         variant="subtle"

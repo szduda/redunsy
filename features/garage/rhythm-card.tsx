@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { RhythmMetadataView } from '@/features/rhythm/rhythm-metadata-view'
 import type { RhythmCard } from '@/features/rhythm/rhythm.types'
 import { cn } from '@/features/theme/cn'
+import { KEYBOARD_FOCUS_VISIBLE_CLASS } from '@/features/theme/keyboard-focus'
 
 type RhythmCardProps = {
   card: RhythmCard
@@ -28,7 +29,7 @@ export const RhythmCardView = ({ card, className }: RhythmCardProps) => (
     )}
   >
     <Link
-      className="flex h-full flex-col p-4"
+      className={cn(KEYBOARD_FOCUS_VISIBLE_CLASS, 'flex h-full flex-col rounded-xl p-4')}
       href={card.userOwned ? `/player?rhythm=${card.slug}` : `/rhythm/${card.slug}`}
     >
       <RhythmMetadataView

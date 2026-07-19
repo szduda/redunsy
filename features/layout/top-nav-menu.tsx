@@ -8,6 +8,7 @@ import { TOP_NAV_HALO_STROKE_CLASS } from '@/features/layout/constants'
 import { MobileNavMenu } from '@/features/layout/mobile-nav-menu'
 import { NavMenuContent } from '@/features/layout/nav-menu-content'
 import { topNavItemClass } from '@/features/layout/top-nav-item'
+import { useFocusTrap } from '@/features/shared/use-focus-trap'
 import { useIsMobile } from '@/features/shared/use-is-mobile'
 import { cn } from '@/features/theme/cn'
 
@@ -57,6 +58,8 @@ type DesktopMenuPanelProps = {
 
 const DesktopMenuPanel = ({ open, onClose, excludeRef }: DesktopMenuPanelProps) => {
   const panelRef = useRef<HTMLDivElement>(null)
+
+  useFocusTrap(panelRef, open, { excludeFromTabOrder: excludeRef })
 
   useEffect(() => {
     if (!open) return
