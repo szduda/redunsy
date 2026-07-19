@@ -3,6 +3,9 @@ import { create } from 'zustand'
 export const PAGE_SIZE_OPTIONS = [10, 20, 30] as const
 export type PageSizeOption = (typeof PAGE_SIZE_OPTIONS)[number]
 
+/** My Rhythms views hide pagination when the library is smaller than one default page. */
+export const MY_RHYTHMS_PAGINATION_THRESHOLD = 20
+
 type PaginationState = {
   page: number
   setPage: (page: number) => void

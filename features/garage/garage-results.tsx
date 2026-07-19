@@ -12,7 +12,10 @@ import { GarageEmptyMyRhythms } from '@/features/garage/garage-empty-my-rhythms'
 import { GarageNotFound } from '@/features/garage/garage-not-found'
 import { isEmptyMyRhythmsLibraryView } from '@/features/garage/is-empty-my-rhythms-library-view'
 import { GaragePagination } from '@/features/garage/garage-pagination'
-import { usePaginationStore } from '@/features/garage/pagination.store'
+import {
+  MY_RHYTHMS_PAGINATION_THRESHOLD,
+  usePaginationStore,
+} from '@/features/garage/pagination.store'
 import { RhythmCardView } from '@/features/garage/rhythm-card'
 import { useDebouncedValue } from '@/features/garage/use-debounced-value'
 import { useGarageSnippets } from '@/features/garage/use-garage-snippets'
@@ -72,6 +75,11 @@ export const GarageResults = ({
     !showSpinner && !isFetching && isEmptyMyRhythmsLibraryView(filters, debouncedSearch)
   const showNotFound =
     !showSpinner && !isFetching && hasActiveQuery && snippets.length === 0 && !showEmptyMyRhythms
+  const isMyRhythmsView = filters.ownership === 'private'
+  const showPagination =
+    !showSpinner &&
+    total > 0 &&
+    (!isMyRhythmsView || total >= MY_RHYTHMS_PAGINATION_THRESHOLD)
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
@@ -122,7 +130,7 @@ export const GarageResults = ({
         </div>
       ) : null}
 
-      {!showSpinner ? (
+      {showPagination ? (
         <GaragePagination
           disabled={isFetching}
           onPageChange={goToPage}
