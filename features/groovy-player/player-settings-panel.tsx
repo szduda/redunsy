@@ -15,6 +15,7 @@ import { SwingPatternField } from '@/features/groovy-player/swing-pattern-field'
 import { isSwingPatternIncorrect, usePlayerStore } from '@/features/groovy-player/player.store'
 import { BOTTOM_NAV_OFFSET_CLASS } from '@/features/layout/constants'
 import { useIsMobile } from '@/features/shared/use-is-mobile'
+import { useFocusTrap } from '@/features/shared/use-focus-trap'
 import { Switch } from '@/features/theme/switch'
 import { Text } from '@/features/theme/text'
 import { cn } from '@/features/theme/cn'
@@ -126,6 +127,8 @@ export const PlayerSettingsPanel = ({ open, onClose, excludeRef }: PlayerSetting
   const setPreventScreenSleep = usePlayerStore((state) => state.setPreventScreenSleep)
   const showKeyboardHints = usePlayerStore((state) => state.showKeyboardHints)
   const setShowKeyboardHints = usePlayerStore((state) => state.setShowKeyboardHints)
+
+  useFocusTrap(panelRef, open, excludeRef)
 
   useEffect(() => {
     if (!open) return

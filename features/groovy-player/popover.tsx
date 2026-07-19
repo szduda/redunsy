@@ -82,7 +82,7 @@ export const Popover = ({
   const panelRef = useRef<HTMLDivElement>(null)
   const close = () => setOpen(false)
 
-  useFocusTrap(panelRef, open && focusTrap)
+  useFocusTrap(panelRef, open && focusTrap, rootRef)
 
   const updatePosition = useCallback(() => {
     const trigger = rootRef.current
