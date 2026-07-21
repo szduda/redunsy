@@ -63,6 +63,32 @@ describe('GarageResults', () => {
     expect(screen.queryByText('Search results')).not.toBeInTheDocument()
     expect(screen.queryByText('Recently added')).not.toBeInTheDocument()
     expect(screen.getByText('Test Rhythm')).toBeInTheDocument()
+    expect(screen.queryByLabelText('Pagination')).not.toBeInTheDocument()
+  })
+
+  it('shows pagination in my rhythms when there are at least 20 rhythms', () => {
+    useGarageSnippetsMock.mockReturnValue({
+      data: {
+        items: [
+          {
+            slug: 'test-rhythm',
+            title: 'Test Rhythm',
+            meter: 4,
+            instruments: ['snare'],
+            userOwned: true,
+          },
+        ],
+        total: 20,
+      },
+      isLoading: false,
+      isFetching: false,
+      isPlaceholderData: false,
+    })
+
+    renderWithQuery(
+      <GarageResults filters={PRIVATE_GARAGE_FILTERS} searchTerm="" showHeading={false} />,
+    )
+
     expect(screen.getByLabelText('Pagination')).toBeInTheDocument()
   })
 
