@@ -77,9 +77,7 @@ export const GarageResults = ({
     !showSpinner && !isFetching && hasActiveQuery && snippets.length === 0 && !showEmptyMyRhythms
   const isMyRhythmsView = filters.ownership === 'private'
   const showPagination =
-    !showSpinner &&
-    total > 0 &&
-    (!isMyRhythmsView || total >= MY_RHYTHMS_PAGINATION_THRESHOLD)
+    !showSpinner && total > 0 && (!isMyRhythmsView || total >= MY_RHYTHMS_PAGINATION_THRESHOLD)
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
