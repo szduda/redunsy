@@ -11,6 +11,7 @@ import { useScreenWakeLock } from '@/features/groovy-player/use-screen-wake-lock
 import { BackIcon } from '@/features/icons/back-icon'
 import { EditIcon } from '@/features/icons/edit-icon'
 import { ForkIcon } from '@/features/icons/fork-icon'
+import { ShareRhythmButton } from '@/features/share-rhythm/export/share-rhythm-button'
 import { FixedSideActions } from '@/features/layout/fixed-side-actions'
 import { useTopNavSticky } from '@/features/layout/use-top-nav-sticky'
 import {
@@ -278,6 +279,7 @@ export const GroovyPlayer = ({ rhythm, hideHeader = false }: GroovyPlayerProps =
             </Button>
             {loadedRhythm ? (
               <>
+                <ShareRhythmButton rhythm={loadedRhythm} />
                 <Button className="!justify-start" onClick={onFork} variant="subtle">
                   <ForkIcon className="mr-1 size-4" /> Fork
                 </Button>
