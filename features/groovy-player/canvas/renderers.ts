@@ -7,6 +7,7 @@ import {
   parseBarsLayout,
   parseBarsNotation,
   type BarLayout,
+  type ParsedBarsNotation,
 } from './bar-layout'
 import { drawTripletBracket, tripletBracketSpans } from './triplet-brackets'
 import {
@@ -270,6 +271,8 @@ type RenderBarsArgs = Omit<BarRendererArgs, 'barIndex' | 'highlighted'> & {
   palette?: CanvasColors
   showBarIndex?: boolean
   markTriplets?: boolean
+  /** Pre-parsed notation; when provided, renderBars does not re-parse. */
+  parsed?: ParsedBarsNotation
 }
 
 const renderBarIndexLabels = (
@@ -340,8 +343,9 @@ export const renderBars = ({
   palette = darkCanvasColors,
   showBarIndex = false,
   markTriplets = false,
+  parsed: preParsed,
 }: RenderBarsArgs) => {
-  const parsed = parseBarsNotation(bars)
+  const parsed = preParsed ?? parseBarsNotation(bars)
   const rowHeights = rowHeightsForBars(canvasWidth, barsPerRow, bars, parsed.layouts)
   const layouts = bars.map((_, barIndex) =>
     layoutBar({

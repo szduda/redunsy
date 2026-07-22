@@ -4,7 +4,7 @@ import {
   yellowyOverlay,
 } from '@/lib/theme/yellowy'
 import { darkCanvasColors, type CanvasColors } from '@/features/groovy-player/canvas/canvas-colors'
-import { parseBarsLayout } from '@/features/groovy-player/canvas/bar-layout'
+import { parseBarsLayout, type BarLayout } from '@/features/groovy-player/canvas/bar-layout'
 import {
   BAR_GAP_PX,
   barHeightForBar,
@@ -48,7 +48,7 @@ export const drawBarOverlayAtIndex = ({
   dark: boolean
   opacity: number
   rowHeights?: number[]
-  layouts?: ReturnType<typeof parseBarsLayout>
+  layouts?: BarLayout[]
 }) => {
   const resolvedLayouts = layouts ?? parseBarsLayout(bars)
   const resolvedRowHeights =
@@ -80,6 +80,8 @@ export const drawDragPreviewHighlights = ({
   dark,
   sourceIndex,
   hoveredBarIndex,
+  layouts: precomputedLayouts,
+  rowHeights: precomputedRowHeights,
 }: {
   bars: string[]
   canvasWidth: number
@@ -88,11 +90,14 @@ export const drawDragPreviewHighlights = ({
   dark: boolean
   sourceIndex: number
   hoveredBarIndex: number
+  layouts?: BarLayout[]
+  rowHeights?: number[]
 }) => {
   const highlighted = new Set<number>([sourceIndex])
   if (hoveredBarIndex >= 0) highlighted.add(hoveredBarIndex)
-  const layouts = parseBarsLayout(bars)
-  const rowHeights = rowHeightsForBars(canvasWidth, barsPerRow, bars, layouts)
+  const layouts = precomputedLayouts ?? parseBarsLayout(bars)
+  const rowHeights =
+    precomputedRowHeights ?? rowHeightsForBars(canvasWidth, barsPerRow, bars, layouts)
 
   highlighted.forEach((barIndex) => {
     drawBarOverlayAtIndex({

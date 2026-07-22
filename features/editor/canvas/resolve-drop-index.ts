@@ -1,7 +1,9 @@
 import { canvasLogicalPoint } from '@/features/editor/canvas/canvas-pointer'
-import { barBoundsAtIndex } from '@/features/editor/canvas/render-editor-bars'
+import { parseBarsLayout } from '@/features/groovy-player/canvas/bar-layout'
 import {
   BAR_GAP_PX,
+  barHeightForCellCount,
+  barTopForIndex,
   barWidthForCanvas,
   rowHeightsForBars,
   rowIndexFromY,
@@ -26,11 +28,21 @@ export const barBoundsForBars = (
   bars: string[],
   canvasWidth: number,
   barsPerRow: number,
-): BarBounds[] =>
-  bars.map((_, barIndex) => ({
-    barIndex,
-    ...barBoundsAtIndex(bars, barIndex, canvasWidth, barsPerRow),
-  }))
+): BarBounds[] => {
+  const layouts = parseBarsLayout(bars)
+  const rowHeights = rowHeightsForBars(canvasWidth, barsPerRow, bars, layouts)
+  const barWidth = barWidthForCanvas(canvasWidth, barsPerRow)
+  return bars.map((_, barIndex) => {
+    const height = barHeightForCellCount(
+      canvasWidth,
+      barsPerRow,
+      layouts[barIndex]?.cellCount ?? 0,
+    )
+    const top = barTopForIndex(barIndex, barsPerRow, rowHeights)
+    const left = (barIndex % barsPerRow) * (barWidth + BAR_GAP_PX)
+    return { barIndex, left, top, width: barWidth, height }
+  })
+}
 
 export const barBoundsFromElements = (
   elements: {

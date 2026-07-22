@@ -5,9 +5,10 @@ import { memo, useLayoutEffect, useRef } from 'react'
 import { setupCanvasDpi } from './canvas-dpi'
 import { darkCanvasColors, lightCanvasColors } from './canvas-colors'
 import { findPatternLength } from './find-pattern-length'
-import { playerCanvasInsets } from './player-canvas-padding'
+import { parseBarsNotation } from './bar-layout'
 import { canvasHeightForBars, renderBars } from './renderers'
 import { useCanvasWidth } from './use-canvas-width'
+import { playerCanvasInsets } from './player-canvas-padding'
 import { usePlayerStore } from '@/features/groovy-player/player.store'
 import { useIsMobile } from '@/features/shared/use-is-mobile'
 import { useIsDark } from '@/features/store/theme.store'
@@ -32,7 +33,8 @@ const Bars = ({ bars, activeIndex = -1, barsPerRow, instrument, id }: BarsCanvas
   const { paddingY, contentWidth } = playerCanvasInsets(canvasWidth, isMobile)
   const barsInPattern = Math.max(findPatternLength(bars, 8), barsPerRow)
   const hash = bars.join('')
-  const contentHeight = canvasHeightForBars(contentWidth, barsPerRow, bars)
+  const parsed = parseBarsNotation(bars)
+  const contentHeight = canvasHeightForBars(contentWidth, barsPerRow, bars, parsed.layouts)
   const canvasHeight = contentHeight + paddingY * 2
   const highlightedBarIndex =
     activeIndex < 0 ? -1 : barsInPattern > 1 ? activeIndex % barsInPattern : activeIndex
@@ -62,6 +64,7 @@ const Bars = ({ bars, activeIndex = -1, barsPerRow, instrument, id }: BarsCanvas
       palette,
       showBarIndex,
       markTriplets,
+      parsed,
     })
 
     context.restore()

@@ -1,5 +1,6 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 
+import * as groupedNotation from '@/lib/midinike/notation/grouped-notation'
 import {
   previewBarsForDrag,
   remapBarIndex,
@@ -96,5 +97,17 @@ describe('resolveBarDropTarget', () => {
       dropIndex: 2,
       hoveredBarIndex: 2,
     })
+  })
+})
+
+describe('barBoundsForBars single-parse', () => {
+  it('parses grouped notation once for all bar bounds', () => {
+    const bars = ['ttstts', 'ssssss', '{ttt}--', 'bbbbbb', 'ffffff', '------']
+    const spy = vi.spyOn(groupedNotation, 'parseGroupedNotation')
+    const bounds = barBoundsForBars(bars, 400, 2)
+    expect(spy).toHaveBeenCalledTimes(1)
+    spy.mockRestore()
+    expect(bounds).toHaveLength(6)
+    expect(bounds.every((bar, index) => bar.barIndex === index)).toBe(true)
   })
 })
