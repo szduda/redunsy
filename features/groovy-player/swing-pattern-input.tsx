@@ -3,14 +3,15 @@
 import { useRef, type CSSProperties, type PointerEvent } from 'react'
 
 import {
+  collapseSwingPattern,
   cycleSwingSymbolBackward,
   cycleSwingSymbolForward,
   parseSwingSymbol,
-  swingPatternWithLockedDownbeat,
+  updateSwingPatternCell,
+  visibleSwingCellCount,
 } from '@/features/groovy-player/swing-pattern-cycle'
 import { SwingPatternIcon } from '@/features/groovy-player/swing-pattern-icons'
 import { fitSwingPattern } from '@/features/groovy-player/player.store'
-import type { GrooveSymbol } from '@/lib/midinike/groove/groove-symbols'
 import { cn } from '@/features/theme/cn'
 import { KEYBOARD_FOCUS_VISIBLE_CLASS } from '@/features/theme/keyboard-focus'
 
@@ -19,6 +20,7 @@ const LONG_PRESS_MS = 450
 type SwingPatternInputProps = {
   value: string
   barSize: number
+  beats?: 1 | 2
   onCommit: (value: string) => void
   className?: string
   style?: CSSProperties
@@ -33,25 +35,16 @@ const cellClass = (disabled: boolean) =>
       : 'border-zinc-300 bg-white text-zinc-900 hover:border-zinc-400 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-100 dark:hover:border-zinc-500',
   )
 
-const updatePatternCell = (
-  pattern: string,
-  barSize: number,
-  index: number,
-  symbol: GrooveSymbol,
-) => {
-  const cells = [...swingPatternWithLockedDownbeat(fitSwingPattern(pattern, barSize), barSize)]
-  cells[index] = symbol
-  return swingPatternWithLockedDownbeat(cells.join(''), barSize)
-}
-
 export const SwingPatternInput = ({
   value,
   barSize,
+  beats = 1,
   onCommit,
   className,
   style,
 }: SwingPatternInputProps) => {
-  const pattern = swingPatternWithLockedDownbeat(fitSwingPattern(value, barSize), barSize)
+  const pattern = collapseSwingPattern(fitSwingPattern(value, barSize), barSize, beats)
+  const cellCount = visibleSwingCellCount(barSize, beats)
   const longPressTriggeredRef = useRef(false)
   const longPressTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
@@ -65,7 +58,7 @@ export const SwingPatternInput = ({
     const symbol = parseSwingSymbol(pattern[index])
     const next =
       direction === 'forward' ? cycleSwingSymbolForward(symbol) : cycleSwingSymbolBackward(symbol)
-    onCommit(updatePatternCell(pattern, barSize, index, next))
+    onCommit(updateSwingPatternCell(value, barSize, beats, index, next))
   }
 
   const onCellPointerDown =
@@ -104,7 +97,7 @@ export const SwingPatternInput = ({
       role="group"
       style={style}
     >
-      {Array.from({ length: barSize }, (_, index) => {
+      {Array.from({ length: cellCount }, (_, index) => {
         const symbol = parseSwingSymbol(pattern[index])
         const disabled = index === 0
         return (
