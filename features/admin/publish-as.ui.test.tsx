@@ -22,6 +22,13 @@ const routeFetch = (input: RequestInfo | URL, init?: RequestInit) => {
     return publishFetchMock(url, init)
   }
 
+  if (url.includes('/api/search-index')) {
+    return Promise.resolve({
+      ok: true,
+      json: async () => ({ version: 'v-test', generatedAt: 1, count: 0, cards: [] }),
+    })
+  }
+
   if (init?.method === 'HEAD' && url.includes('/rhythm/')) {
     return pageStatusFetchMock(url, init)
   }
@@ -99,7 +106,7 @@ describe('PublishPopover', () => {
         slug: 'brand-new-slug',
         created: true,
         url: '/rhythm/brand-new-slug',
-        indexRefresh: 'queued',
+        indexRefresh: 'rebuilt',
       }),
     }))
   })
@@ -181,7 +188,7 @@ describe('PublishPopover', () => {
 
     expect(await screen.findByText('Created new published rhythm')).toBeInTheDocument()
     expect(screen.getByText('Rhythm page revalidated')).toBeInTheDocument()
-    expect(screen.getByText('Garage index redeploy queued')).toBeInTheDocument()
+    expect(screen.getByText('Garage search index rebuilt')).toBeInTheDocument()
     expect(screen.getByText('Live at /rhythm/brand-new-slug')).toBeInTheDocument()
 
     await waitFor(() => {
@@ -198,7 +205,7 @@ describe('PublishPopover', () => {
         slug: 'existing-slug',
         created: false,
         url: '/rhythm/existing-slug',
-        indexRefresh: 'queued',
+        indexRefresh: 'rebuilt',
       }),
     }))
 

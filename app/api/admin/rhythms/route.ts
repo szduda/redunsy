@@ -3,8 +3,8 @@ import { revalidatePath } from 'next/cache'
 import { upsertPublishedRhythm } from '@/db/admin-rhythms'
 import { slugFromTitle } from '@/features/rhythm/rhythm-helpers'
 import type { Rhythm } from '@/features/rhythm/rhythm.types'
+import { rebuildSearchIndex } from '@/features/search-index/search-index.server'
 import { requireAdminSession } from '@/lib/auth-session'
-import { triggerDeployHook } from '@/lib/deploy-hook'
 
 type PublishBody = {
   slug?: string
@@ -43,14 +43,19 @@ export const POST = async (request: Request) => {
     const result = await upsertPublishedRhythm(slug, rhythm)
     revalidatePath(`/rhythm/${slug}`)
     await warmRhythmPage(request, slug)
-    const indexRefresh = await triggerDeployHook()
+    const indexRefresh = await rebuildSearchIndex()
 
     return Response.json({
       ok: true,
       slug,
       created: result.created,
       url: `/rhythm/${slug}`,
-      indexRefresh,
+      indexRefresh: indexRefresh.status,
+      index: {
+        version: indexRefresh.version,
+        generatedAt: indexRefresh.generatedAt,
+        count: indexRefresh.count,
+      },
     })
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Publish failed'

@@ -3,11 +3,13 @@
 import { useEffect, useState } from 'react'
 
 import { suggestFromOptions } from '@/features/editor/suggest-from-options'
-import { GARAGE_FILTER_OPTIONS } from '@/features/garage/rhythm-index'
 import { swingBarSizeForMeter, isSwingPatternEmpty } from '@/features/groovy-player/player.store'
 import { SwingPatternField } from '@/features/groovy-player/swing-pattern-field'
 import { slugFromTitle } from '@/features/rhythm/rhythm-helpers'
 import type { Rhythm, RhythmMeter } from '@/features/rhythm/rhythm.types'
+import { filterOptionsFromRhythmCards } from '@/features/search-index/search-index.filters'
+import { useSearchIndexStore } from '@/features/search-index/search-index.store'
+import { useSearchIndex } from '@/features/search-index/use-search-index'
 import { Input } from '@/features/theme/input'
 import { Text } from '@/features/theme/text'
 import { cn } from '@/features/theme/cn'
@@ -69,6 +71,9 @@ export const RhythmMetadataForm = ({
   onTitleBlur,
   titlePlaceholder,
 }: RhythmMetadataFormProps) => {
+  useSearchIndex()
+  const cards = useSearchIndexStore((state) => state.cards)
+  const filterOptions = filterOptionsFromRhythmCards(cards)
   const [titleDraft, setTitleDraft] = useState(values.title)
   const slugPreview = titleDraft.trim() ? slugFromTitle(titleDraft.trim()) : ''
 
@@ -170,7 +175,7 @@ export const RhythmMetadataForm = ({
         <Input
           className="w-full"
           onChange={(rhythmGroup) => onChange({ rhythmGroup })}
-          onGetSuggestions={suggestFromOptions(GARAGE_FILTER_OPTIONS.rhythmGroup)}
+          onGetSuggestions={suggestFromOptions(filterOptions.rhythmGroup)}
           value={values.rhythmGroup}
         />
       </label>
@@ -180,7 +185,7 @@ export const RhythmMetadataForm = ({
         <Input
           className="w-full"
           onChange={(origin) => onChange({ origin })}
-          onGetSuggestions={suggestFromOptions(GARAGE_FILTER_OPTIONS.origin)}
+          onGetSuggestions={suggestFromOptions(filterOptions.origin)}
           value={values.origin}
         />
       </label>
@@ -190,7 +195,7 @@ export const RhythmMetadataForm = ({
         <Input
           className="w-full"
           onChange={(author) => onChange({ author })}
-          onGetSuggestions={suggestFromOptions(GARAGE_FILTER_OPTIONS.artist)}
+          onGetSuggestions={suggestFromOptions(filterOptions.artist)}
           value={values.author}
         />
       </label>
@@ -200,7 +205,7 @@ export const RhythmMetadataForm = ({
         <Input
           className="w-full"
           onChange={(tags) => onChange({ tags })}
-          onGetSuggestions={suggestFromOptions(GARAGE_FILTER_OPTIONS.tags)}
+          onGetSuggestions={suggestFromOptions(filterOptions.tags)}
           value={values.tags}
         />
       </label>

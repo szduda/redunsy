@@ -34,7 +34,7 @@ vi.mock('@/db/client', () => ({
   },
 }))
 
-import { upsertPublishedRhythm } from '@/db/admin-rhythms'
+import { unpublishRhythm, upsertPublishedRhythm } from '@/db/admin-rhythms'
 import { sampleRhythm } from '@/features/admin/publish-as.test-helpers'
 
 describe('upsertPublishedRhythm', () => {
@@ -93,6 +93,29 @@ describe('upsertPublishedRhythm', () => {
         published: true,
         patterns: expect.arrayContaining([expect.objectContaining({ instrument: 'djembe' })]),
       }),
+    )
+    expect(dbMocks.mockUpdateWhere).toHaveBeenCalledOnce()
+  })
+})
+
+describe('unpublishRhythm', () => {
+  beforeEach(() => {
+    vi.clearAllMocks()
+    dbMocks.mockLimit.mockResolvedValue([])
+    dbMocks.mockUpdateWhere.mockResolvedValue(undefined)
+  })
+
+  it('returns null when the slug does not exist', async () => {
+    await expect(unpublishRhythm('missing')).resolves.toBeNull()
+    expect(dbMocks.mockUpdate).not.toHaveBeenCalled()
+  })
+
+  it('soft-unpublishes an existing rhythm', async () => {
+    dbMocks.mockLimit.mockResolvedValue([{ id: 'kuku', slug: 'kuku', published: true }])
+
+    await expect(unpublishRhythm('kuku')).resolves.toEqual({ slug: 'kuku', unpublished: true })
+    expect(dbMocks.mockUpdateSet).toHaveBeenCalledWith(
+      expect.objectContaining({ published: false }),
     )
     expect(dbMocks.mockUpdateWhere).toHaveBeenCalledOnce()
   })

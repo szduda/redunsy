@@ -9,10 +9,13 @@ import {
   TOP_NAV_STICKY_SIDEBAR_LG_CLASS,
 } from '@/features/layout/constants'
 import { useTopNavSticky } from '@/features/layout/use-top-nav-sticky'
+import { SearchIndexGate } from '@/features/search-index/search-index-gate'
+import { useSearchIndex } from '@/features/search-index/use-search-index'
 import { cn } from '@/features/theme/cn'
 
 export const GaragePage = () => {
   useTopNavSticky(true)
+  useSearchIndex()
 
   return (
     <div className="mx-auto w-full max-w-8xl flex-1 px-3 md:px-4">
@@ -33,6 +36,7 @@ export const GaragePage = () => {
               <GarageSearchInput />
               <GarageOwnershipFilter />
               <GarageFilters />
+              <SearchIndexGate />
             </div>
           </aside>
 

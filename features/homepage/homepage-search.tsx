@@ -3,10 +3,12 @@
 import { useCallback, useRef, useState } from 'react'
 import { useRouter } from 'next/navigation'
 
-import { suggestSearchTerms } from '@/features/garage/search-suggestions'
+import { suggestSearchTerms } from '@/features/search-index/search-index.suggestions'
+import { useSearchIndex } from '@/features/search-index/use-search-index'
 import { Input } from '@/features/theme/input'
 
 export const HomepageSearch = () => {
+  useSearchIndex()
   const [draft, setDraft] = useState('')
   const draftRef = useRef(draft)
   const router = useRouter()
