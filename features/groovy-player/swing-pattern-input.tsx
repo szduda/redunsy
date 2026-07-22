@@ -29,7 +29,7 @@ type SwingPatternInputProps = {
 const cellClass = (disabled: boolean) =>
   cn(
     KEYBOARD_FOCUS_VISIBLE_CLASS,
-    'flex aspect-square min-w-0 flex-1 items-center justify-center rounded border p-0.5 transition-colors',
+    'flex h-10 w-8 shrink-0 items-center justify-center rounded border p-0.5 transition-colors',
     disabled
       ? 'cursor-default border-zinc-200 bg-zinc-100 text-zinc-400 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-600'
       : 'border-zinc-300 bg-white text-zinc-900 hover:border-zinc-400 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-100 dark:hover:border-zinc-500',
@@ -93,7 +93,7 @@ export const SwingPatternInput = ({
   return (
     <div
       aria-label="Swing pattern"
-      className={cn('flex w-full gap-0.5', className)}
+      className={cn('inline-flex w-fit gap-0.5', className)}
       role="group"
       style={style}
     >

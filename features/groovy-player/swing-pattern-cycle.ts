@@ -52,7 +52,6 @@ export const updateSwingPatternCell = (
   index: number,
   symbol: GrooveSymbol,
 ) => {
-  const unitSize = visibleSwingCellCount(barSize, beats)
   const collapsed = collapseSwingPattern(pattern, barSize, beats)
   const cells = [...collapsed]
   cells[index] = symbol

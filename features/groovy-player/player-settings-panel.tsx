@@ -105,7 +105,6 @@ const SwingPatternSection = () => {
         </div>
         <SwingPatternInput
           barSize={swingBarSize}
-          className="max-w-48"
           onCommit={(value) => setSwingPattern(value, swingBarSize)}
           value={swingPattern}
         />
