@@ -5,7 +5,7 @@ import { useEffect, useState } from 'react'
 import { suggestFromOptions } from '@/features/editor/suggest-from-options'
 import { GARAGE_FILTER_OPTIONS } from '@/features/garage/rhythm-index'
 import { swingBarSizeForMeter, isSwingPatternEmpty } from '@/features/groovy-player/player.store'
-import { SwingPatternField } from '@/features/groovy-player/swing-pattern-field'
+import { SwingPatternInput } from '@/features/groovy-player/swing-pattern-input'
 import { slugFromTitle } from '@/features/rhythm/rhythm-helpers'
 import type { Rhythm, RhythmMeter } from '@/features/rhythm/rhythm.types'
 import { Input } from '@/features/theme/input'
@@ -147,9 +147,8 @@ export const RhythmMetadataForm = ({
 
       <label className={cn(fieldLabelClass, 'col-span-6 md:col-span-3')}>
         <Text variant="mono">Swing pattern</Text>
-        <SwingPatternField
+        <SwingPatternInput
           barSize={swingBarSizeForMeter(values.meter)}
-          className="w-full rounded-lg border border-zinc-200 bg-white px-3 py-2 font-mono outline-none focus:border-zinc-500 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-100"
           onCommit={(swingPattern) => onChange({ swingPattern })}
           value={values.swingPattern}
         />
