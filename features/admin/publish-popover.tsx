@@ -1,16 +1,18 @@
 'use client'
 
 import { useState } from 'react'
+import { useQueryClient } from '@tanstack/react-query'
 
+import type { IndexRefreshStatus } from '@/features/admin/admin-api'
 import { publishSlugFromRhythm } from '@/features/admin/publish-slug'
 import { PublishSlugInput } from '@/features/admin/publish-slug-input'
 import { usePublishRhythm } from '@/features/admin/use-publish-rhythm'
 import { useToast } from '@/features/admin/toasts'
-import type { IndexRefreshStatus } from '@/features/admin/admin-api'
 import { Popover } from '@/features/groovy-player/popover'
 import { DeployIcon } from '@/features/icons/deploy-icon'
 import { slugFromTitle } from '@/features/rhythm/rhythm-helpers'
 import type { Rhythm } from '@/features/rhythm/rhythm.types'
+import { applyRebuildResultLocally } from '@/features/search-index/search-index.apply'
 import { Button } from '@/features/theme/button'
 import { Text } from '@/features/theme/text'
 import { cn } from '@/features/theme/cn'
@@ -21,15 +23,16 @@ type PublishPopoverProps = {
 }
 
 const indexRefreshToast = (status: IndexRefreshStatus) => {
-  if (status === 'queued') return 'Garage index redeploy queued'
+  if (status === 'rebuilt') return 'Garage search index rebuilt'
   if (status === 'not-configured') {
-    return 'Garage index redeploy not configured (set VERCEL_DEPLOY_HOOK_URL and redeploy)'
+    return 'Search index Blob not configured (set BLOB_READ_WRITE_TOKEN)'
   }
-  return 'Garage index redeploy failed — garage cards may stay stale until the next deploy'
+  return 'Search index rebuild failed — garage cards may stay stale'
 }
 
 export const PublishPopover = ({ rhythm }: PublishPopoverProps) => {
   const { pushToast } = useToast()
+  const queryClient = useQueryClient()
   const [slug, setSlug] = useState(() => publishSlugFromRhythm(rhythm))
   const [error, setError] = useState<string | null>(null)
   const [safetyToggle, setSafetyToggle] = useState(false)
@@ -48,7 +51,7 @@ export const PublishPopover = ({ rhythm }: PublishPopoverProps) => {
     mutate(
       { slug: nextSlug, rhythm },
       {
-        onSuccess: (payload) => {
+        onSuccess: async (payload) => {
           pushToast(
             payload.created ? 'Created new published rhythm' : 'Updated published rhythm',
             'success',
@@ -56,8 +59,22 @@ export const PublishPopover = ({ rhythm }: PublishPopoverProps) => {
           pushToast('Rhythm page revalidated', 'success')
           pushToast(
             indexRefreshToast(payload.indexRefresh),
-            payload.indexRefresh === 'failed' ? 'error' : 'success',
+            payload.indexRefresh === 'failed' || payload.indexRefresh === 'not-configured'
+              ? 'error'
+              : 'success',
           )
+          if (payload.index.cards) {
+            await applyRebuildResultLocally(
+              {
+                status: payload.indexRefresh,
+                version: payload.index.version,
+                generatedAt: payload.index.generatedAt,
+                count: payload.index.count,
+                cards: payload.index.cards,
+              },
+              queryClient,
+            )
+          }
           pushToast(`Live at ${payload.url}`, 'success')
           close()
         },

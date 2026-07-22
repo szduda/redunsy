@@ -15,7 +15,7 @@ const EXPORT_PATH = resolve(
   process.cwd(),
   'scripts/firestore-migration/firestore-joined-2026-06-19.json',
 )
-const OUTPUT_PATH = resolve(process.cwd(), 'features/garage/rhythm-index.generated.json')
+const OUTPUT_PATH = resolve(process.cwd(), 'features/search-index/search-index.seed.json')
 
 const data = JSON.parse(readFileSync(EXPORT_PATH, 'utf8')) as FirestoreExport
 

@@ -1,5 +1,9 @@
+import type { IndexRefreshStatus } from '@/features/search-index/search-index.types'
+import type { RhythmCard } from '@/features/rhythm/rhythm.types'
 import { slugFromTitle } from '@/features/rhythm/rhythm-helpers'
 import type { Rhythm } from '@/features/rhythm/rhythm.types'
+
+export type { IndexRefreshStatus }
 
 export type AdminSessionResponse = {
   authenticated: boolean
@@ -16,14 +20,18 @@ export type PublishRhythmInput = {
   rhythm: Rhythm
 }
 
-export type IndexRefreshStatus = 'queued' | 'not-configured' | 'failed'
-
 export type PublishRhythmResponse = {
   ok: true
   slug: string
   created: boolean
   url: string
   indexRefresh: IndexRefreshStatus
+  index: {
+    version: string
+    generatedAt: number
+    count: number
+    cards: RhythmCard[] | null
+  }
 }
 
 export const publishRhythm = async ({

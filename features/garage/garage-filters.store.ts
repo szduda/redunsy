@@ -2,8 +2,8 @@ import { create } from 'zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
 
 import { garageFiltersUrlStorage } from '@/features/garage/garage-filters-url-storage'
-import { filterOptionsFromRhythmCards } from '@/features/garage/rhythm-index'
-import { listRhythmCardsForOwnership } from '@/features/garage/search-snippets'
+import { filterOptionsFromRhythmCards } from '@/features/search-index/search-index.filters'
+import { listRhythmCardsForOwnership } from '@/features/search-index/search-index.search'
 import {
   EMPTY_GARAGE_FILTERS,
   type GarageFilters,
