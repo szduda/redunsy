@@ -4,9 +4,11 @@ import {
   yellowyOverlay,
 } from '@/lib/theme/yellowy'
 import { darkCanvasColors, type CanvasColors } from '@/features/groovy-player/canvas/canvas-colors'
+import { parseBarsLayout } from '@/features/groovy-player/canvas/bar-layout'
 import {
   BAR_GAP_PX,
   barHeightForBar,
+  barHeightForCellCount,
   barTopForIndex,
   barWidthForCanvas,
   layoutBar,
@@ -35,6 +37,8 @@ export const drawBarOverlayAtIndex = ({
   context,
   dark,
   opacity,
+  rowHeights,
+  layouts,
 }: {
   barIndex: number
   bars: string[]
@@ -43,14 +47,19 @@ export const drawBarOverlayAtIndex = ({
   context: CanvasRenderingContext2D
   dark: boolean
   opacity: number
+  rowHeights?: number[]
+  layouts?: ReturnType<typeof parseBarsLayout>
 }) => {
-  const rowHeights = rowHeightsForBars(canvasWidth, barsPerRow, bars)
+  const resolvedLayouts = layouts ?? parseBarsLayout(bars)
+  const resolvedRowHeights =
+    rowHeights ?? rowHeightsForBars(canvasWidth, barsPerRow, bars, resolvedLayouts)
   const layout = layoutBar({
     bars,
     canvasWidth,
     barIndex,
     barsPerRow,
-    rowHeights,
+    rowHeights: resolvedRowHeights,
+    layout: resolvedLayouts[barIndex],
   })
   drawYellowyOverlay(
     context,
@@ -82,6 +91,8 @@ export const drawDragPreviewHighlights = ({
 }) => {
   const highlighted = new Set<number>([sourceIndex])
   if (hoveredBarIndex >= 0) highlighted.add(hoveredBarIndex)
+  const layouts = parseBarsLayout(bars)
+  const rowHeights = rowHeightsForBars(canvasWidth, barsPerRow, bars, layouts)
 
   highlighted.forEach((barIndex) => {
     drawBarOverlayAtIndex({
@@ -91,6 +102,8 @@ export const drawDragPreviewHighlights = ({
       barsPerRow,
       context,
       dark,
+      rowHeights,
+      layouts,
       opacity:
         barIndex === sourceIndex ? DRAG_SOURCE_SLOT_OVERLAY_OPACITY : DRAG_SOURCE_OVERLAY_OPACITY,
     })
@@ -171,10 +184,14 @@ export const barBoundsAtIndex = (
   canvasWidth: number,
   barsPerRow: number,
 ) => {
-  const rowHeights = rowHeightsForBars(canvasWidth, barsPerRow, bars)
+  const layouts = parseBarsLayout(bars)
+  const rowHeights = rowHeightsForBars(canvasWidth, barsPerRow, bars, layouts)
   const barWidth = barWidthForCanvas(canvasWidth, barsPerRow)
-  const bar = bars[barIndex] ?? ''
-  const height = barHeightForBar(canvasWidth, barsPerRow, bar)
+  const height = barHeightForCellCount(
+    canvasWidth,
+    barsPerRow,
+    layouts[barIndex]?.cellCount ?? 0,
+  )
   const top = barTopForIndex(barIndex, barsPerRow, rowHeights)
   const left = (barIndex % barsPerRow) * (barWidth + BAR_GAP_PX)
   return { left, top, width: barWidth, height }
