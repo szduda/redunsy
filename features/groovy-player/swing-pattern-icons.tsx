@@ -31,7 +31,7 @@ const DoubleChevronLeftIcon = () => (
 
 const DoubleChevronRightIcon = () => (
   <svg aria-hidden className={iconClass} fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path d="m6 6 6 6-6 6m6-6 6 6-6 6" strokeLinecap="round" strokeLinejoin="round" />
+    <path d="M6 6 12 12l-6 6M12 6 18 12l-6 6" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
 )
 
