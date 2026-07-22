@@ -12,8 +12,9 @@ import {
   barTopForIndex,
   barWidthForCanvas,
   layoutBar,
-  renderBar,
+  paintLaidOutBar,
   rowHeightsForBars,
+  type LaidOutBar,
 } from '@/features/groovy-player/canvas/renderers'
 
 export const drawYellowyOverlay = (
@@ -115,6 +116,34 @@ export const drawDragPreviewHighlights = ({
   })
 }
 
+export type GhostBarLayout = {
+  laidOut: LaidOutBar
+  rowHeights: number[]
+}
+
+export const layoutGhostBar = ({
+  bar,
+  canvasWidth,
+  barsPerRow,
+  palette = darkCanvasColors,
+}: {
+  bar: string
+  canvasWidth: number
+  barsPerRow: number
+  palette?: CanvasColors
+}): GhostBarLayout => {
+  const rowHeights = [barHeightForBar(canvasWidth, barsPerRow, bar)]
+  const laidOut = layoutBar({
+    bars: [bar],
+    canvasWidth,
+    barIndex: 0,
+    barsPerRow,
+    palette,
+    rowHeights,
+  })
+  return { laidOut, rowHeights }
+}
+
 export const renderGhostBar = ({
   bar,
   instrument,
@@ -126,6 +155,7 @@ export const renderGhostBar = ({
   grabOffsetX,
   grabOffsetY,
   palette = darkCanvasColors,
+  ghostLayout,
 }: {
   bar: string
   instrument: string
@@ -137,34 +167,18 @@ export const renderGhostBar = ({
   grabOffsetX: number
   grabOffsetY: number
   palette?: CanvasColors
+  ghostLayout?: GhostBarLayout
 }) => {
-  const rowHeights = [barHeightForBar(canvasWidth, barsPerRow, bar)]
-  const layout = layoutBar({
-    bars: [bar],
-    canvasWidth,
-    barIndex: 0,
-    barsPerRow,
-    palette,
-    rowHeights,
-  })
+  const { laidOut } = ghostLayout ?? layoutGhostBar({ bar, canvasWidth, barsPerRow, palette })
 
   const left = pointerX - grabOffsetX
   const top = pointerY - grabOffsetY
-  const dx = left - layout.barEl.left
-  const dy = top - layout.barEl.top
+  const dx = left - laidOut.barEl.left
+  const dy = top - laidOut.barEl.top
 
   context.save()
   context.translate(dx, dy)
-  renderBar({
-    bars: [bar],
-    instrument,
-    canvas: context.canvas,
-    context,
-    canvasWidth,
-    barIndex: 0,
-    barsPerRow,
-    rowHeights,
-  })
+  paintLaidOutBar(context, instrument, laidOut)
   context.restore()
 }
 

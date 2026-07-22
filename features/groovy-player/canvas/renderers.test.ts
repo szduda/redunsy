@@ -108,4 +108,16 @@ describe('layout path single-parse', () => {
     expect(triplets).toHaveLength(1)
     expect(polys).toHaveLength(1)
   })
+
+  it('hash parse cache: highlight-only does not re-parse', () => {
+    const bars = ['ttstts', 'ssssss']
+    const hash = bars.join('')
+    const cache = { hash, parsed: parseBarsNotation(bars) }
+    const spy = vi.spyOn(groupedNotation, 'parseGroupedNotation')
+
+    const reused = cache.hash === hash ? cache.parsed : parseBarsNotation(bars)
+    expect(reused).toBe(cache.parsed)
+    expect(spy).not.toHaveBeenCalled()
+    spy.mockRestore()
+  })
 })

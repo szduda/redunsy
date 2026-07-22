@@ -12,28 +12,24 @@ import {
   resolveBarDropTarget,
   type BarBounds,
 } from '@/features/editor/canvas/resolve-drop-index'
-import {
-  drawBarSelectionBorder,
-  drawSelectionBorder,
-} from '@/features/editor/canvas/draw-selection-border'
 import { editorCanvasInsets } from '@/features/editor/canvas/editor-canvas-padding'
 import {
-  drawDragPreviewHighlights,
-  grabOffsetForBar,
-  renderGhostBar,
-} from '@/features/editor/canvas/render-editor-bars'
-import { previewBarsForDrag } from '@/features/editor/notation/reorder-bars'
+  dragLayoutUnchanged,
+  paintGhostOnly,
+  type DragLayoutState,
+  type GhostPaintEnv,
+} from '@/features/editor/canvas/bar-drag-paint'
+import {
+  paintDragFrame,
+  paintPlayheadFrame,
+  type StaticFrameCache,
+} from '@/features/editor/canvas/paint-editable-frame'
+import { grabOffsetForBar, type GhostBarLayout } from '@/features/editor/canvas/render-editor-bars'
 import { useNoteSelectionStore } from '@/features/editor/note-selection.store'
 import type { SelectionMode } from '@/features/editor/use-note-editor'
-import { setupCanvasDpi } from '@/features/groovy-player/canvas/canvas-dpi'
-import { darkCanvasColors, lightCanvasColors } from '@/features/groovy-player/canvas/canvas-colors'
 import { findPatternLength } from '@/features/groovy-player/canvas/find-pattern-length'
-import { parseBarsNotation } from '@/features/groovy-player/canvas/bar-layout'
-import {
-  canvasHeightForBars,
-  renderBars,
-  rowHeightsForBars,
-} from '@/features/groovy-player/canvas/renderers'
+import { parseBarsNotation, type ParsedBarsNotation } from '@/features/groovy-player/canvas/bar-layout'
+import { canvasHeightForBars } from '@/features/groovy-player/canvas/renderers'
 import { useCanvasWidth } from '@/features/groovy-player/canvas/use-canvas-width'
 import { usePlayerStore } from '@/features/groovy-player/player.store'
 import { useIsMobile } from '@/features/shared/use-is-mobile'
@@ -42,14 +38,6 @@ import { cn } from '@/features/theme/cn'
 import type { CanvasElement } from '@/features/groovy-player/canvas/types'
 
 const DRAG_THRESHOLD_PX = 6
-
-type DragLayoutState = {
-  sourceIndex: number
-  dropIndex: number
-  hoveredBarIndex: number
-  grabOffsetX: number
-  grabOffsetY: number
-}
 
 const isPointerOutsideCanvas = (
   canvas: HTMLCanvasElement,
@@ -77,6 +65,8 @@ type EditableBarsCanvasProps = {
   onReorderBar: (from: number, to: number) => void
 }
 
+type ParseCache = { hash: string; parsed: ParsedBarsNotation }
+
 const EditableBars = ({
   bars,
   barsPerRow,
@@ -98,6 +88,11 @@ const EditableBars = ({
   const canvasId = `${instrument}-editor-canvas-${id}`
   const containerRef = useRef<HTMLDivElement>(null)
   const canvasElementsRef = useRef<CanvasElement[]>([])
+  const parseCacheRef = useRef<ParseCache | null>(null)
+  const staticCanvasRef = useRef<HTMLCanvasElement | null>(null)
+  const staticCacheRef = useRef<StaticFrameCache | null>(null)
+  const offscreenRef = useRef<HTMLCanvasElement | null>(null)
+  const ghostLayoutRef = useRef<{ key: string; layout: GhostBarLayout } | null>(null)
   const pointerRef = useRef<{
     barIndex: number
     noteIndex: number | null
@@ -113,21 +108,24 @@ const EditableBars = ({
   const dragLayoutRef = useRef<DragLayoutState | null>(null)
   const dragBoundsRef = useRef<BarBounds[]>([])
   const pointerPosRef = useRef({ x: 0, y: 0 })
-  const baseFrameRef = useRef<ImageData | null>(null)
   const dragRafRef = useRef<number | null>(null)
   const ghostRafRef = useRef<number | null>(null)
   const [dragLayout, setDragLayout] = useState<DragLayoutState | null>(null)
   const { width: canvasWidth, dpr } = useCanvasWidth(containerRef)
   const { paddingX, paddingY, contentWidth } = editorCanvasInsets(canvasWidth, isMobile)
   const hash = bars.join('')
-  const parsed = parseBarsNotation(bars)
+
+  if (!parseCacheRef.current || parseCacheRef.current.hash !== hash) {
+    parseCacheRef.current = { hash, parsed: parseBarsNotation(bars) }
+  }
+  const parsed = parseCacheRef.current.parsed
   const contentHeight = canvasHeightForBars(contentWidth, barsPerRow, bars, parsed.layouts)
   const canvasHeight = contentHeight + paddingY * 2
   const barsInPattern = Math.max(findPatternLength(bars, 8), barsPerRow)
   const highlightedBarIndex =
     activeIndex < 0 ? -1 : barsInPattern > 1 ? activeIndex % barsInPattern : activeIndex
 
-  const paintEnvRef = useRef({
+  const paintEnvRef = useRef<GhostPaintEnv>({
     bars,
     instrument,
     contentWidth,
@@ -164,64 +162,39 @@ const EditableBars = ({
     pendingDragLayoutRef.current = null
     dragLayoutRef.current = null
     dragBoundsRef.current = []
-    baseFrameRef.current = null
+    ghostLayoutRef.current = null
+    offscreenRef.current = null
     setDragLayout(null)
-  }
-
-  const paintGhostOnly = () => {
-    const canvas = document.getElementById(canvasId) as HTMLCanvasElement | null
-    const layout = dragLayoutRef.current
-    const base = baseFrameRef.current
-    if (!canvas || !layout || !base) return
-    const context = canvas.getContext('2d')
-    if (!context) return
-
-    const env = paintEnvRef.current
-    const draggedBar = env.bars[layout.sourceIndex]
-    if (!draggedBar) return
-
-    context.putImageData(base, 0, 0)
-    const palette = env.prefersDark ? darkCanvasColors : lightCanvasColors
-    const { x, y } = pointerPosRef.current
-
-    context.save()
-    context.translate(env.paddingX, env.paddingY)
-    renderGhostBar({
-      bar: draggedBar,
-      instrument: env.instrument,
-      context,
-      canvasWidth: env.contentWidth,
-      barsPerRow: env.barsPerRow,
-      pointerX: x,
-      pointerY: y,
-      grabOffsetX: layout.grabOffsetX,
-      grabOffsetY: layout.grabOffsetY,
-      palette,
-    })
-    context.restore()
   }
 
   const scheduleGhostPaint = () => {
     if (ghostRafRef.current !== null) return
     ghostRafRef.current = requestAnimationFrame(() => {
       ghostRafRef.current = null
-      paintGhostOnly()
+      const canvas = document.getElementById(canvasId) as HTMLCanvasElement | null
+      const layout = dragLayoutRef.current
+      const offscreen = offscreenRef.current
+      if (!canvas || !layout || !offscreen) return
+      paintGhostOnly({
+        canvas,
+        offscreen,
+        dragLayout: layout,
+        pointerPos: pointerPosRef.current,
+        env: paintEnvRef.current,
+        ghostLayout: ghostLayoutRef.current?.layout ?? null,
+        canvasWidth,
+        canvasHeight,
+      })
     })
   }
 
   const scheduleDragLayoutUpdate = (next: DragLayoutState) => {
     const current = pendingDragLayoutRef.current ?? dragLayoutRef.current
-    if (
-      current &&
-      current.sourceIndex === next.sourceIndex &&
-      current.dropIndex === next.dropIndex &&
-      current.hoveredBarIndex === next.hoveredBarIndex
-    ) {
-      return false
-    }
+    if (dragLayoutUnchanged(current, next)) return false
 
     cancelGhostRaf()
-    baseFrameRef.current = null
+    offscreenRef.current = null
+    ghostLayoutRef.current = null
     pendingDragLayoutRef.current = next
     if (dragRafRef.current !== null) return true
     dragRafRef.current = requestAnimationFrame(() => {
@@ -237,93 +210,55 @@ const EditableBars = ({
   useLayoutEffect(() => {
     const canvas = document.getElementById(canvasId) as HTMLCanvasElement | null
     if (!canvas || canvasWidth <= 0) return
-    const context = setupCanvasDpi(canvas, canvasWidth, canvasHeight)
-    if (!context) return
 
-    const palette = prefersDark ? darkCanvasColors : lightCanvasColors
-    context.fillStyle = palette.b0
-    context.fillRect(0, 0, canvasWidth, canvasHeight)
+    if (dragLayout) {
+      paintDragFrame({
+        canvas,
+        bars,
+        instrument,
+        canvasWidth,
+        canvasHeight,
+        contentWidth,
+        paddingX,
+        paddingY,
+        barsPerRow,
+        prefersDark,
+        showBarIndex,
+        markTriplets,
+        parsed,
+        dragLayout,
+        pointerPos: pointerPosRef.current,
+        offscreenRef,
+        ghostLayoutRef,
+        canvasElementsRef,
+      })
+      return
+    }
 
-    const draggedBar = dragLayout ? bars[dragLayout.sourceIndex] : null
-    const isDragPreview = dragLayout !== null && dragLayout.dropIndex !== dragLayout.sourceIndex
-    const barsToRender = isDragPreview
-      ? previewBarsForDrag(bars, dragLayout.sourceIndex, dragLayout.dropIndex)
-      : bars
-    const renderParsed = isDragPreview ? parseBarsNotation(barsToRender) : parsed
-
-    context.save()
-    context.translate(paddingX, paddingY)
-
-    const elements = renderBars({
-      bars: barsToRender,
-      instrument,
+    if (!staticCanvasRef.current) staticCanvasRef.current = document.createElement('canvas')
+    paintPlayheadFrame({
       canvas,
-      context,
-      canvasWidth: contentWidth,
+      staticCanvas: staticCanvasRef.current,
+      staticCacheRef,
+      bars,
+      hash,
+      instrument,
+      canvasWidth,
+      canvasHeight,
+      contentWidth,
+      paddingX,
+      paddingY,
       barsPerRow,
-      highlightedBarIndex: isDragPreview ? -1 : highlightedBarIndex,
-      palette,
+      dpr,
+      prefersDark,
       showBarIndex,
       markTriplets,
-      parsed: renderParsed,
+      parsed,
+      highlightedBarIndex,
+      previewSelection,
+      selectionMode,
+      canvasElementsRef,
     })
-
-    canvasElementsRef.current = elements
-
-    if (!dragLayout && previewSelection) {
-      if (selectionMode === 'bar') {
-        const selectedBar = elements.find(
-          (element) => element.type === 'bar' && element.barIndex === previewSelection.barIndex,
-        )
-        if (selectedBar) drawBarSelectionBorder(context, selectedBar, prefersDark)
-      } else {
-        const selected = elements.find(
-          (element) =>
-            element.type === 'note' &&
-            element.barIndex === previewSelection.barIndex &&
-            element.noteIndex === previewSelection.glyphIndex,
-        )
-        if (selected) drawSelectionBorder(context, selected, prefersDark)
-      }
-    }
-
-    if (isDragPreview && dragLayout) {
-      const rowHeights = rowHeightsForBars(contentWidth, barsPerRow, bars, parsed.layouts)
-      drawDragPreviewHighlights({
-        bars,
-        canvasWidth: contentWidth,
-        barsPerRow,
-        context,
-        dark: prefersDark,
-        sourceIndex: dragLayout.sourceIndex,
-        hoveredBarIndex: dragLayout.hoveredBarIndex,
-        layouts: parsed.layouts,
-        rowHeights,
-      })
-    }
-
-    context.restore()
-
-    if (dragLayout && draggedBar) {
-      baseFrameRef.current = context.getImageData(0, 0, canvas.width, canvas.height)
-      context.save()
-      context.translate(paddingX, paddingY)
-      renderGhostBar({
-        bar: draggedBar,
-        instrument,
-        context,
-        canvasWidth: contentWidth,
-        barsPerRow,
-        pointerX: pointerPosRef.current.x,
-        pointerY: pointerPosRef.current.y,
-        grabOffsetX: dragLayout.grabOffsetX,
-        grabOffsetY: dragLayout.grabOffsetY,
-        palette,
-      })
-      context.restore()
-    } else {
-      baseFrameRef.current = null
-    }
   }, [
     hash,
     canvasId,
@@ -345,20 +280,15 @@ const EditableBars = ({
     paddingX,
     paddingY,
     contentWidth,
-    isMobile,
+    parsed,
   ])
-
-  const toContentPoint = (x: number, y: number) => ({
-    x: x - paddingX,
-    y: y - paddingY,
-  })
 
   const contentPointFromEvent = (
     canvas: HTMLCanvasElement,
     event: { clientX: number; clientY: number },
   ) => {
     const { x, y } = canvasLogicalPoint(canvas, event, canvasWidth, canvasHeight)
-    return toContentPoint(x, y)
+    return { x: x - paddingX, y: y - paddingY }
   }
 
   const getCanvas = () => document.getElementById(canvasId) as HTMLCanvasElement | null
@@ -410,7 +340,6 @@ const EditableBars = ({
     const { dropIndex, hoveredBarIndex } = resolveDragTarget(x, y)
     state.dropIndex = dropIndex
     state.hoveredBarIndex = hoveredBarIndex
-
     const layoutChanged = scheduleDragLayoutUpdate({
       sourceIndex: state.barIndex,
       dropIndex,
@@ -441,7 +370,6 @@ const EditableBars = ({
       ) {
         return
       }
-
       pointerRef.current = {
         barIndex: noteTarget.element.barIndex,
         noteIndex: noteTarget.element.noteIndex,
@@ -457,7 +385,6 @@ const EditableBars = ({
 
     const barIndex = getBarIndexAt(event)
     if (barIndex < 0) return
-
     const canvas = getCanvas()
     if (!canvas) return
     const { x, y } = contentPointFromEvent(canvas, event)
@@ -512,7 +439,6 @@ const EditableBars = ({
   const onPointerUp = (event: React.PointerEvent<HTMLCanvasElement>) => {
     const state = pointerRef.current
     pointerRef.current = null
-
     if (!state) {
       releasePointer(event)
       return
@@ -532,31 +458,24 @@ const EditableBars = ({
         releasePointer(event)
         return
       }
-
       const { x, y } = contentPointFromEvent(canvas, event)
       const barBounds =
         dragBoundsRef.current.length > 0
           ? dragBoundsRef.current
           : barBoundsFromElements(canvasElementsRef.current)
       const { dropIndex } = resolveBarDropTarget(bars.length, state.barIndex, x, y, barBounds)
-
-      if (dropIndex !== state.barIndex) {
-        onReorderBar(state.barIndex, dropIndex)
-      }
-
+      if (dropIndex !== state.barIndex) onReorderBar(state.barIndex, dropIndex)
       clearDrag()
       releasePointer(event)
       return
     }
 
     clearDrag()
-
     if (selectionMode === 'bar') {
       onSelectBar(state.barIndex)
       releasePointer(event)
       return
     }
-
     if (state.noteIndex !== null) {
       onSelectNote(state.barIndex, state.noteIndex)
       releasePointer(event)
@@ -572,7 +491,6 @@ const EditableBars = ({
       releasePointer(event)
       return
     }
-
     onSelectNote(target.element.barIndex, target.element.noteIndex)
     releasePointer(event)
   }

@@ -226,27 +226,11 @@ export const layoutBar = ({
   return { barEl, noteElements, glyphs }
 }
 
-export const renderBar = ({
-  bars,
-  instrument,
-  context,
-  canvasWidth,
-  barIndex = 0,
-  barsPerRow = 2,
-  highlighted = false,
-  rowHeights,
-  layout,
-}: BarRendererArgs & { rowHeights?: number[]; layout?: BarLayout }) => {
-  const laidOut = layoutBar({
-    bars,
-    canvasWidth,
-    barIndex,
-    barsPerRow,
-    highlighted,
-    rowHeights,
-    layout,
-  })
-
+export const paintLaidOutBar = (
+  context: CanvasRenderingContext2D,
+  instrument: string,
+  laidOut: LaidOutBar,
+) => {
   renderBarWrapper({ context, el: laidOut.barEl })
 
   laidOut.glyphs.forEach((glyph, noteIndex) => {
@@ -262,7 +246,36 @@ export const renderBar = ({
     }
     renderGlyphOnly({ instrument, el: note, context })
   })
+}
 
+export const renderBar = ({
+  bars,
+  instrument,
+  context,
+  canvasWidth,
+  barIndex = 0,
+  barsPerRow = 2,
+  highlighted = false,
+  rowHeights,
+  layout,
+  palette,
+}: BarRendererArgs & {
+  rowHeights?: number[]
+  layout?: BarLayout
+  palette?: CanvasColors
+}) => {
+  const laidOut = layoutBar({
+    bars,
+    canvasWidth,
+    barIndex,
+    barsPerRow,
+    highlighted,
+    rowHeights,
+    layout,
+    palette,
+  })
+
+  paintLaidOutBar(context, instrument, laidOut)
   return [laidOut.barEl, ...laidOut.noteElements]
 }
 
@@ -361,25 +374,7 @@ export const renderBars = ({
   )
 
   layouts.forEach((layout) => {
-    renderBarWrapper({ context, el: layout.barEl })
-  })
-
-  layouts.forEach((layout) => {
-    layout.glyphs.forEach((glyph, noteIndex) => {
-      if (glyph.kind !== 'eighth') return
-      renderNoteBackground({ context, el: layout.noteElements[noteIndex] })
-    })
-  })
-
-  layouts.forEach((layout) => {
-    layout.glyphs.forEach((glyph, noteIndex) => {
-      const note = layout.noteElements[noteIndex]
-      if (glyph.kind === 'polyrhythm' || glyph.polyrhythmIndex !== undefined) {
-        renderScaledGlyph({ instrument, el: note, glyph, context })
-        return
-      }
-      renderGlyphOnly({ instrument, el: note, context })
-    })
+    paintLaidOutBar(context, instrument, layout)
   })
 
   if (markTriplets) {
