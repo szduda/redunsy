@@ -15,6 +15,10 @@ describe('build-share-url', () => {
     const url = buildPrivateRhythmShareUrl(rhythm, 'https://redunsy.test')
 
     expect(url).toMatch(/^https:\/\/redunsy\.test\/share\//)
+    const segment = new URL(url).pathname.slice('/share/'.length)
+    // Path segment is URI-encoded so lz-string `+` survives Next.js params / chat apps.
+    expect(segment.includes('+')).toBe(false)
+    expect(decodeURIComponent(segment).length).toBeGreaterThan(0)
   })
 
   it('uses the current page URL for public rhythms', () => {

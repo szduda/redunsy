@@ -3,6 +3,7 @@
 import { useParams, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 
+import { resolveEncodedRhythmParam } from '@/features/share-rhythm/import/encoded-rhythm-from-url'
 import { importSharedRhythm } from '@/features/share-rhythm/import/import-shared-rhythm'
 import { Button } from '@/features/theme/button'
 import { Text } from '@/features/theme/text'
@@ -13,7 +14,7 @@ export const SharedRhythmImportView = () => {
   const [failed, setFailed] = useState(false)
 
   useEffect(() => {
-    const encodedRhythm = params.encodedRhythm
+    const encodedRhythm = resolveEncodedRhythmParam(window.location.pathname, params.encodedRhythm)
     if (!encodedRhythm) {
       setFailed(true)
       return
