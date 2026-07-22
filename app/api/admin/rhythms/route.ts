@@ -55,6 +55,7 @@ export const POST = async (request: Request) => {
         version: indexRefresh.version,
         generatedAt: indexRefresh.generatedAt,
         count: indexRefresh.count,
+        cards: indexRefresh.cards,
       },
     })
   } catch (error) {

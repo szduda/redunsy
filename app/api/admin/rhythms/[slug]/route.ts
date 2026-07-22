@@ -33,6 +33,7 @@ export const DELETE = async (_request: Request, context: RouteContext) => {
         version: indexRefresh.version,
         generatedAt: indexRefresh.generatedAt,
         count: indexRefresh.count,
+        cards: indexRefresh.cards,
       },
     })
   } catch (error) {

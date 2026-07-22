@@ -2,12 +2,10 @@
 
 import { useMutation, useQueryClient } from '@tanstack/react-query'
 
-import { SEARCH_INDEX_REBUILD_API_PATH } from '@/features/search-index/search-index.config'
-import { writeSearchIndexLocalCache } from '@/features/search-index/search-index.local-cache'
-import { fetchSearchIndex } from '@/features/search-index/search-index.client'
-import { useSearchIndexStore } from '@/features/search-index/search-index.store'
-import type { RebuildSearchIndexResult } from '@/features/search-index/search-index.types'
 import { useToast } from '@/features/admin/toasts'
+import { SEARCH_INDEX_REBUILD_API_PATH } from '@/features/search-index/search-index.config'
+import { applyRebuildResultLocally } from '@/features/search-index/search-index.apply'
+import type { RebuildSearchIndexResult } from '@/features/search-index/search-index.types'
 import { Button } from '@/features/theme/button'
 
 const rebuildSearchIndexRequest = async (): Promise<RebuildSearchIndexResult> => {
@@ -19,7 +17,6 @@ const rebuildSearchIndexRequest = async (): Promise<RebuildSearchIndexResult> =>
 
 export const SearchIndexButton = () => {
   const { pushToast } = useToast()
-  const setIndex = useSearchIndexStore((state) => state.setIndex)
   const queryClient = useQueryClient()
 
   const { mutate, isPending } = useMutation({
@@ -31,23 +28,11 @@ export const SearchIndexButton = () => {
     pushToast('Rebuilding search index…')
     mutate(undefined, {
       onSuccess: async (result) => {
-        if (result.status === 'rebuilt') {
-          pushToast(`Index rebuilt (${result.count} rhythms)`, 'success')
-          try {
-            const live = await fetchSearchIndex()
-            setIndex(live)
-            writeSearchIndexLocalCache(live)
-            await queryClient.invalidateQueries({ queryKey: ['garage-snippets'] })
-          } catch {
-            pushToast('Index rebuilt but local refresh failed — reload to pick it up', 'error')
-          }
-          return
+        pushToast(`Index rebuilt (${result.count} rhythms)`, 'success')
+        const applied = await applyRebuildResultLocally(result, queryClient)
+        if (!applied) {
+          pushToast('Index rebuilt but local refresh failed — reload to pick it up', 'error')
         }
-        if (result.status === 'not-configured') {
-          pushToast('Blob not configured (set BLOB_READ_WRITE_TOKEN)', 'error')
-          return
-        }
-        pushToast('Search index rebuild failed', 'error')
       },
       onError: (error) => {
         pushToast(error instanceof Error ? error.message : 'Rebuild failed', 'error')

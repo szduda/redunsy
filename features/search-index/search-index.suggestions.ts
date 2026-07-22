@@ -1,7 +1,6 @@
 import Fuse, { type IFuseOptions } from 'fuse.js'
 
 import { listAllRhythmCards } from '@/features/search-index/search-index.search'
-import { getSearchIndexVersion } from '@/features/search-index/search-index.store'
 import type { RhythmCard } from '@/features/rhythm/rhythm.types'
 
 const MIN_QUERY_LENGTH = 3
@@ -38,22 +37,11 @@ const vocabularyFromCard = (terms: Map<string, string>, card: RhythmCard) => {
   card.instruments.forEach((value) => addTerm(terms, value))
 }
 
-type VocabularyCache = {
-  version: string
-  terms: string[]
-}
-
-let vocabularyCache: VocabularyCache | null = null
-
+/** Rebuild each call — catalogue is small; includes My Rhythms localStorage changes. */
 const buildSearchVocabulary = () => {
-  const version = getSearchIndexVersion()
-  if (vocabularyCache?.version === version) return vocabularyCache.terms
-
   const terms = new Map<string, string>()
   listAllRhythmCards().forEach((card) => vocabularyFromCard(terms, card))
-  const values = [...terms.values()]
-  vocabularyCache = { version, terms: values }
-  return values
+  return [...terms.values()]
 }
 
 export const suggestSearchTerms = (query: string): string[] => {

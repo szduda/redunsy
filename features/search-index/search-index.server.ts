@@ -16,24 +16,42 @@ import type {
   SearchIndexPayload,
 } from '@/features/search-index/search-index.types'
 
+export const searchIndexUnavailableError = (message: string) => {
+  const error = new Error(message)
+  error.name = 'SearchIndexUnavailableError'
+  return error
+}
+
+export const isSearchIndexUnavailableError = (error: unknown) =>
+  error instanceof Error && error.name === 'SearchIndexUnavailableError'
+
+/**
+ * Read the live index from Blob. Seed is only used when Blob is not configured
+ * or has never been written — transient Blob errors throw instead of poisoning
+ * clients with a stale seed.
+ */
 export const readSearchIndexPayload = async (): Promise<SearchIndexPayload> => {
   const fromBlob = await readLatestSearchIndexFromBlob()
-  if (fromBlob?.cards) return fromBlob
-  return loadSeedPayload()
+  if (fromBlob.status === 'ok') return fromBlob.payload
+  if (fromBlob.status === 'missing-token' || fromBlob.status === 'not-found') {
+    return loadSeedPayload()
+  }
+  throw searchIndexUnavailableError(fromBlob.message)
 }
 
 export const rebuildSearchIndex = async (): Promise<RebuildSearchIndexResult> => {
   const cards = await getRhythmCardIndex()
   const payload = toSearchIndexPayload(cards, crypto.randomUUID())
+  const meta = metaFromPayload(payload)
 
   if (!hasBlobToken()) {
-    return { ...metaFromPayload(payload), status: 'not-configured' }
+    return { ...meta, status: 'not-configured', cards: payload.cards }
   }
 
   try {
     await writeSearchIndexToBlob(payload)
-    return { ...metaFromPayload(payload), status: 'rebuilt' }
+    return { ...meta, status: 'rebuilt', cards: payload.cards }
   } catch {
-    return { ...metaFromPayload(payload), status: 'failed' }
+    return { ...meta, status: 'failed', cards: null }
   }
 }

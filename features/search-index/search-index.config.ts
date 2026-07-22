@@ -6,15 +6,13 @@ export const SEARCH_INDEX_API_PATH = '/api/search-index'
 export const SEARCH_INDEX_REBUILD_API_PATH = '/api/admin/search-index/rebuild'
 
 export const SEARCH_INDEX_BLOB_LATEST_PATH = 'search-index/latest.json'
-export const SEARCH_INDEX_BLOB_META_PATH = 'search-index/latest.meta.json'
-export const searchIndexBlobVersionPath = (version: string) =>
-  `search-index/versions/${version}.json`
 
-/** CDN / Blob cache for overwritten "latest" pointers (seconds). */
+/**
+ * CDN cache for overwritten `latest.json` (seconds).
+ * Passive refreshers may be up to this + stale-while-revalidate behind a rebuild.
+ */
 export const SEARCH_INDEX_LATEST_CACHE_SECONDS = 60
-
-/** Immutable versioned artifact cache (seconds). */
-export const SEARCH_INDEX_VERSION_CACHE_SECONDS = 31_536_000
+export const SEARCH_INDEX_STALE_WHILE_REVALIDATE_SECONDS = 300
 
 export const SEARCH_INDEX_LOCAL_STORAGE_KEY = 'redunsy:search-index'
 

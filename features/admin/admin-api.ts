@@ -1,4 +1,5 @@
 import type { IndexRefreshStatus } from '@/features/search-index/search-index.types'
+import type { RhythmCard } from '@/features/rhythm/rhythm.types'
 import { slugFromTitle } from '@/features/rhythm/rhythm-helpers'
 import type { Rhythm } from '@/features/rhythm/rhythm.types'
 
@@ -25,10 +26,11 @@ export type PublishRhythmResponse = {
   created: boolean
   url: string
   indexRefresh: IndexRefreshStatus
-  index?: {
+  index: {
     version: string
     generatedAt: number
     count: number
+    cards: RhythmCard[] | null
   }
 }
 

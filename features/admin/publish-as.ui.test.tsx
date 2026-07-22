@@ -107,6 +107,7 @@ describe('PublishPopover', () => {
         created: true,
         url: '/rhythm/brand-new-slug',
         indexRefresh: 'rebuilt',
+        index: { version: 'v1', generatedAt: 1, count: 1, cards: [] },
       }),
     }))
   })
@@ -206,6 +207,7 @@ describe('PublishPopover', () => {
         created: false,
         url: '/rhythm/existing-slug',
         indexRefresh: 'rebuilt',
+        index: { version: 'v2', generatedAt: 2, count: 2, cards: [] },
       }),
     }))
 

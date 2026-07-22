@@ -12,9 +12,7 @@ import { Popover } from '@/features/groovy-player/popover'
 import { DeployIcon } from '@/features/icons/deploy-icon'
 import { slugFromTitle } from '@/features/rhythm/rhythm-helpers'
 import type { Rhythm } from '@/features/rhythm/rhythm.types'
-import { fetchSearchIndex } from '@/features/search-index/search-index.client'
-import { writeSearchIndexLocalCache } from '@/features/search-index/search-index.local-cache'
-import { useSearchIndexStore } from '@/features/search-index/search-index.store'
+import { applyRebuildResultLocally } from '@/features/search-index/search-index.apply'
 import { Button } from '@/features/theme/button'
 import { Text } from '@/features/theme/text'
 import { cn } from '@/features/theme/cn'
@@ -35,7 +33,6 @@ const indexRefreshToast = (status: IndexRefreshStatus) => {
 export const PublishPopover = ({ rhythm }: PublishPopoverProps) => {
   const { pushToast } = useToast()
   const queryClient = useQueryClient()
-  const setIndex = useSearchIndexStore((state) => state.setIndex)
   const [slug, setSlug] = useState(() => publishSlugFromRhythm(rhythm))
   const [error, setError] = useState<string | null>(null)
   const [safetyToggle, setSafetyToggle] = useState(false)
@@ -66,15 +63,17 @@ export const PublishPopover = ({ rhythm }: PublishPopoverProps) => {
               ? 'error'
               : 'success',
           )
-          if (payload.indexRefresh === 'rebuilt') {
-            try {
-              const live = await fetchSearchIndex()
-              setIndex(live)
-              writeSearchIndexLocalCache(live)
-              await queryClient.invalidateQueries({ queryKey: ['garage-snippets'] })
-            } catch {
-              // Passive refresh on next garage visit will pick it up.
-            }
+          if (payload.index.cards) {
+            await applyRebuildResultLocally(
+              {
+                status: payload.indexRefresh,
+                version: payload.index.version,
+                generatedAt: payload.index.generatedAt,
+                count: payload.index.count,
+                cards: payload.index.cards,
+              },
+              queryClient,
+            )
           }
           pushToast(`Live at ${payload.url}`, 'success')
           close()

@@ -28,6 +28,7 @@ describe('DELETE /api/admin/rhythms/[slug]', () => {
       version: 'v2',
       generatedAt: 2,
       count: 9,
+      cards: [],
     })
   })
 
@@ -54,7 +55,7 @@ describe('DELETE /api/admin/rhythms/[slug]', () => {
       slug: 'kuku',
       unpublished: true,
       indexRefresh: 'rebuilt',
-      index: { version: 'v2', generatedAt: 2, count: 9 },
+      index: { version: 'v2', generatedAt: 2, count: 9, cards: [] },
     })
     expect(apiMocks.unpublishRhythm).toHaveBeenCalledWith('kuku')
     expect(apiMocks.revalidatePath).toHaveBeenCalledWith('/rhythm/kuku')

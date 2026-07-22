@@ -7,6 +7,15 @@ export const POST = async () => {
 
   try {
     const result = await rebuildSearchIndex()
+    if (result.status === 'failed') {
+      return Response.json({ ...result, error: 'Blob write failed' }, { status: 502 })
+    }
+    if (result.status === 'not-configured') {
+      return Response.json(
+        { ...result, error: 'BLOB_READ_WRITE_TOKEN is not configured' },
+        { status: 503 },
+      )
+    }
     return Response.json(result)
   } catch (error) {
     const message = error instanceof Error ? error.message : 'Rebuild failed'

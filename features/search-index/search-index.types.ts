@@ -18,4 +18,12 @@ export type IndexRefreshStatus = 'rebuilt' | 'not-configured' | 'failed'
 
 export type RebuildSearchIndexResult = SearchIndexMeta & {
   status: IndexRefreshStatus
+  /** Present when rebuild produced a usable in-memory catalogue (rebuilt / not-configured). */
+  cards: RhythmCard[] | null
 }
+
+export type BlobReadResult =
+  | { status: 'ok'; payload: SearchIndexPayload }
+  | { status: 'missing-token' }
+  | { status: 'not-found' }
+  | { status: 'error'; message: string }

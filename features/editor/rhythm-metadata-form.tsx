@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 
 import { suggestFromOptions } from '@/features/editor/suggest-from-options'
 import { swingBarSizeForMeter, isSwingPatternEmpty } from '@/features/groovy-player/player.store'
@@ -73,7 +73,7 @@ export const RhythmMetadataForm = ({
 }: RhythmMetadataFormProps) => {
   useSearchIndex()
   const cards = useSearchIndexStore((state) => state.cards)
-  const filterOptions = filterOptionsFromRhythmCards(cards)
+  const filterOptions = useMemo(() => filterOptionsFromRhythmCards(cards), [cards])
   const [titleDraft, setTitleDraft] = useState(values.title)
   const slugPreview = titleDraft.trim() ? slugFromTitle(titleDraft.trim()) : ''
 

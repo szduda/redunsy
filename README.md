@@ -13,7 +13,7 @@ Live at [re.dunsy.app](https://re.dunsy.app).
 | Client state | [Zustand](https://zustand.docs.pmnd.rs) per feature; [TanStack Query](https://tanstack.com/query) for async UI |
 | Database     | [PostgreSQL](https://www.postgresql.org) via [Drizzle ORM](https://orm.drizzle.team) + `postgres` driver       |
 | Audio engine | Custom **midinike** library (`lib/midinike/`) — notation parsing, groove compilation, WebAudio playback        |
-| Search       | [Fuse.js](https://fusejs.io) over a live Blob-backed index (zero DB on user sessions) |
+| Search       | [Fuse.js](https://fusejs.io) over a live Blob-backed index (zero DB on user sessions)                          |
 | Testing      | [Vitest](https://vitest.dev) (unit + playback invariants)                                                      |
 | Deployment   | [Vercel](https://vercel.com)                                                                                   |
 
@@ -61,12 +61,12 @@ The groovy player and editor both depend on midinike; playback timing invariants
 
 ### Feature modules
 
-| Feature           | Route(s)                    | Responsibility                                                    |
-| ----------------- | --------------------------- | ----------------------------------------------------------------- |
-| **Groovy player** | `/rhythm/[slug]`, `/player` | Multi-track playback, tempo, swing, metronome, wake lock          |
-| **Garage**        | `/garage`                   | Browse UI; search/filter via `features/search-index/`             |
-| **Editor**        | `/editor`, `/editor/[slug]` | Visual bar editor, metadata, fork/save to localStorage            |
-| **Help**          | `/help`                     | Notation reference and interactive demos                          |
+| Feature           | Route(s)                    | Responsibility                                           |
+| ----------------- | --------------------------- | -------------------------------------------------------- |
+| **Groovy player** | `/rhythm/[slug]`, `/player` | Multi-track playback, tempo, swing, metronome, wake lock |
+| **Garage**        | `/garage`                   | Browse UI; search/filter via `features/search-index/`    |
+| **Editor**        | `/editor`, `/editor/[slug]` | Visual bar editor, metadata, fork/save to localStorage   |
+| **Help**          | `/help`                     | Notation reference and interactive demos                 |
 
 ## Project layout
 
@@ -123,10 +123,10 @@ Open [http://localhost:3000](http://localhost:3000). The dev server works withou
 
 Create `.env.local` (or pull from Vercel with `vercel env pull`):
 
-| Variable                         | Required for            | Purpose                                              |
-| -------------------------------- | ----------------------- | ---------------------------------------------------- |
-| `POSTGRES_URL` or `DATABASE_URL` | Build, DB scripts, admin | Postgres connection string                           |
-| `BLOB_READ_WRITE_TOKEN`          | Production index writes | Vercel Blob token for live search-index rebuilds     |
+| Variable                         | Required for             | Purpose                                          |
+| -------------------------------- | ------------------------ | ------------------------------------------------ |
+| `POSTGRES_URL` or `DATABASE_URL` | Build, DB scripts, admin | Postgres connection string                       |
+| `BLOB_READ_WRITE_TOKEN`          | Production index writes  | Vercel Blob token for live search-index rebuilds |
 
 ### Database
 
@@ -141,15 +141,15 @@ npm run search-index   # Refresh committed seed JSON from Postgres (optional fal
 
 ### Scripts
 
-| Command                 | Description                                       |
-| ----------------------- | ------------------------------------------------- |
-| `npm run dev`           | Start development server                          |
-| `npm run build`         | Production build (refreshes seed index first)     |
-| `npm run start`         | Serve production build                            |
-| `npm run lint`          | ESLint                                            |
-| `npm run test`          | Run all Vitest suites                             |
-| `npm run test:playback` | Playback timing and groove-length invariants      |
-| `npm run format`        | Prettier write                                    |
+| Command                 | Description                                   |
+| ----------------------- | --------------------------------------------- |
+| `npm run dev`           | Start development server                      |
+| `npm run build`         | Production build (refreshes seed index first) |
+| `npm run start`         | Serve production build                        |
+| `npm run lint`          | ESLint                                        |
+| `npm run test`          | Run all Vitest suites                         |
+| `npm run test:playback` | Playback timing and groove-length invariants  |
+| `npm run format`        | Prettier write                                |
 
 ### Garage search index (live)
 

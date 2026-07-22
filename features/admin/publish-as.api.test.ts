@@ -40,6 +40,7 @@ describe('POST /api/admin/rhythms', () => {
       version: 'v1',
       generatedAt: 1,
       count: 10,
+      cards: [],
     })
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true }))
   })
@@ -68,7 +69,7 @@ describe('POST /api/admin/rhythms', () => {
       created: true,
       url: '/rhythm/brand-new-slug',
       indexRefresh: 'rebuilt',
-      index: { version: 'v1', generatedAt: 1, count: 10 },
+      index: { version: 'v1', generatedAt: 1, count: 10, cards: [] },
     })
     expect(apiMocks.upsertPublishedRhythm).toHaveBeenCalledWith('brand-new-slug', rhythm)
     expect(apiMocks.revalidatePath).toHaveBeenCalledWith('/rhythm/brand-new-slug')
@@ -84,6 +85,7 @@ describe('POST /api/admin/rhythms', () => {
       version: 'v1',
       generatedAt: 1,
       count: 10,
+      cards: [],
     })
 
     const response = await POST(jsonRequest({ slug: 'new-slug', rhythm: sampleRhythm() }))
@@ -91,6 +93,7 @@ describe('POST /api/admin/rhythms', () => {
 
     expect(response.status).toBe(200)
     expect(payload.indexRefresh).toBe('not-configured')
+    expect(payload.index.cards).toEqual([])
   })
 
   it('updates an existing published rhythm', async () => {

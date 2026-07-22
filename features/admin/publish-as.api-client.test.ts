@@ -15,6 +15,7 @@ describe('publishRhythm', () => {
           created: true,
           url: '/rhythm/published-slug',
           indexRefresh: 'rebuilt',
+          index: { version: 'v1', generatedAt: 1, count: 1, cards: [] },
         }),
       }),
     )
@@ -35,6 +36,7 @@ describe('publishRhythm', () => {
       created: true,
       url: '/rhythm/published-slug',
       indexRefresh: 'rebuilt',
+      index: { version: 'v1', generatedAt: 1, count: 1, cards: [] },
     })
     expect(fetch).toHaveBeenCalledWith('/api/admin/rhythms', {
       method: 'POST',
