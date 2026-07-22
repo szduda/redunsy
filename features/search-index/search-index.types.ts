@@ -16,6 +16,12 @@ export type SearchIndexMeta = {
 /** Result of an admin-triggered index rebuild (replaces deploy-hook status). */
 export type IndexRefreshStatus = 'rebuilt' | 'not-configured' | 'failed'
 
+/**
+ * Contract for #28 / admin consumers:
+ * - `POST /api/admin/search-index/rebuild` → 200 rebuilt | 503 not-configured | 502 failed
+ * - Publish / soft-unpublish keep HTTP 200 when the DB write succeeds; inspect `indexRefresh`
+ *   (and required `index`) for Blob outcome. `cards` is non-null on rebuilt/not-configured.
+ */
 export type RebuildSearchIndexResult = SearchIndexMeta & {
   status: IndexRefreshStatus
   /** Present when rebuild produced a usable in-memory catalogue (rebuilt / not-configured). */

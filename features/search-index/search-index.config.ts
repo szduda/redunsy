@@ -9,7 +9,9 @@ export const SEARCH_INDEX_BLOB_LATEST_PATH = 'search-index/latest.json'
 
 /**
  * CDN cache for overwritten `latest.json` (seconds).
- * Passive refreshers may be up to this + stale-while-revalidate behind a rebuild.
+ * Passive refreshers may lag a rebuild by up to
+ * SEARCH_INDEX_LATEST_CACHE_SECONDS + SEARCH_INDEX_STALE_WHILE_REVALIDATE_SECONDS
+ * (~6 minutes). Admins bypass this by applying rebuild `cards` locally.
  */
 export const SEARCH_INDEX_LATEST_CACHE_SECONDS = 60
 export const SEARCH_INDEX_STALE_WHILE_REVALIDATE_SECONDS = 300

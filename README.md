@@ -166,7 +166,7 @@ Garage browse/search is owned by [`features/search-index/`](features/search-inde
 
 1. Publish / soft-unpublish / manual rebuild calls `rebuildSearchIndex()`.
 2. That reads published cards from Postgres and writes versioned JSON to Vercel Blob.
-3. Clients pick up the new version on their next passive fetch (admin UI refreshes immediately).
+3. Clients pick up the new version on their next passive fetch (admin UI refreshes immediately from rebuild `cards`). Passive CDN cache is ~60s + 300s stale-while-revalidate; admins never depend on that path for their own session.
 
 **Soft unpublish:** `DELETE /api/admin/rhythms/[slug]` sets `published = false` and rebuilds the index. Delete UI for editors is tracked in #28.
 
