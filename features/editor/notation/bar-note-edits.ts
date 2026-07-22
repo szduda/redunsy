@@ -150,12 +150,8 @@ const nextPlainGlyphIndexInFlat = (
     (entry) => entry.barIndex === selection.barIndex && entry.glyphIndex === selection.glyphIndex,
   )
   if (currentIndex < 0) return null
-
-  for (let index = currentIndex + 1; index < flat.length; index += 1) {
-    if (flat[index].location.kind === 'plain') return index
-    return null
-  }
-  return null
+  const next = flat[currentIndex + 1]
+  return next?.location.kind === 'plain' ? currentIndex + 1 : null
 }
 
 type PlainPair = {

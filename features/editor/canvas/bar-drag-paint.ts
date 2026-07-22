@@ -25,8 +25,10 @@ export const copyVisibleToOffscreen = (
   visible: HTMLCanvasElement,
   offscreen: HTMLCanvasElement,
 ) => {
-  offscreen.width = visible.width
-  offscreen.height = visible.height
+  if (offscreen.width !== visible.width || offscreen.height !== visible.height) {
+    offscreen.width = visible.width
+    offscreen.height = visible.height
+  }
   const context = offscreen.getContext('2d')
   if (!context) return false
   context.setTransform(1, 0, 0, 1, 0, 0)

@@ -68,9 +68,10 @@ Audio scheduler at 25 ms is intentional and fine; UI is bar-stepped (not RAF-p
 
 | Scenario | Before (approx) | After (approx) |
 |----------|-----------------|----------------|
-| Paint 1 track, N bars | ~3N full parses + full draw | 1 cached parse; static redraw only on content change |
-| Playhead step, 4 tracks | 4× (parse + full draw) | 4× (blit static + 1 bar) ; parse cache hit |
-| Drag pointermove | N parses + full React paint | Geometry on cached bounds; ghost composite only |
+| Paint 1 track, N bars | ~3N full parses + full draw | 1 cached parse (`barsNotationHash` / NUL sep); static redraw only on content change |
+| Playhead step, 4 tracks | 4× (parse + full draw) | 4× (blit static + 1 bar); when `markTriplets` is on, also re-stroke bracket overlays |
+| Drag pointermove (same slot) | N parses + full React paint | Geometry on cached bounds; ghost composite only |
+| Drag pointermove (slot change) | N parses + full React paint | Full reparse/repaint of preview order + offscreen snapshot; then ghost-only until next slot |
 | Rapid note keys | Sync LS + O(N²) flatten | Debounced LS + O(N) flatten |
 | Tempo drag while playing | Stop/restart loop | Rebase `stepMs` in place |
 
@@ -80,7 +81,7 @@ Audio scheduler at 25 ms is intentional and fine; UI is bar-stepped (not RAF-p
 
 | Suite | Result |
 |-------|--------|
-| `features/groovy-player/canvas/` + editor + storage + clock | **132 passed** |
+| `features/groovy-player/canvas/` + editor + storage + clock | **132+ passed** (incl. hash collision + storage flush) |
 | `npm run test:playback` | **100 passed** |
 | `tsc --noEmit` | clean |
 | ESLint on touched UI/canvas files | clean |
@@ -92,13 +93,22 @@ Manual browser harness at 8→240 bars (play/pause, drag, rapid tools, mobile) s
 ## Remaining / consciously rejected
 
 **Optional follow-ups (low urgency):**
-- Soften multi-tab dirty discard (merge by `updatedAt`) if dual-tab editing becomes common.
+- Richer multi-tab merge by `updatedAt` if dual-tab editing becomes common (current: flush local dirty before invalidate — no silent loss, last-writer-wins).
 - When `markTriplets` is on, playhead overlay currently re-strokes all brackets after the highlighted bar (correctness); could dirty-rect brackets later.
 - `demo-bar.tsx` may still double-parse (out of critical path).
 
 **Rejected (overkill):** canvas virtualization before this paint model; Worker parse; replacing 25 ms scheduler; `useMemo` wallpaper; OffscreenCanvas transferables.
 
 ---
+
+## Review follow-ups addressed (post Round-3)
+
+- `barsNotationHash` / NUL separator — no `join('')` cache-key collisions.
+- Multi-tab `storage`: flush dirty memory before invalidate.
+- Drag preview highlights use reordered `barsToRender` / `renderParsed` geometry.
+- Offscreen ghost copy skips bitmap wipe when size unchanged.
+- Playhead path: no per-tick `layouts.map` clone; canvas via `useRef` (not `getElementById`).
+- Drop-index past-last guards empty/mismatched bounds; vacuous hash test removed.
 
 ## Iteration agents
 

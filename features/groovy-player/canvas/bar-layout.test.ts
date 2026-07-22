@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from 'vitest'
 
 import * as groupedNotation from '@/lib/midinike/notation/grouped-notation'
 import {
+  barsNotationHash,
   parseBarLayout,
   parseBarsLayout,
   cachedParseBarsNotation,
@@ -145,14 +146,27 @@ describe('cachedParseBarsNotation', () => {
     clearParseBarsNotationCacheForTests()
     const bars = ['ttstts', 'ssssss']
     const spy = vi.spyOn(groupedNotation, 'parseGroupedNotation')
-    const first = cachedParseBarsNotation(bars, bars.join(''))
-    const second = cachedParseBarsNotation(bars, bars.join(''))
+    const first = cachedParseBarsNotation(bars)
+    const second = cachedParseBarsNotation(bars)
     expect(first).toBe(second)
     expect(spy).toHaveBeenCalledTimes(1)
     clearParseBarsNotationCacheForTests()
-    cachedParseBarsNotation(bars, bars.join(''))
+    cachedParseBarsNotation(bars)
     expect(spy).toHaveBeenCalledTimes(2)
     spy.mockRestore()
+    clearParseBarsNotationCacheForTests()
+  })
+
+  it('does not collide on join-without-separator boundaries', () => {
+    clearParseBarsNotationCacheForTests()
+    const a = ['abc', 'd']
+    const b = ['ab', 'cd']
+    expect(barsNotationHash(a)).not.toBe(barsNotationHash(b))
+    const parsedA = cachedParseBarsNotation(a)
+    const parsedB = cachedParseBarsNotation(b)
+    expect(parsedA).not.toBe(parsedB)
+    expect(cachedParseBarsNotation(a)).toBe(parsedA)
+    expect(cachedParseBarsNotation(b)).toBe(parsedB)
     clearParseBarsNotationCacheForTests()
   })
 })

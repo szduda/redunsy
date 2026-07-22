@@ -33,11 +33,7 @@ export const barBoundsForBars = (
   const rowHeights = rowHeightsForBars(canvasWidth, barsPerRow, bars, layouts)
   const barWidth = barWidthForCanvas(canvasWidth, barsPerRow)
   return bars.map((_, barIndex) => {
-    const height = barHeightForCellCount(
-      canvasWidth,
-      barsPerRow,
-      layouts[barIndex]?.cellCount ?? 0,
-    )
+    const height = barHeightForCellCount(canvasWidth, barsPerRow, layouts[barIndex]?.cellCount ?? 0)
     const top = barTopForIndex(barIndex, barsPerRow, rowHeights)
     const left = (barIndex % barsPerRow) * (barWidth + BAR_GAP_PX)
     return { barIndex, left, top, width: barWidth, height }
@@ -81,7 +77,8 @@ export const resolveBarDropTarget = (
   const first = barBounds[0]
   if (x < first.left) return { dropIndex: 0, hoveredBarIndex: -1 }
 
-  const last = barBounds[barCount - 1]
+  const last = barBounds[Math.min(barCount - 1, barBounds.length - 1)]
+  if (!last) return { dropIndex: sourceIndex, hoveredBarIndex: -1 }
   const pastLastHorizontally = x >= last.left + last.width
   const belowLastBar = y >= last.top + last.height
   if (pastLastHorizontally || belowLastBar) {

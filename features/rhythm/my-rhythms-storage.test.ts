@@ -177,7 +177,7 @@ describe('my-rhythms-storage debounce', () => {
     expect(setItem).not.toHaveBeenCalled()
   })
 
-  it('storage event clears memory cache and cancels pending flush', async () => {
+  it('storage event flushes dirty local edits before invalidating cache', async () => {
     const {
       MY_RHYTHMS_STORAGE_KEY,
       readMyRhythms,
@@ -196,13 +196,14 @@ describe('my-rhythms-storage debounce', () => {
     )
     dispatchStorage(MY_RHYTHMS_STORAGE_KEY)
 
-    expect(readMyRhythms().a?.description).toBe('from-other-tab')
+    // Local dirty write wins (flushed before invalidate); cache reloads from storage.
+    expect(readMyRhythms().a?.description).toBe('local-pending')
 
     vi.advanceTimersByTime(300)
     const persisted = JSON.parse(storage.get(MY_RHYTHMS_STORAGE_KEY) ?? '{}') as Record<
       string,
       Rhythm
     >
-    expect(persisted.a?.description).toBe('from-other-tab')
+    expect(persisted.a?.description).toBe('local-pending')
   })
 })

@@ -5,7 +5,7 @@ import { memo, useLayoutEffect, useRef } from 'react'
 import { getDevicePixelRatio } from './canvas-dpi'
 import { darkCanvasColors, lightCanvasColors } from './canvas-colors'
 import { findPatternLength } from './find-pattern-length'
-import { cachedParseBarsNotation } from './bar-layout'
+import { barsNotationHash, cachedParseBarsNotation } from './bar-layout'
 import { canvasHeightForBars, type LaidOutBar } from './renderers'
 import { blitAndHighlightBar, paintStaticBars, staticBarsKey } from './static-bars-layer'
 import { useCanvasWidth } from './use-canvas-width'
@@ -36,12 +36,13 @@ const Bars = ({ bars, activeIndex = -1, barsPerRow, instrument, id }: BarsCanvas
   const markTriplets = usePlayerStore((state) => state.markTriplets)
   const canvasId = `${instrument}-canvas-${id}`
   const containerRef = useRef<HTMLDivElement>(null)
+  const canvasRef = useRef<HTMLCanvasElement>(null)
   const staticCanvasRef = useRef<HTMLCanvasElement | null>(null)
   const staticCacheRef = useRef<StaticCache | null>(null)
   const { width: canvasWidth, dpr } = useCanvasWidth(containerRef)
   const { paddingY, contentWidth } = playerCanvasInsets(canvasWidth, isMobile)
   const barsInPattern = Math.max(findPatternLength(bars, 8), barsPerRow)
-  const hash = bars.join('')
+  const hash = barsNotationHash(bars)
   const parsed = cachedParseBarsNotation(bars, hash)
   const contentHeight = canvasHeightForBars(contentWidth, barsPerRow, bars, parsed.layouts)
   const canvasHeight = contentHeight + paddingY * 2
@@ -49,7 +50,7 @@ const Bars = ({ bars, activeIndex = -1, barsPerRow, instrument, id }: BarsCanvas
     activeIndex < 0 ? -1 : barsInPattern > 1 ? activeIndex % barsInPattern : activeIndex
 
   useLayoutEffect(() => {
-    const canvas = document.getElementById(canvasId) as HTMLCanvasElement | null
+    const canvas = canvasRef.current
     if (!canvas || canvasWidth <= 0) return
 
     const palette = prefersDark ? darkCanvasColors : lightCanvasColors
@@ -113,7 +114,6 @@ const Bars = ({ bars, activeIndex = -1, barsPerRow, instrument, id }: BarsCanvas
   }, [
     hash,
     bars,
-    canvasId,
     canvasWidth,
     canvasHeight,
     dpr,
@@ -131,6 +131,7 @@ const Bars = ({ bars, activeIndex = -1, barsPerRow, instrument, id }: BarsCanvas
   return (
     <div ref={containerRef} className="w-full min-w-0 flex-1">
       <canvas
+        ref={canvasRef}
         id={canvasId}
         className={cn('h-auto w-full bg-zinc-50 dark:bg-zinc-950', canvasWidth <= 0 && 'invisible')}
       />
@@ -145,5 +146,5 @@ export const BarsCanvas = memo(
     prev.activeIndex === next.activeIndex &&
     prev.barsPerRow === next.barsPerRow &&
     prev.instrument === next.instrument &&
-    prev.bars.join('') === next.bars.join(''),
+    barsNotationHash(prev.bars) === barsNotationHash(next.bars),
 )

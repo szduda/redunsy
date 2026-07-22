@@ -57,10 +57,13 @@ export const parseBarsNotation = (bars: string[]): ParsedBarsNotation => {
 const PARSE_CACHE_MAX = 16
 const parseNotationCache = new Map<string, ParsedBarsNotation>()
 
+/** Injective bars→string key (NUL separator avoids `['ab','cd']` / `['abc','d']` collisions). */
+export const barsNotationHash = (bars: string[]) => bars.join('\0')
+
 /** Hash-keyed parse cache for playhead ticks and multi-canvas reuse. */
 export const cachedParseBarsNotation = (
   bars: string[],
-  hash = bars.join(''),
+  hash = barsNotationHash(bars),
 ): ParsedBarsNotation => {
   const hit = parseNotationCache.get(hash)
   if (hit) return hit

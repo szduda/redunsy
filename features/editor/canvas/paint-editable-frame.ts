@@ -112,15 +112,15 @@ export const paintDragFrame = ({
 
   if (isDragPreview) {
     drawDragPreviewHighlights({
-      bars,
+      bars: barsToRender,
       canvasWidth: contentWidth,
       barsPerRow,
       context,
       dark: prefersDark,
       sourceIndex: dragLayout.sourceIndex,
       hoveredBarIndex: dragLayout.hoveredBarIndex,
-      layouts: parsed.layouts,
-      rowHeights: rowHeightsForBars(contentWidth, barsPerRow, bars, parsed.layouts),
+      layouts: renderParsed.layouts,
+      rowHeights: rowHeightsForBars(contentWidth, barsPerRow, barsToRender, renderParsed.layouts),
     })
   }
   context.restore()

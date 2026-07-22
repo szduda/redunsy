@@ -213,9 +213,7 @@ export const blitAndHighlightBar = (args: BlitAndHighlightArgs) => {
   paintLaidOutBar(context, args.instrument, laidOut)
   redrawHighlightOverlays(context, {
     bars: args.bars,
-    layouts: args.layouts.map((layout, index) =>
-      index === highlightedBarIndex ? laidOut : layout,
-    ),
+    layouts: args.layouts,
     palette: args.palette,
     barsPerRow: args.barsPerRow,
     highlightedBarIndex,

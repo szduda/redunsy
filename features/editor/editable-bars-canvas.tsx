@@ -28,7 +28,10 @@ import { grabOffsetForBar, type GhostBarLayout } from '@/features/editor/canvas/
 import { useNoteSelectionStore } from '@/features/editor/note-selection.store'
 import type { SelectionMode } from '@/features/editor/use-note-editor'
 import { findPatternLength } from '@/features/groovy-player/canvas/find-pattern-length'
-import { cachedParseBarsNotation } from '@/features/groovy-player/canvas/bar-layout'
+import {
+  barsNotationHash,
+  cachedParseBarsNotation,
+} from '@/features/groovy-player/canvas/bar-layout'
 import { canvasHeightForBars } from '@/features/groovy-player/canvas/renderers'
 import { useCanvasWidth } from '@/features/groovy-player/canvas/use-canvas-width'
 import { usePlayerStore } from '@/features/groovy-player/player.store'
@@ -85,6 +88,7 @@ const EditableBars = ({
   const allowBarDrag = selectionMode === 'bar' && !isMobile
   const canvasId = `${instrument}-editor-canvas-${id}`
   const containerRef = useRef<HTMLDivElement>(null)
+  const canvasRef = useRef<HTMLCanvasElement>(null)
   const canvasElementsRef = useRef<CanvasElement[]>([])
   const staticCanvasRef = useRef<HTMLCanvasElement | null>(null)
   const staticCacheRef = useRef<StaticFrameCache | null>(null)
@@ -110,7 +114,7 @@ const EditableBars = ({
   const [dragLayout, setDragLayout] = useState<DragLayoutState | null>(null)
   const { width: canvasWidth, dpr } = useCanvasWidth(containerRef)
   const { paddingX, paddingY, contentWidth } = editorCanvasInsets(canvasWidth, isMobile)
-  const hash = bars.join('')
+  const hash = barsNotationHash(bars)
   const parsed = cachedParseBarsNotation(bars, hash)
   const contentHeight = canvasHeightForBars(contentWidth, barsPerRow, bars, parsed.layouts)
   const canvasHeight = contentHeight + paddingY * 2
@@ -167,7 +171,7 @@ const EditableBars = ({
     if (ghostRafRef.current !== null) return
     ghostRafRef.current = requestAnimationFrame(() => {
       ghostRafRef.current = null
-      const canvas = document.getElementById(canvasId) as HTMLCanvasElement | null
+      const canvas = canvasRef.current
       const layout = dragLayoutRef.current
       const offscreen = offscreenRef.current
       if (!canvas || !layout || !offscreen) return
@@ -204,7 +208,7 @@ const EditableBars = ({
   }
 
   useLayoutEffect(() => {
-    const canvas = document.getElementById(canvasId) as HTMLCanvasElement | null
+    const canvas = canvasRef.current
     if (!canvas || canvasWidth <= 0) return
 
     if (dragLayout) {
@@ -257,7 +261,6 @@ const EditableBars = ({
     })
   }, [
     hash,
-    canvasId,
     canvasWidth,
     canvasHeight,
     dpr,
@@ -287,7 +290,7 @@ const EditableBars = ({
     return { x: x - paddingX, y: y - paddingY }
   }
 
-  const getCanvas = () => document.getElementById(canvasId) as HTMLCanvasElement | null
+  const getCanvas = () => canvasRef.current
 
   const getNoteTarget = (event: { clientX: number; clientY: number }) => {
     const canvas = getCanvas()
@@ -312,7 +315,7 @@ const EditableBars = ({
   }
 
   const updateDragPosition = (event: React.PointerEvent<HTMLCanvasElement>) => {
-    const canvas = document.getElementById(canvasId) as HTMLCanvasElement | null
+    const canvas = canvasRef.current
     const state = pointerRef.current
     if (!canvas || !state?.dragging) return
 
@@ -410,7 +413,7 @@ const EditableBars = ({
     const distance = Math.hypot(event.clientX - state.startX, event.clientY - state.startY)
     if (!state.dragging && distance > DRAG_THRESHOLD_PX) {
       state.dragging = true
-      const canvas = document.getElementById(canvasId) as HTMLCanvasElement | null
+      const canvas = canvasRef.current
       if (!canvas) return
       const { x, y } = contentPointFromEvent(canvas, event)
       pointerPosRef.current = { x, y }
@@ -500,6 +503,7 @@ const EditableBars = ({
   return (
     <div ref={containerRef} className="w-full min-w-0 flex-1">
       <canvas
+        ref={canvasRef}
         id={canvasId}
         className={cn(
           'h-auto w-full bg-zinc-50 dark:bg-zinc-950',
@@ -525,6 +529,6 @@ export const EditableBarsCanvas = memo(
     prev.barsPerRow === next.barsPerRow &&
     prev.beatSize === next.beatSize &&
     prev.instrument === next.instrument &&
-    prev.bars.join('') === next.bars.join('') &&
+    barsNotationHash(prev.bars) === barsNotationHash(next.bars) &&
     prev.selectionMode === next.selectionMode,
 )
