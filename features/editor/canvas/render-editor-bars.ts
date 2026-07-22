@@ -206,11 +206,7 @@ export const barBoundsAtIndex = (
   const layouts = parseBarsLayout(bars)
   const rowHeights = rowHeightsForBars(canvasWidth, barsPerRow, bars, layouts)
   const barWidth = barWidthForCanvas(canvasWidth, barsPerRow)
-  const height = barHeightForCellCount(
-    canvasWidth,
-    barsPerRow,
-    layouts[barIndex]?.cellCount ?? 0,
-  )
+  const height = barHeightForCellCount(canvasWidth, barsPerRow, layouts[barIndex]?.cellCount ?? 0)
   const top = barTopForIndex(barIndex, barsPerRow, rowHeights)
   const left = (barIndex % barsPerRow) * (barWidth + BAR_GAP_PX)
   return { left, top, width: barWidth, height }

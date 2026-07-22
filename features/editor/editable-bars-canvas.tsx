@@ -28,7 +28,7 @@ import { grabOffsetForBar, type GhostBarLayout } from '@/features/editor/canvas/
 import { useNoteSelectionStore } from '@/features/editor/note-selection.store'
 import type { SelectionMode } from '@/features/editor/use-note-editor'
 import { findPatternLength } from '@/features/groovy-player/canvas/find-pattern-length'
-import { parseBarsNotation, type ParsedBarsNotation } from '@/features/groovy-player/canvas/bar-layout'
+import { cachedParseBarsNotation } from '@/features/groovy-player/canvas/bar-layout'
 import { canvasHeightForBars } from '@/features/groovy-player/canvas/renderers'
 import { useCanvasWidth } from '@/features/groovy-player/canvas/use-canvas-width'
 import { usePlayerStore } from '@/features/groovy-player/player.store'
@@ -65,8 +65,6 @@ type EditableBarsCanvasProps = {
   onReorderBar: (from: number, to: number) => void
 }
 
-type ParseCache = { hash: string; parsed: ParsedBarsNotation }
-
 const EditableBars = ({
   bars,
   barsPerRow,
@@ -88,7 +86,6 @@ const EditableBars = ({
   const canvasId = `${instrument}-editor-canvas-${id}`
   const containerRef = useRef<HTMLDivElement>(null)
   const canvasElementsRef = useRef<CanvasElement[]>([])
-  const parseCacheRef = useRef<ParseCache | null>(null)
   const staticCanvasRef = useRef<HTMLCanvasElement | null>(null)
   const staticCacheRef = useRef<StaticFrameCache | null>(null)
   const offscreenRef = useRef<HTMLCanvasElement | null>(null)
@@ -114,11 +111,7 @@ const EditableBars = ({
   const { width: canvasWidth, dpr } = useCanvasWidth(containerRef)
   const { paddingX, paddingY, contentWidth } = editorCanvasInsets(canvasWidth, isMobile)
   const hash = bars.join('')
-
-  if (!parseCacheRef.current || parseCacheRef.current.hash !== hash) {
-    parseCacheRef.current = { hash, parsed: parseBarsNotation(bars) }
-  }
-  const parsed = parseCacheRef.current.parsed
+  const parsed = cachedParseBarsNotation(bars, hash)
   const contentHeight = canvasHeightForBars(contentWidth, barsPerRow, bars, parsed.layouts)
   const canvasHeight = contentHeight + paddingY * 2
   const barsInPattern = Math.max(findPatternLength(bars, 8), barsPerRow)
@@ -134,15 +127,18 @@ const EditableBars = ({
     paddingY,
     prefersDark,
   })
-  paintEnvRef.current = {
-    bars,
-    instrument,
-    contentWidth,
-    barsPerRow,
-    paddingX,
-    paddingY,
-    prefersDark,
-  }
+
+  useLayoutEffect(() => {
+    paintEnvRef.current = {
+      bars,
+      instrument,
+      contentWidth,
+      barsPerRow,
+      paddingX,
+      paddingY,
+      prefersDark,
+    }
+  }, [bars, instrument, contentWidth, barsPerRow, paddingX, paddingY, prefersDark])
 
   const cancelDragRaf = () => {
     if (dragRafRef.current === null) return

@@ -111,10 +111,7 @@ export const resolveGhostLayout = ({
   }
 }
 
-export const dragLayoutUnchanged = (
-  current: DragLayoutState | null,
-  next: DragLayoutState,
-) =>
+export const dragLayoutUnchanged = (current: DragLayoutState | null, next: DragLayoutState) =>
   !!current &&
   current.sourceIndex === next.sourceIndex &&
   current.dropIndex === next.dropIndex &&

@@ -28,11 +28,8 @@ export const barWidthForCanvas = (canvasWidth: number, barsPerRow: number) =>
 
 export const noteHeightFromWidth = (width: number) => width / NOTE_ASPECT_W_OVER_H
 
-export const barHeightForCellCount = (
-  canvasWidth: number,
-  barsPerRow: number,
-  cellCount: number,
-) => noteHeightFromWidth(barWidthForCanvas(canvasWidth, barsPerRow) / cellCount)
+export const barHeightForCellCount = (canvasWidth: number, barsPerRow: number, cellCount: number) =>
+  noteHeightFromWidth(barWidthForCanvas(canvasWidth, barsPerRow) / cellCount)
 
 export const barHeightForBar = (
   canvasWidth: number,
@@ -60,11 +57,7 @@ export const rowHeightsForBars = (
     return Math.max(
       0,
       ...Array.from({ length: end - start }, (_, offset) =>
-        barHeightForCellCount(
-          canvasWidth,
-          barsPerRow,
-          resolved[start + offset]?.cellCount ?? 0,
-        ),
+        barHeightForCellCount(canvasWidth, barsPerRow, resolved[start + offset]?.cellCount ?? 0),
       ),
     )
   })

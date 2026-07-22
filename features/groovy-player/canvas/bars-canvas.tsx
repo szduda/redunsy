@@ -5,13 +5,9 @@ import { memo, useLayoutEffect, useRef } from 'react'
 import { getDevicePixelRatio } from './canvas-dpi'
 import { darkCanvasColors, lightCanvasColors } from './canvas-colors'
 import { findPatternLength } from './find-pattern-length'
-import { parseBarsNotation, type ParsedBarsNotation } from './bar-layout'
+import { cachedParseBarsNotation } from './bar-layout'
 import { canvasHeightForBars, type LaidOutBar } from './renderers'
-import {
-  blitAndHighlightBar,
-  paintStaticBars,
-  staticBarsKey,
-} from './static-bars-layer'
+import { blitAndHighlightBar, paintStaticBars, staticBarsKey } from './static-bars-layer'
 import { useCanvasWidth } from './use-canvas-width'
 import { playerCanvasInsets } from './player-canvas-padding'
 import { usePlayerStore } from '@/features/groovy-player/player.store'
@@ -27,8 +23,6 @@ type BarsCanvasProps = {
   instrument: string
 }
 
-type ParseCache = { hash: string; parsed: ParsedBarsNotation }
-
 type StaticCache = {
   key: string
   layouts: LaidOutBar[]
@@ -42,19 +36,13 @@ const Bars = ({ bars, activeIndex = -1, barsPerRow, instrument, id }: BarsCanvas
   const markTriplets = usePlayerStore((state) => state.markTriplets)
   const canvasId = `${instrument}-canvas-${id}`
   const containerRef = useRef<HTMLDivElement>(null)
-  const parseCacheRef = useRef<ParseCache | null>(null)
   const staticCanvasRef = useRef<HTMLCanvasElement | null>(null)
   const staticCacheRef = useRef<StaticCache | null>(null)
   const { width: canvasWidth, dpr } = useCanvasWidth(containerRef)
   const { paddingY, contentWidth } = playerCanvasInsets(canvasWidth, isMobile)
   const barsInPattern = Math.max(findPatternLength(bars, 8), barsPerRow)
   const hash = bars.join('')
-
-  if (!parseCacheRef.current || parseCacheRef.current.hash !== hash) {
-    parseCacheRef.current = { hash, parsed: parseBarsNotation(bars) }
-  }
-  const parsed = parseCacheRef.current.parsed
-
+  const parsed = cachedParseBarsNotation(bars, hash)
   const contentHeight = canvasHeightForBars(contentWidth, barsPerRow, bars, parsed.layouts)
   const canvasHeight = contentHeight + paddingY * 2
   const highlightedBarIndex =

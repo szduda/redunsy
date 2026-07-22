@@ -16,7 +16,10 @@ import { previewBarsForDrag } from '@/features/editor/notation/reorder-bars'
 import type { SelectionMode } from '@/features/editor/use-note-editor'
 import { darkCanvasColors, lightCanvasColors } from '@/features/groovy-player/canvas/canvas-colors'
 import { getDevicePixelRatio, setupCanvasDpi } from '@/features/groovy-player/canvas/canvas-dpi'
-import { parseBarsNotation, type ParsedBarsNotation } from '@/features/groovy-player/canvas/bar-layout'
+import {
+  parseBarsNotation,
+  type ParsedBarsNotation,
+} from '@/features/groovy-player/canvas/bar-layout'
 import {
   renderBars,
   rowHeightsForBars,

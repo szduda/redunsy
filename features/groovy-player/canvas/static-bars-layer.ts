@@ -2,15 +2,10 @@ import { drawBarIndexLabel } from '@/features/groovy-player/bar-index-mark'
 import type { CanvasColors } from './canvas-colors'
 import { ensureCanvasDpi, getDevicePixelRatio, setupCanvasDpi } from './canvas-dpi'
 import type { ParsedBarsNotation } from './bar-layout'
-import {
-  layoutBar,
-  paintLaidOutBar,
-  renderBars,
-  rowHeightsForBars,
-  type LaidOutBar,
-} from './renderers'
+import { layoutBar, paintLaidOutBar, rowHeightsForBars, type LaidOutBar } from './renderers'
 import { drawPolyrhythmBracket, polyrhythmBracketSpans } from './polyrhythm-brackets'
 import { drawTripletBracket, tripletBracketSpans } from './triplet-brackets'
+import type { CanvasElement } from './types'
 
 export type StaticBarsPaintArgs = {
   staticCanvas: HTMLCanvasElement
@@ -29,7 +24,7 @@ export type StaticBarsPaintArgs = {
 }
 
 export type StaticBarsPaintResult = {
-  elements: ReturnType<typeof renderBars>
+  elements: CanvasElement[]
   layouts: LaidOutBar[]
   rowHeights: number[]
 }
@@ -58,19 +53,6 @@ export const paintStaticBars = ({
   context.translate(paddingX, paddingY)
 
   const rowHeights = rowHeightsForBars(contentWidth, barsPerRow, bars, parsed.layouts)
-  const elements = renderBars({
-    bars,
-    instrument,
-    canvas: staticCanvas,
-    context,
-    canvasWidth: contentWidth,
-    barsPerRow,
-    highlightedBarIndex: -1,
-    palette,
-    showBarIndex,
-    markTriplets,
-    parsed,
-  })
   const layouts = bars.map((_, barIndex) =>
     layoutBar({
       bars,
@@ -84,6 +66,44 @@ export const paintStaticBars = ({
     }),
   )
 
+  layouts.forEach((layout) => {
+    paintLaidOutBar(context, instrument, layout)
+  })
+
+  if (markTriplets) {
+    const bracketParsed = {
+      segments: parsed.segments,
+      barCellCounts: parsed.barCellCounts,
+    }
+    context.strokeStyle = palette.w1
+    context.fillStyle = palette.w1
+    context.font = '7px monospace'
+    context.textAlign = 'center'
+    context.textBaseline = 'bottom'
+    context.lineWidth = 1
+    tripletBracketSpans(bars, layouts, barsPerRow, bracketParsed).forEach((span) =>
+      drawTripletBracket(context, span),
+    )
+    context.lineWidth = 2
+    polyrhythmBracketSpans(bars, layouts, barsPerRow, bracketParsed).forEach((span) =>
+      drawPolyrhythmBracket(context, span),
+    )
+  }
+  if (showBarIndex) {
+    layouts.forEach((layout) => {
+      const firstNote = layout.noteElements[0]
+      if (!firstNote) return
+      drawBarIndexLabel(
+        context,
+        firstNote.left + firstNote.width / 2,
+        firstNote.top + firstNote.height,
+        layout.barEl.barIndex ?? 0,
+        palette.w1,
+      )
+    })
+  }
+
+  const elements = layouts.flatMap((layout) => [layout.barEl, ...layout.noteElements])
   context.restore()
   return { elements, layouts, rowHeights }
 }

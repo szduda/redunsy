@@ -1,7 +1,12 @@
 import { describe, expect, it, vi } from 'vitest'
 
 import * as groupedNotation from '@/lib/midinike/notation/grouped-notation'
-import { parseBarLayout, parseBarsLayout } from './bar-layout'
+import {
+  parseBarLayout,
+  parseBarsLayout,
+  cachedParseBarsNotation,
+  clearParseBarsNotationCacheForTests,
+} from './bar-layout'
 import { rowHeightsForBars } from './renderers'
 
 describe('parseBarLayout', () => {
@@ -132,6 +137,23 @@ describe('parseBarsLayout', () => {
     expect(layouts).toHaveLength(2)
     expect(layouts[0]).toEqual(parseBarLayout(bars[0], bars, 0))
     expect(layouts[1]).toEqual(parseBarLayout(bars[1], bars, 1))
+  })
+})
+
+describe('cachedParseBarsNotation', () => {
+  it('reuses parse for the same hash and misses after clear', () => {
+    clearParseBarsNotationCacheForTests()
+    const bars = ['ttstts', 'ssssss']
+    const spy = vi.spyOn(groupedNotation, 'parseGroupedNotation')
+    const first = cachedParseBarsNotation(bars, bars.join(''))
+    const second = cachedParseBarsNotation(bars, bars.join(''))
+    expect(first).toBe(second)
+    expect(spy).toHaveBeenCalledTimes(1)
+    clearParseBarsNotationCacheForTests()
+    cachedParseBarsNotation(bars, bars.join(''))
+    expect(spy).toHaveBeenCalledTimes(2)
+    spy.mockRestore()
+    clearParseBarsNotationCacheForTests()
   })
 })
 
