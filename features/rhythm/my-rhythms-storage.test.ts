@@ -178,12 +178,8 @@ describe('my-rhythms-storage debounce', () => {
   })
 
   it('storage event flushes dirty local edits before invalidating cache', async () => {
-    const {
-      MY_RHYTHMS_STORAGE_KEY,
-      readMyRhythms,
-      resetMyRhythmsStorageForTests,
-      saveRhythm,
-    } = await import('@/features/rhythm/my-rhythms-storage')
+    const { MY_RHYTHMS_STORAGE_KEY, readMyRhythms, resetMyRhythmsStorageForTests, saveRhythm } =
+      await import('@/features/rhythm/my-rhythms-storage')
     resetMyRhythmsStorageForTests()
 
     saveRhythm({ ...sampleRhythm('a'), description: 'local-pending' })
@@ -208,12 +204,8 @@ describe('my-rhythms-storage debounce', () => {
   })
 
   it('storage event clears memory cache when local cache is clean', async () => {
-    const {
-      MY_RHYTHMS_STORAGE_KEY,
-      readMyRhythms,
-      resetMyRhythmsStorageForTests,
-      saveRhythm,
-    } = await import('@/features/rhythm/my-rhythms-storage')
+    const { MY_RHYTHMS_STORAGE_KEY, readMyRhythms, resetMyRhythmsStorageForTests, saveRhythm } =
+      await import('@/features/rhythm/my-rhythms-storage')
     resetMyRhythmsStorageForTests()
 
     saveRhythm({ ...sampleRhythm('a'), description: 'local-clean' })

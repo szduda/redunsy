@@ -11,23 +11,23 @@ Top-notch player/editor UI under real load: **4 instruments × up to 240 bars**,
 ## Load checkpoints
 
 | Checkpoint | Instruments | Bars / instrument |
-|------------|-------------|-------------------|
+| ---------- | ----------- | ----------------- |
 | Baseline   | 4           | 8                 |
 | Mid        | 4           | 32 / 64 / 128     |
 | Max        | 4           | 240               |
 
 ## Baseline (pre-fix) — ranked
 
-| Sev | Issue | Effect at 128–240 bars |
-|-----|--------|-------------------------|
-| P0 | `parseBarLayout` re-parsed **all bars per bar** in heights + layout + brackets | ~`3N` full `parseGroupedNotation`s per track paint |
-| P0 | Playhead `activeBarIndex` full-repainted every open track | 4× full paints every bar step |
-| P1 | Bar drag: `setDrag` every `pointermove` + `barBoundsForBars` parsed **per bar** | O(N) parses **before** React even ran |
-| P1 | Every note edit sync-wrote entire `my-rhythms` JSON | Main-thread I/O on rapid keys |
-| P1 | Arrow/`flattenBarNotes` used per-bar parse → O(N²) | Navigation jank |
-| P2 | Tempo drag restarted audio loop each tick | Audible hiccups + cancel/reschedule |
-| P2 | `buildMergedBeats` compiled primary twice | Extra compile on play/restart |
-| P3 | Unthrottled ResizeObserver; broad volume map select | Secondary thrash |
+| Sev | Issue                                                                           | Effect at 128–240 bars                             |
+| --- | ------------------------------------------------------------------------------- | -------------------------------------------------- |
+| P0  | `parseBarLayout` re-parsed **all bars per bar** in heights + layout + brackets  | ~`3N` full `parseGroupedNotation`s per track paint |
+| P0  | Playhead `activeBarIndex` full-repainted every open track                       | 4× full paints every bar step                      |
+| P1  | Bar drag: `setDrag` every `pointermove` + `barBoundsForBars` parsed **per bar** | O(N) parses **before** React even ran              |
+| P1  | Every note edit sync-wrote entire `my-rhythms` JSON                             | Main-thread I/O on rapid keys                      |
+| P1  | Arrow/`flattenBarNotes` used per-bar parse → O(N²)                              | Navigation jank                                    |
+| P2  | Tempo drag restarted audio loop each tick                                       | Audible hiccups + cancel/reschedule                |
+| P2  | `buildMergedBeats` compiled primary twice                                       | Extra compile on play/restart                      |
+| P3  | Unthrottled ResizeObserver; broad volume map select                             | Secondary thrash                                   |
 
 Audio scheduler at 25 ms is intentional and fine; UI is bar-stepped (not RAF-polled).
 
@@ -36,6 +36,7 @@ Audio scheduler at 25 ms is intentional and fine; UI is bar-stepped (not RAF-p
 ## What shipped
 
 ### Round 1 — foundation
+
 - Threaded **single-parse** APIs (`parseBarsNotation`, optional layouts into heights/brackets/`renderBars`).
 - rAF-coalesced drag state; canvas memo compares `instrument`.
 - Debounced localStorage (300 ms) + flush on hide/unload; immediate write on rename/delete.
@@ -45,6 +46,7 @@ Audio scheduler at 25 ms is intentional and fine; UI is bar-stepped (not RAF-p
 **Cold review score: 6/10** — layout API real; paint still double-parsed at call sites; drag still O(N) parses; merge-beats claimed but missing; ImageData/rAF incomplete.
 
 ### Round 2 — close the blockers
+
 - Call sites share **one parse** for height + `renderBars`.
 - Drag hit-test uses **cached element bounds** (no parse on move).
 - Pointer-only moves: **no React setState**; ghost via composite layer.
@@ -56,6 +58,7 @@ Audio scheduler at 25 ms is intentional and fine; UI is bar-stepped (not RAF-p
 **Cold review score: 8/10** — blockers closed; playhead still full-repainted; ImageData ghost called heavy.
 
 ### Round 3 — playhead + ghost polish
+
 - **Static offscreen layer** per track: rebuild only when bars/size/theme/settings change; playhead ticks **blit + paint one highlighted bar**.
 - `ensureCanvasDpi` avoids wiping canvas when size unchanged.
 - Hash-keyed **`cachedParseBarsNotation`** (module LRU) — no re-parse on playhead ticks; ESLint-clean (no ref-during-render).
@@ -66,25 +69,25 @@ Audio scheduler at 25 ms is intentional and fine; UI is bar-stepped (not RAF-p
 
 ## Hot-path cost model (after)
 
-| Scenario | Before (approx) | After (approx) |
-|----------|-----------------|----------------|
-| Paint 1 track, N bars | ~3N full parses + full draw | 1 cached parse (`barsNotationHash` / NUL sep); static redraw only on content change |
-| Playhead step, 4 tracks | 4× (parse + full draw) | 4× (blit static + 1 bar); when `markTriplets` is on, also re-stroke bracket overlays |
-| Drag pointermove (same slot) | N parses + full React paint | Geometry on cached bounds; ghost composite only |
+| Scenario                       | Before (approx)             | After (approx)                                                                              |
+| ------------------------------ | --------------------------- | ------------------------------------------------------------------------------------------- |
+| Paint 1 track, N bars          | ~3N full parses + full draw | 1 cached parse (`barsNotationHash` / NUL sep); static redraw only on content change         |
+| Playhead step, 4 tracks        | 4× (parse + full draw)      | 4× (blit static + 1 bar); when `markTriplets` is on, also re-stroke bracket overlays        |
+| Drag pointermove (same slot)   | N parses + full React paint | Geometry on cached bounds; ghost composite only                                             |
 | Drag pointermove (slot change) | N parses + full React paint | Full reparse/repaint of preview order + offscreen snapshot; then ghost-only until next slot |
-| Rapid note keys | Sync LS + O(N²) flatten | Debounced LS + O(N) flatten |
-| Tempo drag while playing | Stop/restart loop | Rebase `stepMs` in place |
+| Rapid note keys                | Sync LS + O(N²) flatten     | Debounced LS + O(N) flatten                                                                 |
+| Tempo drag while playing       | Stop/restart loop           | Rebase `stepMs` in place                                                                    |
 
 ---
 
 ## Verification
 
-| Suite | Result |
-|-------|--------|
+| Suite                                                       | Result         |
+| ----------------------------------------------------------- | -------------- |
 | `features/groovy-player/canvas/` + editor + storage + clock | **133 passed** |
-| `npm run test:playback` | **100 passed** |
-| `tsc --noEmit` | clean |
-| ESLint on touched UI/canvas files | clean |
+| `npm run test:playback`                                     | **100 passed** |
+| `tsc --noEmit`                                              | clean          |
+| ESLint on touched UI/canvas files                           | clean          |
 
 Manual browser harness at 8→240 bars (play/pause, drag, rapid tools, mobile) still recommended on the PR.
 
@@ -93,6 +96,7 @@ Manual browser harness at 8→240 bars (play/pause, drag, rapid tools, mobile) s
 ## Remaining / consciously rejected
 
 **Optional follow-ups (low urgency):**
+
 - Richer multi-tab merge by `updatedAt` if dual-tab editing becomes common (current: local snapshot wins; a concurrent remote write is overwritten).
 - When `markTriplets` is on, playhead overlay currently re-strokes all brackets after the highlighted bar (correctness); could dirty-rect brackets later.
 - Drag hover highlight: hit-test uses original-order bounds frozen at drag start; paint uses preview-order rowHeights — with mixed bar heights the hover overlay can sit on a different row than the cursor.

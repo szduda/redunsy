@@ -53,13 +53,7 @@ describe('rebaseLoopTiming / setPlayLoopTempo', () => {
     const rebased = rebaseLoopTiming(timing, 90, nowMs, currentIndex)
 
     expect(
-      playbackIndexAt(
-        rebased.startIndex,
-        rebased.startedAtMs,
-        nowMs,
-        rebased.stepMs,
-        beatCount,
-      ),
+      playbackIndexAt(rebased.startIndex, rebased.startedAtMs, nowMs, rebased.stepMs, beatCount),
     ).toBe(currentIndex)
   })
 
