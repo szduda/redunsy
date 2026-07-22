@@ -81,7 +81,7 @@ Audio scheduler at 25 ms is intentional and fine; UI is bar-stepped (not RAF-p
 
 | Suite | Result |
 |-------|--------|
-| `features/groovy-player/canvas/` + editor + storage + clock | **132+ passed** (incl. hash collision + storage flush) |
+| `features/groovy-player/canvas/` + editor + storage + clock | **133 passed** |
 | `npm run test:playback` | **100 passed** |
 | `tsc --noEmit` | clean |
 | ESLint on touched UI/canvas files | clean |
@@ -93,8 +93,9 @@ Manual browser harness at 8→240 bars (play/pause, drag, rapid tools, mobile) s
 ## Remaining / consciously rejected
 
 **Optional follow-ups (low urgency):**
-- Richer multi-tab merge by `updatedAt` if dual-tab editing becomes common (current: flush local dirty before invalidate — no silent loss, last-writer-wins).
+- Richer multi-tab merge by `updatedAt` if dual-tab editing becomes common (current: local snapshot wins; a concurrent remote write is overwritten).
 - When `markTriplets` is on, playhead overlay currently re-strokes all brackets after the highlighted bar (correctness); could dirty-rect brackets later.
+- Drag hover highlight: hit-test uses original-order bounds frozen at drag start; paint uses preview-order rowHeights — with mixed bar heights the hover overlay can sit on a different row than the cursor.
 - `demo-bar.tsx` may still double-parse (out of critical path).
 
 **Rejected (overkill):** canvas virtualization before this paint model; Worker parse; replacing 25 ms scheduler; `useMemo` wallpaper; OffscreenCanvas transferables.
@@ -104,11 +105,12 @@ Manual browser harness at 8→240 bars (play/pause, drag, rapid tools, mobile) s
 ## Review follow-ups addressed (post Round-3)
 
 - `barsNotationHash` / NUL separator — no `join('')` cache-key collisions.
-- Multi-tab `storage`: flush dirty memory before invalidate.
-- Drag preview highlights use reordered `barsToRender` / `renderParsed` geometry.
+- Multi-tab `storage`: flush dirty memory before invalidate (local snapshot wins; remote concurrent write overwritten — not a merge).
+- Drag preview highlights use reordered `barsToRender` / `renderParsed` geometry; slot-change parse uses `cachedParseBarsNotation`.
 - Offscreen ghost copy skips bitmap wipe when size unchanged.
 - Playhead path: no per-tick `layouts.map` clone; canvas via `useRef` (not `getElementById`).
-- Drop-index past-last guards empty/mismatched bounds; vacuous hash test removed.
+- Drop-index past-last guards empty/mismatched bounds; vacuous hash test removed; non-dirty storage invalidate test restored.
+- Dead `renderBar` export removed.
 
 ## Iteration agents
 

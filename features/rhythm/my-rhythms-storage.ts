@@ -50,7 +50,8 @@ export const flushMyRhythms = () => {
 
 const invalidateForExternalStorage = (event: StorageEvent) => {
   if (event.key !== null && event.key !== MY_RHYTHMS_STORAGE_KEY) return
-  // Flush local in-flight edits before dropping the cache (last-writer-wins, no silent loss).
+  // Flush local in-flight edits before dropping the cache.
+  // Whole-snapshot write: the external tab's update is overwritten (local-wins, not merged).
   if (dirty && memoryCache) writeToLocalStorage(memoryCache)
   clearPersistTimer()
   memoryCache = null

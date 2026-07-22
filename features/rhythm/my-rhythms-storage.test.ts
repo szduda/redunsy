@@ -196,7 +196,7 @@ describe('my-rhythms-storage debounce', () => {
     )
     dispatchStorage(MY_RHYTHMS_STORAGE_KEY)
 
-    // Local dirty write wins (flushed before invalidate); cache reloads from storage.
+    // Local dirty snapshot wins (overwrites the other tab's write); cache reloads from storage.
     expect(readMyRhythms().a?.description).toBe('local-pending')
 
     vi.advanceTimersByTime(300)
@@ -205,5 +205,27 @@ describe('my-rhythms-storage debounce', () => {
       Rhythm
     >
     expect(persisted.a?.description).toBe('local-pending')
+  })
+
+  it('storage event clears memory cache when local cache is clean', async () => {
+    const {
+      MY_RHYTHMS_STORAGE_KEY,
+      readMyRhythms,
+      resetMyRhythmsStorageForTests,
+      saveRhythm,
+    } = await import('@/features/rhythm/my-rhythms-storage')
+    resetMyRhythmsStorageForTests()
+
+    saveRhythm({ ...sampleRhythm('a'), description: 'local-clean' })
+    vi.advanceTimersByTime(300)
+    expect(readMyRhythms().a?.description).toBe('local-clean')
+
+    storage.set(
+      MY_RHYTHMS_STORAGE_KEY,
+      JSON.stringify({ a: { ...sampleRhythm('a'), description: 'from-other-tab' } }),
+    )
+    dispatchStorage(MY_RHYTHMS_STORAGE_KEY)
+
+    expect(readMyRhythms().a?.description).toBe('from-other-tab')
   })
 })

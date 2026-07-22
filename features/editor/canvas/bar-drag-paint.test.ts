@@ -1,10 +1,6 @@
 import { describe, expect, it } from 'vitest'
 
-import {
-  dragLayoutUnchanged,
-  resolveGhostLayout,
-  type DragLayoutState,
-} from './bar-drag-paint'
+import { dragLayoutUnchanged, resolveGhostLayout, type DragLayoutState } from './bar-drag-paint'
 
 describe('dragLayoutUnchanged', () => {
   const base: DragLayoutState = {
@@ -16,9 +12,7 @@ describe('dragLayoutUnchanged', () => {
   }
 
   it('ignores grab offset differences for layout identity', () => {
-    expect(
-      dragLayoutUnchanged(base, { ...base, grabOffsetX: 99, grabOffsetY: 99 }),
-    ).toBe(true)
+    expect(dragLayoutUnchanged(base, { ...base, grabOffsetX: 99, grabOffsetY: 99 })).toBe(true)
   })
 
   it('detects drop/hover changes', () => {

@@ -17,7 +17,7 @@ import type { SelectionMode } from '@/features/editor/use-note-editor'
 import { darkCanvasColors, lightCanvasColors } from '@/features/groovy-player/canvas/canvas-colors'
 import { getDevicePixelRatio, setupCanvasDpi } from '@/features/groovy-player/canvas/canvas-dpi'
 import {
-  parseBarsNotation,
+  cachedParseBarsNotation,
   type ParsedBarsNotation,
 } from '@/features/groovy-player/canvas/bar-layout'
 import {
@@ -92,7 +92,7 @@ export const paintDragFrame = ({
   const barsToRender = isDragPreview
     ? previewBarsForDrag(bars, dragLayout.sourceIndex, dragLayout.dropIndex)
     : bars
-  const renderParsed = isDragPreview ? parseBarsNotation(barsToRender) : parsed
+  const renderParsed = isDragPreview ? cachedParseBarsNotation(barsToRender) : parsed
 
   context.save()
   context.translate(paddingX, paddingY)

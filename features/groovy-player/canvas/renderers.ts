@@ -241,37 +241,6 @@ export const paintLaidOutBar = (
   })
 }
 
-export const renderBar = ({
-  bars,
-  instrument,
-  context,
-  canvasWidth,
-  barIndex = 0,
-  barsPerRow = 2,
-  highlighted = false,
-  rowHeights,
-  layout,
-  palette,
-}: BarRendererArgs & {
-  rowHeights?: number[]
-  layout?: BarLayout
-  palette?: CanvasColors
-}) => {
-  const laidOut = layoutBar({
-    bars,
-    canvasWidth,
-    barIndex,
-    barsPerRow,
-    highlighted,
-    rowHeights,
-    layout,
-    palette,
-  })
-
-  paintLaidOutBar(context, instrument, laidOut)
-  return [laidOut.barEl, ...laidOut.noteElements]
-}
-
 type RenderBarsArgs = Omit<BarRendererArgs, 'barIndex' | 'highlighted'> & {
   highlightedBarIndex?: number
   palette?: CanvasColors
