@@ -280,9 +280,6 @@ export const GroovyPlayer = ({ rhythm, hideHeader = false }: GroovyPlayerProps =
             {loadedRhythm ? (
               <>
                 <ShareRhythmButton rhythm={loadedRhythm} />
-                <Button className="!justify-start" onClick={onFork} variant="subtle">
-                  <ForkIcon className="mr-1 size-4" /> Fork
-                </Button>
                 {loadedRhythm.userOwned ? (
                   <Button
                     className="!justify-start"
@@ -292,6 +289,9 @@ export const GroovyPlayer = ({ rhythm, hideHeader = false }: GroovyPlayerProps =
                     <EditIcon className="mr-1 size-4" /> Edit
                   </Button>
                 ) : null}
+                <Button className="!justify-start" onClick={onFork} variant="subtle">
+                  <ForkIcon className="mr-1 size-4" /> Fork
+                </Button>
               </>
             ) : null}
           </FixedSideActions>
