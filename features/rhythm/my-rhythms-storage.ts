@@ -8,6 +8,7 @@ const PERSIST_DEBOUNCE_MS = 300
 let memoryCache: Record<string, Rhythm> | null = null
 let persistTimer: ReturnType<typeof setTimeout> | null = null
 let flushListenersBound = false
+let dirty = false
 
 /** Coerce a legacy string `author` (pre-`string[]`) into the current array shape. */
 const normalizeAuthor = (author: Rhythm['author'] | string | undefined): string[] => {
@@ -42,8 +43,16 @@ const writeToLocalStorage = (rhythms: Record<string, Rhythm>) => {
 /** Flush any pending debounced write to localStorage immediately. */
 export const flushMyRhythms = () => {
   clearPersistTimer()
-  if (!memoryCache) return
+  if (!dirty || !memoryCache) return
   writeToLocalStorage(memoryCache)
+  dirty = false
+}
+
+const invalidateForExternalStorage = (event: StorageEvent) => {
+  if (event.key !== null && event.key !== MY_RHYTHMS_STORAGE_KEY) return
+  clearPersistTimer()
+  memoryCache = null
+  dirty = false
 }
 
 const bindFlushListeners = () => {
@@ -58,6 +67,7 @@ const bindFlushListeners = () => {
   }
   window.addEventListener('pagehide', flushMyRhythms)
   window.addEventListener('beforeunload', flushMyRhythms)
+  window.addEventListener('storage', invalidateForExternalStorage)
 }
 
 const schedulePersist = () => {
@@ -84,7 +94,7 @@ const parseStoredRhythms = (): Record<string, Rhythm> => {
 
 const loadNormalizedRhythms = (): Record<string, Rhythm> => {
   const stored = parseStoredRhythms()
-  let dirty = false
+  let needsRewrite = false
   const rhythms = Object.fromEntries(
     Object.entries(stored).map(([slug, rhythm]) => {
       const normalized = normalizeRhythmSwing(rhythm)
@@ -96,16 +106,17 @@ const loadNormalizedRhythms = (): Record<string, Rhythm> => {
         !Array.isArray(r.tags) ||
         !Array.isArray(r.rhythmGroup)
       ) {
-        dirty = true
+        needsRewrite = true
       }
       return [slug, normalized]
     }),
   )
-  if (dirty) writeToLocalStorage(rhythms)
+  if (needsRewrite) writeToLocalStorage(rhythms)
   return rhythms
 }
 
 export const readMyRhythms = (): Record<string, Rhythm> => {
+  bindFlushListeners()
   if (memoryCache) return memoryCache
   memoryCache = loadNormalizedRhythms()
   return memoryCache
@@ -113,8 +124,10 @@ export const readMyRhythms = (): Record<string, Rhythm> => {
 
 export const writeMyRhythms = (rhythms: Record<string, Rhythm>) => {
   memoryCache = rhythms
+  dirty = true
   clearPersistTimer()
   writeToLocalStorage(rhythms)
+  dirty = false
 }
 
 export const saveRhythm = (rhythm: Rhythm, previousSlug?: string) => {
@@ -126,6 +139,8 @@ export const saveRhythm = (rhythm: Rhythm, previousSlug?: string) => {
   }
   rhythms[normalized.slug] = { ...normalized, updatedAt: Date.now(), userOwned: true }
   memoryCache = rhythms
+  dirty = true
+  bindFlushListeners()
   if (isRename) {
     flushMyRhythms()
   } else {
@@ -138,6 +153,8 @@ export const deleteRhythm = (slug: string) => {
   const rhythms = { ...readMyRhythms() }
   delete rhythms[slug]
   memoryCache = rhythms
+  dirty = true
+  bindFlushListeners()
   flushMyRhythms()
   return rhythms
 }
@@ -148,5 +165,6 @@ export const listMyRhythms = () => Object.values(readMyRhythms())
 export const resetMyRhythmsStorageForTests = () => {
   clearPersistTimer()
   memoryCache = null
+  dirty = false
   flushListenersBound = false
 }

@@ -1,10 +1,104 @@
 import { describe, expect, it } from 'vitest'
 
-import { playbackCursorAfter, playbackIndexAt, schedulePlaybackWindow } from './playback-clock'
+import {
+  playbackCursorAfter,
+  playbackIndexAt,
+  rebaseLoopTiming,
+  schedulePlaybackWindow,
+  stepMsForBpm,
+} from './playback-clock'
 
 describe('playbackIndexAt', () => {
   it('derives the audible slot from elapsed transport time and wraps the loop', () => {
     expect(playbackIndexAt(2, 100, 129, 10, 4)).toBe(0)
+  })
+})
+
+describe('rebaseLoopTiming / setPlayLoopTempo', () => {
+  const density = 1 / 16
+  const beatCount = 16
+
+  it('updates step timing for the new bpm without resetting density', () => {
+    const timing = {
+      startIndex: 0,
+      startedAtMs: 0,
+      stepMs: stepMsForBpm(120, density),
+      density,
+    }
+    const rebased = rebaseLoopTiming(timing, 60, 1500, 5)
+
+    expect(rebased.stepMs).toBe(stepMsForBpm(60, density))
+    expect(rebased.stepMs).toBe(timing.stepMs * 2)
+    expect(rebased.density).toBe(density)
+    expect(rebased.startIndex).toBe(5)
+    expect(rebased.startedAtMs).toBe(1500)
+  })
+
+  it('keeps getBeatIndex continuous at the rebase instant', () => {
+    const timing = {
+      startIndex: 2,
+      startedAtMs: 100,
+      stepMs: stepMsForBpm(120, density),
+      density,
+    }
+    const nowMs = timing.startedAtMs + timing.stepMs * 3 + 1
+    const currentIndex = playbackIndexAt(
+      timing.startIndex,
+      timing.startedAtMs,
+      nowMs,
+      timing.stepMs,
+      beatCount,
+    )
+
+    const rebased = rebaseLoopTiming(timing, 90, nowMs, currentIndex)
+
+    expect(
+      playbackIndexAt(
+        rebased.startIndex,
+        rebased.startedAtMs,
+        nowMs,
+        rebased.stepMs,
+        beatCount,
+      ),
+    ).toBe(currentIndex)
+  })
+
+  it('advances from the rebased index with the new step size', () => {
+    const timing = {
+      startIndex: 4,
+      startedAtMs: 0,
+      stepMs: stepMsForBpm(120, density),
+      density,
+    }
+    const rebaseAt = 250
+    const currentIndex = playbackIndexAt(
+      timing.startIndex,
+      timing.startedAtMs,
+      rebaseAt,
+      timing.stepMs,
+      beatCount,
+    )
+    const rebased = rebaseLoopTiming(timing, 60, rebaseAt, currentIndex)
+
+    expect(
+      playbackIndexAt(
+        rebased.startIndex,
+        rebased.startedAtMs,
+        rebaseAt + rebased.stepMs,
+        rebased.stepMs,
+        beatCount,
+      ),
+    ).toBe((currentIndex + 1) % beatCount)
+
+    expect(
+      playbackIndexAt(
+        rebased.startIndex,
+        rebased.startedAtMs,
+        rebaseAt + timing.stepMs,
+        rebased.stepMs,
+        beatCount,
+      ),
+    ).toBe(currentIndex)
   })
 })
 

@@ -4,7 +4,10 @@ import WebAudioFontPlayer from './webaudiofont'
 import {
   playbackCursorAfter,
   playbackIndexAt,
+  rebaseLoopTiming,
   schedulePlaybackWindow,
+  stepMsForBpm,
+  type LoopTiming,
   type PlaybackCursor,
 } from './playback-clock'
 
@@ -13,13 +16,6 @@ import type { BeatMatrix, MidiPlayer } from '../types'
 const SCHEDULER_INTERVAL_MS = 25
 const SCHEDULE_AHEAD_MS = 100
 const DEFAULT_ECHO = 0.05
-
-type LoopTiming = {
-  startIndex: number
-  startedAtMs: number
-  stepMs: number
-  density: number
-}
 
 type PlayerState = {
   audioContext: AudioContext
@@ -94,8 +90,6 @@ const refreshCache = (state: PlayerState) => {
 const cancelQueue = (state: PlayerState) => {
   state.player.cancelQueue(state.audioContext)
 }
-
-const stepMsForBpm = (bpm: number, density: number) => density * ((4 * 60) / bpm) * 1000
 
 const stopPlayLoop = (state: PlayerState) => {
   if (state.currentBeatIndex) state.beatIndex = state.currentBeatIndex()
@@ -254,9 +248,10 @@ export const createMidiPlayer = (drums: number[]): MidiPlayer => {
       if (!state.loopStarted || !timing) return
       const nowMs = performance.now()
       const currentIndex = state.currentBeatIndex?.() ?? state.beatIndex
-      timing.startIndex = currentIndex
-      timing.startedAtMs = nowMs
-      timing.stepMs = stepMsForBpm(bpm, timing.density)
+      const rebased = rebaseLoopTiming(timing, bpm, nowMs, currentIndex)
+      timing.startIndex = rebased.startIndex
+      timing.startedAtMs = rebased.startedAtMs
+      timing.stepMs = rebased.stepMs
       state.beatIndex = currentIndex
       state.scheduleInvalidated = true
       cancelQueue(state)

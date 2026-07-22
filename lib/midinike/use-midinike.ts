@@ -180,24 +180,23 @@ export const useMidinike = (options: MidinikeOptions) => {
       )
       const primaryBars = prolongBars(tracks[primaryName], masterBarCount)
 
-      let merged: BeatMatrix = []
-      entries.forEach(([name, cfg]) => {
-        const compiled = compileGroove({
+      const layerCompiled = entries.map(([name, cfg]) => ({
+        name,
+        compiled: compileGroove({
           bars: prolongBars(tracks[name], masterBarCount),
           groove: groovePattern,
           soundMap: soundMapForInstrument(cfg.instrument),
-        })
-        merged = merged.length ? mergeBeatMatrices(merged, compiled.beats) : compiled.beats
-      })
+        }),
+      }))
+      const primaryCompiled = layerCompiled.find(({ name }) => name === primaryName)?.compiled
+      if (!primaryCompiled) return null
 
-      const primaryCompiled = compileGroove({
-        bars: primaryBars,
-        groove: groovePattern,
-        soundMap: soundMapForInstrument(
-          entries.find(([name]) => name === primaryName)?.[1].instrument ??
-            entries[0][1].instrument,
-        ),
-      })
+      const merged = layerCompiled.reduce<BeatMatrix>(
+        (acc, { compiled }) =>
+          acc.length ? mergeBeatMatrices(acc, compiled.beats) : compiled.beats,
+        [],
+      )
+
       return {
         primaryBars,
         compiled: { ...primaryCompiled, beats: merged },

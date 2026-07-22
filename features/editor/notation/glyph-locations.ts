@@ -80,14 +80,19 @@ const toBarLocalLocation = (
   }
 }
 
-export const getGlyphLocations = (bar: string, bars?: string[], barIndex?: number) => {
-  const allBars = bars ?? [bar]
-  const index = barIndex ?? 0
-  const { glyphLocationsByBar } = parseGroupedNotation(allBars)
-  return (glyphLocationsByBar[index] ?? []).map((location) =>
-    toBarLocalLocation(allBars, index, location),
+/** Parse all bars once and return glyph locations for each bar. */
+export const getGlyphLocationsForBars = (bars: string[]): GlyphLocation[][] => {
+  const { glyphLocationsByBar } = parseGroupedNotation(bars)
+  return glyphLocationsByBar.map((locations, barIndex) =>
+    locations.map((location) => toBarLocalLocation(bars, barIndex, location)),
   )
 }
 
+export const getGlyphLocations = (bar: string, bars?: string[], barIndex?: number) => {
+  const allBars = bars ?? [bar]
+  const index = barIndex ?? 0
+  return getGlyphLocationsForBars(allBars)[index] ?? []
+}
+
 export const getGlyphLocationsInBars = (bars: string[], barIndex: number) =>
-  getGlyphLocations(bars[barIndex] ?? '', bars, barIndex)
+  getGlyphLocationsForBars(bars)[barIndex] ?? []
