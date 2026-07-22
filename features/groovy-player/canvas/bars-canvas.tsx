@@ -99,5 +99,6 @@ export const BarsCanvas = memo(
     prev.id === next.id &&
     prev.activeIndex === next.activeIndex &&
     prev.barsPerRow === next.barsPerRow &&
+    prev.instrument === next.instrument &&
     prev.bars.join('') === next.bars.join(''),
 )

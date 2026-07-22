@@ -102,8 +102,32 @@ const EditableBars = ({
     dropIndex?: number
     hoveredBarIndex?: number
   } | null>(null)
+  const pendingDragRef = useRef<BarDragState | null>(null)
+  const dragRafRef = useRef<number | null>(null)
   const [drag, setDrag] = useState<BarDragState | null>(null)
   const { width: canvasWidth, dpr } = useCanvasWidth(containerRef)
+
+  const cancelDragRaf = () => {
+    if (dragRafRef.current === null) return
+    cancelAnimationFrame(dragRafRef.current)
+    dragRafRef.current = null
+  }
+
+  const clearDrag = () => {
+    cancelDragRaf()
+    pendingDragRef.current = null
+    setDrag(null)
+  }
+
+  const scheduleDragUpdate = (next: BarDragState) => {
+    pendingDragRef.current = next
+    if (dragRafRef.current !== null) return
+    dragRafRef.current = requestAnimationFrame(() => {
+      dragRafRef.current = null
+      const pending = pendingDragRef.current
+      if (pending) setDrag(pending)
+    })
+  }
   const { paddingX, paddingY, contentWidth } = editorCanvasInsets(canvasWidth, isMobile)
   const hash = bars.join('')
   const contentHeight = canvasHeightForBars(contentWidth, barsPerRow, bars)
@@ -259,7 +283,7 @@ const EditableBars = ({
     if (isPointerOutsideCanvas(canvas, event)) {
       state.dropIndex = state.barIndex
       state.hoveredBarIndex = -1
-      setDrag({
+      scheduleDragUpdate({
         sourceIndex: state.barIndex,
         dropIndex: state.barIndex,
         hoveredBarIndex: -1,
@@ -275,7 +299,7 @@ const EditableBars = ({
     state.dropIndex = dropIndex
     state.hoveredBarIndex = hoveredBarIndex
 
-    setDrag({
+    scheduleDragUpdate({
       sourceIndex: state.barIndex,
       dropIndex,
       hoveredBarIndex,
@@ -357,7 +381,7 @@ const EditableBars = ({
       const canvas = document.getElementById(canvasId) as HTMLCanvasElement | null
       if (!canvas) return
       const { x, y } = contentPointFromEvent(canvas, event)
-      setDrag({
+      const initialDrag: BarDragState = {
         sourceIndex: state.barIndex,
         dropIndex: state.barIndex,
         hoveredBarIndex: state.barIndex,
@@ -365,7 +389,9 @@ const EditableBars = ({
         pointerY: y,
         grabOffsetX: state.grabOffsetX,
         grabOffsetY: state.grabOffsetY,
-      })
+      }
+      pendingDragRef.current = initialDrag
+      setDrag(initialDrag)
       state.dropIndex = state.barIndex
       state.hoveredBarIndex = state.barIndex
     }
@@ -384,7 +410,7 @@ const EditableBars = ({
 
     const movedDistance = Math.hypot(event.clientX - state.startX, event.clientY - state.startY)
     if (isMobile && movedDistance > DRAG_THRESHOLD_PX) {
-      setDrag(null)
+      clearDrag()
       releasePointer(event)
       return
     }
@@ -392,7 +418,7 @@ const EditableBars = ({
     if (allowBarDrag && state.dragging) {
       const canvas = getCanvas()
       if (!canvas || isPointerOutsideCanvas(canvas, event)) {
-        setDrag(null)
+        clearDrag()
         releasePointer(event)
         return
       }
@@ -410,12 +436,12 @@ const EditableBars = ({
         onReorderBar(state.barIndex, dropIndex)
       }
 
-      setDrag(null)
+      clearDrag()
       releasePointer(event)
       return
     }
 
-    setDrag(null)
+    clearDrag()
 
     if (selectionMode === 'bar') {
       onSelectBar(state.barIndex)
@@ -445,7 +471,7 @@ const EditableBars = ({
 
   const onPointerCancel = (event: React.PointerEvent<HTMLCanvasElement>) => {
     pointerRef.current = null
-    setDrag(null)
+    clearDrag()
     releasePointer(event)
   }
 
@@ -476,6 +502,7 @@ export const EditableBarsCanvas = memo(
     prev.activeIndex === next.activeIndex &&
     prev.barsPerRow === next.barsPerRow &&
     prev.beatSize === next.beatSize &&
+    prev.instrument === next.instrument &&
     prev.bars.join('') === next.bars.join('') &&
     prev.selectionMode === next.selectionMode,
 )

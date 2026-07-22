@@ -371,8 +371,18 @@ export const useMidinike = (options: MidinikeOptions) => {
 
   useEffect(() => {
     if (!playingRef.current) return
-    startLoopRef.current(currentBeatIndex())
-  }, [currentBeatIndex, tempo])
+    const player = midiSounds.current
+    if (!player) return
+    const { cellsPerBar: barCells, cellCount, beats, preGrooveSlots } = compileRef.current
+    const playbackTempo = calcPlaybackTempo(
+      barCells,
+      cellCount,
+      preGrooveSlots,
+      beats.length,
+      tempo,
+    )
+    player.setPlayLoopTempo(playbackTempo)
+  }, [midiSounds, tempo])
 
   const layerHandles = useMemo(
     () =>

@@ -14,6 +14,13 @@ const SCHEDULER_INTERVAL_MS = 25
 const SCHEDULE_AHEAD_MS = 100
 const DEFAULT_ECHO = 0.05
 
+type LoopTiming = {
+  startIndex: number
+  startedAtMs: number
+  stepMs: number
+  density: number
+}
+
 type PlayerState = {
   audioContext: AudioContext
   player: InstanceType<typeof WebAudioFontPlayer>
@@ -26,6 +33,7 @@ type PlayerState = {
   loopGeneration: number
   beatIndex: number
   scheduleInvalidated: boolean
+  loopTiming?: LoopTiming
   currentBeatIndex?: () => number
   schedulerTick?: () => void
   drums: number[]
@@ -87,12 +95,15 @@ const cancelQueue = (state: PlayerState) => {
   state.player.cancelQueue(state.audioContext)
 }
 
+const stepMsForBpm = (bpm: number, density: number) => density * ((4 * 60) / bpm) * 1000
+
 const stopPlayLoop = (state: PlayerState) => {
   if (state.currentBeatIndex) state.beatIndex = state.currentBeatIndex()
   state.loopStarted = false
   state.loopGeneration += 1
   if (state.loopIntervalId !== undefined) clearInterval(state.loopIntervalId)
   state.loopIntervalId = undefined
+  state.loopTiming = undefined
   state.currentBeatIndex = undefined
   state.schedulerTick = undefined
   cancelQueue(state)
@@ -153,10 +164,15 @@ export const createMidiPlayer = (drums: number[]): MidiPlayer => {
       stopPlayLoop(state)
       if (beats.length === 0) return
       state.loopStarted = true
-      const wholeNoteDuration = (4 * 60) / bpm
-      const stepMs = density * wholeNoteDuration * 1000
       const startIndex = fromBeat < beats.length ? fromBeat : 0
       const generation = state.loopGeneration
+      const timing: LoopTiming = {
+        startIndex,
+        startedAtMs: 0,
+        stepMs: stepMsForBpm(bpm, density),
+        density,
+      }
+      state.loopTiming = timing
       state.beatIndex = startIndex
       state.scheduleInvalidated = false
 
@@ -164,14 +180,20 @@ export const createMidiPlayer = (drums: number[]): MidiPlayer => {
         .resume()
         .then(() => {
           if (!state.loopStarted || state.loopGeneration !== generation) return
-          const startedAtMs = performance.now()
+          timing.startedAtMs = performance.now()
           let lastReportedIndex = startIndex
           let cursor: PlaybackCursor = {
             nextIndex: (startIndex + 1) % beats.length,
-            nextTimeMs: startedAtMs + stepMs,
+            nextTimeMs: timing.startedAtMs + timing.stepMs,
           }
           const currentBeatIndex = () =>
-            playbackIndexAt(startIndex, startedAtMs, performance.now(), stepMs, beats.length)
+            playbackIndexAt(
+              timing.startIndex,
+              timing.startedAtMs,
+              performance.now(),
+              timing.stepMs,
+              beats.length,
+            )
           state.currentBeatIndex = currentBeatIndex
 
           playBeatAt(state, contextTime(state), beats[startIndex])
@@ -196,7 +218,13 @@ export const createMidiPlayer = (drums: number[]): MidiPlayer => {
             }
 
             if (state.scheduleInvalidated) {
-              cursor = playbackCursorAfter(startIndex, startedAtMs, nowMs, stepMs, beats.length)
+              cursor = playbackCursorAfter(
+                timing.startIndex,
+                timing.startedAtMs,
+                nowMs,
+                timing.stepMs,
+                beats.length,
+              )
               state.scheduleInvalidated = false
             }
             const window = schedulePlaybackWindow({
@@ -204,7 +232,7 @@ export const createMidiPlayer = (drums: number[]): MidiPlayer => {
               cursor,
               nowMs,
               scheduleUntilMs: nowMs + SCHEDULE_AHEAD_MS,
-              stepMs,
+              stepMs: timing.stepMs,
             })
             cursor = window.cursor
             const audioNow = contextTime(state)
@@ -220,6 +248,19 @@ export const createMidiPlayer = (drums: number[]): MidiPlayer => {
           }
         })
         .catch(() => undefined)
+    },
+    setPlayLoopTempo: (bpm) => {
+      const timing = state.loopTiming
+      if (!state.loopStarted || !timing) return
+      const nowMs = performance.now()
+      const currentIndex = state.currentBeatIndex?.() ?? state.beatIndex
+      timing.startIndex = currentIndex
+      timing.startedAtMs = nowMs
+      timing.stepMs = stepMsForBpm(bpm, timing.density)
+      state.beatIndex = currentIndex
+      state.scheduleInvalidated = true
+      cancelQueue(state)
+      state.schedulerTick?.()
     },
     stopPlayLoop: () => stopPlayLoop(state),
     getBeatIndex: () => state.currentBeatIndex?.() ?? state.beatIndex,

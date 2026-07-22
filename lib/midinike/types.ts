@@ -54,6 +54,8 @@ export type MidiPlayer = {
     fromBeat: number,
     onBeat?: (index: number) => void,
   ) => void
+  /** Update live loop step timing without stopping; rebases from the current beat. */
+  setPlayLoopTempo: (bpm: number) => void
   stopPlayLoop: () => void
   getBeatIndex: () => number
   dispose: () => void
