@@ -1,87 +1,113 @@
-# UI Performance Audit — Player & Editor
+# UI Performance Audit — Player & Editor (Revised)
 
-**Scope:** Player + Editor UI under real load (4 instruments × up to 240 bars).  
-**Goal:** No main-thread hangs, no aggressive polling, slick drag/navigation while paused and playing.  
-**Date:** 2026-07-22
+**Repo:** redunsy · **Branch:** `cursor/ui-performance-audit-4ecd` · **PR:** #65  
+**Date:** 2026-07-22  
+**Process:** Plan → implement → 2× [cold review → implement] → final polish
 
-## Method
+## Goal
 
-1. Static hot-path audit of player/editor canvas, stores, MIDI scheduler, keyboard, DnD.
-2. Implement highest-ROI fixes (real work reduction, not `useMemo` wallpaper).
-3. Two review → implement fine-tuning rounds with an independent cold-blooded reviewer.
+Top-notch player/editor UI under real load: **4 instruments × up to 240 bars**, no main-thread hangs, no aggressive polling. Exercise drag-drop, navigation, rapid tool keys (`r→y→t→y→e`), tempo/volume, **paused and playing**, mobile and desktop.
 
-## Load checkpoints (manual / future browser harness)
+## Load checkpoints
 
 | Checkpoint | Instruments | Bars / instrument |
 |------------|-------------|-------------------|
 | Baseline   | 4           | 8                 |
-| Mid        | 4           | 32, 64, 128       |
+| Mid        | 4           | 32 / 64 / 128     |
 | Max        | 4           | 240               |
 
-Exercise while **paused** and **playing**: bar drag-drop, arrow navigation, rapid tool keys (`r→y→t→y→e`), tempo/volume drag, mobile + desktop.
+## Baseline (pre-fix) — ranked
 
-## Baseline findings (pre-fix)
+| Sev | Issue | Effect at 128–240 bars |
+|-----|--------|-------------------------|
+| P0 | `parseBarLayout` re-parsed **all bars per bar** in heights + layout + brackets | ~`3N` full `parseGroupedNotation`s per track paint |
+| P0 | Playhead `activeBarIndex` full-repainted every open track | 4× full paints every bar step |
+| P1 | Bar drag: `setDrag` every `pointermove` + `barBoundsForBars` parsed **per bar** | O(N) parses **before** React even ran |
+| P1 | Every note edit sync-wrote entire `my-rhythms` JSON | Main-thread I/O on rapid keys |
+| P1 | Arrow/`flattenBarNotes` used per-bar parse → O(N²) | Navigation jank |
+| P2 | Tempo drag restarted audio loop each tick | Audible hiccups + cancel/reschedule |
+| P2 | `buildMergedBeats` compiled primary twice | Extra compile on play/restart |
+| P3 | Unthrottled ResizeObserver; broad volume map select | Secondary thrash |
 
-### P0 — Canvas re-parses notation O(N) times per paint
+Audio scheduler at 25 ms is intentional and fine; UI is bar-stepped (not RAF-polled).
 
-`parseBarLayout` calls `parseGroupedNotation(allBars)` for **each bar**.  
-`rowHeightsForBars` + `layoutBar` (via `renderBars`) therefore parse the full pattern roughly **2N times** per paint. Triplet/polyrhythm brackets parse again.
+---
 
-**Hit on:** every playhead bar step, every drag `pointermove`, every arrow preview, resize, theme/settings toggle.
+## What shipped
 
-### P0 — Playhead updates repaint every open track canvas
+### Round 1 — foundation
+- Threaded **single-parse** APIs (`parseBarsNotation`, optional layouts into heights/brackets/`renderBars`).
+- rAF-coalesced drag state; canvas memo compares `instrument`.
+- Debounced localStorage (300 ms) + flush on hide/unload; immediate write on rename/delete.
+- Live `setPlayLoopTempo` (rebase timing, no loop generation bump).
+- rAF width measure; narrower volume sync signature.
 
-`activeBarIndex` fans out to all track canvases; each does a full layout+paint.
+**Cold review score: 6/10** — layout API real; paint still double-parsed at call sites; drag still O(N) parses; merge-beats claimed but missing; ImageData/rAF incomplete.
 
-### P1 — Bar drag: React state every `pointermove`
+### Round 2 — close the blockers
+- Call sites share **one parse** for height + `renderBars`.
+- Drag hit-test uses **cached element bounds** (no parse on move).
+- Pointer-only moves: **no React setState**; ghost via composite layer.
+- `buildMergedBeats` reuses primary compile.
+- `storage` event invalidates memory cache; dirty-gated flush.
+- Notation `flattenBarNotes` / multi-bar glyph maps: **one parse**.
+- Tempo rebase unit tests (`rebaseLoopTiming`).
 
-`editable-bars-canvas` `setDrag` on every move → `useLayoutEffect` full re-parse + ghost redraw.
+**Cold review score: 8/10** — blockers closed; playhead still full-repainted; ImageData ghost called heavy.
 
-### P1 — Editor persist: sync `localStorage` on every note/bar edit
+### Round 3 — playhead + ghost polish
+- **Static offscreen layer** per track: rebuild only when bars/size/theme/settings change; playhead ticks **blit + paint one highlighted bar**.
+- `ensureCanvasDpi` avoids wiping canvas when size unchanged.
+- Hash-keyed **`cachedParseBarsNotation`** (module LRU) — no re-parse on playhead ticks; ESLint-clean (no ref-during-render).
+- Ghost composite: **offscreen canvas + `drawImage`** (ImageData removed).
+- Cached ghost bar layout; drag helpers extracted (`bar-drag-paint`, `paint-editable-frame`, `static-bars-layer`).
 
-`updateActiveRhythm` → `saveRhythm` → read JSON + rewrite entire library on each key.
+---
 
-### P1 — Arrow key-repeat → preview store → full canvas paint
+## Hot-path cost model (after)
 
-Commit-on-keyup is good; paint path still heavy (mitigated by P0 parse fix).
+| Scenario | Before (approx) | After (approx) |
+|----------|-----------------|----------------|
+| Paint 1 track, N bars | ~3N full parses + full draw | 1 cached parse; static redraw only on content change |
+| Playhead step, 4 tracks | 4× (parse + full draw) | 4× (blit static + 1 bar) ; parse cache hit |
+| Drag pointermove | N parses + full React paint | Geometry on cached bounds; ghost composite only |
+| Rapid note keys | Sync LS + O(N²) flatten | Debounced LS + O(N) flatten |
+| Tempo drag while playing | Stop/restart loop | Rebase `stepMs` in place |
 
-### P2 — Tempo drag restarts the audio loop
+---
 
-`useMidinike` effect calls `startLoop` on every tempo change while playing (cancel queue + reschedule).
+## Verification
 
-### P2 — Volume sync selects entire `byInstrument` map
+| Suite | Result |
+|-------|--------|
+| `features/groovy-player/canvas/` + editor + storage + clock | **132 passed** |
+| `npm run test:playback` | **100 passed** |
+| `tsc --noEmit` | clean |
+| ESLint on touched UI/canvas files | clean |
 
-### P2 — `buildMergedBeats` compiles primary track twice
+Manual browser harness at 8→240 bars (play/pause, drag, rapid tools, mobile) still recommended on the PR.
 
-### P3 — Unthrottled `ResizeObserver` → width state → paint
+---
 
-### P3 — 25 ms audio scheduler (necessary; UI is bar-stepped, OK)
+## Remaining / consciously rejected
 
-## Round 1 implementation plan
+**Optional follow-ups (low urgency):**
+- Soften multi-tab dirty discard (merge by `updatedAt`) if dual-tab editing becomes common.
+- When `markTriplets` is on, playhead overlay currently re-strokes all brackets after the highlighted bar (correctness); could dirty-rect brackets later.
+- `demo-bar.tsx` may still double-parse (out of critical path).
 
-| Fix | Approach | Why real perf |
-|-----|----------|---------------|
-| Single-parse layout | Parse bars once; thread `BarLayout[]` through heights + render + brackets | Cuts parse work from ~2N+2 → 1 per paint |
-| Drag coalescing | rAF-coalesce drag state; skip identical drop/hover when possible | Caps drag paints to frame rate |
-| Debounced persist | Keep Zustand immediate; debounce `localStorage` writes; flush on hide/unload | Removes JSON I/O from keystroke path |
-| Live tempo | Mutable loop BPM on player; invalidate schedule without full stop | Smooth tempo while playing |
-| Resize rAF | Coalesce width updates to one per frame | Less layout thrash |
-| Volume sync | Narrow subscriptions / stable levels signature | Less effect churn |
-| Memo compare | Include `instrument` in canvas memo | Correctness + avoid stale skips |
-| Merge beats | Reuse primary compile in merge | Less compile on play/restart |
+**Rejected (overkill):** canvas virtualization before this paint model; Worker parse; replacing 25 ms scheduler; `useMemo` wallpaper; OffscreenCanvas transferables.
 
-## Success criteria
+---
 
-- Paint path: one `parseGroupedNotation` per canvas paint for a given bars array.
-- Drag while editing 128–240 bars stays interactive (no multi-frame freezes).
-- Rapid note entry does not sync-write storage every key.
-- Tempo slider while playing does not tear/restart audible loop each tick.
-- Existing unit + playback tests green; lint clean.
+## Iteration agents
 
-## Iteration log
+- **Implementers:** Cursor Grok 4.5 High — algorithmic perf, clean modules, low cognitive complexity.
+- **Reviewer (persisted):** cold-blooded, roasted incomplete Round 1 claims, ImageData cost, and playhead gap; Round 2/3 addressed must-fixes.
 
-- **Round 1:** (in progress) implement plan above.
-- **Review 1:** pending cold review.
-- **Round 2:** pending.
-- **Review 2:** pending.
-- **Round 3:** pending final polish + revised report.
+## Key files
+
+- `features/groovy-player/canvas/{bar-layout,renderers,bars-canvas,static-bars-layer,use-canvas-width}.ts(x)`
+- `features/editor/{editable-bars-canvas.tsx,canvas/bar-drag-paint.ts,canvas/paint-editable-frame.ts,notation/bar-note-edits.ts}`
+- `features/rhythm/my-rhythms-storage.ts`
+- `lib/midinike/{use-midinike.ts,audio/player.ts,audio/playback-clock.ts}`
