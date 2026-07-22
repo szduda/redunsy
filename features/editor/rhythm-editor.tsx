@@ -7,6 +7,7 @@ import { PublishGate } from '@/features/admin/publish-gate'
 import { CollapsibleMetadata } from '@/features/editor/collapsible-metadata'
 import { replaceEditorSlugUrl } from '@/features/editor/editor-url'
 import { BackIcon } from '@/features/icons/back-icon'
+import { ForkIcon } from '@/features/icons/fork-icon'
 import { Note16Icon } from '@/features/icons/note-16-icon'
 import { InstrumentTabs } from '@/features/editor/instrument-tabs'
 import { EditableBarsCanvas } from '@/features/editor/editable-bars-canvas'
@@ -34,6 +35,8 @@ import { PageBottomNav } from '@/features/layout/page-bottom-nav'
 import { FixedSideActions } from '@/features/layout/fixed-side-actions'
 import { useTopNavSticky } from '@/features/layout/use-top-nav-sticky'
 import { slugFromTitle, trackBarsRecord } from '@/features/rhythm/rhythm-helpers'
+import { forkRhythmToMyRhythms } from '@/features/rhythm/rhythm-catalog'
+import { ShareRhythmButton } from '@/features/share-rhythm/export/share-rhythm-button'
 import { Button } from '@/features/theme/button'
 import { Text } from '@/features/theme/text'
 import { cn } from '@/features/theme/cn'
@@ -244,6 +247,11 @@ export const RhythmEditor = () => {
     }
   }
 
+  const onDuplicate = () => {
+    const forked = forkRhythmToMyRhythms(rhythm)
+    router.push(`/editor/${forked.slug}`)
+  }
+
   return (
     <>
       {mediaAudio}
@@ -254,12 +262,16 @@ export const RhythmEditor = () => {
           <Button onClick={onBackToPicker} variant="subtle" className="!justify-start">
             <BackIcon className="size-4 mr-1" /> Back to My Rhythms
           </Button>
+          <ShareRhythmButton rhythm={rhythm} />
           <Button
             href={`/player?rhythm=${rhythm.slug}`}
             variant="subtle"
             className="!justify-start"
           >
             <Note16Icon className="mr-1 size-4" /> Show in Player
+          </Button>
+          <Button className="!justify-start" onClick={onDuplicate} variant="subtle">
+            <ForkIcon className="mr-1 size-4" /> Duplicate
           </Button>
           <PublishGate rhythm={rhythm} />
         </FixedSideActions>

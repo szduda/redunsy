@@ -1,6 +1,7 @@
 import type { ReactNode } from 'react'
 
 import type { RhythmCard } from '@/features/rhythm/rhythm.types'
+import { SHARED_WITH_ME_TAG } from '@/features/share-rhythm/shared/share-limits'
 import { Text } from '@/features/theme/text'
 import { cn } from '@/features/theme/cn'
 
@@ -10,13 +11,22 @@ export const barsOnMeterLabel = (bars: number, meter: RhythmCard['meter']) =>
 export const capitalize = (value: string) =>
   value.length ? value[0].toUpperCase() + value.slice(1) : value
 
-export const rhythmTagChipClass =
-  'rounded-full bg-zinc-100 px-2 py-0.5 text-xs text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400'
+export const rhythmTagChipClass = (tag: string) =>
+  cn(
+    'rounded-full px-2 py-0.5 text-xs',
+    tag === SHARED_WITH_ME_TAG
+      ? 'bg-yellowy-light/50 text-zinc-700 dark:text-zinc-300'
+      : 'bg-zinc-100 text-zinc-600 dark:bg-zinc-800 dark:text-zinc-400',
+  )
 
-export const rhythmTags = (card: Pick<RhythmCard, 'rhythmGroup' | 'tags'>) => [
-  ...(card.rhythmGroup ?? []),
-  ...(card.tags ?? []).filter((tag) => !(card.rhythmGroup ?? []).includes(tag)),
-]
+/** Shared-with-me first, then rhythm groups, then remaining tags. */
+export const rhythmTags = (card: Pick<RhythmCard, 'rhythmGroup' | 'tags'>) => {
+  const group = card.rhythmGroup ?? []
+  const tags = (card.tags ?? []).filter((tag) => !group.includes(tag))
+  const shared = tags.filter((tag) => tag === SHARED_WITH_ME_TAG)
+  const rest = tags.filter((tag) => tag !== SHARED_WITH_ME_TAG)
+  return [...shared, ...group, ...rest]
+}
 
 type RhythmMetadataViewProps = {
   card: RhythmCard
@@ -64,7 +74,7 @@ export const RhythmMetadataView = ({
       {tags.length ? (
         <div className="mt-3 flex flex-wrap gap-1.5">
           {tags.map((tag) => (
-            <span key={tag} className={rhythmTagChipClass}>
+            <span key={tag} className={rhythmTagChipClass(tag)}>
               {tag}
             </span>
           ))}
