@@ -40,10 +40,13 @@ describe('demo tracks → Fork → Share → import (e2e)', () => {
     const imported = importSharedRhythm(encoded)
 
     expect(imported).not.toBeNull()
-    expect(imported?.title).toBe(forked.title)
+    expect(imported?.title).not.toBe(forked.title)
+    expect(imported?.title).toContain(forked.title)
+    expect(imported?.title).toContain('(shared)')
+    expect(imported?.slug).not.toBe(forked.slug)
     expect(imported?.meter).toBe(3)
     expect(imported?.userOwned).toBe(true)
-    expect(imported?.tags).toContain(SHARED_WITH_ME_TAG)
+    expect(imported?.tags[0]).toBe(SHARED_WITH_ME_TAG)
     expect(Object.keys(imported?.instruments ?? {})).toEqual(
       expect.arrayContaining(['djembe', 'dundunba', 'sangban', 'kenkeni']),
     )
@@ -52,7 +55,8 @@ describe('demo tracks → Fork → Share → import (e2e)', () => {
       string,
       { title: string }
     >
-    expect(stored[imported!.slug]?.title).toBe(forked.title)
+    expect(stored[imported!.slug]?.title).toBe(imported!.title)
+    expect(stored[forked.slug]?.title).toBe(forked.title)
   })
 
   it('imports when Next.js useParams returns a still-percent-encoded payload', () => {
@@ -71,8 +75,9 @@ describe('demo tracks → Fork → Share → import (e2e)', () => {
     expect(resolved).toBe(encoded)
 
     const imported = importSharedRhythm(resolved)
-    expect(imported?.title).toBe(forked.title)
-    expect(imported?.tags).toContain(SHARED_WITH_ME_TAG)
+    expect(imported?.title).toContain(forked.title)
+    expect(imported?.title).toContain('(shared)')
+    expect(imported?.tags[0]).toBe(SHARED_WITH_ME_TAG)
   })
 
   it('decodeSharePayload accepts percent-encoded lz-string payloads', () => {

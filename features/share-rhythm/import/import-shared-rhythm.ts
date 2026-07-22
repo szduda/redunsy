@@ -5,22 +5,24 @@ import { decodeSharePayload } from '@/features/share-rhythm/import/decode-rhythm
 import { validateSharedRhythm } from '@/features/share-rhythm/import/validate-shared-rhythm'
 import { SHARED_WITH_ME_TAG } from '@/features/share-rhythm/shared/share-limits'
 
-const uniqueSharedSlug = (rhythm: Rhythm) => {
+const uniqueSharedIdentity = (rhythm: Rhythm) => {
   const rhythms = readMyRhythms()
-  if (!rhythms[rhythm.slug]) return rhythm.slug
+  if (!rhythms[rhythm.slug]) return { title: rhythm.title, slug: rhythm.slug }
 
-  let title = rhythm.title
+  let title = `${rhythm.title} (shared)`
   let slug = slugFromTitle(title)
   while (rhythms[slug]) {
-    title = `${rhythm.title} (${randomHash(3)})`
+    title = `${rhythm.title} (shared ${randomHash(3)})`
     slug = slugFromTitle(title)
   }
 
-  return slug
+  return { title, slug }
 }
 
-const withSharedTag = (tags: string[]) =>
-  tags.includes(SHARED_WITH_ME_TAG) ? tags : [...tags, SHARED_WITH_ME_TAG]
+const withSharedTag = (tags: string[]) => {
+  const withoutShared = tags.filter((tag) => tag !== SHARED_WITH_ME_TAG)
+  return [SHARED_WITH_ME_TAG, ...withoutShared]
+}
 
 export const importSharedRhythm = (encodedRhythm: string): Rhythm | null => {
   try {
@@ -29,9 +31,10 @@ export const importSharedRhythm = (encodedRhythm: string): Rhythm | null => {
     if (!validated) return null
 
     const now = Date.now()
-    const slug = uniqueSharedSlug(validated)
+    const { title, slug } = uniqueSharedIdentity(validated)
     const rhythm: Rhythm = {
       ...validated,
+      title,
       slug,
       userOwned: true,
       tags: withSharedTag(validated.tags),

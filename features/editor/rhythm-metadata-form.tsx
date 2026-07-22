@@ -25,7 +25,10 @@ export type RhythmMetadataValues = Pick<
   | 'origin'
   | 'author'
   | 'tags'
->
+> & {
+  /** Present for saved rhythms; creator draft may omit until save. */
+  slug?: string
+}
 
 type RhythmMetadataFormProps = {
   values: RhythmMetadataValues
@@ -70,7 +73,8 @@ export const RhythmMetadataForm = ({
   titlePlaceholder,
 }: RhythmMetadataFormProps) => {
   const [titleDraft, setTitleDraft] = useState(values.title)
-  const slugPreview = titleDraft.trim() ? slugFromTitle(titleDraft.trim()) : ''
+  const slugDisplay =
+    values.slug?.trim() || (titleDraft.trim() ? slugFromTitle(titleDraft.trim()) : '')
 
   useEffect(() => {
     setTitleDraft(values.title)
@@ -100,7 +104,7 @@ export const RhythmMetadataForm = ({
           placeholder="auto-generated"
           readOnly
           tabIndex={-1}
-          value={slugPreview}
+          value={slugDisplay}
         />
       </label>
 
