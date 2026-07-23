@@ -1,10 +1,5 @@
 import type { SwingArticleCopy } from '@/features/learn/swing/swing-article.types'
-import {
-  SWING_BIRE_ROWS,
-  SWING_ON3_ROWS,
-  SWING_ON4_ROWS,
-  row,
-} from '@/features/learn/swing/swing-table-data'
+import { BIRE_PERCENTS, NGON_PERCENTS, compareRow } from '@/features/learn/swing/swing-table-data'
 
 export const SWING_ARTICLE_EN: SwingArticleCopy = {
   locale: 'en',
@@ -69,76 +64,101 @@ export const SWING_ARTICLE_EN: SwingArticleCopy = {
       id: 'dunsy',
       title: 'How dunsy.app patterns compare',
       paragraphs: [
-        'In dunsy.app, swing is written as a short character string over eighth-note cells. Visual chevrons mark how far a cell is pulled early or late on a 12-tick grid: . is straight; < / << / <<< pull earlier; > / >> / >>> push later. Main downbeats stay straight.',
-        'The tables below convert selected patterns into inter-onset intervals (IOIs) as percentages of one beat — the same language Polak and London use — and set them beside the paper’s measured averages. Beat length here follows dunsy’s main-pulse marking: three cells in on 3, four cells in on 4.',
+        'In dunsy.app, swing is written over eighth-note cells with visual chevrons on a 12-tick grid. A late mark lengthens the first slice of the beat and shortens what follows; an early mark does the reverse. Main downbeats stay straight.',
+        'On a binary beat (two cells, 24 ticks) each late step changes the Long by about 4.2 percentage points: > → 54.2:45.8, >> → 58.3:41.7, >>> → 66.7:33.3. A hypothetical +3 step would land at 62.5:37.5 — between >> and >>>. Ternary beats (three cells, 36 ticks) combine two offbeat marks, so the three percentages move together.',
+        'Below: one table per Polak piece. The highlighted first row is the measured average; the rows under it are attempts to recreate that feel with marks available in the app, plus one hypothetical ±3 step where it helps.',
       ],
     },
   ],
   symbolMapTitle: 'Symbol map',
   symbolMapCaption:
-    'Visual swing marks as shown to players, with the stored character and tick offset.',
-  symbolMapHeaders: ['Visual', 'Stored', 'Offset (ticks)'],
+    'Visual swing marks and their tick offsets on the 12-tick eighth grid. Early and late pairs are symmetric.',
+  symbolMapHeaders: ['Visual', 'Offset (ticks)'],
   symbolMapRows: [
-    ['.', '-', '0'],
-    ['< / << / <<<', '( / < / {', '−1 / −2 / −4'],
-    ['> / >> / >>>', ') / > / }', '+1 / +2 / +4'],
+    ['.', '0'],
+    ['<', '−1'],
+    ['<<', '−2'],
+    ['<<<', '−4'],
+    ['>', '+1'],
+    ['>>', '+2'],
+    ['>>>', '+4'],
   ],
   tables: [
     {
-      id: 'on3',
-      title: 'On 3 — three subdivisions per beat (36 ticks)',
+      id: 'ngon',
+      title: 'Ngòn Fariman — L–S–S (ternary beat, 36 ticks)',
       caption:
-        'Late ternary . >> > is the closest dunsy shape to Ngòn’s onbeat L–S–S. Early . << < yields a short-first profile — the opposite phase from Bu–Kèn–Gè measured from the downbeat.',
-      headers: ['Feel', 'Pattern', 'Onsets', 'IOI', '% of beat', 'Note'],
+        'Measured from the downbeat. Closest app pattern is . >> >; the nearest integer fit needs a +3 step the app does not have.',
+      headers: ['', '% of beat', 'Notes'],
       rows: [
-        row('dunsy early', SWING_ON3_ROWS.early, 'S–L–L; not Ngòn from the downbeat'),
-        row('dunsy late', SWING_ON3_ROWS.late, 'Δ vs Ngòn: −1.9 / −0.1 / +2.1 pp'),
-        row('Paper Ngòn', SWING_ON3_ROWS.ngon, 'Reference average'),
-        row(
-          'Nearest grid',
-          SWING_ON3_ROWS.quantized,
-          '* Needs offsets +3/+2 — outside dunsy’s ±1/±2/±4 ladder',
+        compareRow(
+          'Polak & London',
+          NGON_PERCENTS.en.paper,
+          'Grand average across six performances',
+          true,
+        ),
+        compareRow(
+          '. >> >',
+          NGON_PERCENTS.en.late21,
+          'Closest available pattern. Middle Short almost exact (−0.1 pp); Long short by ~1.9 pp; last Short long by ~2.1 pp',
+        ),
+        compareRow(
+          '. >> >>',
+          NGON_PERCENTS.en.late22,
+          'Last Short close to 28.5 (−0.7 pp); middle Short too long (+2.6 pp)',
+        ),
+        compareRow(
+          '. >>> >>',
+          NGON_PERCENTS.en.late42,
+          'Last Short near the paper (−0.7 pp); Long overshoots (+3.6 pp)',
+        ),
+        compareRow(
+          'hypothetical . +3 +2',
+          NGON_PERCENTS.en.hyp32,
+          'Best integer fit. All three slices within ~1 pp of the study mean — but +3 is not in the app’s ±1/±2/±4 ladder',
         ),
       ],
     },
     {
-      id: 'on4',
-      title: 'On 4 — four subdivisions per beat (48 ticks)',
+      id: 'bire',
+      title: 'Bire — L–S (binary beat, 24 ticks)',
       caption:
-        'Neither listed four-cell pattern reproduces Bire’s binary L–S. Read as two pairs, . > . > is only 54.2:45.8 per half-beat — farther from Bire than a simple . >> pair.',
-      headers: ['Feel', 'Pattern', 'Onsets', 'IOI', '% of beat', 'Note'],
+        'Two slices per beat. . >> lands almost on the study average; weaker and stronger late marks bracket it.',
+      headers: ['', '% of beat', 'Notes'],
       rows: [
-        row('dunsy late', SWING_ON4_ROWS.late, 'Weak repeated long–short pairs'),
-        row(
-          'dunsy early',
-          SWING_ON4_ROWS.early,
-          'Closer to dense / samba-like shapes than to Bire',
+        compareRow(
+          'Polak & London',
+          BIRE_PERCENTS.en.paper,
+          'Grand average across four performances',
+          true,
         ),
-        row('Ngòn dense', SWING_ON4_ROWS.ngonDense, 'Equal split of Ngòn’s Long'),
-        row(
-          'Samba Bahia',
-          SWING_ON4_ROWS.samba,
-          'Cited in the paper as a related non-isochronous dialect',
+        compareRow(
+          '. >>',
+          BIRE_PERCENTS.en.late2,
+          'Practically exact (Δ −0.3 / +0.3 pp). Best match in the whole comparison',
         ),
-      ],
-    },
-    {
-      id: 'bire-binary',
-      title: 'Bire context — two subdivisions per beat (24 ticks)',
-      caption:
-        'The paper measures a binary L–S inside one beat. dunsy’s . >> pair lands almost exactly on the study average.',
-      headers: ['Feel', 'Pattern', 'Onsets', 'IOI', '% of beat', 'Note'],
-      rows: [
-        row('dunsy', SWING_BIRE_ROWS.strong, 'Δ vs Bire: −0.3 / +0.3 pp'),
-        row('Paper Bire', SWING_BIRE_ROWS.paper, 'Reference average'),
-        row('dunsy weak', SWING_BIRE_ROWS.weak, 'Δ vs Bire: −4.4 / +4.4 pp'),
+        compareRow(
+          '. >',
+          BIRE_PERCENTS.en.late1,
+          'Too even — Long short by ~4.4 pp versus the paper',
+        ),
+        compareRow(
+          '. >>>',
+          BIRE_PERCENTS.en.late4,
+          'Too close to a 2:1 feel; Long overshoots by ~8.1 pp',
+        ),
+        compareRow(
+          'hypothetical . +3',
+          BIRE_PERCENTS.en.hyp3,
+          'Between >> and >>>. Farther from Bire than . >>; useful only as a ladder reference',
+        ),
       ],
     },
   ],
   closingTitle: 'Reading the comparison',
   closingParagraphs: [
     'Swings that sound similar are not necessarily the same meter. Bire’s binary L–S and Ngòn’s ternary L–S–S are different categorical templates; denser lead figures nest inside them without erasing the accompaniment Shorts.',
-    'Against that backdrop, dunsy’s present patterns already capture one measured case with striking accuracy: the late binary . >> pair versus Bire. Ternary late . >> > approximates Ngòn’s Long and first Short, while equalizing the two Shorts and leaving the Long slightly short of the study mean.',
-    'Treat the paper averages as evidence from specific Malian performances, and the dunsy columns as what the app’s current swing alphabet can express on its 12-tick grid — a side-by-side research comparison for anyone curious how notation swing relates to recorded feel.',
+    'Against that backdrop, dunsy’s present marks already capture one measured case with striking accuracy: the late binary . >> pair versus Bire. For Ngòn, . >> > is the best available approximation — close on the middle Short, a little short on the Long — while a hypothetical +3/+2 step would land nearer the study mean than anything in the current ladder.',
+    'Treat the paper averages as evidence from specific Malian performances, and the rows below them as what the app’s current swing alphabet can express on its 12-tick grid — a side-by-side research comparison for anyone curious how notation swing relates to recorded feel.',
   ],
 }

@@ -81,21 +81,14 @@ export const SwingArticleBody = ({ copy }: SwingArticleBodyProps) => (
             </tr>
           </thead>
           <tbody>
-            {copy.symbolMapRows.map((cells) => (
-              <tr key={cells[0]}>
-                {cells.map((cell, index) => (
-                  <td
-                    className={cn(
-                      'border-b border-zinc-200 px-3 py-2 dark:border-zinc-800',
-                      index === 0
-                        ? 'font-medium text-zinc-900 dark:text-zinc-100'
-                        : 'font-mono text-xs text-zinc-700 dark:text-zinc-300',
-                    )}
-                    key={`${cells[0]}-${index}`}
-                  >
-                    {cell}
-                  </td>
-                ))}
+            {copy.symbolMapRows.map(([visual, offset]) => (
+              <tr key={visual}>
+                <td className="border-b border-zinc-200 px-3 py-2 font-mono text-sm font-medium text-zinc-900 dark:border-zinc-800 dark:text-zinc-100">
+                  {visual}
+                </td>
+                <td className="border-b border-zinc-200 px-3 py-2 font-mono text-xs text-zinc-700 dark:border-zinc-800 dark:text-zinc-300">
+                  {offset}
+                </td>
               </tr>
             ))}
           </tbody>

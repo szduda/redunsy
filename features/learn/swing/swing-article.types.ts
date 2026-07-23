@@ -2,18 +2,18 @@ export type SwingLocale = 'en' | 'pl'
 
 export type SwingTableRow = {
   label: string
-  pattern: string
-  onsets: string
-  ioi: string
   percent: string
   note: string
+  /** Polak reference row — rendered with emphasis. */
+  highlight?: boolean
 }
 
 export type SwingTable = {
   id: string
   title: string
   caption: string
-  headers: [string, string, string, string, string, string]
+  /** First header is intentionally blank (pattern / source column). */
+  headers: [string, string, string]
   rows: SwingTableRow[]
 }
 
@@ -39,8 +39,8 @@ export type SwingArticleCopy = {
   sections: SwingSection[]
   symbolMapTitle: string
   symbolMapCaption: string
-  symbolMapHeaders: [string, string, string]
-  symbolMapRows: [string, string, string][]
+  symbolMapHeaders: [string, string]
+  symbolMapRows: [string, string][]
   tables: SwingTable[]
   closingTitle: string
   closingParagraphs: string[]
