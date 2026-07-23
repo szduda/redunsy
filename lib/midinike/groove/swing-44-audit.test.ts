@@ -2,9 +2,10 @@ import { describe, expect, it } from 'vitest'
 
 import { compileHits } from './compile-groove.test-helpers'
 import {
+  FORCE_1_OFFSET,
+  FORCE_2_OFFSET,
+  FORCE_3_OFFSET,
   grooveOffset,
-  STRONG_GROOVE_OFFSET,
-  WEAK_GROOVE_OFFSET,
   type GrooveSymbol,
 } from './groove-symbols'
 import { TICKS_PER_EIGHTH } from '../notation/cell-duration'
@@ -12,7 +13,7 @@ import { TICKS_PER_EIGHTH } from '../notation/cell-duration'
 /** 4/4 probe bar: three tones + five slaps — a hit on every eighth cell. */
 const BAR = 'tttsssss'
 const REFERENCE = '--------'
-const GROOVE_SYMBOLS: GrooveSymbol[] = ['-', '<', '(', '>', ')']
+const GROOVE_SYMBOLS: GrooveSymbol[] = ['-', '(', '<', '{', ')', '>', '}']
 const NOTE_CELLS = [0, 1, 2, 3, 4, 5, 6, 7] as const
 
 const grooveWithSymbolAt = (cellIndex: number, symbol: GrooveSymbol) =>
@@ -20,7 +21,7 @@ const grooveWithSymbolAt = (cellIndex: number, symbol: GrooveSymbol) =>
     .map((cell, index) => (index === cellIndex ? symbol : cell))
     .join('')
 
-/** Every symbol on every cell (5 × 8). Full 5^8 grids are covered by composing these. */
+/** Every symbol on every cell. Full 7^8 grids are covered by composing these. */
 const singleCellPermutations = (): { groove: string; cell: number; symbol: GrooveSymbol }[] =>
   GROOVE_SYMBOLS.flatMap((symbol) =>
     NOTE_CELLS.map((cell) => ({
@@ -30,7 +31,7 @@ const singleCellPermutations = (): { groove: string; cell: number; symbol: Groov
     })),
   )
 
-/** Every pair of symbols on adjacent swingable cells 1 and 2 (5 × 5). */
+/** Every pair of symbols on adjacent swingable cells 1 and 2. */
 const noteCellPairPermutations = (): {
   groove: string
   cell1: GrooveSymbol
@@ -96,10 +97,17 @@ describe('4/4 swing audit — tttsssss vs --------', () => {
   it('applies every pair permutation on swingable note cells 1 and 2', () => {
     for (const { groove, cell1, cell2 } of noteCellPairPermutations()) {
       const swung = compileHits([BAR], groove)
+      const tick1 = straight[1]! + grooveOffset(cell1)
+      const tick2 = straight[2]! + grooveOffset(cell2)
+      // Opposing force-3 shifts meet at the midpoint and merge into one slot.
+      if (tick1 === tick2) {
+        expect(swung).toEqual([0, tick1, ...straight.slice(3)])
+        continue
+      }
       expect(swung).toEqual(
         straight.map((tick, noteIndex) => {
-          if (noteIndex === 1) return tick + grooveOffset(cell1)
-          if (noteIndex === 2) return tick + grooveOffset(cell2)
+          if (noteIndex === 1) return tick1
+          if (noteIndex === 2) return tick2
           return tick
         }),
       )
@@ -107,57 +115,57 @@ describe('4/4 swing audit — tttsssss vs --------', () => {
   })
 })
 
-describe('4/4 swing audit — < stronger than ( (and late direction)', () => {
+describe('4/4 swing audit — force ladder < << <<< (and late direction)', () => {
   const straight = compileHits([BAR], REFERENCE)
 
-  it('strong early < pulls further left than weak early (', () => {
-    const strong = compileHits([BAR], '-<------')
-    const weak = compileHits([BAR], '-(------')
-    expect(strong[1]!).toBeLessThan(weak[1]!)
-    expect(weak[1]!).toBeLessThan(straight[1]!)
-    expect(straight[1]! - strong[1]!).toBe(STRONG_GROOVE_OFFSET)
-    expect(straight[1]! - weak[1]!).toBe(WEAK_GROOVE_OFFSET)
-    expect(STRONG_GROOVE_OFFSET).toBeGreaterThan(WEAK_GROOVE_OFFSET)
+  it('orders early forces: <<< earlier than << earlier than <', () => {
+    const force1 = compileHits([BAR], '-(------')
+    const force2 = compileHits([BAR], '-<------')
+    const force3 = compileHits([BAR], '-{------')
+    expect(force3[1]!).toBeLessThan(force2[1]!)
+    expect(force2[1]!).toBeLessThan(force1[1]!)
+    expect(force1[1]!).toBeLessThan(straight[1]!)
+    expect(straight[1]! - force1[1]!).toBe(FORCE_1_OFFSET)
+    expect(straight[1]! - force2[1]!).toBe(FORCE_2_OFFSET)
+    expect(straight[1]! - force3[1]!).toBe(FORCE_3_OFFSET)
   })
 
-  it('strong late > pushes further right than weak late )', () => {
-    const strong = compileHits([BAR], '->------')
-    const weak = compileHits([BAR], '-)------')
-    expect(strong[1]!).toBeGreaterThan(weak[1]!)
-    expect(weak[1]!).toBeGreaterThan(straight[1]!)
-    expect(strong[1]! - straight[1]!).toBe(STRONG_GROOVE_OFFSET)
-    expect(weak[1]! - straight[1]!).toBe(WEAK_GROOVE_OFFSET)
+  it('orders late forces: >>> later than >> later than >', () => {
+    const force1 = compileHits([BAR], '-)------')
+    const force2 = compileHits([BAR], '->------')
+    const force3 = compileHits([BAR], '-}------')
+    expect(force3[1]!).toBeGreaterThan(force2[1]!)
+    expect(force2[1]!).toBeGreaterThan(force1[1]!)
+    expect(force1[1]!).toBeGreaterThan(straight[1]!)
+    expect(force1[1]! - straight[1]!).toBe(FORCE_1_OFFSET)
+    expect(force2[1]! - straight[1]!).toBe(FORCE_2_OFFSET)
+    expect(force3[1]! - straight[1]!).toBe(FORCE_3_OFFSET)
   })
 
-  it('early/late pairs are symmetric about the reference for both strengths', () => {
-    const strongEarly = compileHits([BAR], '-<------')[1]!
-    const strongLate = compileHits([BAR], '->------')[1]!
-    const weakEarly = compileHits([BAR], '-(------')[1]!
-    const weakLate = compileHits([BAR], '-)------')[1]!
+  it('early/late pairs are symmetric about the reference for all three forces', () => {
     const mid = straight[1]!
-
-    expect(mid - strongEarly).toBe(strongLate - mid)
-    expect(mid - weakEarly).toBe(weakLate - mid)
+    for (const [early, late, force] of [
+      ['(', ')', FORCE_1_OFFSET],
+      ['<', '>', FORCE_2_OFFSET],
+      ['{', '}', FORCE_3_OFFSET],
+    ] as const) {
+      const earlyTick = compileHits([BAR], grooveWithSymbolAt(1, early))[1]!
+      const lateTick = compileHits([BAR], grooveWithSymbolAt(1, late))[1]!
+      expect(mid - earlyTick).toBe(lateTick - mid)
+      expect(mid - earlyTick).toBe(force)
+    }
   })
 
   it('strength ordering holds on every non-downbeat cell', () => {
     for (const cell of NOTE_CELLS) {
       if (cell === 0) continue
       const mid = straight[cell]!
-      expect(compileHits([BAR], grooveWithSymbolAt(cell, '<'))[cell]).toBe(
-        mid - STRONG_GROOVE_OFFSET,
-      )
-      expect(compileHits([BAR], grooveWithSymbolAt(cell, '('))[cell]).toBe(mid - WEAK_GROOVE_OFFSET)
-      expect(compileHits([BAR], grooveWithSymbolAt(cell, ')'))[cell]).toBe(mid + WEAK_GROOVE_OFFSET)
-      expect(compileHits([BAR], grooveWithSymbolAt(cell, '>'))[cell]).toBe(
-        mid + STRONG_GROOVE_OFFSET,
-      )
-      expect(compileHits([BAR], grooveWithSymbolAt(cell, '<'))[cell]).toBeLessThan(
-        compileHits([BAR], grooveWithSymbolAt(cell, '('))[cell]!,
-      )
-      expect(compileHits([BAR], grooveWithSymbolAt(cell, '>'))[cell]).toBeGreaterThan(
-        compileHits([BAR], grooveWithSymbolAt(cell, ')'))[cell]!,
-      )
+      expect(compileHits([BAR], grooveWithSymbolAt(cell, '{'))[cell]).toBe(mid - FORCE_3_OFFSET)
+      expect(compileHits([BAR], grooveWithSymbolAt(cell, '<'))[cell]).toBe(mid - FORCE_2_OFFSET)
+      expect(compileHits([BAR], grooveWithSymbolAt(cell, '('))[cell]).toBe(mid - FORCE_1_OFFSET)
+      expect(compileHits([BAR], grooveWithSymbolAt(cell, ')'))[cell]).toBe(mid + FORCE_1_OFFSET)
+      expect(compileHits([BAR], grooveWithSymbolAt(cell, '>'))[cell]).toBe(mid + FORCE_2_OFFSET)
+      expect(compileHits([BAR], grooveWithSymbolAt(cell, '}'))[cell]).toBe(mid + FORCE_3_OFFSET)
     }
   })
 })
@@ -168,9 +176,7 @@ describe('4/4 swing audit — common patterns on tttsssss', () => {
   it('applies classic offbeat late swing ->->->->', () => {
     const swung = compileHits([BAR], '->->->->')
     expect(swung).toEqual(
-      straight.map((tick, cell) =>
-        cell === 0 || cell % 2 === 0 ? tick : tick + STRONG_GROOVE_OFFSET,
-      ),
+      straight.map((tick, cell) => (cell === 0 || cell % 2 === 0 ? tick : tick + FORCE_2_OFFSET)),
     )
   })
 
@@ -178,9 +184,14 @@ describe('4/4 swing audit — common patterns on tttsssss', () => {
     const swung = compileHits([BAR], '-<(-----')
     expect(swung).toEqual([
       0,
-      straight[1]! - STRONG_GROOVE_OFFSET,
-      straight[2]! - WEAK_GROOVE_OFFSET,
+      straight[1]! - FORCE_2_OFFSET,
+      straight[2]! - FORCE_1_OFFSET,
       ...straight.slice(3),
     ])
+  })
+
+  it('applies triple-chevron early swing -{------', () => {
+    const swung = compileHits([BAR], '-{------')
+    expect(swung[1]).toBe(straight[1]! - FORCE_3_OFFSET)
   })
 })

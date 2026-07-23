@@ -1,4 +1,4 @@
-/** Twelve scheduler ticks per eighth — five groove positions at ±2 / ±4. */
+/** Twelve scheduler ticks per eighth — seven groove positions at ±2 / ±4 / ±6. */
 export const TICKS_PER_EIGHTH = 12
 
 export const plainCharCells = (length: number) => length

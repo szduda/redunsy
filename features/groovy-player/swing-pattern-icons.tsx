@@ -35,12 +35,35 @@ const DoubleChevronRightIcon = () => (
   </svg>
 )
 
+const TripleChevronLeftIcon = () => (
+  <svg aria-hidden className={iconClass} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path
+      d="M20 6 14 12l6 6M15 6 9 12l6 6M10 6 4 12l6 6"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+)
+
+const TripleChevronRightIcon = () => (
+  <svg aria-hidden className={iconClass} fill="none" stroke="currentColor" viewBox="0 0 24 24">
+    <path
+      d="M4 6 10 12l-6 6M9 6 15 12l-6 6M14 6 20 12l-6 6"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+  </svg>
+)
+
+/** Storage → visual: `(` `<`, `<` `<<`, `{` `<<<`, and late mirrors. */
 const SWING_PATTERN_ICON: Record<GrooveSymbol, () => ReactElement> = {
   '-': DotIcon,
   '(': ChevronLeftIcon,
   '<': DoubleChevronLeftIcon,
-  '>': DoubleChevronRightIcon,
+  '{': TripleChevronLeftIcon,
   ')': ChevronRightIcon,
+  '>': DoubleChevronRightIcon,
+  '}': TripleChevronRightIcon,
 }
 
 type SwingPatternIconProps = {

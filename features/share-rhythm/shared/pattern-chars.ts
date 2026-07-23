@@ -3,7 +3,7 @@ import { RHYTHM_INSTRUMENTS } from '@/features/rhythm/rhythm.types'
 
 export const STRUCTURAL_PATTERN_CHARS = new Set(['-', '[', ']', '{', '}', '<', '>'])
 
-export const GROOVE_PATTERN_CHARS = new Set(['-', '<', '(', '>', ')'])
+export const GROOVE_PATTERN_CHARS = new Set(['-', '(', '<', '{', ')', '>', '}'])
 
 const RHYTHM_INSTRUMENT_SET = new Set<string>(RHYTHM_INSTRUMENTS)
 

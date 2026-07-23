@@ -17,7 +17,7 @@ This suite covers:
 - Demo player: 6-cell notation bars compiled against the 8-cell groove
 - Meter=3 playback: bars and groove both 6 cells, 3/4 tempo
 - Meter=4 playback: bars and groove both 8 cells, 4/4 tempo
-- 4/4 swing audit: `tttsssss` permutations vs `--------`; `<`/`>` stronger than `(`/`)`
+- 4/4 swing audit: `tttsssss` permutations vs `--------`; force ladder `<` < `<<` < `<<<`
 - Player initialization: store's persisted 8-char pattern correctly trimmed for meter=3 rhythms
 - Tempo ratio: 3/4 tempo is exactly 75% of 4/4 at the same BPM
 
@@ -26,4 +26,4 @@ Key invariants that must hold:
 - `tracksMatchGrooveLength(tracks, swingBarSizeForMeter(rhythm.meter))` must pass before `play()` is called
 - A groove and its bars must always share the same `cellsPerBar` value inside `compileGroove`
 - Full-grid 4/4 swing shifts apply (`notationCells === grooveLength`); downbeat cell 0 stays straight
-- `STRONG_GROOVE_OFFSET` (4) > `WEAK_GROOVE_OFFSET` (2) on the 12-tick eighth grid
+- Force offsets: `(`/`)` = ±2, `<`/`>` = ±4, `{`/`}` = ±6 on the 12-tick eighth grid
