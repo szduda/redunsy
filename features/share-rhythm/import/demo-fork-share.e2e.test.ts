@@ -4,7 +4,11 @@ import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { forkPlayerDemoToMyRhythms, PLAYER_DEMO_TITLE } from '@/features/groovy-player/demo-rhythm'
 import { DEMO_NOTATION_SWING_PATTERN } from '@/features/groovy-player/player.store'
-import { MY_RHYTHMS_STORAGE_KEY } from '@/features/rhythm/my-rhythms-storage'
+import {
+  flushMyRhythms,
+  MY_RHYTHMS_STORAGE_KEY,
+  resetMyRhythmsStorageForTests,
+} from '@/features/rhythm/my-rhythms-storage'
 import { buildPrivateRhythmShareUrl } from '@/features/share-rhythm/export/build-share-url'
 import { encodeRhythmForShare } from '@/features/share-rhythm/export/encode-rhythm'
 import { decodeSharePayload } from '@/features/share-rhythm/import/decode-rhythm'
@@ -21,6 +25,7 @@ const asNextUseParamsValue = (encoded: string) => encodeURIComponent(encoded)
 describe('demo tracks → Fork → Share → import (e2e)', () => {
   beforeEach(() => {
     localStorage.clear()
+    resetMyRhythmsStorageForTests()
   })
 
   it('round-trips a forked player demo through a share link', () => {
@@ -38,6 +43,7 @@ describe('demo tracks → Fork → Share → import (e2e)', () => {
     expect(encoded.includes('%')).toBe(false)
 
     const imported = importSharedRhythm(encoded)
+    flushMyRhythms()
 
     expect(imported).not.toBeNull()
     expect(imported?.title).not.toBe(forked.title)
