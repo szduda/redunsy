@@ -26,4 +26,4 @@ Key invariants that must hold:
 - `tracksMatchGrooveLength(tracks, swingBarSizeForMeter(rhythm.meter))` must pass before `play()` is called
 - A groove and its bars must always share the same `cellsPerBar` value inside `compileGroove`
 - Full-grid 4/4 swing shifts apply (`notationCells === grooveLength`); downbeat cell 0 stays straight
-- Force offsets: `(`/`)` = ±2, `<`/`>` = ±4, `{`/`}` = ±6 on the 12-tick eighth grid
+- Force offsets: `(`/`)` = ±1, `<`/`>` = ±2, `{`/`}` = ±4 on the 12-tick eighth grid

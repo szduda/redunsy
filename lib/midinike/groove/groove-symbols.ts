@@ -1,16 +1,12 @@
 export type GrooveSymbol = '-' | '(' | '<' | '{' | ')' | '>' | '}'
 
-/** Base tick shift per force unit on the 12-tick eighth grid. */
-export const GROOVE_FORCE_TICK = 2
-
-/** Visual `<` / `>` — lightest push/pull. */
-export const FORCE_1_OFFSET = GROOVE_FORCE_TICK * 1
-
-/** Visual `<<` / `>>` — medium push/pull. */
-export const FORCE_2_OFFSET = GROOVE_FORCE_TICK * 2
-
-/** Visual `<<<` / `>>>` — strongest push/pull. */
-export const FORCE_3_OFFSET = GROOVE_FORCE_TICK * 3
+/**
+ * End weights on the 12-tick eighth grid (no extra multiplier).
+ * Visual `<` / `<<` / `<<<` → force 1 / 2 / 4.
+ */
+export const FORCE_1_OFFSET = 1
+export const FORCE_2_OFFSET = 2
+export const FORCE_3_OFFSET = 4
 
 /** @deprecated Prefer FORCE_1_OFFSET — kept for existing audit call sites. */
 export const WEAK_GROOVE_OFFSET = FORCE_1_OFFSET
