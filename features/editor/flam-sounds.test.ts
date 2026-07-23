@@ -64,4 +64,11 @@ describe('flam-sounds', () => {
     expect(isFlamSymbol('r', 'djembe')).toBe(true)
     expect(isFlamSymbol('r', 'dundunba')).toBe(false)
   })
+
+  it('exposes no flam symbols for non-djembe instruments', () => {
+    expect(flamSymbolsForInstrument('dundunba')).toEqual([])
+    expect(flamSymbolsForInstrument('sangban')).toEqual([])
+    expect(flamSymbolsForInstrument('kenkeni')).toEqual([])
+    expect(flamSymbolsForInstrument('shaker')).toEqual([])
+  })
 })

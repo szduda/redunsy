@@ -108,6 +108,7 @@ export const EditorKeyboard = ({
   const allSounds = instrumentSounds(instrument)
   const regularSounds = allSounds.filter((sound) => !flamSymbols.includes(sound) && sound !== '-')
   const visibleSounds = flamMode ? flamSymbols : regularSounds
+  const showFlamToggle = flamSymbols.length > 0
 
   useEffect(() => {
     if (editKind === 'sixteenth') setLengthMode('16th')
@@ -360,18 +361,20 @@ export const EditorKeyboard = ({
                 >
                   <Note8Icon />
                 </DisabledHintButton>
-                <DisabledHintButton
-                  aria-pressed={flamMode}
-                  className={cn(roundToggleClass, flamToggleActiveClass(flamMode))}
-                  disabled={!canFlam}
-                  hint={!hasSelection ? NO_SELECTION_HINT : undefined}
-                  keyboardHint="U"
-                  label="Flam"
-                  onClick={onFlamToggle}
-                  style={flamToggleBackgroundStyle(tone, flamMode)}
-                >
-                  <FlamIcon />
-                </DisabledHintButton>
+                {showFlamToggle ? (
+                  <DisabledHintButton
+                    aria-pressed={flamMode}
+                    className={cn(roundToggleClass, flamToggleActiveClass(flamMode))}
+                    disabled={!canFlam}
+                    hint={!hasSelection ? NO_SELECTION_HINT : undefined}
+                    keyboardHint="U"
+                    label="Flam"
+                    onClick={onFlamToggle}
+                    style={flamToggleBackgroundStyle(tone, flamMode)}
+                  >
+                    <FlamIcon />
+                  </DisabledHintButton>
+                ) : null}
               </div>
             </div>
           )}
