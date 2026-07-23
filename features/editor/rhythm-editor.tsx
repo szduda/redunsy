@@ -67,6 +67,7 @@ export const RhythmEditor = () => {
   const focusedTrackId = useEditorStore((state) => state.focusedTrackId)
   const setFocusedTrackId = useEditorStore((state) => state.setFocusedTrackId)
   const patchActiveRhythm = useEditorStore((state) => state.patchActiveRhythm)
+  const changeActiveRhythmMeter = useEditorStore((state) => state.changeActiveRhythmMeter)
   const updateTrackBars = useEditorStore((state) => state.updateTrackBars)
   const updateRhythmInstruments = useEditorStore((state) => state.updateRhythmInstruments)
   const backToPicker = useEditorStore((state) => state.backToPicker)
@@ -286,6 +287,7 @@ export const RhythmEditor = () => {
         >
           <CollapsibleMetadata
             onChange={patchActiveRhythm}
+            onMeterChange={changeActiveRhythmMeter}
             onTitleBlur={onTitleBlur}
             rhythm={rhythm}
           />

@@ -8,6 +8,7 @@ import {
 import { deleteRhythm, readMyRhythms, saveRhythm } from '@/features/rhythm/my-rhythms-storage'
 import { createRhythm, slugFromTitle } from '@/features/rhythm/rhythm-helpers'
 import type { Rhythm, RhythmInstrument, RhythmMeter } from '@/features/rhythm/rhythm.types'
+import { reattachTracksForMeter } from '@/features/editor/reattach-tracks-for-meter'
 import { updateRhythmInstrumentsMap } from '@/features/editor/update-rhythm-instruments'
 
 export type EditorView = 'picker' | 'creator' | 'editor'
@@ -69,6 +70,7 @@ type EditorState = {
   setFocusedTrackId: (trackId: string | null) => void
   updateActiveRhythm: (updater: (rhythm: Rhythm) => Rhythm) => void
   patchActiveRhythm: (patch: Partial<Rhythm>) => void
+  changeActiveRhythmMeter: (meter: RhythmMeter, clearTrackIds?: string[]) => void
   updateTrackBars: (trackId: string, bars: string[]) => void
   updateRhythmInstruments: (layers: RhythmInstrument[]) => void
   removeRhythm: (slug: string) => void
@@ -197,6 +199,22 @@ export const useEditorStore = create<EditorState>((set, get) => ({
       title: nextTitle,
       slug: nextSlug,
       swingPattern: resolveSwingPattern(current, patch),
+      updatedAt: Date.now(),
+      userOwned: true,
+    }
+    const rhythmsNext = persistRhythm(next, previousSlug)
+    set({ rhythms: rhythmsNext, activeSlug: next.slug, previousSlug: next.slug })
+  },
+  changeActiveRhythmMeter: (meter, clearTrackIds = []) => {
+    const { activeSlug, previousSlug, rhythms } = get()
+    if (!activeSlug) return
+    const current = rhythms[activeSlug]
+    if (!current || current.meter === meter) return
+    const next = {
+      ...current,
+      meter,
+      instruments: reattachTracksForMeter(current.instruments, meter, clearTrackIds),
+      swingPattern: defaultSwingPatternForMeter(meter),
       updatedAt: Date.now(),
       userOwned: true,
     }
