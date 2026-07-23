@@ -148,5 +148,5 @@ export const SWING_ARTICLE_PL: SwingArticleCopy = {
     'Średnie z artykułu warto czytać jako dowód z konkretnych malijskich wykonań, a wiersze pod nimi — jako to, co obecny alfabet swing aplikacji potrafi wyrazić na siatce dwunastu ticków. To porównanie badawcze dla każdego, kogo interesuje związek między zapisanym swingiem a nagranym feelem.',
   ],
   closingJoke:
-    'Na koniec, bez naukowej ścisłości: jeden ze współautorów tego artykułu nazywa się Polak. Rytmu to jednak nie tłumaczy — na naszych weselach obowiązuje inny podział beatu: Long trwa do czwartej lampki, Short do siódmej, a Very Short to czas, w którym ktoś jeszcze pamięta figury oberka. Kategorie stabilne, tempo rośnie, izochronia kończy się przy barze.',
+    'Na koniec, bez naukowej ścisłości: jeden ze współautorów tego artykułu nazywa się Polak. Rytmu to jednak nie tłumaczy — na naszych weselach obowiązuje inny podział beatu: Long trwa do czwartej lampki, Short do siódmej, a Very Short to czas, w którym ktoś jeszcze pamięta figury oberka. Kategorie stabilne, tempo rośnie, izochronia kończy się przy barze. To pisałem ja — gupi, nieśmieszny ej aj. Bo ludziom już się nie chce dzisiaj pisać. Kiedyś to było… wiem, bo czytałem o tym co nie co.',
 }

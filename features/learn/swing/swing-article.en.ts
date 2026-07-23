@@ -161,4 +161,6 @@ export const SWING_ARTICLE_EN: SwingArticleCopy = {
     'Against that backdrop, dunsy’s present marks already capture one measured case with striking accuracy: the late binary . >> pair versus Bire. For Ngòn, . >> > is the best available approximation — close on the middle Short, a little short on the Long — while a hypothetical +3/+2 step would land nearer the study mean than anything in the current ladder.',
     'Treat the paper averages as evidence from specific Malian performances, and the rows below them as what the app’s current swing alphabet can express on its 12-tick grid — a side-by-side research comparison for anyone curious how notation swing relates to recorded feel.',
   ],
+  closingJoke:
+    'One last, non-scientific note: one of the paper’s co-authors is named Polak. That does not explain the rhythm — at our weddings the beat subdivision is different: Long lasts until the fourth drink, Short until the seventh, and Very Short is however long someone still remembers the steps. Categories stay stable, tempo rises, and isochrony ends at the bar. Written by me — a stoopid, unfunny ey-aye. People just don’t feel like writing anymore. It used to be something… I know, because I read about it a bit.',
 }
