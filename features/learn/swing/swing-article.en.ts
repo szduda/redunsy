@@ -71,8 +71,8 @@ export const SWING_ARTICLE_EN: SwingArticleCopy = {
       title: 'How dunsy.app patterns compare',
       paragraphs: [
         'In dunsy.app, swing is written over eighth-note cells with visual chevrons on a 12-tick grid. A late mark lengthens the first slice of the beat and shortens what follows; an early mark does the reverse. Main downbeats stay straight. The 4/4 swing input shows four cells (two beats), so a binary feel is written as a repeated beat-group — e.g. ⟦->->⟧, not a lone two-cell fragment. Ternary feels use the three-cell 6/8 unit; denser four-slice figures use the full four-cell row as one mapped beat.',
-        'On a binary beat (two cells, 24 ticks) each late step changes the Long by about 4.2 percentage points: ⟦)⟧ → 54.2:45.8, ⟦>⟧ → 58.3:41.7, ⟦}⟧ → 66.7:33.3. A hypothetical +3 step would land at 62.5:37.5 — between ⟦>⟧ and ⟦}⟧. Ternary beats (three cells, 36 ticks) and quaternary mappings (four cells, 48 ticks) combine several offbeat marks, so all slice percentages move together.',
-        'Below: four tables covering Polak’s accompaniment templates and their denser nested lead composites. The highlighted first row is the measured (or derived) average; the rows under it are attempts to recreate that feel with marks available in the app, plus a hypothetical ±3 step where it helps.',
+        'On a binary beat (two cells, 24 ticks) each late step changes the Long by about 4.2 percentage points. The full ladder is ±1 / ±2 / ±3 / ±4 (chevron count = force): ⟦)⟧ → 54.2:45.8, ⟦>⟧ → 58.3:41.7, ⟦]⟧ → 62.5:37.5, ⟦}⟧ → 66.7:33.3. Ternary beats (three cells, 36 ticks) and quaternary mappings (four cells, 48 ticks) combine several offbeat marks, so all slice percentages move together.',
+        'Below: four tables covering Polak’s accompaniment templates and their denser nested lead composites. The highlighted first row is the measured (or derived) average; the rows under it are attempts to recreate that feel with marks available in the app’s ±1/±2/±3/±4 ladder.',
       ],
     },
   ],
@@ -84,9 +84,11 @@ export const SWING_ARTICLE_EN: SwingArticleCopy = {
     ['-', '0'],
     ['(', '−1'],
     ['<', '−2'],
+    ['[', '−3'],
     ['{', '−4'],
     [')', '+1'],
     ['>', '+2'],
+    [']', '+3'],
     ['}', '+4'],
   ],
   tables: [
@@ -94,7 +96,7 @@ export const SWING_ARTICLE_EN: SwingArticleCopy = {
       id: 'ngon-lss',
       title: 'Ngòn Fariman — accompaniment L–S–S (ternary, 3 cells / 36 ticks)',
       caption:
-        'Kèngèbu from the downbeat. Closest app pattern is ⟦->)⟧; the nearest integer fit needs a +3 step the app does not have.',
+        'Kèngèbu from the downbeat. Best integer fit is ⟦-]>⟧ (late +3 / +2); ⟦->)⟧ remains a close runner-up on the middle Short.',
       headers: ['', '% of beat', 'Notes'],
       rows: [
         compareRow(
@@ -104,9 +106,14 @@ export const SWING_ARTICLE_EN: SwingArticleCopy = {
           true,
         ),
         compareRow(
+          '⟦-]>⟧',
+          NGON_LSS_PERCENTS.en.late32,
+          'Best available fit. All three slices within ~1 pp of the study mean',
+        ),
+        compareRow(
           '⟦->)⟧',
           NGON_LSS_PERCENTS.en.late21,
-          'Closest available pattern. Middle Short almost exact (−0.1 pp); Long short by ~1.9 pp; last Short long by ~2.1 pp',
+          'Middle Short almost exact (−0.1 pp); Long short by ~1.9 pp; last Short long by ~2.1 pp',
         ),
         compareRow(
           '⟦->>⟧',
@@ -117,11 +124,6 @@ export const SWING_ARTICLE_EN: SwingArticleCopy = {
           '⟦-}>⟧',
           NGON_LSS_PERCENTS.en.late42,
           'Last Short near the paper (−0.7 pp); Long overshoots (+3.6 pp)',
-        ),
-        compareRow(
-          'hypothetical ⟦-⟧ +3 ⟦>⟧',
-          NGON_LSS_PERCENTS.en.hyp32,
-          'Best integer fit. All three slices within ~1 pp of the study mean — but +3 is not in the app’s ±1/±2/±4 ladder',
         ),
       ],
     },
@@ -174,14 +176,14 @@ export const SWING_ARTICLE_EN: SwingArticleCopy = {
           'Too even — Long short by ~4.4 pp versus the paper',
         ),
         compareRow(
+          '⟦-]-]⟧',
+          BIRE_LS_PERCENTS.en.late3,
+          'Between ⟦>⟧ and ⟦}⟧ on each beat. Farther from Bire than ⟦->->⟧; useful as a ladder reference',
+        ),
+        compareRow(
           '⟦-}-}⟧',
           BIRE_LS_PERCENTS.en.late4,
           'Too close to a 2:1 feel; Long overshoots by ~8.1 pp',
-        ),
-        compareRow(
-          'hypothetical ⟦-⟧ +3 ⟦-⟧ +3',
-          BIRE_LS_PERCENTS.en.hyp3,
-          'Between ⟦>⟧ and ⟦}⟧ on each beat. Farther from Bire than ⟦->->⟧; useful only as a ladder reference',
         ),
       ],
     },
@@ -199,9 +201,14 @@ export const SWING_ARTICLE_EN: SwingArticleCopy = {
           true,
         ),
         compareRow(
+          '⟦-[<⟧',
+          BIRE_SSS_PERCENTS.en.early32,
+          'Best available fit to 25.4 : 35.3 : 40.4 (Δ −0.4 / +0.8 / −1.5 pp)',
+        ),
+        compareRow(
           '⟦-<<⟧',
           BIRE_SSS_PERCENTS.en.early22,
-          'Closest available pattern. Shape is right (s–S–S); Very Short still ~2.4 pp long',
+          'Shape is right (s–S–S); Very Short still ~2.4 pp long',
         ),
         compareRow(
           '⟦-<(⟧',
@@ -213,18 +220,13 @@ export const SWING_ARTICLE_EN: SwingArticleCopy = {
           BIRE_SSS_PERCENTS.en.early42,
           'Over-shortens the first slice (−3.2 pp); flattens the two Shorts',
         ),
-        compareRow(
-          'hypothetical ⟦-⟧ −3 ⟦<⟧',
-          BIRE_SSS_PERCENTS.en.hyp32,
-          'Best integer fit to 25.4 : 35.3 : 40.4 — but −3 is not in the app’s ±1/±2/±4 ladder',
-        ),
       ],
     },
   ],
   closingTitle: 'Reading the comparison',
   closingParagraphs: [
     'Swings that sound similar are not necessarily the same meter. Bire’s binary L–S and Ngòn’s ternary L–S–S are different categorical templates; denser lead figures nest inside them — s–S₁–S₂ inside L–S, and s–s–S–S inside L–S–S — without erasing the accompaniment Shorts.',
-    'Against that backdrop, dunsy’s present marks capture the late binary accompaniment with striking accuracy: ⟦->->⟧ versus Bire L–S. For Ngòn’s kèngèbu, ⟦->)⟧ is the best available ternary approximation; for the denser quaternary composite, early marks ⟦-<{(⟧ get surprisingly close. Bire’s denser s–S–S needs early marks too (⟦-<<⟧), and would land nearer still with a hypothetical −3 step.',
+    'Against that backdrop, dunsy’s marks capture the late binary accompaniment with striking accuracy: ⟦->->⟧ versus Bire L–S. For Ngòn’s kèngèbu, ⟦-]>⟧ is the best ternary fit; for the denser quaternary composite, early marks ⟦-<{(⟧ get surprisingly close. Bire’s denser s–S–S lands nearest with early ⟦-[<⟧.',
     'Treat the paper averages as evidence from specific Malian performances, and the rows below them as what the app’s current swing alphabet can express on its 12-tick grid — a side-by-side research comparison for anyone curious how notation swing relates to recorded feel.',
   ],
   closingJoke:

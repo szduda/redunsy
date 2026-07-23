@@ -18,16 +18,18 @@ import type { GrooveSymbol } from '@/lib/midinike/groove/groove-symbols'
 
 const LONG_PRESS_MS = 450
 
-const GROOVE_CHARS = new Set<string>(['-', '(', '<', '{', ')', '>', '}'])
+const GROOVE_CHARS = new Set<string>(['-', '(', '<', '[', '{', ')', '>', ']', '}'])
 
 const VISUAL_LABEL: Record<GrooveSymbol, string> = {
   '-': 'straight',
   '(': 'early 1',
   '<': 'early 2',
-  '{': 'early 3',
+  '[': 'early 3',
+  '{': 'early 4',
   ')': 'late 1',
   '>': 'late 2',
-  '}': 'late 3',
+  ']': 'late 3',
+  '}': 'late 4',
 }
 
 type SwingPatternInputBase = {

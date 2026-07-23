@@ -71,8 +71,8 @@ export const SWING_ARTICLE_PL: SwingArticleCopy = {
       title: 'Jak wypada na tym tle dunsy.app',
       paragraphs: [
         'W dunsy.app swing zapisuje się nad komórkami ósemkowymi za pomocą wizualnych znaczków na siatce dwunastu ticków. Znaczek „późny” wydłuża pierwszy odcinek beatu i skraca to, co po nim; znaczek „wczesny” robi odwrotnie. Główne uderzenia na raz (downbeaty) zawsze grane są prosto. Input swing w 4/4 pokazuje cztery pola (dwa beaty), więc feel binarny zapisuje się jako powtórzona grupa — np. ⟦->->⟧, a nie urwany dwukomórkowy fragment. Feely trójdzielne używają trzykomórkowej jednostki 6/8; gęstsze czteroodcinkowe figury mapują cały czteropolowy rząd jako jeden beat z Polaka.',
-        'Na binarnym beacie (dwie komórki, 24 ticki) każdy stopień „późnego” przesunięcia zmienia Long o około 4,2 punktu procentowego: ⟦)⟧ → 54,2 : 45,8, ⟦>⟧ → 58,3 : 41,7, ⟦}⟧ → 66,7 : 33,3. Hipotetyczny stopień +3 wylądowałby na 62,5 : 37,5 — między ⟦>⟧ a ⟦}⟧. Beaty trójdzielne (trzy komórki, 36 ticków) i mapowania czwórdzielne (cztery komórki, 48 ticków) łączą kilka znaczków offbeatowych, więc wszystkie procenty ruszają się razem.',
-        'Poniżej: cztery tabele — akompaniamenty z Polaka oraz ich gęstsze, zagnieżdżone kompozyty leadu. Podświetlony pierwszy wiersz to zmierzona (albo wyprowadzona) średnia; kolejne to próby odtworzenia tego feelu znaczkami dostępnymi w apce — oraz hipotetyczny krok ±3, gdy pomaga.',
+        'Na binarnym beacie (dwie komórki, 24 ticki) każdy stopień „późnego” przesunięcia zmienia Long o około 4,2 punktu procentowego. Pełna drabinka to ±1 / ±2 / ±3 / ±4 (liczba chevronów = siła): ⟦)⟧ → 54,2 : 45,8, ⟦>⟧ → 58,3 : 41,7, ⟦]⟧ → 62,5 : 37,5, ⟦}⟧ → 66,7 : 33,3. Beaty trójdzielne (trzy komórki, 36 ticków) i mapowania czwórdzielne (cztery komórki, 48 ticków) łączą kilka znaczków offbeatowych, więc wszystkie procenty ruszają się razem.',
+        'Poniżej: cztery tabele — akompaniamenty z Polaka oraz ich gęstsze, zagnieżdżone kompozyty leadu. Podświetlony pierwszy wiersz to zmierzona (albo wyprowadzona) średnia; kolejne to próby odtworzenia tego feelu znaczkami z drabinki ±1/±2/±3/±4.',
       ],
     },
   ],
@@ -84,9 +84,11 @@ export const SWING_ARTICLE_PL: SwingArticleCopy = {
     ['-', '0'],
     ['(', '−1'],
     ['<', '−2'],
+    ['[', '−3'],
     ['{', '−4'],
     [')', '+1'],
     ['>', '+2'],
+    [']', '+3'],
     ['}', '+4'],
   ],
   tables: [
@@ -94,14 +96,19 @@ export const SWING_ARTICLE_PL: SwingArticleCopy = {
       id: 'ngon-lss',
       title: 'Ngòn Fariman — akompaniament L–S–S (trójdzielny, 3 pola / 36 ticków)',
       caption:
-        'Kèngèbu liczone od downbeatu. Najbliższy wzorzec w apce to ⟦->)⟧; najbliższe całkowite dopasowanie wymagałoby kroku +3, którego drabinka nie ma.',
+        'Kèngèbu liczone od downbeatu. Najlepsze całkowite dopasowanie to ⟦-]>⟧ (późne +3 / +2); ⟦->)⟧ zostaje bliskim wicemistrzem na środkowym Shortcie.',
       headers: ['', '% beatu', 'Uwagi'],
       rows: [
         compareRow('Polak & London', NGON_LSS_PERCENTS.pl.paper, 'Średnia z sześciu wykonań', true),
         compareRow(
+          '⟦-]>⟧',
+          NGON_LSS_PERCENTS.pl.late32,
+          'Najlepsze dostępne dopasowanie. Wszystkie trzy odcinki w granicach ~1 pp od średniej badania',
+        ),
+        compareRow(
           '⟦->)⟧',
           NGON_LSS_PERCENTS.pl.late21,
-          'Najbliższy dostępny wzorzec. Środkowy Short prawie idealny (−0,1 pp); Long za krótki o ~1,9 pp; ostatni Short za długi o ~2,1 pp',
+          'Środkowy Short prawie idealny (−0,1 pp); Long za krótki o ~1,9 pp; ostatni Short za długi o ~2,1 pp',
         ),
         compareRow(
           '⟦->>⟧',
@@ -112,11 +119,6 @@ export const SWING_ARTICLE_PL: SwingArticleCopy = {
           '⟦-}>⟧',
           NGON_LSS_PERCENTS.pl.late42,
           'Ostatni Short blisko średniej (−0,7 pp); Long za długi (+3,6 pp)',
-        ),
-        compareRow(
-          'hipotetyczne ⟦-⟧ +3 ⟦>⟧',
-          NGON_LSS_PERCENTS.pl.hyp32,
-          'Najlepsze całkowite dopasowanie. Wszystkie trzy odcinki w granicach ~1 pp od średniej badania — ale +3 nie ma w drabince ±1/±2/±4',
         ),
       ],
     },
@@ -164,14 +166,14 @@ export const SWING_ARTICLE_PL: SwingArticleCopy = {
           'Za równe — Long za krótki o ~4,4 pp względem artykułu',
         ),
         compareRow(
+          '⟦-]-]⟧',
+          BIRE_LS_PERCENTS.pl.late3,
+          'Między ⟦>⟧ a ⟦}⟧ na każdym beacie. Dalej od Bire niż ⟦->->⟧; przydatne jako punkt odniesienia drabinki',
+        ),
+        compareRow(
           '⟦-}-}⟧',
           BIRE_LS_PERCENTS.pl.late4,
           'Za blisko feelu 2:1; Long za długi o ~8,1 pp',
-        ),
-        compareRow(
-          'hipotetyczne ⟦-⟧ +3 ⟦-⟧ +3',
-          BIRE_LS_PERCENTS.pl.hyp3,
-          'Między ⟦>⟧ a ⟦}⟧ na każdym beacie. Dalej od Bire niż ⟦->->⟧; przydatne tylko jako punkt odniesienia drabinki',
         ),
       ],
     },
@@ -189,9 +191,14 @@ export const SWING_ARTICLE_PL: SwingArticleCopy = {
           true,
         ),
         compareRow(
+          '⟦-[<⟧',
+          BIRE_SSS_PERCENTS.pl.early32,
+          'Najlepsze dostępne dopasowanie do 25,4 : 35,3 : 40,4 (Δ −0,4 / +0,8 / −1,5 pp)',
+        ),
+        compareRow(
           '⟦-<<⟧',
           BIRE_SSS_PERCENTS.pl.early22,
-          'Najbliższy dostępny wzorzec. Kształt s–S–S jest właściwy; Very Short wciąż ~2,4 pp za długi',
+          'Kształt s–S–S jest właściwy; Very Short wciąż ~2,4 pp za długi',
         ),
         compareRow(
           '⟦-<(⟧',
@@ -203,18 +210,13 @@ export const SWING_ARTICLE_PL: SwingArticleCopy = {
           BIRE_SSS_PERCENTS.pl.early42,
           'Za mocno skraca pierwszy odcinek (−3,2 pp); spłaszcza dwa Shorty',
         ),
-        compareRow(
-          'hipotetyczne ⟦-⟧ −3 ⟦<⟧',
-          BIRE_SSS_PERCENTS.pl.hyp32,
-          'Najlepsze całkowite dopasowanie do 25,4 : 35,3 : 40,4 — ale −3 nie ma w drabince ±1/±2/±4',
-        ),
       ],
     },
   ],
   closingTitle: 'Jak czytać to porównanie',
   closingParagraphs: [
     'Swingi, które brzmią podobnie, nie muszą być tym samym metrum. Binarne L–S z Bire i trójdzielne L–S–S z Ngòn to dwa różne szablony kategorialne; gęstsze figury leadu zagnieżdżają się w nich — s–S₁–S₂ w L–S oraz s–s–S–S w L–S–S — nie zacierając Shortów akompaniamentu.',
-    'Na tym tle obecne znaczki dunsy z zaskakującą dokładnością oddają późny binarny akompaniament: ⟦->->⟧ wobec Bire L–S. Dla kèngèbu Ngòn najlepszym przybliżeniem trójdzielnym jest ⟦->)⟧; dla gęstszego czwórdzielnego kompozytu wczesne znaczki ⟦-<{(⟧ lądują zaskakująco blisko. Gęstsze s–S–S z Bire też wymaga wczesnych znaczków (⟦-<<⟧), a hipotetyczny krok −3 zbliżyłby je jeszcze bardziej.',
+    'Na tym tle znaczki dunsy z zaskakującą dokładnością oddają późny binarny akompaniament: ⟦->->⟧ wobec Bire L–S. Dla kèngèbu Ngòn najlepszym dopasowaniem trójdzielnym jest ⟦-]>⟧; dla gęstszego czwórdzielnego kompozytu wczesne znaczki ⟦-<{(⟧ lądują zaskakująco blisko. Gęstsze s–S–S z Bire najbliżej trafia wczesne ⟦-[<⟧.',
     'Średnie z artykułu warto czytać jako dowód z konkretnych malijskich wykonań, a wiersze pod nimi — jako to, co obecny alfabet swing aplikacji potrafi wyrazić na siatce dwunastu ticków. To porównanie badawcze dla każdego, kogo interesuje związek między zapisanym swingiem a nagranym feelem.',
   ],
   closingJoke:

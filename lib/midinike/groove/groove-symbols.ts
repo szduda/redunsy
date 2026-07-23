@@ -1,12 +1,14 @@
-export type GrooveSymbol = '-' | '(' | '<' | '{' | ')' | '>' | '}'
+export type GrooveSymbol = '-' | '(' | '<' | '[' | '{' | ')' | '>' | ']' | '}'
 
 /**
  * End weights on the 12-tick eighth grid (no extra multiplier).
- * Visual `<` / `<<` / `<<<` → force 1 / 2 / 4.
+ * Visual chevron count matches force: 1 / 2 / 3 / 4 → ±1 / ±2 / ±3 / ±4.
+ * Storage: `(` `<` `[` `{` early, `)` `>` `]` `}` late.
  */
 export const FORCE_1_OFFSET = 1
 export const FORCE_2_OFFSET = 2
-export const FORCE_3_OFFSET = 4
+export const FORCE_3_OFFSET = 3
+export const FORCE_4_OFFSET = 4
 
 /** @deprecated Prefer FORCE_1_OFFSET — kept for existing audit call sites. */
 export const WEAK_GROOVE_OFFSET = FORCE_1_OFFSET
@@ -19,10 +21,12 @@ const GROOVE_OFFSETS: Record<GrooveSymbol, number> = {
   '-': 0,
   '(': -FORCE_1_OFFSET,
   '<': -FORCE_2_OFFSET,
-  '{': -FORCE_3_OFFSET,
+  '[': -FORCE_3_OFFSET,
+  '{': -FORCE_4_OFFSET,
   ')': FORCE_1_OFFSET,
   '>': FORCE_2_OFFSET,
-  '}': FORCE_3_OFFSET,
+  ']': FORCE_3_OFFSET,
+  '}': FORCE_4_OFFSET,
 }
 
 export const grooveOffset = (symbol: string, forceStraight = false): number => {

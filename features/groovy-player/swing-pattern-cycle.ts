@@ -1,8 +1,18 @@
 import { fitSwingPattern } from '@/features/groovy-player/player.store'
 import type { GrooveSymbol } from '@/lib/midinike/groove/groove-symbols'
 
-/** Forward cycle: dot, <, <<, <<<, >, >>, >>> */
-export const SWING_PATTERN_CYCLE: readonly GrooveSymbol[] = ['-', '(', '<', '{', ')', '>', '}']
+/** Forward cycle: dot, <, <<, <<<, <<<<, >, >>, >>>, >>>> */
+export const SWING_PATTERN_CYCLE: readonly GrooveSymbol[] = [
+  '-',
+  '(',
+  '<',
+  '[',
+  '{',
+  ')',
+  '>',
+  ']',
+  '}',
+]
 
 export const cycleSwingSymbolForward = (symbol: GrooveSymbol): GrooveSymbol => {
   const index = SWING_PATTERN_CYCLE.indexOf(symbol)

@@ -10,22 +10,26 @@ import {
 } from '@/features/groovy-player/swing-pattern-cycle'
 
 describe('swing pattern cycle', () => {
-  it('cycles forward: dot, <, <<, <<<, >, >>, >>>', () => {
+  it('cycles forward: dot, <, <<, <<<, <<<<, >, >>, >>>, >>>>', () => {
     expect(cycleSwingSymbolForward('-')).toBe('(')
     expect(cycleSwingSymbolForward('(')).toBe('<')
-    expect(cycleSwingSymbolForward('<')).toBe('{')
+    expect(cycleSwingSymbolForward('<')).toBe('[')
+    expect(cycleSwingSymbolForward('[')).toBe('{')
     expect(cycleSwingSymbolForward('{')).toBe(')')
     expect(cycleSwingSymbolForward(')')).toBe('>')
-    expect(cycleSwingSymbolForward('>')).toBe('}')
+    expect(cycleSwingSymbolForward('>')).toBe(']')
+    expect(cycleSwingSymbolForward(']')).toBe('}')
     expect(cycleSwingSymbolForward('}')).toBe('-')
   })
 
-  it('cycles backward: >>>, >>, >, <<<, <<, <, dot', () => {
+  it('cycles backward: >>>>, >>>, >>, >, <<<<, <<<, <<, <, dot', () => {
     expect(cycleSwingSymbolBackward('-')).toBe('}')
-    expect(cycleSwingSymbolBackward('}')).toBe('>')
+    expect(cycleSwingSymbolBackward('}')).toBe(']')
+    expect(cycleSwingSymbolBackward(']')).toBe('>')
     expect(cycleSwingSymbolBackward('>')).toBe(')')
     expect(cycleSwingSymbolBackward(')')).toBe('{')
-    expect(cycleSwingSymbolBackward('{')).toBe('<')
+    expect(cycleSwingSymbolBackward('{')).toBe('[')
+    expect(cycleSwingSymbolBackward('[')).toBe('<')
     expect(cycleSwingSymbolBackward('<')).toBe('(')
     expect(cycleSwingSymbolBackward('(')).toBe('-')
   })
@@ -50,6 +54,7 @@ describe('swing pattern cycle', () => {
 
   it('updates a visible cell and mirrors the rest', () => {
     expect(updateSwingPatternCell('------', 6, 1, 2, '<')).toBe('--<--<')
+    expect(updateSwingPatternCell('------', 6, 1, 2, '[')).toBe('--[--[')
     expect(updateSwingPatternCell('------', 6, 1, 2, '{')).toBe('--{--{')
   })
 })
