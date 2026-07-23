@@ -11,7 +11,7 @@ import { PepperIcon } from '@/features/icons/pepper-icon'
 import { TripletBracketIcon } from '@/features/icons/triplet-bracket-icon'
 import { WarningIcon } from '@/features/icons/warning-icon'
 import { IconButton } from '@/features/groovy-player/icon-button'
-import { SwingPatternField } from '@/features/groovy-player/swing-pattern-field'
+import { SwingPatternInput } from '@/features/groovy-player/swing-pattern-input'
 import { isSwingPatternIncorrect, usePlayerStore } from '@/features/groovy-player/player.store'
 import { BOTTOM_NAV_OFFSET_CLASS } from '@/features/layout/constants'
 import { useIsMobile } from '@/features/shared/use-is-mobile'
@@ -103,9 +103,8 @@ const SwingPatternSection = () => {
             />
           ) : null}
         </div>
-        <SwingPatternField
+        <SwingPatternInput
           barSize={swingBarSize}
-          className="w-24 rounded-md border border-zinc-300 bg-white px-2 py-1 font-mono text-sm outline-none focus:border-zinc-500 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-100"
           onCommit={(value) => setSwingPattern(value, swingBarSize)}
           value={swingPattern}
         />
