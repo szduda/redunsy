@@ -40,6 +40,7 @@ export type SwingArticleCopy = {
   symbolMapTitle: string
   symbolMapCaption: string
   symbolMapHeaders: [string, string]
+  /** Stored groove symbol(s) → tick offset label. Rendered via inline SwingPatternInput. */
   symbolMapRows: [string, string][]
   tables: SwingTable[]
   closingTitle: string

@@ -1,7 +1,9 @@
 import Link from 'next/link'
 
+import { SwingPatternInput } from '@/features/groovy-player/swing-pattern-input'
 import type { SwingArticleCopy } from '@/features/learn/swing/swing-article.types'
 import { SwingRatioTable } from '@/features/learn/swing/swing-ratio-table'
+import { SwingRichText } from '@/features/learn/swing/swing-rich-text'
 import { Button } from '@/features/theme/button'
 import { Text } from '@/features/theme/text'
 import { cn } from '@/features/theme/cn'
@@ -30,7 +32,7 @@ export const SwingArticleBody = ({ copy }: SwingArticleBodyProps) => (
           className="max-w-2xl text-pretty text-base leading-relaxed text-zinc-700 dark:text-zinc-300"
           key={paragraph.slice(0, 48)}
         >
-          {paragraph}
+          <SwingRichText text={paragraph} />
         </Text>
       ))}
       <Text className="text-pretty leading-relaxed">
@@ -51,7 +53,7 @@ export const SwingArticleBody = ({ copy }: SwingArticleBodyProps) => (
         </h2>
         {section.paragraphs.map((paragraph) => (
           <Text className="text-pretty leading-relaxed" key={paragraph.slice(0, 48)}>
-            {paragraph}
+            <SwingRichText text={paragraph} />
           </Text>
         ))}
       </section>
@@ -64,7 +66,9 @@ export const SwingArticleBody = ({ copy }: SwingArticleBodyProps) => (
       >
         {copy.symbolMapTitle}
       </h2>
-      <Text className="text-pretty leading-relaxed">{copy.symbolMapCaption}</Text>
+      <Text className="text-pretty leading-relaxed">
+        <SwingRichText text={copy.symbolMapCaption} />
+      </Text>
       <div className="overflow-x-auto rounded-md border border-zinc-200 dark:border-zinc-800">
         <table className="min-w-full border-collapse text-left text-sm">
           <thead className="bg-zinc-50 dark:bg-zinc-900/60">
@@ -81,10 +85,10 @@ export const SwingArticleBody = ({ copy }: SwingArticleBodyProps) => (
             </tr>
           </thead>
           <tbody>
-            {copy.symbolMapRows.map(([visual, offset]) => (
-              <tr key={visual}>
-                <td className="border-b border-zinc-200 px-3 py-2 font-mono text-sm font-medium text-zinc-900 dark:border-zinc-800 dark:text-zinc-100">
-                  {visual}
+            {copy.symbolMapRows.map(([symbol, offset]) => (
+              <tr key={`${symbol}-${offset}`}>
+                <td className="border-b border-zinc-200 px-3 py-2 dark:border-zinc-800">
+                  <SwingPatternInput inline value={symbol} />
                 </td>
                 <td className="border-b border-zinc-200 px-3 py-2 font-mono text-xs text-zinc-700 dark:border-zinc-800 dark:text-zinc-300">
                   {offset}
@@ -111,12 +115,12 @@ export const SwingArticleBody = ({ copy }: SwingArticleBodyProps) => (
       </h2>
       {copy.closingParagraphs.map((paragraph) => (
         <Text className="text-pretty leading-relaxed" key={paragraph.slice(0, 48)}>
-          {paragraph}
+          <SwingRichText text={paragraph} />
         </Text>
       ))}
       {copy.closingJoke ? (
         <Text className="text-pretty leading-relaxed italic text-zinc-500 dark:text-zinc-400">
-          {copy.closingJoke}
+          <SwingRichText text={copy.closingJoke} />
         </Text>
       ) : null}
     </section>

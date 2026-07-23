@@ -14,17 +14,43 @@ import { SwingPatternIcon } from '@/features/groovy-player/swing-pattern-icons'
 import { fitSwingPattern } from '@/features/groovy-player/player.store'
 import { cn } from '@/features/theme/cn'
 import { KEYBOARD_FOCUS_VISIBLE_CLASS } from '@/features/theme/keyboard-focus'
+import type { GrooveSymbol } from '@/lib/midinike/groove/groove-symbols'
 
 const LONG_PRESS_MS = 450
 
-type SwingPatternInputProps = {
+const GROOVE_CHARS = new Set<string>(['-', '(', '<', '{', ')', '>', '}'])
+
+const VISUAL_LABEL: Record<GrooveSymbol, string> = {
+  '-': 'straight',
+  '(': 'early 1',
+  '<': 'early 2',
+  '{': 'early 3',
+  ')': 'late 1',
+  '>': 'late 2',
+  '}': 'late 3',
+}
+
+type SwingPatternInputBase = {
   value: string
-  barSize: number
-  beats?: 1 | 2
-  onCommit: (value: string) => void
   className?: string
   style?: CSSProperties
 }
+
+type SwingPatternInputEditable = SwingPatternInputBase & {
+  inline?: false
+  barSize: number
+  beats?: 1 | 2
+  onCommit: (value: string) => void
+}
+
+type SwingPatternInputInline = SwingPatternInputBase & {
+  inline: true
+  barSize?: number
+  beats?: 1 | 2
+  onCommit?: never
+}
+
+type SwingPatternInputProps = SwingPatternInputEditable | SwingPatternInputInline
 
 const cellClass = (disabled: boolean) =>
   cn(
@@ -35,14 +61,51 @@ const cellClass = (disabled: boolean) =>
       : 'border-zinc-300 bg-white text-zinc-900 hover:border-zinc-400 dark:border-zinc-700 dark:bg-zinc-950 dark:text-zinc-100 dark:hover:border-zinc-500',
   )
 
-export const SwingPatternInput = ({
+const inlineSymbols = (value: string) =>
+  [...value].filter((char) => GROOVE_CHARS.has(char)).map((char) => parseSwingSymbol(char))
+
+const InlineSwingPattern = ({
+  value,
+  className,
+  style,
+}: {
+  value: string
+  className?: string
+  style?: CSSProperties
+}) => {
+  const symbols = inlineSymbols(value)
+  const aria = symbols.map((symbol) => VISUAL_LABEL[symbol]).join(', ')
+
+  return (
+    <span
+      aria-label={`Swing pattern: ${aria || 'empty'}`}
+      className={cn(
+        'inline-flex translate-y-[-0.06em] items-center gap-px align-middle',
+        className,
+      )}
+      role="img"
+      style={style}
+    >
+      {symbols.map((symbol, index) => (
+        <span
+          className="inline-flex size-[1.5em] shrink-0 items-center justify-center rounded-[3px] border border-zinc-300 bg-white text-zinc-900 dark:border-zinc-600 dark:bg-zinc-950 dark:text-zinc-100"
+          key={`${symbol}-${index}`}
+        >
+          <SwingPatternIcon className="size-[1.15em]" symbol={symbol} />
+        </span>
+      ))}
+    </span>
+  )
+}
+
+const EditableSwingPattern = ({
   value,
   barSize,
   beats = 1,
   onCommit,
   className,
   style,
-}: SwingPatternInputProps) => {
+}: SwingPatternInputEditable) => {
   const pattern = collapseSwingPattern(fitSwingPattern(value, barSize), barSize, beats)
   const cellCount = visibleSwingCellCount(barSize, beats)
   const longPressTriggeredRef = useRef(false)
@@ -120,3 +183,10 @@ export const SwingPatternInput = ({
     </div>
   )
 }
+
+export const SwingPatternInput = (props: SwingPatternInputProps) =>
+  props.inline ? (
+    <InlineSwingPattern className={props.className} style={props.style} value={props.value} />
+  ) : (
+    <EditableSwingPattern {...props} />
+  )

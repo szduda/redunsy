@@ -65,7 +65,7 @@ export const SWING_ARTICLE_PL: SwingArticleCopy = {
       title: 'Jak wypada na tym tle dunsy.app',
       paragraphs: [
         'W dunsy.app swing zapisuje się nad komórkami ósemkowymi za pomocą wizualnych znaczków na siatce dwunastu ticków. Znaczek „późny” wydłuża pierwszy odcinek beatu i skraca to, co po nim; znaczek „wczesny” robi odwrotnie. Główne uderzenia na raz (downbeaty) zawsze grane są prosto.',
-        'Na binarnym beacie (dwie komórki, 24 ticki) każdy stopień „późnego” przesunięcia zmienia Long o około 4,2 punktu procentowego: > → 54,2 : 45,8, >> → 58,3 : 41,7, >>> → 66,7 : 33,3. Hipotetyczny stopień +3 wylądowałby na 62,5 : 37,5 — między >> a >>>. Beaty trójdzielne (trzy komórki, 36 ticków) łączą dwa znaczki offbeatowe, więc trzy procenty ruszają się razem.',
+        'Na binarnym beacie (dwie komórki, 24 ticki) każdy stopień „późnego” przesunięcia zmienia Long o około 4,2 punktu procentowego: ⟦)⟧ → 54,2 : 45,8, ⟦>⟧ → 58,3 : 41,7, ⟦}⟧ → 66,7 : 33,3. Hipotetyczny stopień +3 wylądowałby na 62,5 : 37,5 — między ⟦>⟧ a ⟦}⟧. Beaty trójdzielne (trzy komórki, 36 ticków) łączą dwa znaczki offbeatowe, więc trzy procenty ruszają się razem.',
         'Poniżej: po jednej tabeli na utwór z Polaka. Podświetlony pierwszy wiersz to zmierzona średnia; kolejne to próby odtworzenia tego feelu znaczkami dostępnymi w apce — oraz jeden hipotetyczny krok ±3, gdy pomaga.',
       ],
     },
@@ -75,40 +75,40 @@ export const SWING_ARTICLE_PL: SwingArticleCopy = {
     'Wizualne oznaczenia swing i ich przesunięcia na siatce dwunastu ticków. Pary wczesne i późne są symetryczne.',
   symbolMapHeaders: ['Wizualnie', 'Offset (ticki)'],
   symbolMapRows: [
-    ['.', '0'],
-    ['<', '−1'],
-    ['<<', '−2'],
-    ['<<<', '−4'],
-    ['>', '+1'],
-    ['>>', '+2'],
-    ['>>>', '+4'],
+    ['-', '0'],
+    ['(', '−1'],
+    ['<', '−2'],
+    ['{', '−4'],
+    [')', '+1'],
+    ['>', '+2'],
+    ['}', '+4'],
   ],
   tables: [
     {
       id: 'ngon',
       title: 'Ngòn Fariman — L–S–S (beat trójdzielny, 36 ticków)',
       caption:
-        'Liczone od downbeatu. Najbliższy wzorzec w apce to . >> >; najbliższe całkowite dopasowanie wymagałoby kroku +3, którego drabinka nie ma.',
+        'Liczone od downbeatu. Najbliższy wzorzec w apce to ⟦->)⟧; najbliższe całkowite dopasowanie wymagałoby kroku +3, którego drabinka nie ma.',
       headers: ['', '% beatu', 'Uwagi'],
       rows: [
         compareRow('Polak & London', NGON_PERCENTS.pl.paper, 'Średnia z sześciu wykonań', true),
         compareRow(
-          '. >> >',
+          '⟦->)⟧',
           NGON_PERCENTS.pl.late21,
           'Najbliższy dostępny wzorzec. Środkowy Short prawie idealny (−0,1 pp); Long za krótki o ~1,9 pp; ostatni Short za długi o ~2,1 pp',
         ),
         compareRow(
-          '. >> >>',
+          '⟦->>⟧',
           NGON_PERCENTS.pl.late22,
           'Ostatni Short blisko 28,5 (−0,7 pp); środkowy Short za długi (+2,6 pp)',
         ),
         compareRow(
-          '. >>> >>',
+          '⟦-}>⟧',
           NGON_PERCENTS.pl.late42,
           'Ostatni Short blisko średniej (−0,7 pp); Long za długi (+3,6 pp)',
         ),
         compareRow(
-          'hipotetyczne . +3 +2',
+          'hipotetyczne ⟦-⟧ +3 ⟦>⟧',
           NGON_PERCENTS.pl.hyp32,
           'Najlepsze całkowite dopasowanie. Wszystkie trzy odcinki w granicach ~1 pp od średniej badania — ale +3 nie ma w drabince ±1/±2/±4',
         ),
@@ -118,25 +118,25 @@ export const SWING_ARTICLE_PL: SwingArticleCopy = {
       id: 'bire',
       title: 'Bire — L–S (beat binarny, 24 ticki)',
       caption:
-        'Dwa odcinki na beat. . >> trafia niemal w średnią z badania; słabszy i mocniejszy znaczek późny biorą ją w nawias.',
+        'Dwa odcinki na beat. ⟦->⟧ trafia niemal w średnią z badania; słabszy i mocniejszy znaczek późny biorą ją w nawias.',
       headers: ['', '% beatu', 'Uwagi'],
       rows: [
         compareRow('Polak & London', BIRE_PERCENTS.pl.paper, 'Średnia z czterech wykonań', true),
         compareRow(
-          '. >>',
+          '⟦->⟧',
           BIRE_PERCENTS.pl.late2,
           'Praktycznie dokładne (Δ −0,3 / +0,3 pp). Najlepsze trafienie w całym porównaniu',
         ),
         compareRow(
-          '. >',
+          '⟦-)⟧',
           BIRE_PERCENTS.pl.late1,
           'Za równe — Long za krótki o ~4,4 pp względem artykułu',
         ),
-        compareRow('. >>>', BIRE_PERCENTS.pl.late4, 'Za blisko feelu 2:1; Long za długi o ~8,1 pp'),
+        compareRow('⟦-}⟧', BIRE_PERCENTS.pl.late4, 'Za blisko feelu 2:1; Long za długi o ~8,1 pp'),
         compareRow(
-          'hipotetyczne . +3',
+          'hipotetyczne ⟦-⟧ +3',
           BIRE_PERCENTS.pl.hyp3,
-          'Między >> a >>>. Dalej od Bire niż . >>; przydatne tylko jako punkt odniesienia drabinki',
+          'Między ⟦>⟧ a ⟦}⟧. Dalej od Bire niż ⟦->⟧; przydatne tylko jako punkt odniesienia drabinki',
         ),
       ],
     },
@@ -144,7 +144,7 @@ export const SWING_ARTICLE_PL: SwingArticleCopy = {
   closingTitle: 'Jak czytać to porównanie',
   closingParagraphs: [
     'Swingi, które brzmią podobnie, nie muszą być tym samym metrum. Binarne L–S z Bire i trójdzielne L–S–S z Ngòn to dwa różne szablony kategorialne; gęstsze figury leadu zagnieżdżają się w nich, nie zacierając Shortów akompaniamentu.',
-    'Na tym tle obecne znaczki dunsy z zaskakującą dokładnością oddają jeden zmierzony przypadek: późną, binarną parę . >> wobec Bire. Dla Ngòn najlepszym dostępnym przybliżeniem jest . >> > — blisko środkowego Shorta, odrobinę za krótko na Longu — a hipotetyczny krok +3/+2 wylądowałby bliżej średniej badania niż cokolwiek z obecnej drabinki.',
+    'Na tym tle obecne znaczki dunsy z zaskakującą dokładnością oddają jeden zmierzony przypadek: późną, binarną parę ⟦->⟧ wobec Bire. Dla Ngòn najlepszym dostępnym przybliżeniem jest ⟦->)⟧ — blisko środkowego Shorta, odrobinę za krótko na Longu — a hipotetyczny krok +3/+2 wylądowałby bliżej średniej badania niż cokolwiek z obecnej drabinki.',
     'Średnie z artykułu warto czytać jako dowód z konkretnych malijskich wykonań, a wiersze pod nimi — jako to, co obecny alfabet swing aplikacji potrafi wyrazić na siatce dwunastu ticków. To porównanie badawcze dla każdego, kogo interesuje związek między zapisanym swingiem a nagranym feelem.',
   ],
   closingJoke:

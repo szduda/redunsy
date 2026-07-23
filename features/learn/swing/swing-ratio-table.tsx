@@ -1,4 +1,5 @@
 import type { SwingTable } from '@/features/learn/swing/swing-article.types'
+import { SwingRichText } from '@/features/learn/swing/swing-rich-text'
 import { Text } from '@/features/theme/text'
 import { cn } from '@/features/theme/cn'
 
@@ -15,7 +16,9 @@ export const SwingRatioTable = ({ table }: SwingRatioTableProps) => (
       >
         {table.title}
       </h3>
-      <Text className="text-pretty leading-relaxed">{table.caption}</Text>
+      <Text className="text-pretty leading-relaxed">
+        <SwingRichText text={table.caption} />
+      </Text>
     </div>
 
     <div className="overflow-x-auto rounded-md border border-zinc-200 dark:border-zinc-800">
@@ -46,14 +49,14 @@ export const SwingRatioTable = ({ table }: SwingRatioTableProps) => (
             >
               <th
                 className={cn(
-                  'whitespace-nowrap border-b border-zinc-200 px-3 py-2 font-mono text-xs dark:border-zinc-800',
+                  'border-b border-zinc-200 px-3 py-2 dark:border-zinc-800',
                   item.highlight
                     ? 'font-semibold text-zinc-900 dark:text-zinc-100'
                     : 'font-medium text-zinc-800 dark:text-zinc-200',
                 )}
                 scope="row"
               >
-                {item.label}
+                <SwingRichText text={item.label} />
               </th>
               <td
                 className={cn(
@@ -66,7 +69,7 @@ export const SwingRatioTable = ({ table }: SwingRatioTableProps) => (
                 {item.percent}
               </td>
               <td className="border-b border-zinc-200 px-3 py-2 text-zinc-600 dark:border-zinc-800 dark:text-zinc-400">
-                {item.note}
+                <SwingRichText text={item.note} />
               </td>
             </tr>
           ))}
