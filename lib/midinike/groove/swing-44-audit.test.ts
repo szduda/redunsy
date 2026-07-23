@@ -5,6 +5,7 @@ import {
   FORCE_1_OFFSET,
   FORCE_2_OFFSET,
   FORCE_3_OFFSET,
+  FORCE_4_OFFSET,
   grooveOffset,
   type GrooveSymbol,
 } from './groove-symbols'
@@ -13,7 +14,7 @@ import { TICKS_PER_EIGHTH } from '../notation/cell-duration'
 /** 4/4 probe bar: three tones + five slaps — a hit on every eighth cell. */
 const BAR = 'tttsssss'
 const REFERENCE = '--------'
-const GROOVE_SYMBOLS: GrooveSymbol[] = ['-', '(', '<', '{', ')', '>', '}']
+const GROOVE_SYMBOLS: GrooveSymbol[] = ['-', '(', '<', '[', '{', ')', '>', ']', '}']
 const NOTE_CELLS = [0, 1, 2, 3, 4, 5, 6, 7] as const
 
 const grooveWithSymbolAt = (cellIndex: number, symbol: GrooveSymbol) =>
@@ -21,7 +22,7 @@ const grooveWithSymbolAt = (cellIndex: number, symbol: GrooveSymbol) =>
     .map((cell, index) => (index === cellIndex ? symbol : cell))
     .join('')
 
-/** Every symbol on every cell. Full 7^8 grids are covered by composing these. */
+/** Every symbol on every cell. Full 9^8 grids are covered by composing these. */
 const singleCellPermutations = (): { groove: string; cell: number; symbol: GrooveSymbol }[] =>
   GROOVE_SYMBOLS.flatMap((symbol) =>
     NOTE_CELLS.map((cell) => ({
@@ -99,7 +100,7 @@ describe('4/4 swing audit — tttsssss vs --------', () => {
       const swung = compileHits([BAR], groove)
       const tick1 = straight[1]! + grooveOffset(cell1)
       const tick2 = straight[2]! + grooveOffset(cell2)
-      // Opposing force-3 shifts meet at the midpoint and merge into one slot.
+      // Opposing equal-magnitude shifts can meet at the midpoint and merge.
       if (tick1 === tick2) {
         expect(swung).toEqual([0, tick1, ...straight.slice(3)])
         continue
@@ -115,39 +116,46 @@ describe('4/4 swing audit — tttsssss vs --------', () => {
   })
 })
 
-describe('4/4 swing audit — force ladder < << <<< (and late direction)', () => {
+describe('4/4 swing audit — force ladder < << <<< <<<< (and late direction)', () => {
   const straight = compileHits([BAR], REFERENCE)
 
-  it('orders early forces: <<< earlier than << earlier than <', () => {
+  it('orders early forces by chevron count / offset', () => {
     const force1 = compileHits([BAR], '-(------')
     const force2 = compileHits([BAR], '-<------')
-    const force3 = compileHits([BAR], '-{------')
+    const force3 = compileHits([BAR], '-[------')
+    const force4 = compileHits([BAR], '-{------')
+    expect(force4[1]!).toBeLessThan(force3[1]!)
     expect(force3[1]!).toBeLessThan(force2[1]!)
     expect(force2[1]!).toBeLessThan(force1[1]!)
     expect(force1[1]!).toBeLessThan(straight[1]!)
     expect(straight[1]! - force1[1]!).toBe(FORCE_1_OFFSET)
     expect(straight[1]! - force2[1]!).toBe(FORCE_2_OFFSET)
     expect(straight[1]! - force3[1]!).toBe(FORCE_3_OFFSET)
+    expect(straight[1]! - force4[1]!).toBe(FORCE_4_OFFSET)
   })
 
-  it('orders late forces: >>> later than >> later than >', () => {
+  it('orders late forces by chevron count / offset', () => {
     const force1 = compileHits([BAR], '-)------')
     const force2 = compileHits([BAR], '->------')
-    const force3 = compileHits([BAR], '-}------')
+    const force3 = compileHits([BAR], '-]------')
+    const force4 = compileHits([BAR], '-}------')
+    expect(force4[1]!).toBeGreaterThan(force3[1]!)
     expect(force3[1]!).toBeGreaterThan(force2[1]!)
     expect(force2[1]!).toBeGreaterThan(force1[1]!)
     expect(force1[1]!).toBeGreaterThan(straight[1]!)
     expect(force1[1]! - straight[1]!).toBe(FORCE_1_OFFSET)
     expect(force2[1]! - straight[1]!).toBe(FORCE_2_OFFSET)
     expect(force3[1]! - straight[1]!).toBe(FORCE_3_OFFSET)
+    expect(force4[1]! - straight[1]!).toBe(FORCE_4_OFFSET)
   })
 
-  it('early/late pairs are symmetric about the reference for all three forces', () => {
+  it('early/late pairs are symmetric about the reference for all four forces', () => {
     const mid = straight[1]!
     for (const [early, late, force] of [
       ['(', ')', FORCE_1_OFFSET],
       ['<', '>', FORCE_2_OFFSET],
-      ['{', '}', FORCE_3_OFFSET],
+      ['[', ']', FORCE_3_OFFSET],
+      ['{', '}', FORCE_4_OFFSET],
     ] as const) {
       const earlyTick = compileHits([BAR], grooveWithSymbolAt(1, early))[1]!
       const lateTick = compileHits([BAR], grooveWithSymbolAt(1, late))[1]!
@@ -160,12 +168,14 @@ describe('4/4 swing audit — force ladder < << <<< (and late direction)', () =>
     for (const cell of NOTE_CELLS) {
       if (cell === 0) continue
       const mid = straight[cell]!
-      expect(compileHits([BAR], grooveWithSymbolAt(cell, '{'))[cell]).toBe(mid - FORCE_3_OFFSET)
+      expect(compileHits([BAR], grooveWithSymbolAt(cell, '{'))[cell]).toBe(mid - FORCE_4_OFFSET)
+      expect(compileHits([BAR], grooveWithSymbolAt(cell, '['))[cell]).toBe(mid - FORCE_3_OFFSET)
       expect(compileHits([BAR], grooveWithSymbolAt(cell, '<'))[cell]).toBe(mid - FORCE_2_OFFSET)
       expect(compileHits([BAR], grooveWithSymbolAt(cell, '('))[cell]).toBe(mid - FORCE_1_OFFSET)
       expect(compileHits([BAR], grooveWithSymbolAt(cell, ')'))[cell]).toBe(mid + FORCE_1_OFFSET)
       expect(compileHits([BAR], grooveWithSymbolAt(cell, '>'))[cell]).toBe(mid + FORCE_2_OFFSET)
-      expect(compileHits([BAR], grooveWithSymbolAt(cell, '}'))[cell]).toBe(mid + FORCE_3_OFFSET)
+      expect(compileHits([BAR], grooveWithSymbolAt(cell, ']'))[cell]).toBe(mid + FORCE_3_OFFSET)
+      expect(compileHits([BAR], grooveWithSymbolAt(cell, '}'))[cell]).toBe(mid + FORCE_4_OFFSET)
     }
   })
 })
@@ -190,8 +200,13 @@ describe('4/4 swing audit — common patterns on tttsssss', () => {
     ])
   })
 
-  it('applies triple-chevron early swing -{------', () => {
-    const swung = compileHits([BAR], '-{------')
+  it('applies triple-chevron early swing -[------', () => {
+    const swung = compileHits([BAR], '-[------')
     expect(swung[1]).toBe(straight[1]! - FORCE_3_OFFSET)
+  })
+
+  it('applies quadruple-chevron early swing -{------', () => {
+    const swung = compileHits([BAR], '-{------')
+    expect(swung[1]).toBe(straight[1]! - FORCE_4_OFFSET)
   })
 })

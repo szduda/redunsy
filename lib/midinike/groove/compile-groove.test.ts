@@ -16,6 +16,7 @@ import {
   FORCE_1_OFFSET,
   FORCE_2_OFFSET,
   FORCE_3_OFFSET,
+  FORCE_4_OFFSET,
   grooveOffset,
   STRONG_GROOVE_OFFSET,
   WEAK_GROOVE_OFFSET,
@@ -278,12 +279,15 @@ describe('compileGroove — groove modifier strength and direction', () => {
   it('maps symbols to symmetric tick offsets on the 12-tick grid', () => {
     expect(grooveOffset('(')).toBe(-FORCE_1_OFFSET)
     expect(grooveOffset('<')).toBe(-FORCE_2_OFFSET)
-    expect(grooveOffset('{')).toBe(-FORCE_3_OFFSET)
+    expect(grooveOffset('[')).toBe(-FORCE_3_OFFSET)
+    expect(grooveOffset('{')).toBe(-FORCE_4_OFFSET)
     expect(grooveOffset('-')).toBe(0)
     expect(grooveOffset(')')).toBe(FORCE_1_OFFSET)
     expect(grooveOffset('>')).toBe(FORCE_2_OFFSET)
-    expect(grooveOffset('}')).toBe(FORCE_3_OFFSET)
+    expect(grooveOffset(']')).toBe(FORCE_3_OFFSET)
+    expect(grooveOffset('}')).toBe(FORCE_4_OFFSET)
     expect(grooveOffset('<', true)).toBe(0)
+    expect(FORCE_4_OFFSET).toBeGreaterThan(FORCE_3_OFFSET)
     expect(FORCE_3_OFFSET).toBeGreaterThan(FORCE_2_OFFSET)
     expect(FORCE_2_OFFSET).toBeGreaterThan(FORCE_1_OFFSET)
     expect(WEAK_GROOVE_OFFSET).toBe(FORCE_1_OFFSET)
@@ -292,19 +296,23 @@ describe('compileGroove — groove modifier strength and direction', () => {
 
   it('orders early modifiers before straight before late modifiers on cell 1', () => {
     const straight = hitOnCell('------')
-    const force3Early = hitOnCell('-{----')
+    const force4Early = hitOnCell('-{----')
+    const force3Early = hitOnCell('-[----')
     const force2Early = hitOnCell('-<----')
     const force1Early = hitOnCell('-(----')
     const force1Late = hitOnCell('-)----')
     const force2Late = hitOnCell('->----')
-    const force3Late = hitOnCell('-}----')
+    const force3Late = hitOnCell('-]----')
+    const force4Late = hitOnCell('-}----')
 
+    expect(force4Early).toBeLessThan(force3Early)
     expect(force3Early).toBeLessThan(force2Early)
     expect(force2Early).toBeLessThan(force1Early)
     expect(force1Early).toBeLessThan(straight)
     expect(straight).toBeLessThan(force1Late)
     expect(force1Late).toBeLessThan(force2Late)
     expect(force2Late).toBeLessThan(force3Late)
+    expect(force3Late).toBeLessThan(force4Late)
   })
 
   it('applies expected tick shifts on cell 1', () => {
@@ -313,10 +321,12 @@ describe('compileGroove — groove modifier strength and direction', () => {
 
     expect(hitOnCell('-(----')).toBe(straight - FORCE_1_OFFSET)
     expect(hitOnCell('-<----')).toBe(straight - FORCE_2_OFFSET)
-    expect(hitOnCell('-{----')).toBe(straight - FORCE_3_OFFSET)
+    expect(hitOnCell('-[----')).toBe(straight - FORCE_3_OFFSET)
+    expect(hitOnCell('-{----')).toBe(straight - FORCE_4_OFFSET)
     expect(hitOnCell('-)----')).toBe(straight + FORCE_1_OFFSET)
     expect(hitOnCell('->----')).toBe(straight + FORCE_2_OFFSET)
-    expect(hitOnCell('-}----')).toBe(straight + FORCE_3_OFFSET)
+    expect(hitOnCell('-]----')).toBe(straight + FORCE_3_OFFSET)
+    expect(hitOnCell('-}----')).toBe(straight + FORCE_4_OFFSET)
   })
 
   it('keeps force-2 pairs equal distance from straight, opposite direction', () => {
@@ -339,15 +349,25 @@ describe('compileGroove — groove modifier strength and direction', () => {
 
   it('keeps force-3 pairs equal distance from straight, opposite direction', () => {
     const straight = hitOnCell('------')
-    const early = hitOnCell('-{----')
-    const late = hitOnCell('-}----')
+    const early = hitOnCell('-[----')
+    const late = hitOnCell('-]----')
 
     expect(straight - early).toBe(late - straight)
     expect(straight - early).toBe(FORCE_3_OFFSET)
   })
 
-  it('makes force-3 earlier than force-2 earlier than force-1', () => {
-    expect(hitOnCell('-{----')).toBeLessThan(hitOnCell('-<----'))
+  it('keeps force-4 pairs equal distance from straight, opposite direction', () => {
+    const straight = hitOnCell('------')
+    const early = hitOnCell('-{----')
+    const late = hitOnCell('-}----')
+
+    expect(straight - early).toBe(late - straight)
+    expect(straight - early).toBe(FORCE_4_OFFSET)
+  })
+
+  it('makes force-4 earlier than force-3 earlier than force-2 earlier than force-1', () => {
+    expect(hitOnCell('-{----')).toBeLessThan(hitOnCell('-[----'))
+    expect(hitOnCell('-[----')).toBeLessThan(hitOnCell('-<----'))
     expect(hitOnCell('-<----')).toBeLessThan(hitOnCell('-(----'))
   })
 

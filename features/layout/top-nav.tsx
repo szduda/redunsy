@@ -8,12 +8,14 @@ import { AppLogo } from '@/features/layout/app-logo'
 import { TOP_NAV_BG_CLASS, TOP_NAV_HEIGHT_CLASS } from '@/features/layout/constants'
 import { topNavItemClass } from '@/features/layout/top-nav-item'
 import { TopNavMenu } from '@/features/layout/top-nav-menu'
+import { usesOpenDesktopNav } from '@/features/layout/uses-open-desktop-nav'
 import { useUiStore } from '@/features/store/ui.store'
 import { cn } from '@/features/theme/cn'
 
 export const TopNav = () => {
   const pathname = usePathname()
   const topNavSticky = useUiStore((state) => state.topNavSticky)
+  const openDesktopNav = usesOpenDesktopNav(pathname)
 
   if (pathname === '/') return null
 
@@ -24,6 +26,7 @@ export const TopNav = () => {
         TOP_NAV_BG_CLASS,
         TOP_NAV_HEIGHT_CLASS,
         topNavSticky ? 'fixed inset-x-0 top-0' : 'relative',
+        openDesktopNav && 'md:hidden',
       )}
     >
       <nav className="mx-auto flex h-full max-w-8xl items-center justify-between px-3 md:px-4">
