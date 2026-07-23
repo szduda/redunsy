@@ -4,14 +4,17 @@ import {
   yellowyOverlay,
 } from '@/lib/theme/yellowy'
 import { darkCanvasColors, type CanvasColors } from '@/features/groovy-player/canvas/canvas-colors'
+import { parseBarsLayout, type BarLayout } from '@/features/groovy-player/canvas/bar-layout'
 import {
   BAR_GAP_PX,
   barHeightForBar,
+  barHeightForCellCount,
   barTopForIndex,
   barWidthForCanvas,
   layoutBar,
-  renderBar,
+  paintLaidOutBar,
   rowHeightsForBars,
+  type LaidOutBar,
 } from '@/features/groovy-player/canvas/renderers'
 
 export const drawYellowyOverlay = (
@@ -35,6 +38,8 @@ export const drawBarOverlayAtIndex = ({
   context,
   dark,
   opacity,
+  rowHeights,
+  layouts,
 }: {
   barIndex: number
   bars: string[]
@@ -43,14 +48,19 @@ export const drawBarOverlayAtIndex = ({
   context: CanvasRenderingContext2D
   dark: boolean
   opacity: number
+  rowHeights?: number[]
+  layouts?: BarLayout[]
 }) => {
-  const rowHeights = rowHeightsForBars(canvasWidth, barsPerRow, bars)
+  const resolvedLayouts = layouts ?? parseBarsLayout(bars)
+  const resolvedRowHeights =
+    rowHeights ?? rowHeightsForBars(canvasWidth, barsPerRow, bars, resolvedLayouts)
   const layout = layoutBar({
     bars,
     canvasWidth,
     barIndex,
     barsPerRow,
-    rowHeights,
+    rowHeights: resolvedRowHeights,
+    layout: resolvedLayouts[barIndex],
   })
   drawYellowyOverlay(
     context,
@@ -71,6 +81,8 @@ export const drawDragPreviewHighlights = ({
   dark,
   sourceIndex,
   hoveredBarIndex,
+  layouts: precomputedLayouts,
+  rowHeights: precomputedRowHeights,
 }: {
   bars: string[]
   canvasWidth: number
@@ -79,9 +91,14 @@ export const drawDragPreviewHighlights = ({
   dark: boolean
   sourceIndex: number
   hoveredBarIndex: number
+  layouts?: BarLayout[]
+  rowHeights?: number[]
 }) => {
   const highlighted = new Set<number>([sourceIndex])
   if (hoveredBarIndex >= 0) highlighted.add(hoveredBarIndex)
+  const layouts = precomputedLayouts ?? parseBarsLayout(bars)
+  const rowHeights =
+    precomputedRowHeights ?? rowHeightsForBars(canvasWidth, barsPerRow, bars, layouts)
 
   highlighted.forEach((barIndex) => {
     drawBarOverlayAtIndex({
@@ -91,10 +108,40 @@ export const drawDragPreviewHighlights = ({
       barsPerRow,
       context,
       dark,
+      rowHeights,
+      layouts,
       opacity:
         barIndex === sourceIndex ? DRAG_SOURCE_SLOT_OVERLAY_OPACITY : DRAG_SOURCE_OVERLAY_OPACITY,
     })
   })
+}
+
+export type GhostBarLayout = {
+  laidOut: LaidOutBar
+  rowHeights: number[]
+}
+
+export const layoutGhostBar = ({
+  bar,
+  canvasWidth,
+  barsPerRow,
+  palette = darkCanvasColors,
+}: {
+  bar: string
+  canvasWidth: number
+  barsPerRow: number
+  palette?: CanvasColors
+}): GhostBarLayout => {
+  const rowHeights = [barHeightForBar(canvasWidth, barsPerRow, bar)]
+  const laidOut = layoutBar({
+    bars: [bar],
+    canvasWidth,
+    barIndex: 0,
+    barsPerRow,
+    palette,
+    rowHeights,
+  })
+  return { laidOut, rowHeights }
 }
 
 export const renderGhostBar = ({
@@ -108,6 +155,7 @@ export const renderGhostBar = ({
   grabOffsetX,
   grabOffsetY,
   palette = darkCanvasColors,
+  ghostLayout,
 }: {
   bar: string
   instrument: string
@@ -119,34 +167,18 @@ export const renderGhostBar = ({
   grabOffsetX: number
   grabOffsetY: number
   palette?: CanvasColors
+  ghostLayout?: GhostBarLayout
 }) => {
-  const rowHeights = [barHeightForBar(canvasWidth, barsPerRow, bar)]
-  const layout = layoutBar({
-    bars: [bar],
-    canvasWidth,
-    barIndex: 0,
-    barsPerRow,
-    palette,
-    rowHeights,
-  })
+  const { laidOut } = ghostLayout ?? layoutGhostBar({ bar, canvasWidth, barsPerRow, palette })
 
   const left = pointerX - grabOffsetX
   const top = pointerY - grabOffsetY
-  const dx = left - layout.barEl.left
-  const dy = top - layout.barEl.top
+  const dx = left - laidOut.barEl.left
+  const dy = top - laidOut.barEl.top
 
   context.save()
   context.translate(dx, dy)
-  renderBar({
-    bars: [bar],
-    instrument,
-    canvas: context.canvas,
-    context,
-    canvasWidth,
-    barIndex: 0,
-    barsPerRow,
-    rowHeights,
-  })
+  paintLaidOutBar(context, instrument, laidOut)
   context.restore()
 }
 
@@ -171,10 +203,10 @@ export const barBoundsAtIndex = (
   canvasWidth: number,
   barsPerRow: number,
 ) => {
-  const rowHeights = rowHeightsForBars(canvasWidth, barsPerRow, bars)
+  const layouts = parseBarsLayout(bars)
+  const rowHeights = rowHeightsForBars(canvasWidth, barsPerRow, bars, layouts)
   const barWidth = barWidthForCanvas(canvasWidth, barsPerRow)
-  const bar = bars[barIndex] ?? ''
-  const height = barHeightForBar(canvasWidth, barsPerRow, bar)
+  const height = barHeightForCellCount(canvasWidth, barsPerRow, layouts[barIndex]?.cellCount ?? 0)
   const top = barTopForIndex(barIndex, barsPerRow, rowHeights)
   const left = (barIndex % barsPerRow) * (barWidth + BAR_GAP_PX)
   return { left, top, width: barWidth, height }

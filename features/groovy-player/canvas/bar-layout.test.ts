@@ -1,6 +1,14 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 
-import { parseBarLayout } from './bar-layout'
+import * as groupedNotation from '@/lib/midinike/notation/grouped-notation'
+import {
+  barsNotationHash,
+  parseBarLayout,
+  parseBarsLayout,
+  cachedParseBarsNotation,
+  clearParseBarsNotationCacheForTests,
+} from './bar-layout'
+import { rowHeightsForBars } from './renderers'
 
 describe('parseBarLayout', () => {
   it('places plain 8th notes on whole cell boundaries', () => {
@@ -120,5 +128,65 @@ describe('parseBarLayout', () => {
     ])
     expect(layout.glyphs[0]).toMatchObject({ position: 0, polyrhythmIndex: 0 })
     expect(layout.glyphs[6]?.position).toBe(2)
+  })
+})
+
+describe('parseBarsLayout', () => {
+  it('matches per-bar parseBarLayout for cross-bar triplets', () => {
+    const bars = ['-----{tt', '-}-----']
+    const layouts = parseBarsLayout(bars)
+    expect(layouts).toHaveLength(2)
+    expect(layouts[0]).toEqual(parseBarLayout(bars[0], bars, 0))
+    expect(layouts[1]).toEqual(parseBarLayout(bars[1], bars, 1))
+  })
+})
+
+describe('cachedParseBarsNotation', () => {
+  it('reuses parse for the same hash and misses after clear', () => {
+    clearParseBarsNotationCacheForTests()
+    const bars = ['ttstts', 'ssssss']
+    const spy = vi.spyOn(groupedNotation, 'parseGroupedNotation')
+    const first = cachedParseBarsNotation(bars)
+    const second = cachedParseBarsNotation(bars)
+    expect(first).toBe(second)
+    expect(spy).toHaveBeenCalledTimes(1)
+    clearParseBarsNotationCacheForTests()
+    cachedParseBarsNotation(bars)
+    expect(spy).toHaveBeenCalledTimes(2)
+    spy.mockRestore()
+    clearParseBarsNotationCacheForTests()
+  })
+
+  it('does not collide on join-without-separator boundaries', () => {
+    clearParseBarsNotationCacheForTests()
+    const a = ['abc', 'd']
+    const b = ['ab', 'cd']
+    expect(barsNotationHash(a)).not.toBe(barsNotationHash(b))
+    const parsedA = cachedParseBarsNotation(a)
+    const parsedB = cachedParseBarsNotation(b)
+    expect(parsedA).not.toBe(parsedB)
+    expect(cachedParseBarsNotation(a)).toBe(parsedA)
+    expect(cachedParseBarsNotation(b)).toBe(parsedB)
+    clearParseBarsNotationCacheForTests()
+  })
+})
+
+describe('rowHeightsForBars single-parse', () => {
+  it('parses grouped notation once when layouts are not provided', () => {
+    const bars = ['ttstts', 'ssssss', 'tttttt', '{ttt}--']
+    const spy = vi.spyOn(groupedNotation, 'parseGroupedNotation')
+    rowHeightsForBars(300, 2, bars)
+    expect(spy).toHaveBeenCalledTimes(1)
+    spy.mockRestore()
+  })
+
+  it('reuses precomputed layouts without re-parsing', () => {
+    const bars = ['ttstts', 'ssssss', '-----{tt', '-}-----']
+    const layouts = parseBarsLayout(bars)
+    const spy = vi.spyOn(groupedNotation, 'parseGroupedNotation')
+    const withLayouts = rowHeightsForBars(300, 2, bars, layouts)
+    expect(spy).not.toHaveBeenCalled()
+    spy.mockRestore()
+    expect(withLayouts).toEqual(rowHeightsForBars(300, 2, bars))
   })
 })

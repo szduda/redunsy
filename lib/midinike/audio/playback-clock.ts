@@ -8,6 +8,13 @@ export type ScheduledSlot = {
   timeMs: number
 }
 
+export type LoopTiming = {
+  startIndex: number
+  startedAtMs: number
+  stepMs: number
+  density: number
+}
+
 type ScheduleWindowInput = {
   beatCount: number
   cursor: PlaybackCursor
@@ -18,6 +25,21 @@ type ScheduleWindowInput = {
 
 const wrapIndex = (index: number, beatCount: number) =>
   ((index % beatCount) + beatCount) % beatCount
+
+export const stepMsForBpm = (bpm: number, density: number) => density * ((4 * 60) / bpm) * 1000
+
+/** Rebase transport so the audible index stays continuous when BPM changes mid-loop. */
+export const rebaseLoopTiming = (
+  timing: LoopTiming,
+  bpm: number,
+  nowMs: number,
+  currentIndex: number,
+): LoopTiming => ({
+  density: timing.density,
+  startIndex: currentIndex,
+  startedAtMs: nowMs,
+  stepMs: stepMsForBpm(bpm, timing.density),
+})
 
 export const playbackIndexAt = (
   startIndex: number,

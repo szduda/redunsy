@@ -1,4 +1,9 @@
-import { parseGroupedNotation, type GlyphKind } from '@/lib/midinike/notation/grouped-notation'
+import {
+  parseGroupedNotation,
+  type GlyphKind,
+  type GroupedBarLayout,
+  type GroupedSegment,
+} from '@/lib/midinike/notation/grouped-notation'
 
 export type { GlyphKind }
 
@@ -14,23 +19,67 @@ export type BarLayout = {
   glyphs: BarGlyph[]
 }
 
+export type ParsedBarsNotation = {
+  layouts: BarLayout[]
+  segments: GroupedSegment[]
+  barCellCounts: number[]
+}
+
+export const toBarLayout = (layout: GroupedBarLayout): BarLayout => ({
+  cellCount: layout.cellCount,
+  glyphs: layout.glyphs.map(({ note, position, kind, polyrhythmIndex }) => ({
+    note,
+    position,
+    kind,
+    polyrhythmIndex,
+  })),
+})
+
 export const parseBarLayout = (bar: string, bars?: string[], barIndex?: number): BarLayout => {
   const allBars = bars ?? [bar]
   const index = barIndex ?? 0
   const { barLayouts } = parseGroupedNotation(allBars)
-  const layout = barLayouts[index] ?? { cellCount: 0, glyphs: [] }
+  return toBarLayout(barLayouts[index] ?? { cellCount: 0, glyphs: [] })
+}
+
+export const parseBarsLayout = (bars: string[]): BarLayout[] =>
+  parseGroupedNotation(bars).barLayouts.map(toBarLayout)
+
+export const parseBarsNotation = (bars: string[]): ParsedBarsNotation => {
+  const { barLayouts, segments, barCellCounts } = parseGroupedNotation(bars)
   return {
-    cellCount: layout.cellCount,
-    glyphs: layout.glyphs.map(({ note, position, kind, polyrhythmIndex }) => ({
-      note,
-      position,
-      kind,
-      polyrhythmIndex,
-    })),
+    layouts: barLayouts.map(toBarLayout),
+    segments,
+    barCellCounts,
   }
 }
 
-export const parseBarsLayout = (bars: string[]) => parseGroupedNotation(bars).barLayouts
+const PARSE_CACHE_MAX = 16
+const parseNotationCache = new Map<string, ParsedBarsNotation>()
+
+/** Injective bars→string key (NUL separator avoids `['ab','cd']` / `['abc','d']` collisions). */
+export const barsNotationHash = (bars: string[]) => bars.join('\0')
+
+/** Hash-keyed parse cache for playhead ticks and multi-canvas reuse. */
+export const cachedParseBarsNotation = (
+  bars: string[],
+  hash = barsNotationHash(bars),
+): ParsedBarsNotation => {
+  const hit = parseNotationCache.get(hash)
+  if (hit) return hit
+  const parsed = parseBarsNotation(bars)
+  parseNotationCache.set(hash, parsed)
+  if (parseNotationCache.size > PARSE_CACHE_MAX) {
+    const oldest = parseNotationCache.keys().next().value
+    if (oldest !== undefined) parseNotationCache.delete(oldest)
+  }
+  return parsed
+}
+
+/** Test-only: clear the notation parse cache. */
+export const clearParseBarsNotationCacheForTests = () => {
+  parseNotationCache.clear()
+}
 
 export const onBeatCellIndexes = (cellCount: number) => {
   if (cellCount % 6 === 0) return [0, 3]

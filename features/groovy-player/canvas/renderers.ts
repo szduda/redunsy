@@ -1,7 +1,14 @@
 import { darkCanvasColors, type CanvasColors } from './canvas-colors'
 import { font } from './drum-font'
 import { drawBarIndexLabel } from '@/features/groovy-player/bar-index-mark'
-import { onBeatCellIndexes, parseBarLayout } from './bar-layout'
+import {
+  onBeatCellIndexes,
+  parseBarLayout,
+  parseBarsLayout,
+  parseBarsNotation,
+  type BarLayout,
+  type ParsedBarsNotation,
+} from './bar-layout'
 import { drawTripletBracket, tripletBracketSpans } from './triplet-brackets'
 import {
   drawPolyrhythmBracket,
@@ -10,6 +17,7 @@ import {
 } from './polyrhythm-brackets'
 
 import type { BarGlyph } from './bar-layout'
+import type { BracketParsedNotation } from './triplet-brackets'
 import type { CanvasElement } from './types'
 
 export const BAR_GAP_PX = 1
@@ -20,25 +28,36 @@ export const barWidthForCanvas = (canvasWidth: number, barsPerRow: number) =>
 
 export const noteHeightFromWidth = (width: number) => width / NOTE_ASPECT_W_OVER_H
 
+export const barHeightForCellCount = (canvasWidth: number, barsPerRow: number, cellCount: number) =>
+  noteHeightFromWidth(barWidthForCanvas(canvasWidth, barsPerRow) / cellCount)
+
 export const barHeightForBar = (
   canvasWidth: number,
   barsPerRow: number,
   bar: string,
   bars?: string[],
   barIndex?: number,
+  layout?: BarLayout,
 ) => {
-  const { cellCount } = parseBarLayout(bar, bars, barIndex)
-  return noteHeightFromWidth(barWidthForCanvas(canvasWidth, barsPerRow) / cellCount)
+  const { cellCount } = layout ?? parseBarLayout(bar, bars, barIndex)
+  return barHeightForCellCount(canvasWidth, barsPerRow, cellCount)
 }
 
-export const rowHeightsForBars = (canvasWidth: number, barsPerRow: number, bars: string[]) => {
+export const rowHeightsForBars = (
+  canvasWidth: number,
+  barsPerRow: number,
+  bars: string[],
+  layouts?: BarLayout[],
+) => {
+  const resolved = layouts ?? parseBarsLayout(bars)
   const rowCount = Math.ceil(bars.length / barsPerRow)
   return Array.from({ length: rowCount }, (_, row) => {
-    const rowBars = bars.slice(row * barsPerRow, (row + 1) * barsPerRow)
+    const start = row * barsPerRow
+    const end = Math.min(start + barsPerRow, bars.length)
     return Math.max(
       0,
-      ...rowBars.map((bar, offset) =>
-        barHeightForBar(canvasWidth, barsPerRow, bar, bars, row * barsPerRow + offset),
+      ...Array.from({ length: end - start }, (_, offset) =>
+        barHeightForCellCount(canvasWidth, barsPerRow, resolved[start + offset]?.cellCount ?? 0),
       ),
     )
   })
@@ -51,8 +70,13 @@ export const barTopForIndex = (barIndex: number, barsPerRow: number, rowHeights:
   return top
 }
 
-export const canvasHeightForBars = (canvasWidth: number, barsPerRow: number, bars: string[]) => {
-  const rowHeights = rowHeightsForBars(canvasWidth, barsPerRow, bars)
+export const canvasHeightForBars = (
+  canvasWidth: number,
+  barsPerRow: number,
+  bars: string[],
+  layouts?: BarLayout[],
+) => {
+  const rowHeights = rowHeightsForBars(canvasWidth, barsPerRow, bars, layouts)
   if (!rowHeights.length) return 0
   return rowHeights.reduce((sum, height) => sum + height + 2 * BAR_GAP_PX, 0) - 2 * BAR_GAP_PX
 }
@@ -129,6 +153,7 @@ type BarRendererArgs = {
 type LayoutBarArgs = Omit<BarRendererArgs, 'canvas' | 'context' | 'instrument'> & {
   palette?: CanvasColors
   rowHeights?: number[]
+  layout?: BarLayout
 }
 
 export type LaidOutBar = {
@@ -144,15 +169,17 @@ export const layoutBar = ({
   barsPerRow = 2,
   highlighted = false,
   palette = darkCanvasColors,
-  rowHeights = rowHeightsForBars(canvasWidth, barsPerRow, bars),
+  rowHeights,
+  layout,
 }: LayoutBarArgs): LaidOutBar => {
   const bar = bars[barIndex]
-  const { cellCount, glyphs } = parseBarLayout(bar, bars, barIndex)
+  const { cellCount, glyphs } = layout ?? parseBarLayout(bar, bars, barIndex)
   const barWidth = barWidthForCanvas(canvasWidth, barsPerRow)
   const noteWidth = barWidth / cellCount
   const barHeight = noteHeightFromWidth(noteWidth)
   const beatCells = onBeatCellIndexes(cellCount)
-  const top = barTopForIndex(barIndex, barsPerRow, rowHeights)
+  const resolvedRowHeights = rowHeights ?? rowHeightsForBars(canvasWidth, barsPerRow, bars)
+  const top = barTopForIndex(barIndex, barsPerRow, resolvedRowHeights)
   const barLeft = (barIndex % barsPerRow) * (barWidth + BAR_GAP_PX)
 
   const barEl: CanvasElement = {
@@ -192,42 +219,26 @@ export const layoutBar = ({
   return { barEl, noteElements, glyphs }
 }
 
-export const renderBar = ({
-  bars,
-  instrument,
-  context,
-  canvasWidth,
-  barIndex = 0,
-  barsPerRow = 2,
-  highlighted = false,
-  rowHeights,
-}: BarRendererArgs & { rowHeights?: number[] }) => {
-  const layout = layoutBar({
-    bars,
-    canvasWidth,
-    barIndex,
-    barsPerRow,
-    highlighted,
-    rowHeights,
-  })
+export const paintLaidOutBar = (
+  context: CanvasRenderingContext2D,
+  instrument: string,
+  laidOut: LaidOutBar,
+) => {
+  renderBarWrapper({ context, el: laidOut.barEl })
 
-  renderBarWrapper({ context, el: layout.barEl })
-
-  layout.glyphs.forEach((glyph, noteIndex) => {
+  laidOut.glyphs.forEach((glyph, noteIndex) => {
     if (glyph.kind !== 'eighth') return
-    renderNoteBackground({ context, el: layout.noteElements[noteIndex] })
+    renderNoteBackground({ context, el: laidOut.noteElements[noteIndex] })
   })
 
-  layout.glyphs.forEach((glyph, noteIndex) => {
-    const note = layout.noteElements[noteIndex]
+  laidOut.glyphs.forEach((glyph, noteIndex) => {
+    const note = laidOut.noteElements[noteIndex]
     if (glyph.kind === 'polyrhythm' || glyph.polyrhythmIndex !== undefined) {
       renderScaledGlyph({ instrument, el: note, glyph, context })
       return
     }
     renderGlyphOnly({ instrument, el: note, context })
   })
-
-  return [layout.barEl, ...layout.noteElements]
 }
 
 type RenderBarsArgs = Omit<BarRendererArgs, 'barIndex' | 'highlighted'> & {
@@ -235,6 +246,8 @@ type RenderBarsArgs = Omit<BarRendererArgs, 'barIndex' | 'highlighted'> & {
   palette?: CanvasColors
   showBarIndex?: boolean
   markTriplets?: boolean
+  /** Pre-parsed notation; when provided, renderBars does not re-parse. */
+  parsed?: ParsedBarsNotation
 }
 
 const renderBarIndexLabels = (
@@ -261,6 +274,7 @@ const renderPolyrhythmMarks = (
   layouts: LaidOutBar[],
   palette: CanvasColors,
   barsPerRow: number,
+  parsed?: BracketParsedNotation,
 ) => {
   context.strokeStyle = palette.w1
   context.fillStyle = palette.w1
@@ -269,7 +283,7 @@ const renderPolyrhythmMarks = (
   context.textAlign = 'center'
   context.textBaseline = 'bottom'
 
-  polyrhythmBracketSpans(bars, layouts, barsPerRow).forEach((span) =>
+  polyrhythmBracketSpans(bars, layouts, barsPerRow, parsed).forEach((span) =>
     drawPolyrhythmBracket(context, span),
   )
 }
@@ -280,6 +294,7 @@ const renderTripletMarks = (
   layouts: LaidOutBar[],
   palette: CanvasColors,
   barsPerRow: number,
+  parsed?: BracketParsedNotation,
 ) => {
   context.strokeStyle = palette.w1
   context.fillStyle = palette.w1
@@ -288,7 +303,7 @@ const renderTripletMarks = (
   context.textAlign = 'center'
   context.textBaseline = 'bottom'
 
-  tripletBracketSpans(bars, layouts, barsPerRow).forEach((span) =>
+  tripletBracketSpans(bars, layouts, barsPerRow, parsed).forEach((span) =>
     drawTripletBracket(context, span),
   )
 }
@@ -303,8 +318,10 @@ export const renderBars = ({
   palette = darkCanvasColors,
   showBarIndex = false,
   markTriplets = false,
+  parsed: preParsed,
 }: RenderBarsArgs) => {
-  const rowHeights = rowHeightsForBars(canvasWidth, barsPerRow, bars)
+  const parsed = preParsed ?? parseBarsNotation(bars)
+  const rowHeights = rowHeightsForBars(canvasWidth, barsPerRow, bars, parsed.layouts)
   const layouts = bars.map((_, barIndex) =>
     layoutBar({
       bars,
@@ -314,34 +331,21 @@ export const renderBars = ({
       highlighted: barIndex === highlightedBarIndex,
       palette,
       rowHeights,
+      layout: parsed.layouts[barIndex],
     }),
   )
 
   layouts.forEach((layout) => {
-    renderBarWrapper({ context, el: layout.barEl })
-  })
-
-  layouts.forEach((layout) => {
-    layout.glyphs.forEach((glyph, noteIndex) => {
-      if (glyph.kind !== 'eighth') return
-      renderNoteBackground({ context, el: layout.noteElements[noteIndex] })
-    })
-  })
-
-  layouts.forEach((layout) => {
-    layout.glyphs.forEach((glyph, noteIndex) => {
-      const note = layout.noteElements[noteIndex]
-      if (glyph.kind === 'polyrhythm' || glyph.polyrhythmIndex !== undefined) {
-        renderScaledGlyph({ instrument, el: note, glyph, context })
-        return
-      }
-      renderGlyphOnly({ instrument, el: note, context })
-    })
+    paintLaidOutBar(context, instrument, layout)
   })
 
   if (markTriplets) {
-    renderTripletMarks(context, bars, layouts, palette, barsPerRow)
-    renderPolyrhythmMarks(context, bars, layouts, palette, barsPerRow)
+    const bracketParsed: BracketParsedNotation = {
+      segments: parsed.segments,
+      barCellCounts: parsed.barCellCounts,
+    }
+    renderTripletMarks(context, bars, layouts, palette, barsPerRow, bracketParsed)
+    renderPolyrhythmMarks(context, bars, layouts, palette, barsPerRow, bracketParsed)
   }
   if (showBarIndex) renderBarIndexLabels(context, layouts, palette)
 

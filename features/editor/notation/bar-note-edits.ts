@@ -1,5 +1,9 @@
-import { parseBarLayout, type GlyphKind } from '@/features/groovy-player/canvas/bar-layout'
-import { getGlyphLocationsInBars } from '@/features/editor/notation/glyph-locations'
+import { parseBarsLayout, type GlyphKind } from '@/features/groovy-player/canvas/bar-layout'
+import {
+  getGlyphLocationsForBars,
+  getGlyphLocationsInBars,
+  type GlyphLocation,
+} from '@/features/editor/notation/glyph-locations'
 import { parseGroupedNotation } from '@/lib/midinike/notation/grouped-notation'
 
 export type NoteSelection = {
@@ -17,26 +21,26 @@ export const getSelectionEditKind = (bars: string[], selection: NoteSelection) =
   return location?.kind ?? 'plain'
 }
 
-export const flattenBarNotes = (bars: string[]): FlatNote[] =>
-  bars.flatMap((bar, barIndex) => {
-    const { glyphs } = parseBarLayout(bar, bars, barIndex)
-    return glyphs.map((glyph, glyphIndex) => ({
+export const flattenBarNotes = (bars: string[]): FlatNote[] => {
+  const layouts = parseBarsLayout(bars)
+  return layouts.flatMap((layout, barIndex) =>
+    layout.glyphs.map((glyph, glyphIndex) => ({
       barIndex,
       glyphIndex,
       kind: glyph.kind,
       note: glyph.note,
-    }))
-  })
+    })),
+  )
+}
 
 export const getSelectedFlatNote = (
   bars: string[],
   selection: NoteSelection | null,
 ): FlatNote | null => {
   if (!selection) return null
-  const bar = bars[selection.barIndex]
-  if (!bar) return null
-  const { glyphs } = parseBarLayout(bar, bars, selection.barIndex)
-  const glyph = glyphs[selection.glyphIndex]
+  const layout = parseBarsLayout(bars)[selection.barIndex]
+  if (!layout) return null
+  const glyph = layout.glyphs[selection.glyphIndex]
   if (!glyph) return null
   return { ...selection, kind: glyph.kind, note: glyph.note }
 }
@@ -138,22 +142,16 @@ export const setNoteAtGlyph = (bars: string[], selection: NoteSelection, note: s
   return nextBars
 }
 
-const nextPlainGlyphIndex = (bars: string[], selection: NoteSelection) => {
-  const locationsByBar = bars.map((_, barIndex) => getGlyphLocationsInBars(bars, barIndex))
-  const flat = locationsByBar.flatMap((locations, barIndex) =>
-    locations.map((location, glyphIndex) => ({ barIndex, glyphIndex, location })),
-  )
-
+const nextPlainGlyphIndexInFlat = (
+  flat: { barIndex: number; glyphIndex: number; location: GlyphLocation }[],
+  selection: NoteSelection,
+) => {
   const currentIndex = flat.findIndex(
     (entry) => entry.barIndex === selection.barIndex && entry.glyphIndex === selection.glyphIndex,
   )
   if (currentIndex < 0) return null
-
-  for (let index = currentIndex + 1; index < flat.length; index += 1) {
-    if (flat[index].location.kind === 'plain') return index
-    return null
-  }
-  return null
+  const next = flat[currentIndex + 1]
+  return next?.location.kind === 'plain' ? currentIndex + 1 : null
 }
 
 type PlainPair = {
@@ -165,17 +163,18 @@ type PlainPair = {
   second: string
 }
 
-const plainEighthPairAt = (bars: string[], selection: NoteSelection): PlainPair | null => {
-  const locations = getGlyphLocationsInBars(bars, selection.barIndex)
-  const location = locations[selection.glyphIndex]
-  if (!location || location.kind !== 'plain') return null
-
-  const locationsByBar = bars.map((_, barIndex) => getGlyphLocationsInBars(bars, barIndex))
-  const flat = locationsByBar.flatMap((entries, barIndex) =>
+const flatGlyphEntries = (locationsByBar: GlyphLocation[][]) =>
+  locationsByBar.flatMap((entries, barIndex) =>
     entries.map((entry, glyphIndex) => ({ barIndex, glyphIndex, location: entry })),
   )
 
-  const nextIndex = nextPlainGlyphIndex(bars, selection)
+const plainEighthPairAt = (bars: string[], selection: NoteSelection): PlainPair | null => {
+  const locationsByBar = getGlyphLocationsForBars(bars)
+  const location = locationsByBar[selection.barIndex]?.[selection.glyphIndex]
+  if (!location || location.kind !== 'plain') return null
+
+  const flat = flatGlyphEntries(locationsByBar)
+  const nextIndex = nextPlainGlyphIndexInFlat(flat, selection)
   if (nextIndex === null) return null
 
   const second = flat[nextIndex]
@@ -216,16 +215,11 @@ export const convertBarsToTriplet = (bars: string[], selection: NoteSelection, b
   let pair = plainEighthPairAt(workingBars, selection)
 
   if (!pair) {
-    const locations = getGlyphLocationsInBars(workingBars, selection.barIndex)
-    const location = locations[selection.glyphIndex]
+    const locationsByBar = getGlyphLocationsForBars(workingBars)
+    const location = locationsByBar[selection.barIndex]?.[selection.glyphIndex]
     if (!location || location.kind !== 'plain') return workingBars
 
-    const locationsByBar = workingBars.map((_, barIndex) =>
-      getGlyphLocationsInBars(workingBars, barIndex),
-    )
-    const flat = locationsByBar.flatMap((entries, barIndex) =>
-      entries.map((entry, glyphIndex) => ({ barIndex, glyphIndex, location: entry })),
-    )
+    const flat = flatGlyphEntries(locationsByBar)
     const currentIndex = flat.findIndex(
       (entry) => entry.barIndex === selection.barIndex && entry.glyphIndex === selection.glyphIndex,
     )
@@ -270,16 +264,11 @@ export const convertBarsToPolyrhythm = (
   let pair = plainEighthPairAt(workingBars, selection)
 
   if (!pair) {
-    const locations = getGlyphLocationsInBars(workingBars, selection.barIndex)
-    const location = locations[selection.glyphIndex]
+    const locationsByBar = getGlyphLocationsForBars(workingBars)
+    const location = locationsByBar[selection.barIndex]?.[selection.glyphIndex]
     if (!location || location.kind !== 'plain') return workingBars
 
-    const locationsByBar = workingBars.map((_, barIndex) =>
-      getGlyphLocationsInBars(workingBars, barIndex),
-    )
-    const flat = locationsByBar.flatMap((entries, barIndex) =>
-      entries.map((entry, glyphIndex) => ({ barIndex, glyphIndex, location: entry })),
-    )
+    const flat = flatGlyphEntries(locationsByBar)
     const currentIndex = flat.findIndex(
       (entry) => entry.barIndex === selection.barIndex && entry.glyphIndex === selection.glyphIndex,
     )

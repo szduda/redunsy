@@ -4,8 +4,10 @@ import {
   type GroupedBarGlyph,
 } from '@/lib/midinike/notation/grouped-notation'
 
-import type { BarGlyph } from './bar-layout'
+import type { BarGlyph, ParsedBarsNotation } from './bar-layout'
 import type { CanvasElement } from './types'
+
+export type BracketParsedNotation = Pick<ParsedBarsNotation, 'segments' | 'barCellCounts'>
 
 export type PolyrhythmBracketLayout = {
   barEl: Pick<CanvasElement, 'top' | 'left' | 'width'>
@@ -63,8 +65,9 @@ export const polyrhythmBracketSpans = (
   bars: string[],
   layouts: PolyrhythmBracketLayout[],
   barsPerRow: number,
+  parsed?: BracketParsedNotation,
 ): PolyrhythmBracketSpan[] => {
-  const { segments, barCellCounts } = parseGroupedNotation(bars)
+  const { segments, barCellCounts } = parsed ?? parseGroupedNotation(bars)
   const barStarts = barStartCells(barCellCounts)
   const spans: PolyrhythmBracketSpan[] = []
 
