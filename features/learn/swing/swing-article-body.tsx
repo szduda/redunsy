@@ -121,6 +121,11 @@ export const SwingArticleBody = ({ copy }: SwingArticleBodyProps) => (
           {paragraph}
         </Text>
       ))}
+      {copy.closingJoke ? (
+        <Text className="text-pretty leading-relaxed italic text-zinc-500 dark:text-zinc-400">
+          {copy.closingJoke}
+        </Text>
+      ) : null}
     </section>
 
     <p>

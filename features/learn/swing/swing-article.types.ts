@@ -44,4 +44,6 @@ export type SwingArticleCopy = {
   tables: SwingTable[]
   closingTitle: string
   closingParagraphs: string[]
+  /** Optional tonal aside after the closing section — used for the Polish edition's parting joke. */
+  closingJoke?: string
 }
