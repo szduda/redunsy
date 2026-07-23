@@ -9,6 +9,7 @@ export const NAV_MENU_ITEMS = [
   { href: '/garage', label: 'Garage' },
   { href: '/editor', label: 'Rhythm Editor' },
   { href: '/player', label: 'Player Demo' },
+  { href: '/learn', label: 'Learn' },
 ] as const
 
 const linkStyles = {
