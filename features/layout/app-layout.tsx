@@ -1,6 +1,7 @@
 'use client'
 
 import { useCallback, useState, Suspense, type ReactNode } from 'react'
+import { usePathname } from 'next/navigation'
 
 import { BottomNav } from '@/features/layout/bottom-nav'
 import {
@@ -10,6 +11,7 @@ import {
 } from '@/features/layout/constants'
 import { BottomNavPortalTarget, BottomNavSlotProvider } from '@/features/layout/page-bottom-nav'
 import { TopNav } from '@/features/layout/top-nav'
+import { usesOpenDesktopNav } from '@/features/layout/uses-open-desktop-nav'
 import { SearchUrlSync } from '@/features/shared/search-url-sync'
 import { useUiStore } from '@/features/store/ui.store'
 import { cn } from '@/features/theme/cn'
@@ -19,12 +21,14 @@ type AppLayoutProps = {
 }
 
 export const AppLayout = ({ children }: AppLayoutProps) => {
+  const pathname = usePathname()
   const [hasBottomNav, setHasBottomNav] = useState(false)
   const onHasBottomNavChange = useCallback(
     (visible: boolean) => setHasBottomNav((current) => (current === visible ? current : visible)),
     [],
   )
   const topNavSticky = useUiStore((state) => state.topNavSticky)
+  const openDesktopNav = usesOpenDesktopNav(pathname)
 
   return (
     <BottomNavSlotProvider onHasBottomNavChange={onHasBottomNavChange}>
@@ -36,7 +40,7 @@ export const AppLayout = ({ children }: AppLayoutProps) => {
         className={cn(
           'flex min-h-[calc(100dvh - 2.5rem)] flex-1 flex-col',
           PAGE_BODY_BG_CLASS,
-          topNavSticky && TOP_NAV_PADDING_CLASS,
+          topNavSticky && (openDesktopNav ? 'pt-10 md:pt-0' : TOP_NAV_PADDING_CLASS),
           hasBottomNav ? BOTTOM_NAV_PADDING_CLASS : 'pb-0',
         )}
       >
