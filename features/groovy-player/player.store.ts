@@ -53,7 +53,7 @@ export const fitSwingPattern = (pattern: string, barSize: number) =>
   pattern.slice(0, barSize).padEnd(barSize, '-')
 
 /** Valid groove cell symbols (see {@link import('@/lib/midinike').grooveOffset}). */
-const GROOVE_CHARS = new Set(['-', '<', '(', '>', ')'])
+const GROOVE_CHARS = new Set(['-', '(', '<', '[', '{', ')', '>', ']', '}'])
 
 /** Drop invalid characters and fit to the groove length — used on input blur/enter. */
 export const sanitizeSwingPattern = (pattern: string, barSize: number) =>

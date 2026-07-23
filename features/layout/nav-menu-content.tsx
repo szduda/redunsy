@@ -9,6 +9,7 @@ export const NAV_MENU_ITEMS = [
   { href: '/garage', label: 'Garage' },
   { href: '/editor', label: 'Rhythm Editor' },
   { href: '/player', label: 'Player Demo' },
+  { href: '/learn', label: 'Learn' },
 ] as const
 
 const linkStyles = {
@@ -29,11 +30,15 @@ const linkStyles = {
 type NavMenuContentProps = {
   onClose?: () => void
   variant?: keyof typeof linkStyles
+  excludeHome?: boolean
 }
 
-export const NavMenuContent = ({ onClose, variant = 'default' }: NavMenuContentProps) => {
-  const items =
-    variant === 'homepage' ? NAV_MENU_ITEMS.filter((item) => item.href !== '/') : NAV_MENU_ITEMS
+export const NavMenuContent = ({
+  onClose,
+  variant = 'default',
+  excludeHome = false,
+}: NavMenuContentProps) => {
+  const items = excludeHome ? NAV_MENU_ITEMS.filter((item) => item.href !== '/') : NAV_MENU_ITEMS
 
   return (
     <nav className="flex flex-col gap-1">
@@ -46,7 +51,7 @@ export const NavMenuContent = ({ onClose, variant = 'default' }: NavMenuContentP
         className={cn(
           'mt-2 pt-4',
           variant === 'homepage'
-            ? 'opacity-50 hover:opacity-100 ml-1'
+            ? 'ml-1 opacity-50 hover:opacity-100'
             : 'border-t border-zinc-200 dark:border-zinc-800',
         )}
       >

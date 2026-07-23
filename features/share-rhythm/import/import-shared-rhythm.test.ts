@@ -3,7 +3,12 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest'
 
 import { createRhythm, slugFromTitle } from '@/features/rhythm/rhythm-helpers'
-import { MY_RHYTHMS_STORAGE_KEY } from '@/features/rhythm/my-rhythms-storage'
+import {
+  flushMyRhythms,
+  MY_RHYTHMS_STORAGE_KEY,
+  resetMyRhythmsStorageForTests,
+  writeMyRhythms,
+} from '@/features/rhythm/my-rhythms-storage'
 import { encodeRhythmForShare } from '@/features/share-rhythm/export/encode-rhythm'
 import { importSharedRhythm } from '@/features/share-rhythm/import/import-shared-rhythm'
 import { SHARED_WITH_ME_TAG } from '@/features/share-rhythm/shared/share-limits'
@@ -11,6 +16,7 @@ import { SHARED_WITH_ME_TAG } from '@/features/share-rhythm/shared/share-limits'
 describe('importSharedRhythm', () => {
   beforeEach(() => {
     localStorage.clear()
+    resetMyRhythmsStorageForTests()
   })
 
   it('imports a shared rhythm into My Library with the shared tag', () => {
@@ -18,6 +24,7 @@ describe('importSharedRhythm', () => {
     const encoded = encodeRhythmForShare(rhythm)
 
     const imported = importSharedRhythm(encoded)
+    flushMyRhythms()
 
     expect(imported?.slug).toBe('from-friend')
     expect(imported?.tags).toContain(SHARED_WITH_ME_TAG)
@@ -29,7 +36,7 @@ describe('importSharedRhythm', () => {
 
   it('creates a unique title and slug when the library already has that slug', () => {
     const existing = createRhythm({ title: 'share-test', layers: ['djembe'] })
-    localStorage.setItem(MY_RHYTHMS_STORAGE_KEY, JSON.stringify({ [existing.slug]: existing }))
+    writeMyRhythms({ [existing.slug]: existing })
 
     const encoded = encodeRhythmForShare(createRhythm({ title: 'share-test', layers: ['djembe'] }))
 

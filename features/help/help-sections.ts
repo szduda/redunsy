@@ -222,7 +222,7 @@ export const HELP_SECTIONS: HelpSection[] = [
         icon: 'pepper',
         title: 'Swing pattern',
         description:
-          'Each character controls how notes in one eighth-note slot are shifted on the playback grid. `-` plays straight on the beat. `<` and `(` pull hits earlier (strong / weak). `>` and `)` push them later (strong / weak). Main downbeats are never shifted. The pattern length must match the rhythm meter — 6 characters for 3/4, 8 for 4/4. A warning icon appears when the length is wrong. Examples: Soli-style `-<(-<(`, Marakadon-style `->)->)`, common 4/4 swing `->->->->`, or the rarer delayed variant `--->--->`.',
+          'Each character controls how notes in one eighth-note slot are shifted on the playback grid. `-` plays straight on the beat. Early chevrons pull hits earlier — `(` / `<` / `[` / `{` map to visual `<` / `<<` / `<<<` / `<<<<` (force 1 / 2 / 3 / 4 = ±1 / ±2 / ±3 / ±4 ticks). Late `)` / `>` / `]` / `}` map to `>` / `>>` / `>>>` / `>>>>`. Main downbeats are never shifted. The pattern length must match the rhythm meter — 6 characters for 3/4, 8 for 4/4. A warning icon appears when the length is wrong. Examples: Soli-style `-<(-<(`, Marakadon-style `->)->)`, common 4/4 swing `->->->->`, or the rarer delayed variant `--->--->`.',
       },
       {
         icon: 'barIndex',

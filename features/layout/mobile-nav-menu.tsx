@@ -9,7 +9,7 @@ import { cn } from '@/features/theme/cn'
 import { KEYBOARD_FOCUS_VISIBLE_CLASS } from '@/features/theme/keyboard-focus'
 
 const MOBILE_NAV_PANEL_CLASS =
-  'h-[300px] !bottom-auto border-zinc-200 bg-white/95 backdrop-blur dark:border-zinc-800 dark:bg-zinc-900/95'
+  'h-[360px] !bottom-auto border-zinc-200 bg-white/95 backdrop-blur dark:border-zinc-800 dark:bg-zinc-900/95'
 
 const MenuCloseBadge = () => (
   <svg aria-hidden className="size-3" fill="none" viewBox="0 0 24 24">

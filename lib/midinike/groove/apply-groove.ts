@@ -48,10 +48,6 @@ const shiftBarGroove = (
   return shifted
 }
 
-/** Tick-offset groove shifts apply only when notation is narrower than the groove grid. */
-const isPartialGridGroove = (notationCells: number, grooveLength: number) =>
-  notationCells < grooveLength
-
 export const applyGrooveToBar = (
   cells: ParsedCell[],
   groove: string,
@@ -60,10 +56,6 @@ export const applyGrooveToBar = (
 ): BeatMatrix => {
   const segments = barSlotSegments(cells, notationCells, grooveLength)
   const slots = segments.flatMap((segment) => segment.slots)
-  const skipSwingShift =
-    !isPartialGridGroove(notationCells, grooveLength) || groove === '-'.repeat(grooveLength)
-  const shifted = skipSwingShift
-    ? slots
-    : shiftBarGroove(slots, segments, groove, notationCells, grooveLength)
-  return shifted
+  if (groove === '-'.repeat(grooveLength)) return slots
+  return shiftBarGroove(slots, segments, groove, notationCells, grooveLength)
 }

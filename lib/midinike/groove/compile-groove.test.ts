@@ -12,7 +12,15 @@ import {
   compileResult,
   evenSpacing,
 } from './compile-groove.test-helpers'
-import { grooveOffset } from './groove-symbols'
+import {
+  FORCE_1_OFFSET,
+  FORCE_2_OFFSET,
+  FORCE_3_OFFSET,
+  FORCE_4_OFFSET,
+  grooveOffset,
+  STRONG_GROOVE_OFFSET,
+  WEAK_GROOVE_OFFSET,
+} from './groove-symbols'
 
 import type { BeatMatrix } from '../types'
 
@@ -269,56 +277,97 @@ describe('compileGroove — groove modifier strength and direction', () => {
   const hitOnCell = (groove: string) => compileHits([bar], partialGroove(groove))[0]
 
   it('maps symbols to symmetric tick offsets on the 12-tick grid', () => {
-    expect(grooveOffset('<')).toBe(-2)
-    expect(grooveOffset('(')).toBe(-1)
+    expect(grooveOffset('(')).toBe(-FORCE_1_OFFSET)
+    expect(grooveOffset('<')).toBe(-FORCE_2_OFFSET)
+    expect(grooveOffset('[')).toBe(-FORCE_3_OFFSET)
+    expect(grooveOffset('{')).toBe(-FORCE_4_OFFSET)
     expect(grooveOffset('-')).toBe(0)
-    expect(grooveOffset(')')).toBe(1)
-    expect(grooveOffset('>')).toBe(2)
+    expect(grooveOffset(')')).toBe(FORCE_1_OFFSET)
+    expect(grooveOffset('>')).toBe(FORCE_2_OFFSET)
+    expect(grooveOffset(']')).toBe(FORCE_3_OFFSET)
+    expect(grooveOffset('}')).toBe(FORCE_4_OFFSET)
     expect(grooveOffset('<', true)).toBe(0)
+    expect(FORCE_4_OFFSET).toBeGreaterThan(FORCE_3_OFFSET)
+    expect(FORCE_3_OFFSET).toBeGreaterThan(FORCE_2_OFFSET)
+    expect(FORCE_2_OFFSET).toBeGreaterThan(FORCE_1_OFFSET)
+    expect(WEAK_GROOVE_OFFSET).toBe(FORCE_1_OFFSET)
+    expect(STRONG_GROOVE_OFFSET).toBe(FORCE_2_OFFSET)
   })
 
   it('orders early modifiers before straight before late modifiers on cell 1', () => {
     const straight = hitOnCell('------')
-    const strongEarly = hitOnCell('-<----')
-    const weakEarly = hitOnCell('-(----')
-    const weakLate = hitOnCell('-)----')
-    const strongLate = hitOnCell('->----')
+    const force4Early = hitOnCell('-{----')
+    const force3Early = hitOnCell('-[----')
+    const force2Early = hitOnCell('-<----')
+    const force1Early = hitOnCell('-(----')
+    const force1Late = hitOnCell('-)----')
+    const force2Late = hitOnCell('->----')
+    const force3Late = hitOnCell('-]----')
+    const force4Late = hitOnCell('-}----')
 
-    expect(strongEarly).toBeLessThan(weakEarly)
-    expect(weakEarly).toBeLessThan(straight)
-    expect(straight).toBeLessThan(weakLate)
-    expect(weakLate).toBeLessThan(strongLate)
+    expect(force4Early).toBeLessThan(force3Early)
+    expect(force3Early).toBeLessThan(force2Early)
+    expect(force2Early).toBeLessThan(force1Early)
+    expect(force1Early).toBeLessThan(straight)
+    expect(straight).toBeLessThan(force1Late)
+    expect(force1Late).toBeLessThan(force2Late)
+    expect(force2Late).toBeLessThan(force3Late)
+    expect(force3Late).toBeLessThan(force4Late)
   })
 
   it('applies expected tick shifts on cell 1', () => {
     const straight = hitOnCell('------')
     expect(straight).toBe((8 / 6) * TICKS_PER_EIGHTH)
 
-    expect(hitOnCell('-<----')).toBe(straight - 2)
-    expect(hitOnCell('-(----')).toBe(straight - 1)
-    expect(hitOnCell('->----')).toBe(straight + 2)
-    expect(hitOnCell('-)----')).toBe(straight + 1)
+    expect(hitOnCell('-(----')).toBe(straight - FORCE_1_OFFSET)
+    expect(hitOnCell('-<----')).toBe(straight - FORCE_2_OFFSET)
+    expect(hitOnCell('-[----')).toBe(straight - FORCE_3_OFFSET)
+    expect(hitOnCell('-{----')).toBe(straight - FORCE_4_OFFSET)
+    expect(hitOnCell('-)----')).toBe(straight + FORCE_1_OFFSET)
+    expect(hitOnCell('->----')).toBe(straight + FORCE_2_OFFSET)
+    expect(hitOnCell('-]----')).toBe(straight + FORCE_3_OFFSET)
+    expect(hitOnCell('-}----')).toBe(straight + FORCE_4_OFFSET)
   })
 
-  it('keeps strong pairs equal distance from straight, opposite direction', () => {
+  it('keeps force-2 pairs equal distance from straight, opposite direction', () => {
     const straight = hitOnCell('------')
-    const strongEarly = hitOnCell('-<----')
-    const strongLate = hitOnCell('->----')
+    const early = hitOnCell('-<----')
+    const late = hitOnCell('->----')
 
-    expect(straight - strongEarly).toBe(strongLate - straight)
-    expect(straight - strongEarly).toBe(2)
+    expect(straight - early).toBe(late - straight)
+    expect(straight - early).toBe(FORCE_2_OFFSET)
   })
 
-  it('keeps weak pairs equal distance from straight, opposite direction', () => {
+  it('keeps force-1 pairs equal distance from straight, opposite direction', () => {
     const straight = hitOnCell('------')
-    const weakEarly = hitOnCell('-(----')
-    const weakLate = hitOnCell('-)----')
+    const early = hitOnCell('-(----')
+    const late = hitOnCell('-)----')
 
-    expect(straight - weakEarly).toBe(weakLate - straight)
-    expect(straight - weakEarly).toBe(1)
+    expect(straight - early).toBe(late - straight)
+    expect(straight - early).toBe(FORCE_1_OFFSET)
   })
 
-  it('makes strong early earlier than weak early', () => {
+  it('keeps force-3 pairs equal distance from straight, opposite direction', () => {
+    const straight = hitOnCell('------')
+    const early = hitOnCell('-[----')
+    const late = hitOnCell('-]----')
+
+    expect(straight - early).toBe(late - straight)
+    expect(straight - early).toBe(FORCE_3_OFFSET)
+  })
+
+  it('keeps force-4 pairs equal distance from straight, opposite direction', () => {
+    const straight = hitOnCell('------')
+    const early = hitOnCell('-{----')
+    const late = hitOnCell('-}----')
+
+    expect(straight - early).toBe(late - straight)
+    expect(straight - early).toBe(FORCE_4_OFFSET)
+  })
+
+  it('makes force-4 earlier than force-3 earlier than force-2 earlier than force-1', () => {
+    expect(hitOnCell('-{----')).toBeLessThan(hitOnCell('-[----'))
+    expect(hitOnCell('-[----')).toBeLessThan(hitOnCell('-<----'))
     expect(hitOnCell('-<----')).toBeLessThan(hitOnCell('-(----'))
   })
 
@@ -331,13 +380,20 @@ describe('compileGroove — groove modifier strength and direction', () => {
     const straight = compileHits(['ttstts'], GROOVE_8)
     const swung = compileHits(['ttstts'], '-<-<-<--')
 
-    expect(swung).toEqual([0, 14, 32, 48, 62, 80])
+    expect(swung).toEqual([
+      0,
+      straight[1]! - FORCE_2_OFFSET,
+      32,
+      48,
+      straight[4]! - FORCE_2_OFFSET,
+      80,
+    ])
     expect(swung[0]).toBe(straight[0])
     expect(swung[2]).toBe(straight[2])
     expect(swung[3]).toBe(straight[3])
     expect(swung[5]).toBe(straight[5])
-    expect(swung[1]).toBe(straight[1] - 2)
-    expect(swung[4]).toBe(straight[4] - 2)
+    expect(swung[1]).toBe(straight[1]! - FORCE_2_OFFSET)
+    expect(swung[4]).toBe(straight[4]! - FORCE_2_OFFSET)
   })
 
   it('does not expand total slot count when groove is applied', () => {
