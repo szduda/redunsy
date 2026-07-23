@@ -23,10 +23,18 @@ describe('demo playback groove length', () => {
     expect(compiled.beats.length).toBe(barSlotCount(8))
 
     const hits = compiled.beats.flatMap((slot, index) => (slot[0].length ? [index] : []))
-    expect(hits).toEqual([0, 14, 31, 46, 80])
+    const straight = compileGroove({ bars: [bar], groove: '--------' })
+    const straightHits = straight.beats.flatMap((slot, index) => (slot[0].length ? [index] : []))
+    // Demo groove `-<(-<(--`: strong early on cells mapped to `<`, weak early on `(`.
+    expect(hits[0]).toBe(0)
+    expect(hits[1]).toBe(straightHits[1]! - 4)
+    expect(hits[2]).toBe(straightHits[2]! - 2)
+    expect(hits[3]).toBe(straightHits[3]! - 4)
+    expect(hits[4]).toBe(straightHits[4])
+    expect(hits).toEqual([0, 12, 30, 44, 80])
   })
 
-  it('six-cell grooves on six-cell bars stay straight (full grid)', () => {
+  it('six-cell grooves on six-cell bars apply full-grid swing shifts', () => {
     const bar = DEMO_TRACKS[0].bars[0]
     const groove = '-<(-<('
     const straight = compileGroove({ bars: [bar], groove: '------' })
@@ -34,6 +42,8 @@ describe('demo playback groove length', () => {
 
     const hits = compiled.beats.flatMap((slot, index) => (slot[0].length ? [index] : []))
     const straightHits = straight.beats.flatMap((slot, index) => (slot[0].length ? [index] : []))
-    expect(hits).toEqual(straightHits)
+    expect(hits[0]).toBe(straightHits[0])
+    expect(hits[1]).toBeLessThan(straightHits[1]!)
+    expect(hits).not.toEqual(straightHits)
   })
 })

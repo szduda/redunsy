@@ -249,7 +249,7 @@ describe('meter=3 playback — 6-cell bars with 6-cell groove', () => {
     expect(() => compileGroove({ bars: METER3_BARS, groove })).not.toThrow()
   })
 
-  it('migrated full-grid swing keeps even hit spacing (matches canvas)', () => {
+  it('migrated full-grid swing shifts timed hits off the straight grid', () => {
     const maaneSwing = '-<-<-<'
     const maaneBar = 'b-stts'
     const groove = resolveGroovePattern(maaneSwing, 6, true)
@@ -257,8 +257,9 @@ describe('meter=3 playback — 6-cell bars with 6-cell groove', () => {
       beats.flatMap((slot, index) => (slot[0].length ? [index] : []))
     const straight = compileGroove({ bars: [maaneBar], groove: GROOVE3 })
     const swung = compileGroove({ bars: [maaneBar], groove })
-    expect(beatHits(swung.beats)).toEqual(beatHits(straight.beats))
-    expect(beatHits(swung.beats)).toEqual([0, 24, 36, 48, 60])
+    expect(beatHits(straight.beats)).toEqual([0, 24, 36, 48, 60])
+    expect(beatHits(swung.beats)).not.toEqual(beatHits(straight.beats))
+    expect(beatHits(swung.beats)[0]).toBe(0)
   })
 
   it('meter=3 playback stretches six-cell bars on an eight-cell groove', () => {
