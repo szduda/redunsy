@@ -57,3 +57,16 @@ export const upsertPublishedRhythm = async (slug: string, rhythm: Rhythm) => {
 
   return { created: true, slug }
 }
+
+/** Soft-unpublish: keep the row, hide from catalogue and public rhythm pages. */
+export const unpublishRhythm = async (slug: string) => {
+  const [existing] = await db.select().from(rhythms).where(eq(rhythms.slug, slug)).limit(1)
+  if (!existing) return null
+
+  await db
+    .update(rhythms)
+    .set({ published: false, updatedAt: new Date() })
+    .where(eq(rhythms.slug, slug))
+
+  return { slug, unpublished: true as const }
+}

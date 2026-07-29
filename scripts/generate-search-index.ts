@@ -6,7 +6,7 @@ import { config } from 'dotenv'
 config({ path: '.env.local' })
 config({ path: '.env' })
 
-const OUTPUT_PATH = resolve(process.cwd(), 'features/garage/rhythm-index.generated.json')
+const OUTPUT_PATH = resolve(process.cwd(), 'features/search-index/search-index.seed.json')
 
 const hasConnection = Boolean(
   process.env.POSTGRES_URL ?? process.env.POSTGRES_URL_NON_POOLING ?? process.env.DATABASE_URL,

@@ -2,28 +2,28 @@
 
 import { useEffect, useMemo, useState } from 'react'
 
-import { filterOptionsFromRhythmCards } from '@/features/garage/rhythm-index'
-import {
-  listIndexRhythmCardsForOwnership,
-  listRhythmCardsForOwnership,
-} from '@/features/garage/search-snippets'
 import { useGarageFiltersStore } from '@/features/garage/garage-filters.store'
+import { listMyRhythms } from '@/features/rhythm/my-rhythms-storage'
+import { rhythmToCard } from '@/features/rhythm/rhythm-helpers'
+import { filterOptionsFromRhythmCards } from '@/features/search-index/search-index.filters'
+import { matchesOwnership } from '@/features/search-index/search-index.search'
+import { useSearchIndexStore } from '@/features/search-index/search-index.store'
+import { useSearchIndex } from '@/features/search-index/use-search-index'
 
 export const useGarageFilterOptions = () => {
+  useSearchIndex()
   const ownership = useGarageFiltersStore((state) => state.ownership)
+  const cards = useSearchIndexStore((state) => state.cards)
   const [hydrated, setHydrated] = useState(false)
 
   useEffect(() => {
     setHydrated(true)
   }, [])
 
-  return useMemo(
-    () =>
-      filterOptionsFromRhythmCards(
-        hydrated
-          ? listRhythmCardsForOwnership(ownership)
-          : listIndexRhythmCardsForOwnership(ownership),
-      ),
-    [hydrated, ownership],
-  )
+  return useMemo(() => {
+    const catalogue = hydrated ? [...cards, ...listMyRhythms().map(rhythmToCard)] : cards
+    return filterOptionsFromRhythmCards(
+      catalogue.filter((card) => matchesOwnership(card, ownership)),
+    )
+  }, [cards, hydrated, ownership])
 }

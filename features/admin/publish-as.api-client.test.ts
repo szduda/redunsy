@@ -14,7 +14,8 @@ describe('publishRhythm', () => {
           slug: 'published-slug',
           created: true,
           url: '/rhythm/published-slug',
-          indexRefresh: 'queued',
+          indexRefresh: 'rebuilt',
+          index: { version: 'v1', generatedAt: 1, count: 1, cards: [] },
         }),
       }),
     )
@@ -34,7 +35,8 @@ describe('publishRhythm', () => {
       slug: 'published-slug',
       created: true,
       url: '/rhythm/published-slug',
-      indexRefresh: 'queued',
+      indexRefresh: 'rebuilt',
+      index: { version: 'v1', generatedAt: 1, count: 1, cards: [] },
     })
     expect(fetch).toHaveBeenCalledWith('/api/admin/rhythms', {
       method: 'POST',

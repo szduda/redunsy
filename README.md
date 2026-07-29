@@ -13,7 +13,7 @@ Live at [re.dunsy.app](https://re.dunsy.app).
 | Client state | [Zustand](https://zustand.docs.pmnd.rs) per feature; [TanStack Query](https://tanstack.com/query) for async UI |
 | Database     | [PostgreSQL](https://www.postgresql.org) via [Drizzle ORM](https://orm.drizzle.team) + `postgres` driver       |
 | Audio engine | Custom **midinike** library (`lib/midinike/`) — notation parsing, groove compilation, WebAudio playback        |
-| Search       | [Fuse.js](https://fusejs.io) over a build-time JSON index                                                      |
+| Search       | [Fuse.js](https://fusejs.io) over a live Blob-backed index (zero DB on user sessions)                          |
 | Testing      | [Vitest](https://vitest.dev) (unit + playback invariants)                                                      |
 | Deployment   | [Vercel](https://vercel.com)                                                                                   |
 
@@ -28,7 +28,8 @@ Live at [re.dunsy.app](https://re.dunsy.app).
 │  features/<name>/         Feature modules (UI + stores + hooks)│
 │  ├── groovy-player        Playback UI, transport, settings    │
 │  ├── editor               Canvas notation editor                │
-│  ├── garage               Search, filters, pagination           │
+│  ├── garage               Browse UI over search-index feature │
+│  ├── search-index         Live catalogue index (Blob + client)│
 │  ├── rhythm               Shared types and localStorage catalog │
 │  ├── store/               Cross-cutting Zustand stores          │
 │  └── theme/, layout/, icons/  Shared UI primitives              │
@@ -42,10 +43,9 @@ The codebase follows **functional programming** conventions: no classes, feature
 
 ### Data model
 
-Published rhythms live in **Postgres** (`db/schema.ts`). Each row stores metadata plus instrument patterns as JSONB. At **build time**, the catalogue is read once to:
+Published rhythms live in **Postgres** (`db/schema.ts`). Each row stores metadata plus instrument patterns as JSONB. At **build time**, the catalogue is read once to pre-render static `/rhythm/[slug]` player pages (`dynamicParams` allows new slugs without redeploy).
 
-1. Pre-render static `/rhythm/[slug]` player pages.
-2. Generate `features/garage/rhythm-index.generated.json` for client-side search (no runtime DB access in the browser).
+The **garage search index** is a separate live artifact owned by `features/search-index/`: admin actions rebuild a versioned JSON file on **Vercel Blob**; user sessions fetch it once (plus localStorage bootstrap) and never touch Postgres.
 
 **User-owned rhythms** (created, forked, or edited) are stored in **localStorage** and resolved client-side. The editor and `/player?rhythm=<slug>` route work entirely in the browser for private collections.
 
@@ -61,12 +61,12 @@ The groovy player and editor both depend on midinike; playback timing invariants
 
 ### Feature modules
 
-| Feature           | Route(s)                    | Responsibility                                                    |
-| ----------------- | --------------------------- | ----------------------------------------------------------------- |
-| **Groovy player** | `/rhythm/[slug]`, `/player` | Multi-track playback, tempo, swing, metronome, wake lock          |
-| **Garage**        | `/garage`                   | Fuse.js search, faceted filters, pagination over the static index |
-| **Editor**        | `/editor`, `/editor/[slug]` | Visual bar editor, metadata, fork/save to localStorage            |
-| **Help**          | `/help`                     | Notation reference and interactive demos                          |
+| Feature           | Route(s)                    | Responsibility                                           |
+| ----------------- | --------------------------- | -------------------------------------------------------- |
+| **Groovy player** | `/rhythm/[slug]`, `/player` | Multi-track playback, tempo, swing, metronome, wake lock |
+| **Garage**        | `/garage`                   | Browse UI; search/filter via `features/search-index/`    |
+| **Editor**        | `/editor`, `/editor/[slug]` | Visual bar editor, metadata, fork/save to localStorage   |
+| **Help**          | `/help`                     | Notation reference and interactive demos                 |
 
 ## Project layout
 
@@ -90,6 +90,7 @@ scripts/              Build-time index generation, DB seeding
 | `zustand`                    | Client state management            |
 | `@tanstack/react-query`      | Async data and query caching       |
 | `fuse.js`                    | Fuzzy search over the rhythm index |
+| `@vercel/blob`               | Durable live search-index artifact |
 | `tailwind-merge`             | Conditional class merging          |
 
 **Development**
@@ -122,10 +123,10 @@ Open [http://localhost:3000](http://localhost:3000). The dev server works withou
 
 Create `.env.local` (or pull from Vercel with `vercel env pull`):
 
-| Variable                         | Required for       | Purpose                                        |
-| -------------------------------- | ------------------ | ---------------------------------------------- |
-| `POSTGRES_URL` or `DATABASE_URL` | Build, DB scripts  | Postgres connection string                     |
-| `VERCEL_DEPLOY_HOOK_URL`         | Production publish | Queues redeploy to refresh garage search index |
+| Variable                         | Required for             | Purpose                                          |
+| -------------------------------- | ------------------------ | ------------------------------------------------ |
+| `POSTGRES_URL` or `DATABASE_URL` | Build, DB scripts, admin | Postgres connection string                       |
+| `BLOB_READ_WRITE_TOKEN`          | Production index writes  | Vercel Blob token for live search-index rebuilds |
 
 ### Database
 
@@ -133,53 +134,52 @@ Create `.env.local` (or pull from Vercel with `vercel env pull`):
 npm run db:push        # Push schema to local Postgres
 npm run db:migrate     # Run migrations
 npm run db:seed        # Seed rhythms from migration scripts
-npm run search-index   # Regenerate garage search JSON from Postgres
+npm run search-index   # Refresh committed seed JSON from Postgres (optional fallback)
 ```
 
-`npm run build` runs `prebuild` automatically, which regenerates the search index when a connection string is available.
+`npm run build` runs `prebuild` automatically, which refreshes the seed JSON when a connection string is available. Live catalogue updates use Blob rebuilds, not redeploys.
 
 ### Scripts
 
-| Command                 | Description                                       |
-| ----------------------- | ------------------------------------------------- |
-| `npm run dev`           | Start development server                          |
-| `npm run build`         | Production build (regenerates search index first) |
-| `npm run start`         | Serve production build                            |
-| `npm run lint`          | ESLint                                            |
-| `npm run test`          | Run all Vitest suites                             |
-| `npm run test:playback` | Playback timing and groove-length invariants      |
-| `npm run format`        | Prettier write                                    |
+| Command                 | Description                                   |
+| ----------------------- | --------------------------------------------- |
+| `npm run dev`           | Start development server                      |
+| `npm run build`         | Production build (refreshes seed index first) |
+| `npm run start`         | Serve production build                        |
+| `npm run lint`          | ESLint                                        |
+| `npm run test`          | Run all Vitest suites                         |
+| `npm run test:playback` | Playback timing and groove-length invariants  |
+| `npm run format`        | Prettier write                                |
 
-### Garage search index (static)
+### Garage search index (live)
 
-Garage browse/search uses [`features/garage/rhythm-index.generated.json`](features/garage/rhythm-index.generated.json), bundled into the client build. User sessions do **not** read Postgres for catalogue cards; search, filters, and pagination run entirely in the browser over that static index.
+Garage browse/search is owned by [`features/search-index/`](features/search-index/). User sessions do **not** read Postgres for catalogue cards.
 
-**Publish flow:**
+**Read path (users):**
 
-1. Admin publish writes the rhythm to Postgres.
-2. The rhythm detail page is revalidated (`/rhythm/[slug]`).
-3. A Vercel deploy hook (`VERCEL_DEPLOY_HOOK_URL`) queues a production rebuild.
-4. `prebuild` runs `scripts/generate-search-index.ts`, regenerating the JSON from Postgres.
-5. The new deployment serves updated garage cards.
+1. Bootstrap from `localStorage` when present (repeat visits).
+2. Otherwise load the committed seed JSON as a separate chunk.
+3. Passively fetch `GET /api/search-index` once per session (Blob latest, seed fallback).
+4. Search, filters, and pagination run in the browser (Fuse.js).
 
-**Limitations:**
+**Write path (admin only):**
 
-- Garage cards stay stale until the redeploy finishes; the rhythm detail page can be fresh earlier.
-- Local/dev publish works without a deploy hook, but garage cards only update after `npm run search-index` or a deploy.
-- Search/filter changes never hit the server — by design, to keep session cost near zero.
+1. Publish / soft-unpublish / manual rebuild calls `rebuildSearchIndex()`.
+2. That reads published cards from Postgres and writes versioned JSON to Vercel Blob.
+3. Clients pick up the new version on their next passive fetch (admin UI refreshes immediately from rebuild `cards`). Passive CDN cache is ~60s + 300s stale-while-revalidate; admins never depend on that path for their own session.
+
+**Soft unpublish:** `DELETE /api/admin/rhythms/[slug]` sets `published = false` and rebuilds the index. Delete UI for editors is tracked in #28.
 
 **Cost profile (expected scale):**
 
-| Event              | DB reads (garage) | API calls (garage) | Notes                                                               |
-| ------------------ | ----------------- | ------------------ | ------------------------------------------------------------------- |
-| New user session   | 0                 | 0                  | Static JS + bundled JSON only                                       |
-| Search/filter/page | 0                 | 0                  | Client CPU only                                                     |
-| One publish        | 0                 | 0                  | Build time: 1 catalogue DB read, 1 upsert, 1 deploy hook, 1 rebuild |
+| Event              | DB reads (garage) | API calls (garage) | Notes                                      |
+| ------------------ | ----------------- | ------------------ | ------------------------------------------ |
+| New user session   | 0                 | 1                  | Cached JSON fetch; localStorage on repeats |
+| Search/filter/page | 0                 | 0                  | Client CPU only                            |
+| One publish        | 1 catalogue read  | 0 (user)           | Admin upsert + Blob write                  |
 
-Current catalogue is ~50 rhythms; under 1,000 should stay comfortably within Vercel Pro. Revisit bundle size and client search latency around 5,000–10,000 rhythms if growth continues.
-
-Set `VERCEL_DEPLOY_HOOK_URL` in production (Vercel project → Settings → Git → Deploy Hooks).
+Current catalogue is ~50 rhythms; under 1,000 should stay comfortably within Vercel Pro.
 
 ## Deployment
 
-Deployed on Vercel. Static rhythm pages and the garage search index are produced at build time.
+Deployed on Vercel. Static rhythm pages are produced at build time (`dynamicParams` covers newly published slugs). The garage search index is served from Blob and refreshed by admin actions without a full redeploy.
