@@ -152,6 +152,8 @@ npm run search-index   # Regenerate garage search JSON from Postgres
 | `npm run format`        | Prettier write                                    |
 | `npm run graph`         | Module graph: shared hubs, cycles, layer jumps    |
 
+See [docs/dependency-graph-resolution.md](docs/dependency-graph-resolution.md) for how to read and clear remaining findings.
+
 ### Garage search index (static)
 
 Garage browse/search uses [`features/garage/rhythm-index.generated.json`](features/garage/rhythm-index.generated.json), bundled into the client build. User sessions do **not** read Postgres for catalogue cards; search, filters, and pagination run entirely in the browser over that static index.

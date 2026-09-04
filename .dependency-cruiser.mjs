@@ -101,7 +101,10 @@ const config = {
               attributes: { fillcolor: 'lime', color: 'black', penwidth: 2 },
             },
             {
-              criteria: { source: '^(features/(theme|icons|layout|shared|store|rhythm|logo)|lib)' },
+              criteria: {
+                source:
+                  '^(features/(theme|icons|layout|shared|store|rhythm|logo|groovy-player)|lib)',
+              },
               attributes: { fillcolor: '#dbeafe', color: '#1d4ed8' },
             },
           ],

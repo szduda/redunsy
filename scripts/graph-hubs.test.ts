@@ -7,7 +7,8 @@ describe('graph hubs', () => {
     expect(isSharedKernel('features/theme')).toBe(true)
     expect(isSharedKernel('features/icons')).toBe(true)
     expect(isSharedKernel('features/layout')).toBe(true)
-    expect(isSharedKernel('features/groovy-player')).toBe(false)
+    expect(isSharedKernel('features/groovy-player')).toBe(true)
+    expect(isSharedKernel('features/editor')).toBe(false)
   })
 
   it('splits high fan-in shared kernels from surprising feature hubs', () => {
@@ -20,7 +21,7 @@ describe('graph hubs', () => {
       { source: 'features/garage', dependencies: [{ resolved: 'features/groovy-player' }] },
     ])
     const { shared, other } = classifyHubs(hubs)
-    expect(shared.map((hub) => hub.source)).toEqual(['features/theme'])
-    expect(other.map((hub) => hub.source)).toEqual(['features/groovy-player'])
+    expect(shared.map((hub) => hub.source)).toEqual(['features/groovy-player', 'features/theme'])
+    expect(other.map((hub) => hub.source)).toEqual([])
   })
 })

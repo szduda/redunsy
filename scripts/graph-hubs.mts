@@ -14,6 +14,7 @@ export const SHARED_KERNELS = [
   'features/store',
   'features/rhythm',
   'features/logo',
+  'features/groovy-player',
   'lib',
   'lib/midinike',
 ] as const
