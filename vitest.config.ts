@@ -10,6 +10,7 @@ export default defineConfig({
       'features/**/*.test.{ts,tsx}',
       'db/**/*.test.ts',
       'app/**/*.test.ts',
+      'scripts/**/*.test.ts',
     ],
     setupFiles: ['./vitest.setup.ts'],
   },
