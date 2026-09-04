@@ -100,6 +100,7 @@ scripts/              Build-time index generation, DB seeding
 | `vitest`                              | Unit and playback tests                   |
 | `drizzle-kit`                         | Schema migrations                         |
 | `tsx`                                 | Script runner (index generation, seeding) |
+| `dependency-cruiser`, `@viz-js/viz`   | Module dependency graph (`npm run graph`) |
 | `tailwindcss`, `@tailwindcss/postcss` | CSS framework                             |
 
 ## Getting started
@@ -149,6 +150,7 @@ npm run search-index   # Regenerate garage search JSON from Postgres
 | `npm run test`          | Run all Vitest suites                             |
 | `npm run test:playback` | Playback timing and groove-length invariants      |
 | `npm run format`        | Prettier write                                    |
+| `npm run graph`         | Build and open the module dependency graph        |
 
 ### Garage search index (static)
 
