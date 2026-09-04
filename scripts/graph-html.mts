@@ -1,5 +1,7 @@
 import type { ICruiseResult, IViolation } from 'dependency-cruiser'
 
+import { classifyHubs, rankHubs, type Hub } from './graph-hubs.mts'
+
 const escapeHtml = (value: string) =>
   value.replaceAll('&', '&amp;').replaceAll('<', '&lt;').replaceAll('>', '&gt;')
 
@@ -16,31 +18,12 @@ const cycleLine = (violation: IViolation) =>
 const jumpLine = (violation: IViolation) =>
   `${violation.from} → ${violation.to}  (${violation.rule.name})`
 
-const hubLine = (hub: { source: string; inbound: number; outbound: number }) =>
-  `${hub.source}  ← ${hub.inbound} inbound / ${hub.outbound} outbound`
-
-export const rankHubs = (collapsed: ICruiseResult) => {
-  const inbound = new Map<string, number>()
-  for (const mod of collapsed.modules) {
-    if (!inbound.has(mod.source)) inbound.set(mod.source, 0)
-    for (const dep of mod.dependencies) {
-      inbound.set(dep.resolved, (inbound.get(dep.resolved) ?? 0) + 1)
-    }
-  }
-  return collapsed.modules
-    .map((mod) => ({
-      source: mod.source,
-      inbound: inbound.get(mod.source) ?? 0,
-      outbound: mod.dependencies.length,
-    }))
-    .sort((left, right) => right.inbound - left.inbound || right.outbound - left.outbound)
-    .slice(0, 8)
-}
+const hubLine = (hub: Hub) => `${hub.source}  ← ${hub.inbound} inbound / ${hub.outbound} outbound`
 
 export const buildGraphHtml = (svg: string, result: ICruiseResult, collapsed: ICruiseResult) => {
   const cycles = result.summary.violations.filter((item) => item.rule.name === 'no-circular')
   const jumps = result.summary.violations.filter((item) => item.rule.name.includes('-not-to-'))
-  const hubs = rankHubs(collapsed)
+  const { shared, other } = classifyHubs(rankHubs(collapsed.modules))
 
   return `<!doctype html>
 <html lang="en">
@@ -58,10 +41,11 @@ export const buildGraphHtml = (svg: string, result: ICruiseResult, collapsed: IC
       .panels { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 12px; }
       section { background: #fff; border: 1px solid #e2e8f0; border-radius: 8px; padding: 10px 12px; }
       h2 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em; margin: 0 0 6px; color: #475569; }
+      h3 { font-size: 0.75rem; margin: 10px 0 4px; color: #334155; }
       ul { margin: 0; padding-left: 1.1rem; }
       li { margin: 0.2rem 0; }
       code { font-size: 12px; }
-      .empty { margin: 0; color: #64748b; }
+      .empty, .hint { margin: 0 0 8px; color: #64748b; }
       .graph { overflow: auto; background: #fff; border-top: 1px solid #e2e8f0; }
       .node.current path, .node.current polygon { stroke: #d946ef; stroke-width: 2; }
       .edge.current path { stroke: #d946ef; stroke-width: 3; stroke-opacity: 1; }
@@ -70,17 +54,21 @@ export const buildGraphHtml = (svg: string, result: ICruiseResult, collapsed: IC
   <body>
     <header>
       <h1>Redunsy dependency graph</h1>
-      <p>Collapsed to <code>app</code>, <code>features/*</code>, <code>lib</code>, <code>db</code>. Lime nodes contain cycles. Hover a node to see its star.</p>
+      <p>Collapsed to <code>app</code>, <code>features/*</code>, <code>lib</code>, <code>db</code>. A star is not a smell: shared UI should look like one. Hover a node to see its edges.</p>
       <div class="legend">
-        <span><i class="swatch" style="background:#ef4444"></i> cycles (red edges)</span>
-        <span><i class="swatch" style="background:#84cc16"></i> cycle folders (lime nodes)</span>
+        <span><i class="swatch" style="background:#93c5fd"></i> shared kernels (expected stars)</span>
+        <span><i class="swatch" style="background:#84cc16"></i> folders with cycles (lime)</span>
+        <span><i class="swatch" style="background:#ef4444"></i> cycle edges (red)</span>
         <span><i class="swatch" style="background:#f97316"></i> layer jumps (orange)</span>
-        <span><i class="swatch" style="background:#d946ef"></i> hover highlight</span>
       </div>
       <div class="panels">
         <section>
-          <h2>Stars (most dependents)</h2>
-          ${listItems(hubs.map(hubLine), 'No modules to rank.')}
+          <h2>Hubs</h2>
+          <p class="hint">High fan-in + low fan-out is the stable-dependency shape. Unexpected hubs are product features imported by many others.</p>
+          <h3>Shared kernels</h3>
+          ${listItems(shared.map(hubLine), 'No shared kernels with inbound edges.')}
+          <h3>Other hubs</h3>
+          ${listItems(other.map(hubLine), 'No surprising high-fan-in features.')}
         </section>
         <section>
           <h2>Cycles (${cycles.length})</h2>

@@ -150,7 +150,7 @@ npm run search-index   # Regenerate garage search JSON from Postgres
 | `npm run test`          | Run all Vitest suites                             |
 | `npm run test:playback` | Playback timing and groove-length invariants      |
 | `npm run format`        | Prettier write                                    |
-| `npm run graph`         | Build and open the module dependency graph        |
+| `npm run graph`         | Module graph: shared hubs, cycles, layer jumps    |
 
 ### Garage search index (static)
 

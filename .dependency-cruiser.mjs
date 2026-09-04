@@ -95,6 +95,16 @@ const config = {
             bgcolor: 'white',
           },
           node: { fontsize: '11' },
+          modules: [
+            {
+              criteria: { matchesHighlight: true },
+              attributes: { fillcolor: 'lime', color: 'black', penwidth: 2 },
+            },
+            {
+              criteria: { source: '^(features/(theme|icons|layout|shared|store|rhythm|logo)|lib)' },
+              attributes: { fillcolor: '#dbeafe', color: '#1d4ed8' },
+            },
+          ],
         },
       },
     },
