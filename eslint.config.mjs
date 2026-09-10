@@ -38,6 +38,7 @@ const eslintConfig = defineConfig([
     'drizzle/**',
     'public/**',
     'lib/**',
+    'dunsy-api/**',
   ]),
 ])
 

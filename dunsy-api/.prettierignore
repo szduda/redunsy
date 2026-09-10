@@ -1,6 +1,5 @@
-.next
+dist
+coverage
 node_modules
-out
-build
 package-lock.json
-dunsy-api
+openapi.json
