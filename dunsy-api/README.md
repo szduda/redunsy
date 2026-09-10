@@ -60,7 +60,9 @@ OpenAPI: `http://localhost:3001/docs` (non-production). Regenerate the committed
 
 ## Vercel
 
-`src/main.ts` is the Nest entry (`bootstrap` + `listen`). Vercel maps it to a single Fluid Compute function. `vercel.ts` sets `framework: 'nestjs'`. Do not add `api/` Route Handlers or rewrites that bypass Nest.
+`src/main.ts` is the Nest entry (`bootstrap` + `listen`). After extract, rename `vercel.ts.example` to `vercel.ts` (`framework: 'nestjs'`). Do not add `api/` Route Handlers or rewrites that bypass Nest.
+
+While this folder is parked inside Redunsy, the parent `.vercelignore` excludes it so the Next.js project does not treat it as a second Vercel app.
 
 Set the same env vars on the API project as in `.env.example`. Mirror `DUNSY_API_INTERNAL_KEY` and `ADMIN_EMAILS` onto the Next.js project.
 

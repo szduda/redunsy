@@ -18,4 +18,4 @@ gh repo create szduda/dunsy-api --public --source=. --remote=origin --push
 
 Then delete `dunsy-api/` from Redunsy in a follow-up PR.
 
-Import the new GitHub repo on Vercel as its own project (`framework: nestjs`, Fluid Compute). Set `DUNSY_API_INTERNAL_KEY` (and later `ADMIN_EMAILS`, `POSTGRES_URL`) on that project.
+Then rename `vercel.ts.example` → `vercel.ts`. Import the new GitHub repo on Vercel as its own project (`framework: nestjs`, Fluid Compute). Set `DUNSY_API_INTERNAL_KEY` (and later `ADMIN_EMAILS`, `POSTGRES_URL`) on that project.
