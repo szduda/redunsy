@@ -1,0 +1,129 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/health": {
+      "get": {
+        "operationId": "HealthController_liveness",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "example": {
+                    "status": "ok"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "summary": "Liveness. No auth, no database.",
+        "tags": [
+          "health"
+        ]
+      }
+    },
+    "/ready": {
+      "get": {
+        "operationId": "ReadyController_readiness",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "example": {
+                    "status": "ok",
+                    "database": "unconfigured"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "internal-key": []
+          }
+        ],
+        "summary": "Readiness. Requires internal key. Pings Postgres when configured.",
+        "tags": [
+          "ready"
+        ]
+      }
+    },
+    "/v1/connection/whoami": {
+      "get": {
+        "operationId": "ConnectionController_whoami",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WhoamiResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "internal-key": []
+          }
+        ],
+        "summary": "Echo BFF-forwarded identity. Requires x-dunsy-internal-key (or Bearer).",
+        "tags": [
+          "connection"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "dunsy-api",
+    "description": "Dunsy HTTP API. Browser clients must not call this origin; the Next.js BFF is the only caller.",
+    "version": "0.1.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "securitySchemes": {
+      "internal-key": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "x-dunsy-internal-key"
+      }
+    },
+    "schemas": {
+      "WhoamiResponse": {
+        "type": "object",
+        "properties": {
+          "googleSub": {
+            "type": "string",
+            "nullable": true,
+            "example": "google-oauth2|123"
+          },
+          "email": {
+            "type": "string",
+            "nullable": true,
+            "example": "user@example.com"
+          },
+          "admin": {
+            "type": "boolean",
+            "example": false
+          }
+        },
+        "required": [
+          "googleSub",
+          "email",
+          "admin"
+        ]
+      }
+    }
+  }
+}
