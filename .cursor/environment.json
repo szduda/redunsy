@@ -1,0 +1,13 @@
+{
+  "name": "Redunsy",
+  "install": "bash .cursor/install.sh",
+  "start": "bash .cursor/start.sh",
+  "terminals": [
+    {
+      "name": "dev",
+      "command": "npm run dev",
+      "description": "Next.js dev server on http://localhost:3000 (reads .env.local for the local Postgres connection)."
+    }
+  ],
+  "ports": [{ "name": "web", "port": 3000 }]
+}
